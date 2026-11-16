@@ -1,0 +1,58 @@
+name: tracker timing
+on:
+  push:
+    paths:
+      - 'rtl/bank/s0/l1d_req_tracker.v'
+      - 'flow/asap7/sta_module.tcl'
+      - '.github/workflows/timing_tracker.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  timing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    env:
+      PERIOD: '250'
+      MODULES: l1d_req_tracker
+      OUT: ${{ github.workspace }}/timing_results/tracker_p250
+    steps:
+      - uses: actions/checkout@v4
+      - name: synthesize and time l1d_req_tracker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          bash flow/asap7/run_timing.sh 2>&1 | tee "$OUT/run.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timing-tracker
+          path: |
+            ${{ env.OUT }}/results
+            ${{ env.OUT }}/run.log
+          if-no-files-found: warn
+          retention-days: 30
+  publish:
+    needs: timing
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: timing-tracker
+          path: artifacts
+      - name: publish to branch timing-tracker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/res; cp -r artifacts /tmp/res/run
+          git rev-parse HEAD > /tmp/res/commit.txt
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan timing-tracker; git rm -rq --cached . ; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "tracker timing results"; git push -f origin timing-tracker

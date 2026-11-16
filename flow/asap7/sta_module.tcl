@@ -36,6 +36,8 @@ if {[llength $ck] && [llength $outs]} { set so [class_slack $ck $outs] }
 if {[llength $ins] && [llength $outs]} { set sx [class_slack $ins $outs] }
 puts "RESULT top=$::env(TOP) period_ps=$::env(CLK_PERIOD_PS) slack_all=$sa slack_r2r=$sr slack_in2reg=$si slack_reg2out=$so slack_in2out=$sx"
 report_checks -path_delay max -group_path_count 10 -fields {slew cap fanout} -digits 3 > ${prefix}_worst_paths.rpt
+catch { if {[llength $ck] && [llength $dp]} { report_checks -path_delay max -from $ck -to $dp -group_path_count 12 -unique_paths_to_endpoint -fields {slew cap fanout} -digits 3 > ${prefix}_r2r_paths.rpt } }
+catch { if {[llength $ins] && [llength $dp]} { report_checks -path_delay max -from $ins -to $dp -group_path_count 6 -unique_paths_to_endpoint -fields {slew cap fanout} -digits 3 > ${prefix}_in2reg_paths.rpt } }
 report_checks -path_delay min -group_path_count 5 -fields {slew cap fanout} -digits 3 > ${prefix}_hold_paths.rpt
 check_setup -verbose > ${prefix}_check_setup.rpt
 catch { report_design_area } msg

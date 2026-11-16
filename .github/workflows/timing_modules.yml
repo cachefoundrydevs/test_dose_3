@@ -1,0 +1,98 @@
+name: module timing
+on:
+  push:
+    paths:
+      - 'flow/asap7/**'
+      - '.github/workflows/timing_modules.yml'
+  workflow_dispatch:
+    inputs:
+      periods:
+        description: 'Clock periods in ps, space separated'
+        type: string
+        default: '250'
+      data_clkq_ps:
+        description: 'Assumed data SRAM read time (ps)'
+        type: string
+        default: '180'
+      tag_clkq_ps:
+        description: 'Assumed tag SRAM read time (ps)'
+        type: string
+        default: '150'
+permissions:
+  contents: write
+env:
+  REQUESTED_PERIODS: ${{ inputs.periods || '250' }}
+  DATA_CLKQ_PS: ${{ inputs.data_clkq_ps || '180' }}
+  TAG_CLKQ_PS: ${{ inputs.tag_clkq_ps || '150' }}
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p inventory
+          MATRIX=$(python3 flow/asap7/inventory.py --periods "$REQUESTED_PERIODS" --snapshot inventory/source_inventory.json)
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "$MATRIX" > inventory/matrix.json
+  timing:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    name: ${{ matrix.group }} at ${{ matrix.period }} ps
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    env:
+      PERIOD: ${{ matrix.period }}
+      MODULES: ${{ matrix.modules }}
+      OUT: ${{ github.workspace }}/timing_results/${{ matrix.group }}_p${{ matrix.period }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: synthesize and measure each module
+        timeout-minutes: 340
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          bash flow/asap7/run_timing.sh 2>&1 | tee "$OUT/run.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timing-${{ matrix.group }}-p${{ matrix.period }}
+          path: |
+            ${{ env.OUT }}/results
+            ${{ env.OUT }}/run.log
+          if-no-files-found: warn
+          retention-days: 30
+  summary:
+    needs: [plan, timing]
+    if: ${{ always() && needs.plan.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: timing-*
+          path: artifacts
+      - name: table and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 flow/asap7/fmax_table.py artifacts FMAX.md
+          cat FMAX.md >> "$GITHUB_STEP_SUMMARY"
+          mkdir -p /tmp/res; cp FMAX.md /tmp/res/; cp -r artifacts /tmp/res/runs
+          git rev-parse HEAD > /tmp/res/commit.txt
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan timing-results; git rm -rq --cached . ; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "module timing results"; git push -f origin timing-results

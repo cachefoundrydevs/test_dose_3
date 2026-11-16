@@ -195,7 +195,9 @@ module l1d_req_tracker #(
                 for (fb_entry = 0; fb_entry < NE; fb_entry = fb_entry + 1) begin
                     free_below[fb_entry] = {RANK_W{1'b0}};
                     for (fb_lower = 0; fb_lower < fb_entry; fb_lower = fb_lower + 1)
-                        free_below[fb_entry] = free_below[fb_entry] + {{(RANK_W-1){1'b0}}, ~valid_q[fb_lower]};
+                        free_below[fb_entry] = free_below[fb_entry] ^
+                                               ({free_below[fb_entry][1] & free_below[fb_entry][0],
+                                                 free_below[fb_entry][0], 1'b1} & {RANK_W{~valid_q[fb_lower]}});
                 end
             end
             genvar pk_k, pk_e;

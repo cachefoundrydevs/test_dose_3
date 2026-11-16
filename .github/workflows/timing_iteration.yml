@@ -67,7 +67,7 @@ jobs:
     env:
       PERIOD: ${{ needs.request.outputs.period }}
       MODULES: ${{ needs.request.outputs.module }}
-      OUT: ${{ github.workspace }}/timing_results/iter
+      OUT: timing_results/iter
     steps:
       - uses: actions/checkout@v4
       - shell: bash
@@ -80,8 +80,8 @@ jobs:
         with:
           name: timing
           path: |
-            ${{ env.OUT }}/results
-            ${{ env.OUT }}/run.log
+            timing_results/iter/results
+            timing_results/iter/run.log
           if-no-files-found: warn
   publish:
     needs: [request, names, equiv, timing]

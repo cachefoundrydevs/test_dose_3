@@ -33,11 +33,26 @@ YS
 }
 elab "$GOLD" gold "$OUT/gold.il" || { echo "EQUIV: FAIL (golden does not elaborate)"; exit 1; }
 elab "$CUR"  gate "$OUT/gate.il" || { echo "EQUIV: FAIL (current does not elaborate)"; exit 1; }
+# optional golden/<M>.equiv_blacklist: base names of INTERNAL combinational signals whose encoding was changed on
+# purpose (outputs and flops are never listed); they are not paired, everything after them is still proven
+BL=""
+if [[ -f golden/$M.equiv_blacklist ]]; then
+    : > "$OUT/blacklist.txt"
+    while read -r b; do
+        b=${b%%#*}; b=$(echo "$b" | tr -d ' \r'); [[ -z "$b" ]] && continue
+        # last word of every 'wire' line (an escaped name: first character is the escape mark), kept when its last
+        # dotted part is the base name, with or without an index
+        awk '$1 == "wire" {print $NF}' "$OUT/gold.il" | cut -c2- | grep -E "^([A-Za-z0-9_.]*[.])?$b([[][0-9]+[]])?$" >> "$OUT/blacklist.txt" || true
+    done < "golden/$M.equiv_blacklist"
+    sort -u -o "$OUT/blacklist.txt" "$OUT/blacklist.txt"
+    echo "blacklisted internal signals: $(tr '\n' ' ' < "$OUT/blacklist.txt")"
+    BL="-blacklist $OUT/blacklist.txt"
+fi
 cat > "$OUT/equiv.ys" <<YS
 read_rtlil $OUT/gold.il
 read_rtlil $OUT/gate.il
 async2sync
-equiv_make gold gate equiv
+equiv_make $BL gold gate equiv
 hierarchy -top equiv
 equiv_simple -seq 5
 equiv_induct -seq 5

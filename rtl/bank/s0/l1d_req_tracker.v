@@ -144,7 +144,9 @@ module l1d_req_tracker #(
         for (rank_src = 0; rank_src < NS; rank_src = rank_src + 1) begin
             rank[rank_src] = {RANK_W{1'b0}};
             for (rank_lower = 0; rank_lower < rank_src; rank_lower = rank_lower + 1)
-                rank[rank_src] = rank[rank_src] + {{(RANK_W-1){1'b0}}, eligible[rank_lower]};
+                rank[rank_src] = rank[rank_src] ^
+                                 ({rank[rank_src][1] & rank[rank_src][0],
+                                   rank[rank_src][0], 1'b1} & {RANK_W{eligible[rank_lower]}});
         end
     end
     wire [NS-1:0] alloc;

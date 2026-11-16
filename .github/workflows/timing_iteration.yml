@@ -1,0 +1,110 @@
+name: timing iteration
+on:
+  push:
+    paths:
+      - 'request/timing_request.txt'
+permissions:
+  contents: write
+jobs:
+  request:
+    runs-on: ubuntu-24.04
+    outputs:
+      module: ${{ steps.r.outputs.module }}
+      period: ${{ steps.r.outputs.period }}
+      iteration: ${{ steps.r.outputs.iteration }}
+      path: ${{ steps.r.outputs.path }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: r
+        shell: bash
+        run: |
+          set -euo pipefail
+          get() { sed -n "s/^$1=\([A-Za-z0-9_.-]*\).*/\1/p" request/timing_request.txt | tr -d '\r' | head -1; }
+          m=$(get module); p=$(get period); k=$(get iteration)
+          [[ -n "$m" && "$p" =~ ^[0-9]+$ ]] || { echo "bad request"; cat request/timing_request.txt; exit 1; }
+          f=$(grep -v '^[-#]' filelists/rtl.f | grep "/$m.v$" | head -1)
+          [[ -n "$f" && -f golden/$m.v ]] || { echo "no rtl file or no golden copy for $m"; exit 1; }
+          echo "module=$m" >> "$GITHUB_OUTPUT"; echo "period=$p" >> "$GITHUB_OUTPUT"
+          echo "iteration=$k" >> "$GITHUB_OUTPUT"; echo "path=$f" >> "$GITHUB_OUTPUT"
+  names:
+    needs: request
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          mkdir -p proof
+          set -o pipefail
+          perl flow/check_names.pl golden/${{ needs.request.outputs.module }}.v ${{ needs.request.outputs.path }} | tee proof/names.txt
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: names, path: proof, if-no-files-found: warn }
+  equiv:
+    needs: request
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          export PATH=$PATH:/OpenROAD-flow-scripts/tools/install/yosys/bin
+          mkdir -p proof
+          set -o pipefail
+          bash flow/equiv.sh ${{ needs.request.outputs.module }} golden/${{ needs.request.outputs.module }}.v ${{ needs.request.outputs.path }} proof 2>&1 | tee proof/equiv.txt
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: equiv, path: proof, if-no-files-found: warn }
+  timing:
+    needs: [request, names, equiv]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    env:
+      PERIOD: ${{ needs.request.outputs.period }}
+      MODULES: ${{ needs.request.outputs.module }}
+      OUT: ${{ github.workspace }}/timing_results/iter
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          bash flow/asap7/run_timing.sh 2>&1 | tee "$OUT/run.log"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing
+          path: |
+            ${{ env.OUT }}/results
+            ${{ env.OUT }}/run.log
+          if-no-files-found: warn
+  publish:
+    needs: [request, names, equiv, timing]
+    if: always() && needs.request.result == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+        continue-on-error: true
+      - shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/res; cp -r artifacts/. /tmp/res/ 2>/dev/null || true
+          cp request/timing_request.txt /tmp/res/request.txt
+          git rev-parse HEAD > /tmp/res/commit.txt
+          {
+            echo "run=${{ github.run_id }}"
+            echo "names=${{ needs.names.result }}"
+            echo "equiv=${{ needs.equiv.result }}"
+            echo "timing=${{ needs.timing.result }}"
+          } > /tmp/res/status.txt
+          B=timing-${{ needs.request.outputs.module }}
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan "$B"; git rm -rq --cached . ; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "timing iteration ${{ needs.request.outputs.iteration }}"; git push -f origin "$B"

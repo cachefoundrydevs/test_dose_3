@@ -144,9 +144,10 @@ module l1d_req_tracker #(
         for (rank_src = 0; rank_src < NS; rank_src = rank_src + 1) begin
             rank[rank_src] = {RANK_W{1'b0}};
             for (rank_lower = 0; rank_lower < rank_src; rank_lower = rank_lower + 1)
-                rank[rank_src] = rank[rank_src] ^
-                                 ({rank[rank_src][1] & rank[rank_src][0],
-                                   rank[rank_src][0], 1'b1} & {RANK_W{eligible[rank_lower]}});
+                rank[rank_src] = eligible[rank_lower] ?
+                                 {rank[rank_src][1] | rank[rank_src][2],
+                                  rank[rank_src][0], ~rank[rank_src][2]} :
+                                 rank[rank_src];
         end
     end
     wire [NS-1:0] alloc;
@@ -155,8 +156,16 @@ module l1d_req_tracker #(
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
             wire rank_in_room;
             wire rank_in_max;
-            assign rank_in_room = |((~({(NE+1){1'b1}} << free_count_q) >> rank[al_idx]) & {{NE{1'b0}}, 1'b1});
-            assign rank_in_max  = (rank[al_idx] < NA);
+            assign rank_in_room = ((rank[al_idx] == 3'b000) && (free_count_q > 0)) ||
+                                  ((rank[al_idx] == 3'b001) && (free_count_q > 1)) ||
+                                  ((rank[al_idx] == 3'b011) && (free_count_q > 2)) ||
+                                  ((rank[al_idx] == 3'b111) && (free_count_q > 3)) ||
+                                  ((rank[al_idx] == 3'b110) && (free_count_q > 4));
+            assign rank_in_max  = ((rank[al_idx] == 3'b000) && (0 < NA)) ||
+                                  ((rank[al_idx] == 3'b001) && (1 < NA)) ||
+                                  ((rank[al_idx] == 3'b011) && (2 < NA)) ||
+                                  ((rank[al_idx] == 3'b111) && (3 < NA)) ||
+                                  ((rank[al_idx] == 3'b110) && (4 < NA));
             assign alloc[al_idx] = eligible[al_idx] & rank_in_room & rank_in_max;
         end
     endgenerate
@@ -224,7 +233,8 @@ module l1d_req_tracker #(
         for (se_src = 0; se_src < NS; se_src = se_src + 1) begin
             src_entry[se_src] = {NE{1'b0}};
             for (se_rank = 0; se_rank < NA; se_rank = se_rank + 1)
-                if (rank[se_src] == se_rank)
+                if (rank[se_src] == ((se_rank < RANK_W) ? ((1 << se_rank) - 1) :
+                                     (((1 << RANK_W) - 1) & ~((1 << (se_rank - RANK_W)) - 1))))
                     src_entry[se_src] = src_entry[se_src] | free_pick[se_rank*NE +: NE];
         end
         for (se_entry = 0; se_entry < NE; se_entry = se_entry + 1) begin
@@ -237,7 +247,8 @@ module l1d_req_tracker #(
         for (se_rank = 0; se_rank < NA; se_rank = se_rank + 1) begin
             age_groups[se_rank*NE +: NE] = {NE{1'b0}};
             for (se_src = 0; se_src < NS; se_src = se_src + 1)
-                if (alloc[se_src] && (rank[se_src] == se_rank))
+                if (alloc[se_src] && (rank[se_src] == ((se_rank < RANK_W) ? ((1 << se_rank) - 1) :
+                                                       (((1 << RANK_W) - 1) & ~((1 << (se_rank - RANK_W)) - 1)))))
                     age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | src_entry[se_src];
         end
     end
@@ -406,8 +417,8 @@ module l1d_req_tracker #(
     always @* begin
         alloc_cnt = {RANK_W{1'b0}};
         for (ac_src = 0; ac_src < NS; ac_src = ac_src + 1)
-            alloc_cnt = alloc[ac_src] ? {rank[ac_src][2] ^ (rank[ac_src][1] & rank[ac_src][0]),
-                                         rank[ac_src][1] ^ rank[ac_src][0], ~rank[ac_src][0]} : alloc_cnt;
+            alloc_cnt = alloc[ac_src] ? {rank[ac_src][2], ~rank[ac_src][2] & rank[ac_src][0],
+                                         ~rank[ac_src][0] | (rank[ac_src][1] & ~rank[ac_src][2])} : alloc_cnt;
     end
     wire [TRK_CNT_W-1:0] free_count_next;
     assign free_count_next = (alloc_cnt == 0) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now}     :

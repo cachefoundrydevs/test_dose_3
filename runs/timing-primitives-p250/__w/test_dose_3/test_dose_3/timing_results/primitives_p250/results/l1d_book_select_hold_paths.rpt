@@ -1,0 +1,145 @@
+Startpoint: prefetch_valid (input port clocked by clk)
+Endpoint: book_kind_q[4]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     3    1.384    0.000    0.000    0.000 v prefetch_valid (in)
+     1    0.548    5.177    8.854    8.854 v _150_/Y (AND4x1_ASAP7_75t_R)
+                   5.177    0.000    8.854 v book_kind_q[4]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                                     8.854   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           12.500   12.500   clock uncertainty
+                            0.000   12.500   clock reconvergence pessimism
+                                    12.500 ^ book_kind_q[4]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.725   21.225   library hold time
+                                    21.225   data required time
+---------------------------------------------------------------------------------
+                                    21.225   data required time
+                                    -8.854   data arrival time
+---------------------------------------------------------------------------------
+                                   -12.371   slack (VIOLATED)
+
+
+Startpoint: maint_token_valid (input port clocked by clk)
+Endpoint: book_valid_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     5    2.885    0.000    0.000    0.000 v maint_token_valid (in)
+     1    0.878    7.769    6.545    6.545 ^ _145_/Y (OAI21x1_ASAP7_75t_R)
+     1    0.548    6.976    6.654   13.199 v _148_/Y (AOI21x1_ASAP7_75t_R)
+                   6.976    0.000   13.199 v book_valid_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                                    13.199   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           12.500   12.500   clock uncertainty
+                            0.000   12.500   clock reconvergence pessimism
+                                    12.500 ^ book_valid_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.561   21.061   library hold time
+                                    21.061   data required time
+---------------------------------------------------------------------------------
+                                    21.061   data required time
+                                   -13.199   data arrival time
+---------------------------------------------------------------------------------
+                                    -7.862   slack (VIOLATED)
+
+
+Startpoint: entry_ready_valid (input port clocked by clk)
+Endpoint: book_now_entry (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     4    2.866    0.000    0.000    0.000 v entry_ready_valid (in)
+     1    0.000    2.435    6.744    6.744 v _152_/Y (AND3x1_ASAP7_75t_R)
+                   2.435    0.000    6.744 v book_now_entry (out)
+                                     6.744   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           12.500   12.500   clock uncertainty
+                            0.000   12.500   clock reconvergence pessimism
+                            0.000   12.500   output external delay
+                                    12.500   data required time
+---------------------------------------------------------------------------------
+                                    12.500   data required time
+                                    -6.744   data arrival time
+---------------------------------------------------------------------------------
+                                    -5.756   slack (VIOLATED)
+
+
+Startpoint: maint_token_valid (input port clocked by clk)
+Endpoint: book_now_maint (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     5    2.885    0.000    0.000    0.000 v maint_token_valid (in)
+     1    0.000    2.435    6.744    6.744 v _116_/Y (AND3x1_ASAP7_75t_R)
+                   2.435    0.000    6.744 v book_now_maint (out)
+                                     6.744   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           12.500   12.500   clock uncertainty
+                            0.000   12.500   clock reconvergence pessimism
+                            0.000   12.500   output external delay
+                                    12.500   data required time
+---------------------------------------------------------------------------------
+                                    12.500   data required time
+                                    -6.744   data arrival time
+---------------------------------------------------------------------------------
+                                    -5.756   slack (VIOLATED)
+
+
+Startpoint: prefetch_valid (input port clocked by clk)
+Endpoint: book_now_prefetch (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     3    1.384    0.000    0.000    0.000 v prefetch_valid (in)
+     1    0.000    2.435    6.744    6.744 v _149_/Y (AND3x1_ASAP7_75t_R)
+                   2.435    0.000    6.744 v book_now_prefetch (out)
+                                     6.744   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           12.500   12.500   clock uncertainty
+                            0.000   12.500   clock reconvergence pessimism
+                            0.000   12.500   output external delay
+                                    12.500   data required time
+---------------------------------------------------------------------------------
+                                    12.500   data required time
+                                    -6.744   data arrival time
+---------------------------------------------------------------------------------
+                                    -5.756   slack (VIOLATED)
+
+

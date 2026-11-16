@@ -1,0 +1,163 @@
+Startpoint: current_state[1] (input port clocked by vclk)
+Endpoint: state_write_enable (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     5    3.819    0.000    0.000    0.000 v current_state[1] (in)
+     4    3.866   24.088   11.865   11.865 ^ _076_/Y (INVx1_ASAP7_75t_R)
+     4    3.363   40.605   25.357   37.222 v _103_/CON (HAxp5_ASAP7_75t_R)
+     1    0.634    6.717   19.848   57.070 v _083_/Y (AND3x1_ASAP7_75t_R)
+     2    1.055    8.946   16.384   73.455 v _084_/Y (AO21x1_ASAP7_75t_R)
+     1    0.578    8.073   21.575   95.030 v _085_/Y (AO32x1_ASAP7_75t_R)
+     1    0.000    7.550   28.775  123.805 v _090_/Y (AO222x2_ASAP7_75t_R)
+                   7.550    0.000  123.805 v state_write_enable (out)
+                                   123.805   data arrival time
+
+                   0.000  250.000  250.000   clock vclk (rise edge)
+                            0.000  250.000   clock network delay (ideal)
+                          -12.500  237.500   clock uncertainty
+                            0.000  237.500   clock reconvergence pessimism
+                            0.000  237.500   output external delay
+                                   237.500   data required time
+---------------------------------------------------------------------------------
+                                   237.500   data required time
+                                  -123.805   data arrival time
+---------------------------------------------------------------------------------
+                                   113.695   slack (MET)
+
+
+Startpoint: current_state[1] (input port clocked by vclk)
+Endpoint: next_state[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    3.659    0.000    0.000    0.000 ^ current_state[1] (in)
+     4    4.118   21.010   10.983   10.983 v _076_/Y (INVx1_ASAP7_75t_R)
+     5    4.271   47.306   28.731   39.715 ^ _101_/CON (HAxp5_ASAP7_75t_R)
+     2    1.268   16.781   14.413   54.128 v _069_/Y (NOR2x1_ASAP7_75t_R)
+     1    0.633    7.309   17.253   71.380 v _070_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    5.754   11.966   83.346 v _071_/Y (AND3x1_ASAP7_75t_R)
+     1    0.533    6.307   14.586   97.932 v _072_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    5.286   17.337  115.269 v _075_/Y (AO221x1_ASAP7_75t_R)
+                   5.286    0.000  115.269 v next_state[0] (out)
+                                   115.269   data arrival time
+
+                   0.000  250.000  250.000   clock vclk (rise edge)
+                            0.000  250.000   clock network delay (ideal)
+                          -12.500  237.500   clock uncertainty
+                            0.000  237.500   clock reconvergence pessimism
+                            0.000  237.500   output external delay
+                                   237.500   data required time
+---------------------------------------------------------------------------------
+                                   237.500   data required time
+                                  -115.269   data arrival time
+---------------------------------------------------------------------------------
+                                   122.231   slack (MET)
+
+
+Startpoint: current_state[1] (input port clocked by vclk)
+Endpoint: next_state[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    3.659    0.000    0.000    0.000 ^ current_state[1] (in)
+     4    4.118   21.010   10.983   10.983 v _076_/Y (INVx1_ASAP7_75t_R)
+     5    4.271   47.306   28.731   39.715 ^ _101_/CON (HAxp5_ASAP7_75t_R)
+     1    0.612   12.135    9.177   48.892 v _065_/Y (INVx1_ASAP7_75t_R)
+     1    0.634    9.686   30.578   79.470 v _066_/Y (OR4x2_ASAP7_75t_R)
+     2    1.103    9.002   15.959   95.429 v _067_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    5.274   17.988  113.417 v _099_/Y (AO221x1_ASAP7_75t_R)
+                   5.274    0.000  113.417 v next_state[1] (out)
+                                   113.417   data arrival time
+
+                   0.000  250.000  250.000   clock vclk (rise edge)
+                            0.000  250.000   clock network delay (ideal)
+                          -12.500  237.500   clock uncertainty
+                            0.000  237.500   clock reconvergence pessimism
+                            0.000  237.500   output external delay
+                                   237.500   data required time
+---------------------------------------------------------------------------------
+                                   237.500   data required time
+                                  -113.417   data arrival time
+---------------------------------------------------------------------------------
+                                   124.083   slack (MET)
+
+
+Startpoint: current_state[1] (input port clocked by vclk)
+Endpoint: snoop_hands_over_data (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    3.659    0.000    0.000    0.000 ^ current_state[1] (in)
+     4    4.118   21.010   10.983   10.983 v _076_/Y (INVx1_ASAP7_75t_R)
+     4    3.345   38.558   25.049   36.032 ^ _103_/CON (HAxp5_ASAP7_75t_R)
+     1    0.627    9.065   20.259   56.291 ^ _083_/Y (AND3x1_ASAP7_75t_R)
+     2    1.072   10.057   12.586   68.877 ^ _084_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    7.871   23.648   92.526 ^ _100_/Y (AND4x2_ASAP7_75t_R)
+                   7.871    0.000   92.526 ^ snoop_hands_over_data (out)
+                                    92.526   data arrival time
+
+                   0.000  250.000  250.000   clock vclk (rise edge)
+                            0.000  250.000   clock network delay (ideal)
+                          -12.500  237.500   clock uncertainty
+                            0.000  237.500   clock reconvergence pessimism
+                            0.000  237.500   output external delay
+                                   237.500   data required time
+---------------------------------------------------------------------------------
+                                   237.500   data required time
+                                   -92.526   data arrival time
+---------------------------------------------------------------------------------
+                                   144.974   slack (MET)
+
+
+Startpoint: current_state[1] (input port clocked by vclk)
+Endpoint: upgrade_needed (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    3.659    0.000    0.000    0.000 ^ current_state[1] (in)
+     4    4.118   21.010   10.983   10.983 v _076_/Y (INVx1_ASAP7_75t_R)
+     4    3.345   38.558   25.049   36.032 ^ _103_/CON (HAxp5_ASAP7_75t_R)
+     2    1.231   27.041   22.802   58.834 v _079_/Y (AOI211x1_ASAP7_75t_R)
+     1    0.000    4.556   16.671   75.506 v _080_/Y (OA21x2_ASAP7_75t_R)
+                   4.556    0.000   75.506 v upgrade_needed (out)
+                                    75.506   data arrival time
+
+                   0.000  250.000  250.000   clock vclk (rise edge)
+                            0.000  250.000   clock network delay (ideal)
+                          -12.500  237.500   clock uncertainty
+                            0.000  237.500   clock reconvergence pessimism
+                            0.000  237.500   output external delay
+                                   237.500   data required time
+---------------------------------------------------------------------------------
+                                   237.500   data required time
+                                   -75.506   data arrival time
+---------------------------------------------------------------------------------
+                                   161.994   slack (MET)
+
+

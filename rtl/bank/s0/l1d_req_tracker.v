@@ -155,7 +155,7 @@ module l1d_req_tracker #(
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
             wire rank_in_room;
             wire rank_in_max;
-            assign rank_in_room = ({{(TRK_CNT_W-RANK_W){1'b0}}, rank[al_idx]} < free_count_q);
+            assign rank_in_room = |((~({(NE+1){1'b1}} << free_count_q) >> rank[al_idx]) & {{NE{1'b0}}, 1'b1});
             assign rank_in_max  = (rank[al_idx] < NA);
             assign alloc[al_idx] = eligible[al_idx] & rank_in_room & rank_in_max;
         end
@@ -403,10 +403,18 @@ module l1d_req_tracker #(
     always @* begin
         alloc_cnt = {RANK_W{1'b0}};
         for (ac_src = 0; ac_src < NS; ac_src = ac_src + 1)
-            alloc_cnt = alloc_cnt + {{(RANK_W-1){1'b0}}, alloc[ac_src]};
+            alloc_cnt = alloc[ac_src] ? {rank[ac_src][2] ^ (rank[ac_src][1] & rank[ac_src][0]),
+                                         rank[ac_src][1] ^ rank[ac_src][0], ~rank[ac_src][0]} : alloc_cnt;
     end
     wire [TRK_CNT_W-1:0] free_count_next;
-    assign free_count_next = free_count_q - {{(TRK_CNT_W-RANK_W){1'b0}}, alloc_cnt} + {{(TRK_CNT_W-1){1'b0}}, |freed_now};
+    assign free_count_next = (alloc_cnt == 0) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now}     :
+                             (alloc_cnt == 1) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 1 :
+                             (alloc_cnt == 2) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 2 :
+                             (alloc_cnt == 3) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 3 :
+                             (alloc_cnt == 4) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 4 :
+                             (alloc_cnt == 5) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 5 :
+                             (alloc_cnt == 6) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 6 :
+                                                free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 7;
     integer ent;
     always @(posedge clk) begin : tracker_proc
         if (rst) begin

@@ -32,9 +32,8 @@ jobs:
       matrix:
         variant:
           - { name: base,     cfg: '' }
-          - { name: swap_arith, cfg: 'SWAP_ARITH_OPERATORS=1' }
-          - { name: wrapped_ops, cfg: 'SYNTH_WRAPPED_OPERATORS=1' }
-          - { name: retime, cfg: 'SYNTH_RETIME_MODULES=l1d_req_tracker' }
+          - { name: lvt, cfg: 'ASAP7_USELVT=1' }
+          - { name: slvt, cfg: 'ASAP7_USESLVT=1' }
     container:
       image: openroad/orfs:latest
       options: --user root

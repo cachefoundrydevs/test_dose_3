@@ -85,6 +85,13 @@ export ADDITIONAL_LIBS      = $OUT/macros/l1d_macro_data_tdp.lib $OUT/macros/l1d
 export CORE_UTILIZATION    = 40
 export SYNTH_HIERARCHICAL   = 0
 CFG
+    # optional extra ORFS settings for flow experiments (one "NAME=VALUE" per line); empty by default
+    if [[ -n ${EXTRA_ORFS_CFG:-} ]]; then
+        while IFS='=' read -r k v; do
+            [[ -n "$k" ]] && echo "export $k = $v" >> "$CONFIG"
+        done <<< "$EXTRA_ORFS_CFG"
+        echo "extra ORFS settings:"; grep -A20 'SYNTH_HIERARCHICAL' "$CONFIG" | tail -n +2
+    fi
     if ! (cd "$FLOW_HOME" && make DESIGN_CONFIG="$CONFIG" WORK_HOME="$W" synth) > "$OUT/results/synth_$M.log" 2>&1; then
         tail -30 "$OUT/results/synth_$M.log"; failure SYNTH_FAIL; continue
     fi

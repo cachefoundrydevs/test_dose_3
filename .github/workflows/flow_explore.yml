@@ -1,0 +1,77 @@
+name: flow explore
+# One-off flow experiment: the same RTL timed under several ORFS synthesis settings (no RTL change).
+# Triggered by a push that changes request/flow_explore.txt (module=, period=). Results: branch flow-explore.
+on:
+  push:
+    paths:
+      - 'request/flow_explore.txt'
+permissions:
+  contents: write
+jobs:
+  knobs:
+    runs-on: ubuntu-24.04
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    steps:
+      - shell: bash
+        run: |
+          mkdir -p out
+          cd /OpenROAD-flow-scripts/flow/scripts
+          # every environment variable the synthesis scripts read, with the line that reads it
+          grep -nE 'env\(|env_var' synth*.tcl synth*.sh 2>/dev/null > $GITHUB_WORKSPACE/out/synth_knobs.txt || true
+          cat abc_speed.script > $GITHUB_WORKSPACE/out/abc_speed.script 2>/dev/null || true
+          grep -nE 'extract_fa|ABC_CLOCK|-D ' synth*.tcl > $GITHUB_WORKSPACE/out/synth_fa_abc_lines.txt || true
+      - uses: actions/upload-artifact@v4
+        with: { name: knobs, path: out }
+  timing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - { name: base,     cfg: '' }
+          - { name: abc_d200, cfg: 'ABC_CLOCK_PERIOD_IN_PS=200' }
+          - { name: abc_d150, cfg: 'ABC_CLOCK_PERIOD_IN_PS=150' }
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        env:
+          EXTRA_ORFS_CFG: ${{ matrix.variant.cfg }}
+        run: |
+          set -euo pipefail
+          get() { sed -n "s/^$1=\([A-Za-z0-9_.-]*\).*/\1/p" request/flow_explore.txt | tr -d '\r' | head -1; }
+          export MODULES=$(get module) PERIOD=$(get period) OUT=timing_results/${{ matrix.variant.name }}
+          mkdir -p "$OUT"
+          bash flow/asap7/run_timing.sh 2>&1 | tee "$OUT/run.log"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing_${{ matrix.variant.name }}
+          path: |
+            timing_results/${{ matrix.variant.name }}/results
+            timing_results/${{ matrix.variant.name }}/run.log
+          if-no-files-found: warn
+  publish:
+    needs: [knobs, timing]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+        continue-on-error: true
+      - shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/res; cp -r artifacts/. /tmp/res/ 2>/dev/null || true
+          cp request/flow_explore.txt /tmp/res/request.txt
+          git rev-parse HEAD > /tmp/res/commit.txt
+          echo "run=${{ github.run_id }}" > /tmp/res/status.txt
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan flow-explore; git rm -rq --cached . ; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "flow explore"; git push -f origin flow-explore

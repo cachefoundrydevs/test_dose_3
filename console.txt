@@ -1,0 +1,51 @@
+Verilator 5.020 2024-01-01 rev (Debian 5.020-1)
+Icarus Verilog version 12.0 (stable) ()
+lint warnings: 239
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:180:10: Cell pin connected by name with empty reference: 'snoop_request_ready'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:183:10: Cell pin connected by name with empty reference: 'snoop_response_valid'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:185:10: Cell pin connected by name with empty reference: 'snoop_response_addr'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:186:10: Cell pin connected by name with empty reference: 'snoop_response_present'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:187:10: Cell pin connected by name with empty reference: 'snoop_response_dirty'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:188:10: Cell pin connected by name with empty reference: 'snoop_response_data'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:190:10: Cell pin connected by name with empty reference: 'amo_lock_timeout_sticky'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:191:10: Cell pin connected by name with empty reference: 'ecc_correctable_pulse'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:192:10: Cell pin connected by name with empty reference: 'ecc_uncorrectable_sticky'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:228:10: Cell pin connected by name with empty reference: 'm_axi_aruser'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:256:10: Cell pin connected by name with empty reference: 'rd_pend_valid'
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:257:10: Cell pin connected by name with empty reference: 'rd_pend_addr'
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:97:46: Bits of signal are not used: 'axi_wr_res_addr_id'[8:6]
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:136:29: Bits of signal are not used: 'axi_write_len'[7:3]
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:137:29: Bits of signal are not used: 'axi_read_len'[7:3]
+%Warning-UNOPTFLAT: rtl/common/l1d_fifo.v:96:21: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.g_fifo[0].u_fifo.free_next_r'
+%Warning-UNOPTFLAT: rtl/bank/miss/l1d_victim_cache.v:216:30: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv'
+%Warning-UNOPTFLAT: rtl/bank/miss/l1d_victim_cache.v:217:30: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].ta'
+LINT: PASS
+--- tb_l1d_soc_L1D_V14_COMPAT_TOP ---
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+issued 3000, answered 3000; AR 232 (one-beat 169), AW 198 (one-beat 142), W beats 366; stop cycles 0
+TEST PASSED
+tb/tests/tb_l1d_soc.v:482: $finish called at 83630000 (1ps)
+PASS tb_l1d_soc_L1D_V14_COMPAT_TOP
+--- tb_l1d_soc_L1D_V14_COMPAT_TOP_L1D_DEBUG_NOPS_200 ---
+[0] L1D B1 S0 ISSUE clean token  set=63 way=3
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S1 MAINT set=63 way=3 state=0        
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_cache.u_dcache.g_bank[1].u_bank.u_maint walked sets 0..63
+[0] L1D B1 S2 MAINT                                done
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_cache.u_dcache.g_bank[1].u_bank.u_maint: RUN -> FINAL (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_cache.u_dcache.g_bank[1].u_bank.u_maint: FINAL -> IDLE (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_cache.u_dcache.g_bank[1].u_bank.u_maint done
+[0] L1D TOP  MAINT all banks done
+issued 200, answered 200; AR 69 (one-beat 13), AW 53 (one-beat 13), W beats 173; stop cycles 0
+TEST PASSED
+tb/tests/tb_l1d_soc.v:482: $finish called at 27130000 (1ps)
+PASS tb_l1d_soc_L1D_V14_COMPAT_TOP_L1D_DEBUG_NOPS_200
+=== Summary: 2 passed, 0 failed ===

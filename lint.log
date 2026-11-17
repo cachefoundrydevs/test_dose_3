@@ -1,0 +1,944 @@
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:85:72: Cell pin connected by name with empty reference: 'free_slots'
+   85 |                 .used_slots (skid_used[sk*SKID_CNT_W +: SKID_CNT_W]), .free_slots (), .free_slots_next ()
+      |                                                                        ^~~~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.020
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:85:88: Cell pin connected by name with empty reference: 'free_slots_next'
+   85 |                 .used_slots (skid_used[sk*SKID_CNT_W +: SKID_CNT_W]), .free_slots (), .free_slots_next ()
+      |                                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:93:50: Cell pin connected by name with empty reference: 'empty'
+   93 |                 .front_data (skid_head_line_3), .empty (), .full (), .used_slots (), .free_slots (), .free_slots_next ()
+      |                                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:93:61: Cell pin connected by name with empty reference: 'full'
+   93 |                 .front_data (skid_head_line_3), .empty (), .full (), .used_slots (), .free_slots (), .free_slots_next ()
+      |                                                             ^~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:93:71: Cell pin connected by name with empty reference: 'used_slots'
+   93 |                 .front_data (skid_head_line_3), .empty (), .full (), .used_slots (), .free_slots (), .free_slots_next ()
+      |                                                                       ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:93:87: Cell pin connected by name with empty reference: 'free_slots'
+   93 |                 .front_data (skid_head_line_3), .empty (), .full (), .used_slots (), .free_slots (), .free_slots_next ()
+      |                                                                                       ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_port_front.v:93:103: Cell pin connected by name with empty reference: 'free_slots_next'
+   93 |                 .front_data (skid_head_line_3), .empty (), .full (), .used_slots (), .free_slots (), .free_slots_next ()
+      |                                                                                                       ^~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_resp_merge.v:53:18: Cell pin connected by name with empty reference: 'full'
+   53 |                 .full       (),
+      |                  ^~~~
+%Warning-PINCONNECTEMPTY: rtl/front/l1d_resp_merge.v:54:18: Cell pin connected by name with empty reference: 'used_slots'
+   54 |                 .used_slots (),
+      |                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/bank/fifo/l1d_snoop_buf.v:90:81: Cell has missing pin: 'allocate_group_onehot'
+   90 |     l1d_age_matrix #(.N(N), .IDX_W(SNP_ID_W), .ONEHOT_ALLOC(1), .ONEHOT_ENC(1)) u_age (
+      |                                                                                 ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/s0/l1d_bank_s0.v:374:10: Cell pin connected by name with empty reference: 'buffer_empty'
+  374 |         .buffer_empty         ()
+      |          ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/s1/l1d_s1_lookup.v:31:10: Cell pin connected by name with empty reference: 'any_set'
+   31 |         .any_set          ()
+      |          ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/arrays/l1d_tag_array.v:36:18: Cell pin connected by name with empty reference: 'b_rdata'
+   36 |                 .b_rdata ()
+      |                  ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/arrays/l1d_data_array.v:40:18: Cell pin connected by name with empty reference: 'b_rdata'
+   40 |                 .b_rdata ()
+      |                  ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:125:111: Cell pin connected by name with empty reference: 'grant_index'
+  125 |         .clk(clk), .rst(rst), .request_bits(e_ar_c), .grant_taken(axi_read_req_ready), .grant_onehot(ar_gc), .grant_index(), .any_request()
+      |                                                                                                               ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:125:127: Cell pin connected by name with empty reference: 'any_request'
+  125 |         .clk(clk), .rst(rst), .request_bits(e_ar_c), .grant_taken(axi_read_req_ready), .grant_onehot(ar_gc), .grant_index(), .any_request()
+      |                                                                                                                               ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:128:109: Cell pin connected by name with empty reference: 'grant_index'
+  128 |         .clk(clk), .rst(rst), .request_bits(e_resp_c), .grant_taken(response_taken), .grant_onehot(rs_gc), .grant_index(), .any_request()
+      |                                                                                                             ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:128:125: Cell pin connected by name with empty reference: 'any_request'
+  128 |         .clk(clk), .rst(rst), .request_bits(e_resp_c), .grant_taken(response_taken), .grant_onehot(rs_gc), .grant_index(), .any_request()
+      |                                                                                                                             ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:131:114: Cell pin connected by name with empty reference: 'grant_index'
+  131 |         .clk(clk), .rst(rst), .request_bits(e_tok_c), .grant_taken(refill_token_granted), .grant_onehot(tk_gc), .grant_index(), .any_request()
+      |                                                                                                                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr.v:131:130: Cell pin connected by name with empty reference: 'any_request'
+  131 |         .clk(clk), .rst(rst), .request_bits(e_tok_c), .grant_taken(refill_token_granted), .grant_onehot(tk_gc), .grant_index(), .any_request()
+      |                                                                                                                                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr_nc.v:70:10: Cell pin connected by name with empty reference: 'used_slots'
+   70 |         .used_slots (),
+      |          ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_mshr_nc.v:71:10: Cell pin connected by name with empty reference: 'free_slots'
+   71 |         .free_slots ()
+      |          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/bank/miss/l1d_mshr_nc.v:61:45: Cell has missing pin: 'free_slots_next'
+   61 |     l1d_fifo #(.WIDTH(Q_W), .DEPTH(QDEPTH)) u_q (
+      |                                             ^~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_victim_cache.v:138:10: Cell pin connected by name with empty reference: 'older_than_flat'
+  138 |         .older_than_flat (),
+      |          ^~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/miss/l1d_victim_cache.v:139:10: Cell pin connected by name with empty reference: 'oldest_onehot'
+  139 |         .oldest_onehot   (),
+      |          ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/bank/miss/l1d_victim_cache.v:132:46: Cell has missing pin: 'allocate_onehot'
+  132 |     l1d_age_matrix #(.N(N), .IDX_W(VC_ID_W)) u_age (
+      |                                              ^~~~~
+%Warning-PINMISSING: rtl/bank/miss/l1d_victim_cache.v:132:46: Cell has missing pin: 'allocate_group_onehot'
+  132 |     l1d_age_matrix #(.N(N), .IDX_W(VC_ID_W)) u_age (
+      |                                              ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/l1d_bank.v:433:38: Cell pin connected by name with empty reference: 's2_tag_fix'
+  433 |         .s2_tag_synd (s2_tag_synd), .s2_tag_fix (), .s2_tag_ce (s2_tag_ce), .s2_tag_ue (s2_tag_ue),
+      |                                      ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/l1d_bank.v:520:10: Cell pin connected by name with empty reference: 'reservation_valid'
+  520 |         .reservation_valid      (),
+      |          ^~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/l1d_bank.v:521:10: Cell pin connected by name with empty reference: 'reservation_line_addr'
+  521 |         .reservation_line_addr  (),
+      |          ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/bank/l1d_bank.v:679:10: Cell pin connected by name with empty reference: 'maint_busy'
+  679 |         .maint_busy         ()
+      |          ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/snoop/l1d_snoop_ctrl.v:71:18: Cell pin connected by name with empty reference: 'full'
+   71 |                 .full       (),
+      |                  ^~~~
+%Warning-PINCONNECTEMPTY: rtl/snoop/l1d_snoop_ctrl.v:72:18: Cell pin connected by name with empty reference: 'used_slots'
+   72 |                 .used_slots (),
+      |                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/snoop/l1d_snoop_ctrl.v:63:86: Cell has missing pin: 'free_slots_next'
+   63 |             l1d_fifo #(.WIDTH(SNPR_W), .DEPTH(RD), .CNT_W(SNPR_CNT_W), .POP_LAST(1)) u_fifo (
+      |                                                                                      ^~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi_ports.v:201:10: Cell pin connected by name with empty reference: 'ecc_correctable_pulse'
+  201 |         .ecc_correctable_pulse(), .ecc_uncorrectable_sticky(),
+      |          ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi_ports.v:201:36: Cell pin connected by name with empty reference: 'ecc_uncorrectable_sticky'
+  201 |         .ecc_correctable_pulse(), .ecc_uncorrectable_sticky(),
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:176:10: Cell pin connected by name with empty reference: 'vpu_req_stop'
+  176 |         .vpu_req_stop (), .vpu_resp_read_enable (1'b1), .vpu_resp_valid (), .vpu_resp_is_write_ack (),
+      |          ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:176:58: Cell pin connected by name with empty reference: 'vpu_resp_valid'
+  176 |         .vpu_req_stop (), .vpu_resp_read_enable (1'b1), .vpu_resp_valid (), .vpu_resp_is_write_ack (),
+      |                                                          ^~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:176:78: Cell pin connected by name with empty reference: 'vpu_resp_is_write_ack'
+  176 |         .vpu_req_stop (), .vpu_resp_read_enable (1'b1), .vpu_resp_valid (), .vpu_resp_is_write_ack (),
+      |                                                                              ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:177:10: Cell pin connected by name with empty reference: 'vpu_resp_master_id'
+  177 |         .vpu_resp_master_id (), .vpu_resp_rob_index (), .vpu_resp_data (),
+      |          ^~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:177:34: Cell pin connected by name with empty reference: 'vpu_resp_rob_index'
+  177 |         .vpu_resp_master_id (), .vpu_resp_rob_index (), .vpu_resp_data (),
+      |                                  ^~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_axi.v:177:58: Cell pin connected by name with empty reference: 'vpu_resp_data'
+  177 |         .vpu_resp_master_id (), .vpu_resp_rob_index (), .vpu_resp_data (),
+      |                                                          ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_soc.v:235:10: Cell pin connected by name with empty reference: 'rd_pend_valid'
+  235 |         .rd_pend_valid (),
+      |          ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_soc.v:236:10: Cell pin connected by name with empty reference: 'rd_pend_addr'
+  236 |         .rd_pend_addr  ()
+      |          ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_single_port_axi.v:174:10: Cell pin connected by name with empty reference: 'ecc_correctable_pulse'
+  174 |         .ecc_correctable_pulse    (),
+      |          ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: dummy_l2/l1d_top_single_port_axi.v:175:10: Cell pin connected by name with empty reference: 'ecc_uncorrectable_sticky'
+  175 |         .ecc_uncorrectable_sticky (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:140:18: Cell pin connected by name with empty reference: 'used_slots'
+  140 |                 .used_slots (),
+      |                  ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:141:18: Cell pin connected by name with empty reference: 'free_slots'
+  141 |                 .free_slots ()
+      |                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/top/l1d_top_single_port.v:131:71: Cell has missing pin: 'free_slots_next'
+  131 |             l1d_fifo #(.WIDTH(STORE_PORT_BIT + 1), .DEPTH(INQ_DEPTH)) u_input_queue (
+      |                                                                       ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:251:10: Cell pin connected by name with empty reference: 'stop_1'
+  251 |         .stop_1               (),
+      |          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:270:10: Cell pin connected by name with empty reference: 'stop_3'
+  270 |         .stop_3               (),
+      |          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:278:10: Cell pin connected by name with empty reference: 'final_r_cache_hit_from_scheduler_1'
+  278 |         .final_r_cache_hit_from_scheduler_1 (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:279:10: Cell pin connected by name with empty reference: 'final_r_mem_size_from_scheduler_1'
+  279 |         .final_r_mem_size_from_scheduler_1  (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:280:10: Cell pin connected by name with empty reference: 'final_r_master_id_from_scheduler_1'
+  280 |         .final_r_master_id_from_scheduler_1 (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:281:10: Cell pin connected by name with empty reference: 'final_r_idx_from_scheduler_1'
+  281 |         .final_r_idx_from_scheduler_1       (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:282:10: Cell pin connected by name with empty reference: 'final_r_data_from_scheduler_1'
+  282 |         .final_r_data_from_scheduler_1      (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:291:10: Cell pin connected by name with empty reference: 'final_r_cache_hit_from_scheduler_3'
+  291 |         .final_r_cache_hit_from_scheduler_3 (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:292:10: Cell pin connected by name with empty reference: 'final_r_hit_rd_wr_from_scheduler_3'
+  292 |         .final_r_hit_rd_wr_from_scheduler_3 (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:293:10: Cell pin connected by name with empty reference: 'final_r_master_id_from_scheduler_3'
+  293 |         .final_r_master_id_from_scheduler_3 (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:294:10: Cell pin connected by name with empty reference: 'final_r_idx_from_scheduler_3'
+  294 |         .final_r_idx_from_scheduler_3       (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/top/l1d_top_single_port.v:295:10: Cell pin connected by name with empty reference: 'final_r_data_from_scheduler_3'
+  295 |         .final_r_data_from_scheduler_3      (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:180:10: Cell pin connected by name with empty reference: 'snoop_request_ready'
+  180 |         .snoop_request_ready       (),
+      |          ^~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:183:10: Cell pin connected by name with empty reference: 'snoop_response_valid'
+  183 |         .snoop_response_valid      (),
+      |          ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:185:10: Cell pin connected by name with empty reference: 'snoop_response_addr'
+  185 |         .snoop_response_addr       (),
+      |          ^~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:186:10: Cell pin connected by name with empty reference: 'snoop_response_present'
+  186 |         .snoop_response_present    (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:187:10: Cell pin connected by name with empty reference: 'snoop_response_dirty'
+  187 |         .snoop_response_dirty      (),
+      |          ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:188:10: Cell pin connected by name with empty reference: 'snoop_response_data'
+  188 |         .snoop_response_data       (),
+      |          ^~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:190:10: Cell pin connected by name with empty reference: 'amo_lock_timeout_sticky'
+  190 |         .amo_lock_timeout_sticky   (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:191:10: Cell pin connected by name with empty reference: 'ecc_correctable_pulse'
+  191 |         .ecc_correctable_pulse     (),
+      |          ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:192:10: Cell pin connected by name with empty reference: 'ecc_uncorrectable_sticky'
+  192 |         .ecc_uncorrectable_sticky  (),
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:228:10: Cell pin connected by name with empty reference: 'm_axi_aruser'
+  228 |         .m_axi_aruser  (),
+      |          ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:256:10: Cell pin connected by name with empty reference: 'rd_pend_valid'
+  256 |         .rd_pend_valid (),
+      |          ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: wrapper/dcache_v5_v14_compat.v:257:10: Cell pin connected by name with empty reference: 'rd_pend_addr'
+  257 |         .rd_pend_addr  ()
+      |          ^~~~~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/stream/l1d_pf_stream.v:174:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  174 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/stream/l1d_pf_stream.v:146:13: ... Location of original declaration
+  146 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/stream/l1d_pf_stream.v:182:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  182 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/stream/l1d_pf_stream.v:146:13: ... Location of original declaration
+  146 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/stream/l1d_pf_stream.v:249:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  249 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/stream/l1d_pf_stream.v:146:13: ... Location of original declaration
+  146 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/stream/l1d_pf_stream.v:312:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  312 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/stream/l1d_pf_stream.v:146:13: ... Location of original declaration
+  146 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/stream/l1d_pf_stream.v:331:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  331 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/stream/l1d_pf_stream.v:146:13: ... Location of original declaration
+  146 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:222:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  222 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:140:13: ... Location of original declaration
+  140 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:234:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  234 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:140:13: ... Location of original declaration
+  140 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:267:17: Declaration of signal hides declaration in upper scope: 'way_idx'
+  267 |         integer way_idx;
+      |                 ^~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:141:13: ... Location of original declaration
+  141 |     integer way_idx;
+      |             ^~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:328:17: Declaration of signal hides declaration in upper scope: 'entry_idx'
+  328 |         integer entry_idx;
+      |                 ^~~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:140:13: ... Location of original declaration
+  140 |     integer entry_idx;
+      |             ^~~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:383:17: Declaration of signal hides declaration in upper scope: 'way_idx'
+  383 |         integer way_idx;
+      |                 ^~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:141:13: ... Location of original declaration
+  141 |     integer way_idx;
+      |             ^~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_core.v:453:17: Declaration of signal hides declaration in upper scope: 'way_idx'
+  453 |         integer way_idx;
+      |                 ^~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_core.v:141:13: ... Location of original declaration
+  141 |     integer way_idx;
+      |             ^~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_expand.v:74:17: Declaration of signal hides declaration in upper scope: 'slot_idx'
+   74 |         integer slot_idx;
+      |                 ^~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_expand.v:69:43: ... Location of original declaration
+   69 |     integer                               slot_idx;
+      |                                           ^~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_expand.v:92:17: Declaration of signal hides declaration in upper scope: 'slot_idx'
+   92 |         integer slot_idx;
+      |                 ^~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_expand.v:69:43: ... Location of original declaration
+   69 |     integer                               slot_idx;
+      |                                           ^~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_expand.v:113:17: Declaration of signal hides declaration in upper scope: 'slot_idx'
+  113 |         integer slot_idx;
+      |                 ^~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_expand.v:69:43: ... Location of original declaration
+   69 |     integer                               slot_idx;
+      |                                           ^~~~~~~~
+%Warning-VARHIDDEN: rtl/prefetch/sms/l1d_pf_sms_expand.v:144:17: Declaration of signal hides declaration in upper scope: 'bank_idx'
+  144 |         integer bank_idx;
+      |                 ^~~~~~~~
+                    rtl/prefetch/sms/l1d_pf_sms_expand.v:70:43: ... Location of original declaration
+   70 |     integer                               bank_idx;
+      |                                           ^~~~~~~~
+%Warning-WIDTHTRUNC: dummy_l2/l2_pkt_axi_bridge.v:85:27: Operator VAR 'AXI_LEN' expects 8 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+   85 |    localparam [LEN_W-1:0] AXI_LEN = BEATS - 1;
+      |                           ^~~~~~~
+%Warning-WIDTHTRUNC: dummy_l2/l2_pkt_axi_bridge.v:86:21: Operator VAR 'AXI_SIZE' expects 3 bits on the Initial value, but Initial value's CLOG2 generates 32 bits.
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+   86 |    localparam [2:0] AXI_SIZE = $clog2(AXI_STRB_W);
+      |                     ^~~~~~~~
+%Warning-WIDTHTRUNC: rtl/l2/l1d_l2_port.v:39:31: Operator VAR 'LAST_BEAT' expects 2 bits on the Initial value, but Initial value's SUB generates 32 or 8 bits.
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+   39 |     localparam [BEAT_W-1:0]   LAST_BEAT = AXI_BEATS - 1;
+      |                               ^~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/bank/s3/l1d_bank_s3.v:28:31: Operator VAR 'SIZE_C' expects 3 bits on the Initial value, but Initial value's VARREF 'AXI_SIZE' generates 32 bits.
+                                                    : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s3'
+   28 |     localparam [2:0]          SIZE_C = AXI_SIZE;
+      |                               ^~~~~~
+%Warning-WIDTHTRUNC: rtl/bank/l1d_maint.v:34:30: Operator VAR 'LAST_SET' expects 6 bits on the Initial value, but Initial value's SUB generates 32 or 7 bits.
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_maint'
+   34 |     localparam [INDEX_W-1:0] LAST_SET = SETS - 1;
+      |                              ^~~~~~~~
+%Warning-WIDTHTRUNC: rtl/bank/l1d_maint.v:35:30: Operator VAR 'LAST_WAY' expects 2 bits on the Initial value, but Initial value's SUB generates 32 or 3 bits.
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_maint'
+   35 |     localparam [WAY_W-1:0]   LAST_WAY = WAYS - 1;
+      |                              ^~~~~~~~
+%Warning-WIDTHEXPAND: rtl/prefetch/stream/l1d_pf_stream.v:42:29: Operator VAR 'LAST_WIDE' expects 10 bits on the Initial value, but Initial value's VARREF 'LAST_LINE' generates 6 bits.
+                                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stream'
+   42 |     localparam [WIDE_W-1:0] LAST_WIDE  = LAST_LINE;
+      |                             ^~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/common/l1d_fifo.v:21:28: Operator VAR 'DEPTH_C' expects 4 bits on the Initial value, but Initial value's VARREF 'DEPTH' generates 32 bits.
+                                                : ... note: In instance 'dcache_v5_v14_compat.u_cache.g_input_queue.u_input_queue'
+   21 |     localparam [CNT_W-1:0] DEPTH_C  = DEPTH;
+      |                            ^~~~~~~
+%Warning-WIDTHTRUNC: rtl/common/l1d_arb_rr.v:38:17: Logical operator GENIF expects 1 bit on the If, but If's AND generates 32 or 2 bits.
+                                                  : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_snoop.u_arb'
+   38 |                 if ((ie >> ib) & 1) begin : g_set
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/common/l1d_ecc_fix.v:26:21: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'is_pow2' generates 32 bits.
+                                                   : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2.g_ecc_fix.u_tag_fix'
+   26 |                 if (!is_pow2) begin
+      |                     ^
+%Warning-WIDTHTRUNC: rtl/common/l1d_ecc_fix.v:37:36: Operator VAR 'POS' expects 7 bits on the Initial value, but Initial value's FUNCREF 'data_pos' generates 32 bits.
+                                                   : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2.g_ecc_fix.u_tag_fix'
+   37 |             localparam [HAM_W-1:0] POS = data_pos(d);
+      |                                    ^~~
+%Warning-WIDTHTRUNC: rtl/common/l1d_ecc_fix.v:37:36: Operator VAR 'POS' expects 6 bits on the Initial value, but Initial value's FUNCREF 'data_pos' generates 32 bits.
+                                                   : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2.g_ecc_fix.u_tag_fix'
+   37 |             localparam [HAM_W-1:0] POS = data_pos(d);
+      |                                    ^~~
+%Warning-WIDTHTRUNC: rtl/common/l1d_arb_rr.v:38:17: Logical operator GENIF expects 1 bit on the If, but If's AND generates 32 or 3 bits.
+                                                  : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr.u_ar_arb'
+   38 |                 if ((ie >> ib) & 1) begin : g_set
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/prefetch/sms/l1d_pf_sms_front.v:33:29: Operator VAR 'PORT_LAST' expects 2 bits on the Initial value, but Initial value's SUB generates 32 or 3 bits.
+                                                              : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_front'
+   33 |     localparam [PORT_W-1:0] PORT_LAST = N_PORTS - 1;
+      |                             ^~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/prefetch/sms/l1d_pf_sms_front.v:34:29: Operator VAR 'BANK_LAST' expects 2 bits on the Initial value, but Initial value's SUB generates 32 or 3 bits.
+                                                              : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_front'
+   34 |     localparam [BANK_W-1:0] BANK_LAST = N_BANKS - 1;
+      |                             ^~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/common/l1d_ecc_enc.v:24:21: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'is_pow2' generates 32 bits.
+                                                   : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s1.g_ecc.g_ecc_way[0].u_tag_syn.u_enc'
+   24 |                 if (!is_pow2) begin
+      |                     ^
+%Warning-WIDTHTRUNC: rtl/common/l1d_ecc_enc.v:36:62: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's AND generates 32 bits.
+                                                   : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s1.g_ecc.g_ecc_way[0].u_tag_syn.u_enc'
+   36 |                 ham_mask[d] = ((data_pos(d) >> ham_bit) & 1) ? 1'b1 : 1'b0;
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/common/l1d_age_matrix.v:57:27: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'allocate_index' generates 1 bits.
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_snp.u_age'
+   57 |                     if (i == allocate_index) older[i] <= {N{1'b0}};
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/common/l1d_age_matrix.v:57:27: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'allocate_index' generates 3 bits.
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker.u_age'
+   57 |                     if (i == allocate_index) older[i] <= {N{1'b0}};
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_front.v:67:33: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'train_rot_q' generates 2 bits.
+                                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_front'
+   67 |             rot_idx = (scan_idx + train_rot_q) % N_PORTS;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_front.v:81:33: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'evt_rot_q' generates 2 bits.
+                                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_front'
+   81 |             rot_idx = (scan_idx + evt_rot_q) % N_BANKS;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_req_tracker.v:482:64: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_seat' generates 3 bits.
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  482 |             s2_entry_onehot[s2_dec] = s2_cpu_valid && (s2_seat == s2_dec);
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_req_tracker.v:522:69: Operator LT expects 32 or 4 bits on the LHS, but LHS's VARREF 's2_seat' generates 3 bits.
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  522 |         s2_frees        = s2_cpu_valid && s2_free_entry && (s2_seat < NE);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_req_tracker.v:527:40: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'free_count_q' generates 4 bits.
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  527 |             count_plus  = free_count_q + 1 - fc_count;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/bank/s0/l1d_req_tracker.v:527:25: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  527 |             count_plus  = free_count_q + 1 - fc_count;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_req_tracker.v:528:40: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'free_count_q' generates 4 bits.
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  528 |             count_minus = free_count_q - fc_count;
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/bank/s0/l1d_req_tracker.v:528:25: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  528 |             count_minus = free_count_q - fc_count;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_mshr_entry.v:120:58: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[7].u_entry'
+  120 |             off_hi_r[a] <= (p_off[OFFSET_W-1:BEAT_OFF_W] == a);
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_mshr_entry.v:122:51: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[7].u_entry'
+  122 |             off_lo_r[a] <= (p_off[BEAT_OFF_W-1:0] == a);
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/bank/fifo/l1d_snoop_buf.v:177:60: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_action_entry_id' generates 1 bits.
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_snp'
+  177 |                 if (s2_action_valid && (s2_action_entry_id == s)) begin
+      |                                                            ^~
+%Warning-WIDTHTRUNC: rtl/prefetch/sms/l1d_pf_sms_expand.v:85:24: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'bit_idx' generates 32 bits.
+                                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+   85 |             bit_number = bit_idx;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/prefetch/sms/l1d_pf_sms_expand.v:132:24: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'bit_idx' generates 32 bits.
+                                                                : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  132 |             bit_number = bit_idx;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:147:25: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'x1_bank' generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  147 |             if (x1_bank == bank_idx) begin
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:168:52: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  168 |                         && (out_addr_q[BANK_W-1:0] == bank_idx)
+      |                                                    ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:219:43: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'x1_bank' generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  219 |                 else if (!(go && (x1_bank == bank_idx))
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:220:62: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  220 |                          && fb_valid && (fb_addr[BANK_W-1:0] == bank_idx)
+      |                                                              ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:213:37: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'x1_bank' generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  213 |                 if ((go && (x1_bank == bank_idx))
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/prefetch/sms/l1d_pf_sms_expand.v:214:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+  214 |                     && !(fb_valid && (fb_addr[BANK_W-1:0] == bank_idx)
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/bank/s3/l1d_bank_s3.v:126:34: Operator ASSIGNW expects 512 bits on the Assign RHS, but Assign RHS's VARREF 'n_wr_data' generates 128 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s3'
+  126 |     wire [LINE_W-1:0] n_wr_line  = n_wr_data;
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:216:47: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  216 |             line_q = line_q | ({LINE_W{s2_way == lw}} & s2_lines[lw*LINE_W +: LINE_W]);
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:234:58: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  234 |             hit_synd    = hit_synd    | ({HSYND_W{s2_way == ew}}  & s2_data_synd[ew*HSYND_W +: HSYND_W]);
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:235:59: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  235 |             hit_fix     = hit_fix     | ({GRANULES{s2_way == ew}} & s2_data_fix[ew*GRANULES +: GRANULES]);
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:236:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  236 |             hit_data_ce = hit_data_ce | ((s2_way == ew) & s2_data_ce[ew]);
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:237:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  237 |             hit_data_ue = hit_data_ue | ((s2_way == ew) & s2_data_ue[ew]);
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/bank/s2/l1d_bank_s2.v:303:61: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's2_way' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+  303 |             hit_data = hit_data | ({WRITE_DATA_WIDTH{s2_way == hw}} & s2_words[hw*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]);
+      |                                                             ^~
+%Warning-WIDTHEXPAND: rtl/bank/s1/l1d_bank_s1.v:327:71: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 's1_off' generates 6 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s1'
+  327 |             st_be[bi] = s1_line_op || ((bi >= s1_off) && (bi < s1_off + nby));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_bank_s0.v:311:57: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'r_port' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  311 |             r_is_port[cr_port]     = r_cpu_q && (r_port == cr_port);
+      |                                                         ^~
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_bank_s0.v:312:67: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's1_port' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  312 |             s1_is_port[cr_port]    = s1_lsu && !s1_pf && (s1_port == cr_port);
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/bank/s0/l1d_bank_s0.v:313:72: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'book_port_q' generates 2 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  313 |             issue_is_port[cr_port] = (book_entry_issue && (book_port_q == cr_port)) || (fresh_issue && fresh_port_onehot[cr_port]);
+      |                                                                        ^~
+%Warning-WIDTHEXPAND: rtl/front/l1d_bank_order.v:52:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'step_cnt' generates 3 bits.
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_front.g_bank[3].u_order'
+   52 |                 if (step_cnt == step_idx) rotate_by_count = rotate_left(pointer_onehot, step_idx);
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:70:41: Operator EQ expects 3 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   70 |             assign is_clean[g] = (st[g] == VC_VALID) && !dty[g] && !excl[g];
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:71:41: Operator EQ expects 3 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   71 |             assign is_dirty[g] = (st[g] == VC_VALID) &&  dty[g] && !excl[g];
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:72:41: Operator EQ expects 3 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   72 |             assign is_pend[g]  = (st[g] == VC_WBPEND) && !iss[g];
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:98:55: Operator AND expects 3 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   98 |             lk_st   = lk_st   | ({3{lk_pick[q]}}      & st[q]);
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:187:21: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 2 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  187 |             st_base = st[sn];
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:188:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'writeback_done_slot_id' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  188 |             if (writeback_done_valid && (writeback_done_slot_id == sn))     st_base = VC_FREE;
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:189:41: Operator EQ expects 3 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  189 |             if (drain_enable && (st[sn] == VC_VALID) && !dty[sn])           st_base = VC_FREE;
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:190:58: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'swap_start_slot' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  190 |             h_swp = swap_start_valid && (swap_start_slot == sn);
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:191:76: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'snoop_hit_slot' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  191 |             h_snp = snoop_hit_valid && snoop_invalidate && (snoop_hit_slot == sn);
+      |                                                                            ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:192:52: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'release_slot' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  192 |             h_rel = release_valid && (release_slot == sn);
+      |                                                    ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:193:50: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'insert_slot' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  193 |             h_ins = insert_valid && (insert_slot == sn);
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_victim_cache.v:201:67: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wb_slot' generates 3 bits.
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  201 |             h_hand    = wb_act && writeback_req_ready && (wb_slot == sn);
+      |                                                                   ^~
+%Warning-WIDTHTRUNC: rtl/bank/miss/l1d_victim_cache.v:250:24: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's VARREF 'VC_FREE' generates 3 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  250 |                 st[s]  <= VC_FREE;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/bank/miss/l1d_victim_cache.v:263:24: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 3 bits.
+                                                            : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  263 |                 st[s]  <= st_n[s];
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_mshr_nc.v:85:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'f_lane' generates 4 bits.
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_nc'
+   85 |             lane_oh_q[ql] <= (f_lane == ql);
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/bank/miss/l1d_mshr_nc.v:147:25: Operator ASSIGNW expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'h_size' generates 2 bits.
+                                                        : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_nc'
+  147 |     wire [2:0] h_axsize = h_size;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/top/l1d_prefetch_unit.v:246:80: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                        : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch'
+  246 |                 for_bank[bx] = cand[bx] & (a_line_q[bx][LA_BANK_LSB +: BANK_W] == bb) & pf_req_ready[bb];
+      |                                                                                ^~
+%Warning-WIDTHEXPAND: rtl/l2/l1d_l2_port.v:189:89: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'sel_offset' generates 6 bits.
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+  189 |             nc_read_mask[mask_bit] = (mask_bit >= sel_offset) && (mask_bit < sel_offset + nc_read_bytes);
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: dummy_l2/l2_pkt_axi_bridge.v:169:16: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+  169 |          n = n + rq_mask[km];
+      |                ^
+%Warning-WIDTHEXPAND: dummy_l2/l2_pkt_axi_bridge.v:261:33: Operator EQ expects 32 or 5 bits on the LHS, but LHS's VARREF 'resp_sel' generates 4 bits.
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+  261 |             rr_ptr <= (resp_sel == N_OUT - 1) ? {SLOT_W{1'b0}} :
+      |                                 ^~
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:97:46: Bits of signal are not used: 'axi_wr_res_addr_id'[8:6]
+                                                           : ... note: In instance 'dcache_v5_v14_compat'
+   97 |     input  wire [D_AXI_WRITE_ADDR_BITS-1:0]  axi_wr_res_addr_id,
+      |                                              ^~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:136:29: Bits of signal are not used: 'axi_write_len'[7:3]
+                                                            : ... note: In instance 'dcache_v5_v14_compat'
+  136 |     wire [7:0]              axi_write_len;
+      |                             ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: wrapper/dcache_v5_v14_compat.v:137:29: Bits of signal are not used: 'axi_read_len'[7:3]
+                                                            : ... note: In instance 'dcache_v5_v14_compat'
+  137 |     wire [7:0]              axi_read_len;
+      |                             ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: dummy_l2/l2_pkt_axi_bridge.v:26:37: Bits of signal are not used: 'm_axi_bresp'[0]
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+   26 |    input  wire [1:0]                m_axi_bresp,
+      |                                     ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: dummy_l2/l2_pkt_axi_bridge.v:31:37: Bits of signal are not used: 'm_axi_rresp'[0]
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+   31 |    input  wire [1:0]                m_axi_rresp,
+      |                                     ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: dummy_l2/l2_pkt_axi_bridge.v:117:27: Bits of signal are not used: 'j'[31:4]
+                                                          : ... note: In instance 'dcache_v5_v14_compat.u_axi_bridge'
+  117 |    integer                j;
+      |                           ^
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:112:41: Signal is not used: 'read_enable_from_lsu_3'
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  112 |     input  wire                         read_enable_from_lsu_3,
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:250:33: Signal is not used: 'bk_train_port'
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  250 |     wire [NB*PORT_W-1:0]        bk_train_port;
+      |                                 ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:464:26: Signal is not used: 'resp_for_port_3'
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  464 |     wire [NB-1:0]        resp_for_port_3;
+      |                          ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:465:26: Signal is not used: 'vpu_bank_resp'
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  465 |     wire [NB*VPKT_W-1:0] vpu_bank_resp;
+      |                          ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:479:23: Bits of signal are not used: 'merged_packet_0'[73:71]
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  479 |     wire [RESP_W-1:0] merged_packet_0;
+      |                       ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_top.v:480:23: Bits of signal are not used: 'merged_packet_1'[73:71]
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache'
+  480 |     wire [RESP_W-1:0] merged_packet_1;
+      |                       ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/front/l1d_resp_merge.v:31:26: Signal is not used: 'sel_idx'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_merge_2'
+   31 |     wire [BANK_W-1:0]    sel_idx;
+      |                          ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/l1d_bank.v:210:29: Signal is not used: 's2_amo1'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank'
+  210 |     wire                    s2_amo1;
+      |                             ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/l1d_bank.v:215:29: Signal is not used: 'st_merged'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank'
+  215 |     wire [LINE_W-1:0]       st_merged;
+      |                             ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/l1d_bank.v:241:29: Signal is not used: 'done_valid'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank'
+  241 |     wire                    done_valid;
+      |                             ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/l1d_bank.v:242:29: Signal is not used: 'done_seat'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank'
+  242 |     wire [SEAT_W-1:0]       done_seat;
+      |                             ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/snoop/l1d_snoop_ctrl.v:18:37: Bits of signal are not used: 'snoop_request_addr'[5:0]
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_snoop'
+   18 |     input  wire [ADDR_W-1:0]        snoop_request_addr;
+      |                                     ^~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/snoop/l1d_snoop_ctrl.v:50:23: Signal is not used: 'sel_idx'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_snoop'
+   50 |     wire [BANK_W-1:0] sel_idx;
+      |                       ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/l2/l1d_l2_port.v:48:40: Signal is not used: 'bank_read_req_burst_len'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+   48 |     input  wire [NB*8-1:0]             bank_read_req_burst_len;
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/l2/l1d_l2_port.v:63:40: Signal is not used: 'bank_write_req_burst_len'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+   63 |     input  wire [NB*8-1:0]             bank_write_req_burst_len;
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/l2/l1d_l2_port.v:64:40: Signal is not used: 'bank_write_req_size'
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+   64 |     input  wire [NB*3-1:0]             bank_write_req_size;
+      |                                        ^~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/l2/l1d_l2_port.v:98:29: Bits of signal are not used: 'sel_addr'[63:56]
+                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_l2_port'
+   98 |     wire [AXI_ADDR_W-1:0]   sel_addr;
+      |                             ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_prefetch_unit.v:38:38: Bits of signal are not used: 'evict_line_addr'[231:224,173:166,115:108,57:50]
+                                                        : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch'
+   38 |     input  wire [NB*LINE_ADDR_W-1:0] evict_line_addr;
+      |                                      ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/top/l1d_prefetch_unit.v:115:26: Bits of signal are not used: 'stride_addr'[5:0]
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch'
+  115 |     wire [ADDR_W-1:0]    stride_addr;
+      |                          ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/prefetch/stride/l1d_pf_stride.v:248:31: Bits of signal are not used: 'g_tgt'[5:0]
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stride'
+  248 |    wire [TGT_W-1:0]           g_tgt;
+      |                               ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/prefetch/stride/l1d_pf_stride.v:311:15: Bits of signal are not used: 'e'[31:6]
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stride'
+  311 |       integer e;
+      |               ^
+%Warning-UNUSEDSIGNAL: rtl/prefetch/stride/l1d_pf_stride.v:403:15: Bits of signal are not used: 'e'[31:6]
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stride'
+  403 |       integer e;
+      |               ^
+%Warning-UNUSEDSIGNAL: rtl/prefetch/stream/l1d_pf_stream.v:19:51: Bits of signal are not used: 'tr_addr'[5:0]
+                                                                : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stream'
+   19 |     input  wire [PA_W-1:0]                        tr_addr,
+      |                                                   ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/prefetch/stream/l1d_pf_stream.v:63:29: Bits of signal are not used: 's0_dn_diff'[9:6]
+                                                                : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_stream'
+   63 |     wire [WIDE_W-1:0]       s0_dn_diff;
+      |                             ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:106:40: Signal is not used: 's3_amo_v'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  106 |     input  wire                        s3_amo_v;
+      |                                        ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:107:40: Signal is not used: 'lock_valid'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  107 |     input  wire                        lock_valid;
+      |                                        ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:118:40: Signal is not used: 'm_resp_valid'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  118 |     input  wire                        m_resp_valid;
+      |                                        ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:119:40: Signal is not used: 'n_resp_valid'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  119 |     input  wire                        n_resp_valid;
+      |                                        ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:145:24: Signal is not used: 'r_pf_q'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  145 |     reg                r_pf_q;
+      |                        ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:195:28: Signal is not used: 'tracker_any_pins'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  195 |     wire                   tracker_any_pins;
+      |                            ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:198:28: Signal is not used: 'oldest_ready_set'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  198 |     wire [INDEX_W-1:0]     oldest_ready_set;
+      |                            ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:202:28: Signal is not used: 'oldest_ready_is_line_op'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  202 |     wire                   oldest_ready_is_line_op;
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:206:28: Signal is not used: 'arrival_book_set'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  206 |     wire [INDEX_W-1:0]     arrival_book_set;
+      |                            ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:210:28: Signal is not used: 'arrival_book_is_line_op'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  210 |     wire                   arrival_book_is_line_op;
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:215:28: Signal is not used: 'entry_pc_flat'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  215 |     wire [NE*PC_W-1:0]     entry_pc_flat;
+      |                            ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_bank_s0.v:216:28: Signal is not used: 'entry_valid_q'
+                                                       : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0'
+  216 |     wire [NE-1:0]          entry_valid_q;
+      |                            ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:51:40: Signal is not used: 's2_seat'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   51 |     input  wire [SEAT_W-1:0]           s2_seat;
+      |                                        ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:53:40: Signal is not used: 's2_mid'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   53 |     input  wire [MSHR_ID_W-1:0]        s2_mid;
+      |                                        ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:69:40: Signal is not used: 's2_wbpend'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   69 |     input  wire                        s2_wbpend;
+      |                                        ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:71:40: Signal is not used: 's2_vdirty'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   71 |     input  wire                        s2_vdirty;
+      |                                        ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:72:40: Signal is not used: 's2_vshared'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   72 |     input  wire                        s2_vshared;
+      |                                        ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s2/l1d_bank_s2.v:74:40: Signal is not used: 's2_slot'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s2'
+   74 |     input  wire [VC_ID_W-1:0]          s2_slot;
+      |                                        ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s3/l1d_bank_s3.v:30:40: Signal is not used: 'clk'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s3'
+   30 |     input  wire                        clk;
+      |                                        ^~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s3/l1d_bank_s3.v:31:40: Signal is not used: 'rst'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s3'
+   31 |     input  wire                        rst;
+      |                                        ^~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s3/l1d_bank_s3.v:53:25: Signal is not used: 'resp_free_all'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s3'
+   53 |     wire [4*RCNT_W-1:0] resp_free_all = {lsu_response_fifo_free_3, lsu_response_fifo_free_2, lsu_response_fifo_free_1, lsu_response_fifo_free_0};
+      |                         ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/arrays/l1d_bank_r.v:40:40: Bits of signal are not used: 's2_line'[57:8,1:0]
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_r'
+   40 |     input  wire [LINE_ADDR_W-1:0]      s2_line;
+      |                                        ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/arrays/l1d_bank_r.v:45:40: Bits of signal are not used: 's3_line'[57:8,1:0]
+                                                         : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_r'
+   45 |     input  wire [LINE_ADDR_W-1:0]      s3_line;
+      |                                        ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:112:32: Signal is not used: 'rs_i'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  112 |     wire [MSHR_ID_W-1:0] ar_i, rs_i, tk_i;
+      |                                ^~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:134:44: Bits of signal are not used: 'm7_ar_gm'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  134 |     wire [N-1:0] m7_ar_next, m7_ar_masked, m7_ar_gm, m7_ar_gu;
+      |                                            ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:134:54: Bits of signal are not used: 'm7_ar_gu'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  134 |     wire [N-1:0] m7_ar_next, m7_ar_masked, m7_ar_gm, m7_ar_gu;
+      |                                                      ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:159:44: Bits of signal are not used: 'm7_rs_gm'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  159 |     wire [N-1:0] m7_rs_next, m7_rs_masked, m7_rs_gm, m7_rs_gu;
+      |                                            ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:159:54: Bits of signal are not used: 'm7_rs_gu'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  159 |     wire [N-1:0] m7_rs_next, m7_rs_masked, m7_rs_gm, m7_rs_gu;
+      |                                                      ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:184:44: Bits of signal are not used: 'm7_tk_gm'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  184 |     wire [N-1:0] m7_tk_next, m7_tk_masked, m7_tk_gm, m7_tk_gu;
+      |                                            ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:184:54: Bits of signal are not used: 'm7_tk_gu'[0]
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  184 |     wire [N-1:0] m7_tk_next, m7_tk_masked, m7_tk_gm, m7_tk_gu;
+      |                                                      ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:208:18: Signal is not used: 'ar_sel'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  208 |     wire [N-1:0] ar_sel = {ar_g[N-1:1], ~|ar_g[N-1:1]};
+      |                  ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:209:18: Signal is not used: 'rs_sel'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  209 |     wire [N-1:0] rs_sel = {rs_g[N-1:1], ~|rs_g[N-1:1]};
+      |                  ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr.v:210:18: Signal is not used: 'tk_sel'
+                                                      : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_mshr'
+  210 |     wire [N-1:0] tk_sel = {tk_g[N-1:1], ~|tk_g[N-1:1]};
+      |                  ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_mshr_nc.v:99:26: Signal is not used: 'herr'
+                                                        : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_nc'
+   99 |     reg                  herr;
+      |                          ^~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_victim_cache.v:22:35: Signal is not used: 'lookup_line_addr'
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   22 |     input  wire [LINE_ADDR_W-1:0] lookup_line_addr;
+      |                                   ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_victim_cache.v:79:18: Signal is not used: 'lk_seen'
+                                                             : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+   79 |     reg          lk_seen;
+      |                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/miss/l1d_victim_cache.v:131:24: Signal is not used: 'any_clean'
+                                                              : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_vc'
+  131 |     wire               any_clean;
+      |                        ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/prefetch/sms/l1d_pf_sms_expand.v:23:49: Bits of signal are not used: 'fb_addr'[49:2]
+                                                                 : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_prefetch.u_prefetch.u_pf_sms.u_expand'
+   23 |     input  wire [LINE_ADDR_W-1:0]               fb_addr,
+      |                                                 ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_req_tracker.v:155:19: Bits of signal are not used: 'free_room'[8:5]
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  155 |     wire [NE:0]   free_room;
+      |                   ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_req_tracker.v:443:22: Signal is not used: 'older_than_flat'
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  443 |     wire [NE*NE-1:0] older_than_flat;
+      |                      ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/bank/s0/l1d_req_tracker.v:566:13: Signal is not driven, nor used: 'fg_lower'
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[3].u_bank.u_s0.u_tracker'
+  566 |     integer fg_lower;
+      |             ^~~~~~~~
+%Warning-BLKSEQ: rtl/front/l1d_port_front.v:212:24: Blocking assignment '=' in sequential logic process
+                                                  : ... Suggest using delayed assignment '<='
+  212 |             used_next  = {1'b0, used_now} + {{SKID_CNT_W{1'b0}}, push_now} - {{SKID_CNT_W{1'b0}}, pop_now};
+      |                        ^
+%Warning-BLKSEQ: rtl/bank/s0/l1d_req_tracker.v:721:26: Blocking assignment '=' in sequential logic process
+                                                     : ... Suggest using delayed assignment '<='
+  721 |                 chk_hits = 0;
+      |                          ^
+%Warning-BLKSEQ: rtl/bank/s0/l1d_req_tracker.v:723:83: Blocking assignment '=' in sequential logic process
+                                                     : ... Suggest using delayed assignment '<='
+  723 |                     if (alloc[chk_src] && src_entry[chk_src][chk_entry]) chk_hits = chk_hits + 1;
+      |                                                                                   ^
+%Warning-BLKSEQ: rtl/prefetch/sms/l1d_pf_sms_core.v:161:20: Blocking assignment '=' in sequential logic process
+                                                          : ... Suggest using delayed assignment '<='
+  161 |             folded = {SET_W{1'b0}};
+      |                    ^
+%Warning-BLKSEQ: rtl/prefetch/sms/l1d_pf_sms_core.v:163:23: Blocking assignment '=' in sequential logic process
+                                                          : ... Suggest using delayed assignment '<='
+  163 |                 folded[bit_idx % SET_W] = folded[bit_idx % SET_W]
+      |                       ^
+%Warning-BLKSEQ: rtl/prefetch/sms/l1d_pf_sms_core.v:174:20: Blocking assignment '=' in sequential logic process
+                                                          : ... Suggest using delayed assignment '<='
+  174 |             folded = {PHT_TAG_W{1'b0}};
+      |                    ^
+%Warning-BLKSEQ: rtl/prefetch/sms/l1d_pf_sms_core.v:176:51: Blocking assignment '=' in sequential logic process
+                                                          : ... Suggest using delayed assignment '<='
+  176 |                 folded[(bit_idx + 3) % PHT_TAG_W] =
+      |                                                   ^
+%Warning-UNOPTFLAT: rtl/common/l1d_fifo.v:96:21: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.g_fifo[0].u_fifo.free_next_r'
+                                               : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0'
+   96 |     reg [CNT_W-1:0] free_next_r;
+      |                     ^~~~~~~~~~~
+                    rtl/common/l1d_fifo.v:96:21:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.g_fifo[0].u_fifo.free_next_r
+                    rtl/common/l1d_fifo.v:19:29:      Example path: ASSIGNW
+                    rtl/front/l1d_resp_merge.v:19:40:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.bank_response_fifo_free_next
+                    rtl/bank/l1d_bank.v:65:37:      Example path: ASSIGNW
+                    rtl/bank/s0/l1d_bank_s0.v:292:33:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_s0.free_next_flat
+                    rtl/bank/s0/l1d_bank_s0.v:309:5:      Example path: ALWAYS
+                    rtl/bank/s0/l1d_bank_s0.v:306:26:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_s0.port_miss_ok
+                    rtl/bank/s3/l1d_bank_s3.v:105:23:      Example path: ASSIGNW
+                    rtl/bank/l1d_bank.v:243:29:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.m_resp_ack
+                    rtl/bank/s3/l1d_bank_s3.v:108:32:      Example path: ASSIGNW
+                    rtl/bank/l1d_bank.v:59:37:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.__Vcellout__g_bank[0].u_bank__lsu_response_packet
+                    rtl/top/l1d_top.v:470:76:      Example path: ASSIGNW
+                    rtl/top/l1d_top.v:461:26:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.resp_for_port_0
+                    rtl/common/l1d_arb_rr.v:30:40:      Example path: ASSIGNW
+                    rtl/common/l1d_arb_rr.v:30:40:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.u_arb.__VdfgTmp_h89c74c72__0
+                    rtl/common/l1d_arb_rr.v:47:5:      Example path: ALWAYS
+                    rtl/front/l1d_resp_merge.v:30:26:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.sel_gnt
+                    rtl/common/l1d_fifo.v:42:18:      Example path: ASSIGNW
+                    rtl/common/l1d_fifo.v:42:10:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.g_fifo[0].u_fifo.do_push
+                    rtl/common/l1d_fifo.v:98:5:      Example path: ALWAYS
+                    rtl/common/l1d_fifo.v:96:21:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.u_merge_0.g_fifo[0].u_fifo.free_next_r
+%Warning-UNOPTFLAT: rtl/bank/miss/l1d_victim_cache.v:216:30: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv'
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc'
+  216 |             wire [LK_PW-1:0] tv [0:2*N-2];
+      |                              ^~
+                    rtl/bank/miss/l1d_victim_cache.v:216:30:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv
+                    rtl/bank/miss/l1d_victim_cache.v:228:35:      Example path: ASSIGNW
+                    rtl/bank/miss/l1d_victim_cache.v:216:30:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv
+%Warning-UNOPTFLAT: rtl/bank/miss/l1d_victim_cache.v:217:30: Signal unoptimizable: Circular combinational logic: 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].ta'
+                                                           : ... note: In instance 'dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc'
+  217 |             wire             ta [0:2*N-2];
+      |                              ^~
+                    rtl/bank/miss/l1d_victim_cache.v:217:30:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].ta
+                    rtl/bank/miss/l1d_victim_cache.v:228:35:      Example path: ASSIGNW
+                    rtl/bank/miss/l1d_victim_cache.v:216:30:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv
+                    rtl/bank/miss/l1d_victim_cache.v:228:35:      Example path: ASSIGNW
+                    rtl/bank/miss/l1d_victim_cache.v:216:30:      Example path: dcache_v5_v14_compat.u_cache.u_dcache.g_bank[0].u_bank.u_vc.g_lkd[0].tv

@@ -209,6 +209,8 @@ module l1d_bank_s0 #(
     wire                   arrival_book_is_write;
     wire                   arrival_book_is_line_op;
     wire                   arrival_book_is_amo;
+    wire                   arrival_book_credit_ok;
+    reg  [LSU_PORTS-1:0] credit_book_next;
     wire [NE-1:0]          book_entry_onehot;
     wire [NE-1:0]          issue_entry_onehot;
     wire [NE*REQ_W-1:0]    entry_packet_flat;
@@ -240,6 +242,7 @@ module l1d_bank_s0 #(
         .credit_q_1                (credit_q[1]),
         .credit_q_2                (credit_q[2]),
         .credit_q_3                (credit_q[3]),
+        .credit_book_next          (credit_book_next),
         .fresh_issue               (fresh_issue),
         .fresh_port_onehot         (fresh_port_onehot),
         .fresh_entry_onehot        (fresh_entry_onehot),
@@ -265,6 +268,7 @@ module l1d_bank_s0 #(
         .arrival_book_is_write     (arrival_book_is_write),
         .arrival_book_is_line_op   (arrival_book_is_line_op),
         .arrival_book_is_amo       (arrival_book_is_amo),
+        .arrival_book_credit_ok    (arrival_book_credit_ok),
         .book_entry_onehot         (book_entry_onehot),
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
@@ -300,7 +304,6 @@ module l1d_bank_s0 #(
     reg  [LSU_PORTS-1:0] s1_is_port;
     reg  [LSU_PORTS-1:0] issue_is_port;
     reg  [LSU_PORTS-1:0] credit_next;
-    reg  [LSU_PORTS-1:0] credit_book_next;
     reg  [LSU_PORTS-1:0] credit_book_if_none;
     reg  [LSU_PORTS-1:0] credit_book_if_issue;
     reg  [LSU_PORTS-1:0] port_miss_ok;
@@ -330,7 +333,7 @@ module l1d_bank_s0 #(
     wire entry_credit_ok;
     wire arrival_credit_ok;
     assign entry_credit_ok   = credit_book_next[oldest_ready_port];
-    assign arrival_credit_ok = credit_book_next[arrival_book_port];
+    assign arrival_credit_ok = arrival_book_credit_ok;
     wire                   sn_sel_valid;
     wire                   sn_sel_inv;
     wire [SNP_ID_W-1:0]    sn_sel_id;

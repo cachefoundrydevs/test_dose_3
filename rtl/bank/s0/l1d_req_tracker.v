@@ -10,11 +10,11 @@ module l1d_req_tracker #(
     arrival_packet_0, arrival_packet_1, arrival_packet_2, arrival_packet_3, arrival_pc_0, arrival_pc_1,
     arrival_pc_2, arrival_pc_3, drain_request, drain_packet, drain_pc, vec_slot_available,
     vec_write_slot, vec_write_valid, fresh_allowed_q, credit_q_0, credit_q_1, credit_q_2,
-    credit_q_3, fresh_issue, fresh_port_onehot, fresh_entry_onehot, any_pins_arrival, arrival_allocated_0,
+    credit_q_3, credit_book_next, fresh_issue, fresh_port_onehot, fresh_entry_onehot, any_pins_arrival, arrival_allocated_0,
     arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated, oldest_ready_valid, oldest_ready_onehot,
     oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
     arrival_book_valid, arrival_book_entry_onehot, arrival_book_set, arrival_book_line, arrival_book_port, arrival_book_is_write,
-    arrival_book_is_line_op, arrival_book_is_amo, book_entry_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
+    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, book_entry_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
     s2_cpu_valid, s2_seat, s2_kill, s2_answered, act_valid, act_code,
     act_id, s2_train_sent, s2_seat_trained, s2_seat_pc, mshr_freed, vc_freed,
     nc_freed, free_count_q, entry_valid_q, tracker_empty,
@@ -47,6 +47,7 @@ module l1d_req_tracker #(
     input  wire credit_q_1;
     input  wire credit_q_2;
     input  wire credit_q_3;
+    input  wire [LSU_PORTS-1:0] credit_book_next;
     output wire fresh_issue;
     output wire [3:0]                  fresh_port_onehot;
     output wire [TRK_ENTRIES-1:0]      fresh_entry_onehot;
@@ -72,6 +73,7 @@ module l1d_req_tracker #(
     output wire arrival_book_is_write;
     output wire arrival_book_is_line_op;
     output wire arrival_book_is_amo;
+    output wire arrival_book_credit_ok;
     input  wire [TRK_ENTRIES-1:0]      book_entry_onehot;
     input  wire [TRK_ENTRIES-1:0]      issue_entry_onehot;
     output wire [TRK_ENTRIES*REQ_W-1:0] entry_packet_flat;
@@ -123,6 +125,7 @@ module l1d_req_tracker #(
     wire [NS-1:0]       src_place_ok;
     wire [NS-1:0]       eligible;
     wire [NS*INDEX_W-1:0] src_set;
+    wire [NS-1:0]       src_credit_ok;
     assign src_valid  = {drain_request, arrival_request_3, arrival_request_2, arrival_request_1, arrival_request_0};
     assign src_packet = {drain_packet, arrival_packet_3, arrival_packet_2, arrival_packet_1, arrival_packet_0};
     assign src_pc     = {drain_pc, arrival_pc_3, arrival_pc_2, arrival_pc_1, arrival_pc_0};
@@ -135,6 +138,7 @@ module l1d_req_tracker #(
             assign src_place_ok[src_idx]   = !src_line_store[src_idx] | vec_slot_available;
             assign eligible[src_idx]       = src_valid[src_idx] & src_place_ok[src_idx];
             assign src_set[src_idx*INDEX_W +: INDEX_W] = src_packet[src_idx*REQ_W + SET_IN_REQ +: INDEX_W];
+            assign src_credit_ok[src_idx]  = credit_book_next[src_packet[src_idx*REQ_W + REQ_PORT_LSB +: PORT_W]];
         end
     endgenerate
     assign any_pins_arrival = |src_valid[LSU_PORTS-1:0];
@@ -434,6 +438,7 @@ module l1d_req_tracker #(
     assign arrival_book_is_write     = ab_packet[REQ_RDWR_BIT];
     assign arrival_book_is_line_op   = ab_packet[REQ_LINE_BIT];
     assign arrival_book_is_amo       = ab_packet[REQ_AMO_BIT] & ab_packet[REQ_SEQ_BIT];
+    assign arrival_book_credit_ok    = |(arrival_pick & src_credit_ok);
     reg  [NE-1:0] ready_cand;
     integer rc_entry;
     always @* begin

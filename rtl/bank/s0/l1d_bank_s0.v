@@ -439,26 +439,15 @@ module l1d_bank_s0 #(
     reg                    book_is_write_next;
     reg                    book_is_amo_next;
     always @* begin
-        book_line_next     = {LINE_ADDR_W{1'b0}};
-        book_port_next     = {PORT_W{1'b0}};
-        book_is_write_next = 1'b0;
-        book_is_amo_next   = 1'b0;
-        if (book_now_snoop)  book_line_next = sn_sel_line;
-        if (book_now_refill) book_line_next = tok_line;
-        if (book_now_maint)  book_line_next = mt_line;
-        if (book_now_prefetch) book_line_next = pf_line_q;
-        if (book_now_entry) begin
-            book_line_next     = oldest_ready_line;
-            book_port_next     = oldest_ready_port;
-            book_is_write_next = oldest_ready_is_write;
-            book_is_amo_next   = oldest_ready_is_amo;
-        end
-        if (book_now_arrival) begin
-            book_line_next     = arrival_book_line;
-            book_port_next     = arrival_book_port;
-            book_is_write_next = arrival_book_is_write;
-            book_is_amo_next   = arrival_book_is_amo;
-        end
+        book_line_next     = (({LINE_ADDR_W{book_now_snoop}}    & sn_sel_line) |
+                              ({LINE_ADDR_W{book_now_refill}}   & tok_line) |
+                              ({LINE_ADDR_W{book_now_maint}}    & mt_line) |
+                              ({LINE_ADDR_W{book_now_prefetch}} & pf_line_q) |
+                              ({LINE_ADDR_W{book_now_entry}}    & oldest_ready_line)) |
+                             ({LINE_ADDR_W{book_now_arrival}}   & arrival_book_line);
+        book_port_next     = ({PORT_W{book_now_entry}} & oldest_ready_port) | ({PORT_W{book_now_arrival}} & arrival_book_port);
+        book_is_write_next = (book_now_entry & oldest_ready_is_write) | (book_now_arrival & arrival_book_is_write);
+        book_is_amo_next   = (book_now_entry & oldest_ready_is_amo)   | (book_now_arrival & arrival_book_is_amo);
     end
     integer cp_idx;
     always @(posedge clk) begin : book_fields_proc

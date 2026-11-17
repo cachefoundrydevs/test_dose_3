@@ -212,6 +212,7 @@ module l1d_bank_s0 #(
     wire                   arrival_book_credit_ok;
     reg  [LSU_PORTS-1:0] credit_book_next;
     wire [NE-1:0]          book_entry_onehot;
+    wire [NE-1:0]          book_ready_onehot;
     wire [NE-1:0]          issue_entry_onehot;
     wire [NE*REQ_W-1:0]    entry_packet_flat;
     wire [NE*PC_W-1:0]     entry_pc_flat;
@@ -390,7 +391,9 @@ module l1d_bank_s0 #(
     wire book_valid_q;
     wire [BOOK_KIND_W-1:0] book_kind_q;
     wire book_now_snoop, book_now_refill, book_now_maint;
-    wire book_now_entry, book_now_arrival, book_now_prefetch;
+    wire book_now_entry, book_now_prefetch;
+    wire book_now_arrival;
+    wire book_now_prefetch_no_arrival;
     wire amo_issued_now;
     wire store_in_flight_next;
     wire s2_amo_served;
@@ -423,9 +426,11 @@ module l1d_bank_s0 #(
         .book_now_maint       (book_now_maint),
         .book_now_entry       (book_now_entry),
         .book_now_arrival     (book_now_arrival),
-        .book_now_prefetch    (book_now_prefetch)
+        .book_now_prefetch    (book_now_prefetch),
+        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival)
     );
-    assign book_entry_onehot = ({NE{book_now_entry}} & oldest_ready_onehot) | ({NE{book_now_arrival}} & arrival_book_entry_onehot);
+    assign book_ready_onehot = {NE{book_now_entry}} & oldest_ready_onehot;
+    assign book_entry_onehot = book_ready_onehot | ({NE{book_now_arrival}} & arrival_book_entry_onehot);
     wire [LINE_ADDR_W-1:0] mt_line;
     assign mt_line = {{TAG_W{1'b0}}, mt_set, BANK_C};
     reg  [LINE_ADDR_W-1:0] book_line_q;
@@ -441,16 +446,23 @@ module l1d_bank_s0 #(
     reg  [PORT_W-1:0]      book_port_next;
     reg                    book_is_write_next;
     reg                    book_is_amo_next;
+    wire [LINE_ADDR_W-1:0] book_line_no_arrival;
+    wire [PORT_W-1:0]      book_port_no_arrival;
+    wire                   book_is_write_no_arrival;
+    wire                   book_is_amo_no_arrival;
+    assign book_line_no_arrival     = ({LINE_ADDR_W{book_now_snoop}}               & sn_sel_line) |
+                                      ({LINE_ADDR_W{book_now_refill}}              & tok_line) |
+                                      ({LINE_ADDR_W{book_now_maint}}               & mt_line) |
+                                      ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q) |
+                                      ({LINE_ADDR_W{book_now_entry}}               & oldest_ready_line);
+    assign book_port_no_arrival     = {PORT_W{book_now_entry}} & oldest_ready_port;
+    assign book_is_write_no_arrival = book_now_entry & oldest_ready_is_write;
+    assign book_is_amo_no_arrival   = book_now_entry & oldest_ready_is_amo;
     always @* begin
-        book_line_next     = (({LINE_ADDR_W{book_now_snoop}}    & sn_sel_line) |
-                              ({LINE_ADDR_W{book_now_refill}}   & tok_line) |
-                              ({LINE_ADDR_W{book_now_maint}}    & mt_line) |
-                              ({LINE_ADDR_W{book_now_prefetch}} & pf_line_q) |
-                              ({LINE_ADDR_W{book_now_entry}}    & oldest_ready_line)) |
-                             ({LINE_ADDR_W{book_now_arrival}}   & arrival_book_line);
-        book_port_next     = ({PORT_W{book_now_entry}} & oldest_ready_port) | ({PORT_W{book_now_arrival}} & arrival_book_port);
-        book_is_write_next = (book_now_entry & oldest_ready_is_write) | (book_now_arrival & arrival_book_is_write);
-        book_is_amo_next   = (book_now_entry & oldest_ready_is_amo)   | (book_now_arrival & arrival_book_is_amo);
+        book_line_next     = book_now_arrival ? arrival_book_line     : book_line_no_arrival;
+        book_port_next     = book_now_arrival ? arrival_book_port     : book_port_no_arrival;
+        book_is_write_next = book_now_arrival ? arrival_book_is_write : book_is_write_no_arrival;
+        book_is_amo_next   = book_now_arrival ? arrival_book_is_amo   : book_is_amo_no_arrival;
     end
     integer cp_idx;
     always @(posedge clk) begin : book_fields_proc

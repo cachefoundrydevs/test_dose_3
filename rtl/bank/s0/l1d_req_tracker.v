@@ -14,7 +14,7 @@ module l1d_req_tracker #(
     arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated, oldest_ready_valid, oldest_ready_onehot,
     oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
     arrival_book_valid, arrival_book_entry_onehot, arrival_book_set, arrival_book_line, arrival_book_port, arrival_book_is_write,
-    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, book_entry_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
+    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, book_entry_onehot, book_ready_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
     s2_cpu_valid, s2_seat, s2_kill, s2_answered, act_valid, act_code,
     act_id, s2_train_sent, s2_seat_trained, s2_seat_pc, mshr_freed, vc_freed,
     nc_freed, free_count_q, entry_valid_q, tracker_empty,
@@ -75,6 +75,7 @@ module l1d_req_tracker #(
     output wire arrival_book_is_amo;
     output wire arrival_book_credit_ok;
     input  wire [TRK_ENTRIES-1:0]      book_entry_onehot;
+    input  wire [TRK_ENTRIES-1:0]      book_ready_onehot;
     input  wire [TRK_ENTRIES-1:0]      issue_entry_onehot;
     output wire [TRK_ENTRIES*REQ_W-1:0] entry_packet_flat;
     output wire [TRK_ENTRIES*PC_W-1:0] entry_pc_flat;
@@ -430,7 +431,7 @@ module l1d_req_tracker #(
         ab_entry  = fresh_issue ? ab_entry_fresh  : ab_entry_nofresh;
         ab_packet = fresh_issue ? ab_packet_fresh : ab_packet_nofresh;
     end
-    assign arrival_book_valid        = |arrival_pick;
+    assign arrival_book_valid        = arrival_seen;
     assign arrival_book_entry_onehot = ab_entry;
     assign arrival_book_set          = ab_packet[SET_IN_REQ +: INDEX_W];
     assign arrival_book_line         = ab_packet[LINE_IN_REQ +: LINE_ADDR_W];
@@ -697,7 +698,7 @@ module l1d_req_tracker #(
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                             state_q[ent][TRK_READY_B] <= 1'b1;
                         end
-                        if (book_entry_onehot[ent] && state_q[ent][TRK_READY_B]) begin
+                        if (book_ready_onehot[ent] && state_q[ent][TRK_READY_B]) begin
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                             state_q[ent][TRK_BOOKED_B] <= 1'b1;
                         end

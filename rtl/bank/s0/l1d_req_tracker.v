@@ -644,6 +644,7 @@ module l1d_req_tracker #(
             end
         end else begin
             free_count_q <= free_count_next;
+            valid_dup_q  <= valid_q;
             for (ent = 0; ent < NE; ent = ent + 1) begin
                 if (!valid_q[ent]) begin
                     packet_q[ent] <= load_packet[ent];

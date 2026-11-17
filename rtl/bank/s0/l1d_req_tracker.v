@@ -152,8 +152,7 @@ module l1d_req_tracker #(
     end
     wire [NS-1:0] alloc;
     wire [NE:0]   free_room;
-    reg  [NE:0]   free_room_q;
-    assign free_room = free_room_q;
+    assign free_room = ~({(NE+1){1'b1}} << free_count_q);
     genvar al_idx;
     generate
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
@@ -349,13 +348,13 @@ module l1d_req_tracker #(
         for (rd_rank = 0; rd_rank < NA; rd_rank = rd_rank + 1) begin
             rank_deps_old[rd_rank] = {NE{1'b0}};
             rank_pair[rd_rank]     = {NA{1'b0}};
-            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1) begin
-                if (rank_onehot[rd_src][rd_rank])
+            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1)
+                if (rank_onehot[rd_src][rd_rank]) begin
                     rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
-                for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
-                    if (rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
-                        rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
-            end
+                    for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
+                        if (lower_pair[rd_src][rd_lower])
+                            rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
+                end
         end
         for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
             deps_load[dl_entry] = {NE{1'b0}};
@@ -478,29 +477,14 @@ module l1d_req_tracker #(
     reg  [TRK_CNT_W-1:0] free_count_pick;
     reg                  s2_frees;
     integer fc_count;
-    reg  [TRK_CNT_W-1:0] count_plus;
-    reg  [TRK_CNT_W-1:0] count_minus;
-    reg  [NE:0]          free_room_next;
     always @* begin
         s2_frees        = s2_cpu_valid && s2_free_entry && (s2_seat < NE);
         free_count_pick = {TRK_CNT_W{1'b0}};
-        free_room_next  = {(NE+1){1'b0}};
-        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1) begin
-            count_plus  = free_count_q + 1 - fc_count;
-            count_minus = free_count_q - fc_count;
+        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1)
             if (((fc_count == 0)  || rank_alloc[(fc_count > 0) ? fc_count - 1 : 0]) &&
-                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0])) begin
-                free_count_pick = free_count_pick | (s2_frees ? count_plus : count_minus);
-                free_room_next  = free_room_next |
-                                  (s2_frees ? ~({(NE+1){1'b1}} << count_plus) : ~({(NE+1){1'b1}} << count_minus));
-            end
-        end
-    end
-    always @(posedge clk) begin : free_room_proc
-        if (rst)
-            free_room_q <= ~({(NE+1){1'b1}} << NE_C);
-        else
-            free_room_q <= free_room_next;
+                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0]))
+                free_count_pick = free_count_pick |
+                                  (s2_frees ? (free_count_q + 1 - fc_count) : (free_count_q - fc_count));
     end
     wire [TRK_CNT_W-1:0] free_count_next;
     assign free_count_next = free_count_pick;

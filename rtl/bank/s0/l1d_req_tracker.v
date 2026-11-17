@@ -222,6 +222,20 @@ module l1d_req_tracker #(
             end
         end
     endgenerate
+    reg  [NA-1:0] rank_onehot [0:NS-1];
+    reg  [NA-1:0] rank_alloc;
+    integer ro_src;
+    integer ro_rank;
+    always @* begin
+        rank_alloc = {NA{1'b0}};
+        for (ro_src = 0; ro_src < NS; ro_src = ro_src + 1)
+            for (ro_rank = 0; ro_rank < NA; ro_rank = ro_rank + 1) begin
+                rank_onehot[ro_src][ro_rank] = alloc[ro_src] &&
+                    (rank[ro_src] == ((ro_rank < RANK_W) ? ((1 << ro_rank) - 1) :
+                                      (((1 << RANK_W) - 1) & ~((1 << (ro_rank - RANK_W)) - 1))));
+                rank_alloc[ro_rank] = rank_alloc[ro_rank] | rank_onehot[ro_src][ro_rank];
+            end
+    end
     reg  [NE-1:0] src_entry [0:NS-1];
     reg  [NS-1:0] data_sel [0:NE-1];
     reg  [NE-1:0] alloc_en;
@@ -241,15 +255,17 @@ module l1d_req_tracker #(
             alloc_en[se_entry] = 1'b0;
             for (se_src = 0; se_src < NS; se_src = se_src + 1) begin
                 data_sel[se_entry][se_src] = eligible[se_src] & src_entry[se_src][se_entry];
-                alloc_en[se_entry] = alloc_en[se_entry] | (alloc[se_src] & src_entry[se_src][se_entry]);
+                alloc_en[se_entry] = alloc_en[se_entry] |
+                    ((se_src < NA) &&
+                     rank_alloc[(se_src < NA) ? se_src : 0] &&
+                     free_pick[((se_src < NA) ? se_src : 0)*NE + se_entry]);
             end
         end
         for (se_rank = 0; se_rank < NA; se_rank = se_rank + 1) begin
             age_groups[se_rank*NE +: NE] = {NE{1'b0}};
             for (se_src = 0; se_src < NS; se_src = se_src + 1)
-                if (alloc[se_src] && (rank[se_src] == ((se_rank < RANK_W) ? ((1 << se_rank) - 1) :
-                                                       (((1 << RANK_W) - 1) & ~((1 << (se_rank - RANK_W)) - 1)))))
-                    age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | src_entry[se_src];
+                if ((se_src == se_rank) && rank_alloc[se_rank])
+                    age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | free_pick[se_rank*NE +: NE];
         end
     end
     reg  [REQ_W-1:0] load_packet [0:NE-1];
@@ -298,18 +314,55 @@ module l1d_req_tracker #(
     integer dp_src;
     integer dp_entry;
     integer dp_lower;
+    reg  [NE-1:0] deps_old [0:NS-1];
+    reg  [NS-1:0] lower_pair [0:NS-1];
     always @* begin
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
             for (dp_entry = 0; dp_entry < NE; dp_entry = dp_entry + 1)
-                deps_new[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
+                deps_old[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
                                              (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]) &
                                              (write_q[dp_entry] | src_write[dp_src]);
+            deps_new[dp_src]   = deps_old[dp_src];
+            lower_pair[dp_src] = {NS{1'b0}};
             for (dp_lower = 0; dp_lower < dp_src; dp_lower = dp_lower + 1) begin
                 same_set_pair = alloc[dp_lower] &&
                                 (src_set[dp_lower*INDEX_W +: INDEX_W] == src_set[dp_src*INDEX_W +: INDEX_W]) &&
                                 (src_write[dp_lower] || src_write[dp_src]);
+                lower_pair[dp_src][dp_lower] = same_set_pair;
                 if (same_set_pair)
                     deps_new[dp_src] = deps_new[dp_src] | src_entry[dp_lower];
+            end
+        end
+    end
+    reg  [NE-1:0] rank_deps_old [0:NA-1];
+    reg  [NA-1:0] rank_pair [0:NA-1];
+    reg  [NE-1:0] deps_load [0:NE-1];
+    integer rd_rank;
+    integer rd_src;
+    integer rd_lower;
+    integer dl_entry;
+    integer dl_rank;
+    integer dl_lower;
+    always @* begin
+        for (rd_rank = 0; rd_rank < NA; rd_rank = rd_rank + 1) begin
+            rank_deps_old[rd_rank] = {NE{1'b0}};
+            rank_pair[rd_rank]     = {NA{1'b0}};
+            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1)
+                if (rank_onehot[rd_src][rd_rank]) begin
+                    rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
+                    for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
+                        if (lower_pair[rd_src][rd_lower])
+                            rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
+                end
+        end
+        for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
+            deps_load[dl_entry] = {NE{1'b0}};
+            for (dl_rank = 0; dl_rank < NA; dl_rank = dl_rank + 1) begin
+                if (free_pick[dl_rank*NE + dl_entry])
+                    deps_load[dl_entry] = deps_load[dl_entry] | rank_deps_old[dl_rank];
+                for (dl_lower = 0; dl_lower < NA; dl_lower = dl_lower + 1)
+                    if (free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
+                        deps_load[dl_entry] = deps_load[dl_entry] | free_pick[dl_lower*NE +: NE];
             end
         end
     end
@@ -465,10 +518,7 @@ module l1d_req_tracker #(
                         state_q[ent][TRK_BOOKED_B] <= 1'b1;
                     else
                         state_q[ent][TRK_READY_B]  <= 1'b1;
-                    deps_q[ent] <= {NE{1'b0}};
-                    for (ac_src = 0; ac_src < NS; ac_src = ac_src + 1)
-                        if (alloc[ac_src] && src_entry[ac_src][ent])
-                            deps_q[ent] <= deps_new[ac_src];
+                    deps_q[ent] <= deps_load[ent];
                 end else if (valid_q[ent]) begin
                     deps_q[ent] <= deps_q[ent] & ~freed_now;
                     if (s2_entry_onehot[ent]) begin

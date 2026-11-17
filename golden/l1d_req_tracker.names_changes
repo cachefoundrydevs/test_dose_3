@@ -1,0 +1,27 @@
+# approved changes of names (user decision, iteration 6 of the tracker timing work): added or dropped items
++ DECL reg[NA-1:0]rank_onehot[0:NS-1]
++ DECL reg[NA-1:0]rank_alloc
++ DECL integer ro_src
++ DECL integer ro_rank
++ ALWAYS always @*
++ FOR for(ro_src=0;ro_src<NS;ro_src=ro_src+1)
++ FOR for(ro_rank=0;ro_rank<NA;ro_rank=ro_rank+1)
++ DECL reg[NE-1:0]deps_old[0:NS-1]
++ DECL reg[NS-1:0]lower_pair[0:NS-1]
++ DECL reg[NE-1:0]rank_deps_old[0:NA-1]
++ DECL reg[NA-1:0]rank_pair[0:NA-1]
++ DECL reg[NE-1:0]deps_load[0:NE-1]
++ DECL integer rd_rank
++ DECL integer rd_src
++ DECL integer rd_lower
++ DECL integer dl_entry
++ DECL integer dl_rank
++ DECL integer dl_lower
++ ALWAYS always @*
++ FOR for(rd_rank=0;rd_rank<NA;rd_rank=rd_rank+1)
++ FOR for(rd_src=0;rd_src<NS;rd_src=rd_src+1)
++ FOR for(rd_lower=0;rd_lower<NS;rd_lower=rd_lower+1)
++ FOR for(dl_entry=0;dl_entry<NE;dl_entry=dl_entry+1)
++ FOR for(dl_rank=0;dl_rank<NA;dl_rank=dl_rank+1)
++ FOR for(dl_lower=0;dl_lower<NA;dl_lower=dl_lower+1)
+- FOR for(ac_src=0;ac_src<NS;ac_src=ac_src+1)

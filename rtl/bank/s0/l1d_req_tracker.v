@@ -103,6 +103,7 @@ module l1d_req_tracker #(
     localparam [TRK_CNT_W-1:0] NE_C = NE;
     localparam [REQ_W-1:0] SLOT_MASK = {{(REQ_W-VEC_SLOT_W){1'b0}}, {VEC_SLOT_W{1'b1}}} << REQ_DATA_LSB;
     reg  [NE-1:0]           valid_q;
+    reg  [NE-1:0]           valid_dup_q;
     reg  [TRK_STATE_W-1:0]  state_q [0:NE-1];
     reg  [REQ_W-1:0]        packet_q [0:NE-1];
     reg  [PC_W-1:0]         pc_q [0:NE-1];
@@ -574,7 +575,7 @@ module l1d_req_tracker #(
     integer ks_part;
     always @* begin
         for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1)
-            ks_ge[ks_entry] = {{(GE_W-2){1'b0}}, !valid_q[ks_entry], 1'b1};
+            ks_ge[ks_entry] = {{(GE_W-2){1'b0}}, !valid_dup_q[ks_entry], 1'b1};
         for (ks_lv = 1; ks_lv <= KS_LV; ks_lv = ks_lv + 1)
             for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1) begin
                 ks_ge[ks_lv*NE + ks_entry] = {GE_W{1'b0}};
@@ -592,7 +593,7 @@ module l1d_req_tracker #(
             free_ge[fg_entry] = (fg_entry == 0) ? {{(GE_W-1){1'b0}}, 1'b1} :
                                 ks_ge[KS_LV*NE + ((fg_entry > 0) ? fg_entry - 1 : 0)];
             for (fr_rank = 0; fr_rank < 2 * NA; fr_rank = fr_rank + 1)
-                free_rank[fr_rank*NE + fg_entry] = !valid_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
+                free_rank[fr_rank*NE + fg_entry] = !valid_dup_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
                                                    !free_ge[fg_entry][fr_rank+1];
         end
         freed_any = |(freed_now & valid_q);
@@ -630,6 +631,7 @@ module l1d_req_tracker #(
     always @(posedge clk) begin : tracker_proc
         if (rst) begin
             valid_q      <= {NE{1'b0}};
+            valid_dup_q  <= {NE{1'b0}};
             write_q      <= {NE{1'b0}};
             wait_nc_q    <= {NE{1'b0}};
             trained_q    <= {NE{1'b0}};
@@ -651,6 +653,7 @@ module l1d_req_tracker #(
                 end
                 if (alloc_en[ent]) begin
                     valid_q[ent]     <= 1'b1;
+                    valid_dup_q[ent] <= 1'b1;
                     trained_q[ent]   <= 1'b0;
                     wait_nc_q[ent]   <= 1'b0;
                     wait_mshr_q[ent] <= {MSHR_ENTRIES{1'b0}};
@@ -668,6 +671,7 @@ module l1d_req_tracker #(
                     if (s2_entry_onehot[ent]) begin
                         if (s2_free_entry) begin
                             valid_q[ent] <= 1'b0;
+                            valid_dup_q[ent] <= 1'b0;
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                         end else if (s2_to_ready) begin
                             state_q[ent] <= {TRK_STATE_W{1'b0}};

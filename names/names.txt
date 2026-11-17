@@ -1,0 +1,99 @@
+approved + DECL reg[NE-1:0]valid_dup_q
+approved + DECL reg[INDEX_W-1:0]set_dup_q[0:NE-1]
+approved + DECL wire[NE:0]free_room
+approved + DECL reg[NE:0]free_room_q
+approved + DECL reg[NE:0]free_room_dup_q
+approved + DECL reg[NA*NE-1:0]free_pick_q
+approved + DECL reg[NA-1:0]rank_onehot[0:NS-1]
+approved + DECL reg[NA-1:0]rank_alloc
+approved + DECL integer ro_src
+approved + DECL integer ro_rank
+approved + ALWAYS always @*
+approved + FOR for(ro_src=0;ro_src<NS;ro_src=ro_src+1)
+approved + FOR for(ro_rank=0;ro_rank<NA;ro_rank=ro_rank+1)
+approved + DECL reg[NE-1:0]deps_old[0:NS-1]
+approved + DECL reg[NS-1:0]lower_pair[0:NS-1]
+approved + DECL reg[NE-1:0]rank_deps_old[0:NA-1]
+approved + DECL reg[NA-1:0]rank_pair[0:NA-1]
+approved + DECL reg[NE-1:0]deps_load[0:NE-1]
+approved + DECL integer rd_rank
+approved + DECL integer rd_src
+approved + DECL integer rd_lower
+approved + DECL integer dl_entry
+approved + DECL integer dl_rank
+approved + DECL integer dl_lower
+approved + ALWAYS always @*
+approved + FOR for(rd_rank=0;rd_rank<NA;rd_rank=rd_rank+1)
+approved + FOR for(rd_src=0;rd_src<NS;rd_src=rd_src+1)
+approved + FOR for(rd_lower=0;rd_lower<NS;rd_lower=rd_lower+1)
+approved + FOR for(dl_entry=0;dl_entry<NE;dl_entry=dl_entry+1)
+approved + FOR for(dl_rank=0;dl_rank<NA;dl_rank=dl_rank+1)
+approved + FOR for(dl_lower=0;dl_lower<NA;dl_lower=dl_lower+1)
+approved + DECL reg[NA-1:0]pick_any
+approved + DECL reg[NS-1:0]pair_block
+approved + DECL reg[NS-1:0]cand_nofresh
+approved + DECL reg[NS-1:0]cand_fresh
+approved + DECL reg[NS-1:0]pick_nofresh
+approved + DECL reg[NS-1:0]pick_fresh
+approved + DECL integer pb_rank
+approved + DECL integer pb_lower
+approved + FOR for(pb_rank=0;pb_rank<NA;pb_rank=pb_rank+1)
+approved + FOR for(pb_lower=0;pb_lower<NS;pb_lower=pb_lower+1)
+approved + FOR for(ab_src=0;ab_src<NS;ab_src=ab_src+1)
+approved + DECL reg[NE-1:0]ab_entry_nofresh
+approved + DECL reg[NE-1:0]ab_entry_fresh
+approved + DECL reg[REQ_W-1:0]ab_packet_nofresh
+approved + DECL reg[REQ_W-1:0]ab_packet_fresh
+approved + DECL reg[TRK_CNT_W-1:0]free_count_pick
+approved + DECL reg s2_frees
+approved + DECL integer fc_count
+approved + DECL reg[TRK_CNT_W-1:0]count_plus
+approved + DECL reg[TRK_CNT_W-1:0]count_minus
+approved + DECL reg[NE:0]free_room_next
+approved + DECL reg[NE:0]room_now
+approved + DECL reg[NE:0]room_plus
+approved + DECL reg[NE:0]room_minus
+approved + ALWAYS always @*
+approved + FOR for(fc_count=0;fc_count<=NA;fc_count=fc_count+1)
+approved + ALWAYS always @(posedge clk)
+approved + LABEL free_room_proc
+approved + DECL localparam GE_W = 2 * NA + 1
+approved + DECL reg[GE_W-1:0]free_ge[0:NE-1]
+approved + DECL reg[2*NA*NE-1:0]free_rank
+approved + DECL reg[GE_W-1:0]freed_ge
+approved + DECL reg freed_any
+approved + DECL reg[NA:0]alloc_n_onehot
+approved + DECL reg[NA*NE-1:0]free_pick_next
+approved + DECL reg[NA*NE-1:0]free_pick_kept
+approved + DECL reg[NA*NE-1:0]free_pick_freed
+approved + DECL integer fg_entry
+approved + DECL integer fg_lower
+approved + DECL integer fr_rank
+approved + DECL integer fn_pick
+approved + DECL integer fn_count
+approved + DECL localparam KS_LV = $clog2(NE)
+approved + DECL reg[GE_W-1:0]ks_ge[0:(KS_LV+1)*NE-1]
+approved + DECL integer ks_lv
+approved + DECL integer ks_entry
+approved + DECL integer ks_bit
+approved + DECL integer ks_part
+approved + ALWAYS always @*
+approved + FOR for(ks_entry=0;ks_entry<NE;ks_entry=ks_entry+1)
+approved + FOR for(ks_lv=1;ks_lv<=KS_LV;ks_lv=ks_lv+1)
+approved + FOR for(ks_entry=0;ks_entry<NE;ks_entry=ks_entry+1)
+approved + FOR for(ks_bit=0;ks_bit<GE_W;ks_bit=ks_bit+1)
+approved + FOR for(ks_part=0;ks_part<=ks_bit;ks_part=ks_part+1)
+approved + ALWAYS always @*
+approved + FOR for(fg_entry=0;fg_entry<NE;fg_entry=fg_entry+1)
+approved + FOR for(fr_rank=0;fr_rank<2*NA;fr_rank=fr_rank+1)
+approved + FOR for(fg_entry=0;fg_entry<NE;fg_entry=fg_entry+1)
+approved + FOR for(fn_count=0;fn_count<=NA;fn_count=fn_count+1)
+approved + FOR for(fn_pick=0;fn_pick<NA;fn_pick=fn_pick+1)
+approved + FOR for(fn_count=0;fn_count<=NA;fn_count=fn_count+1)
+approved + DECL integer fq_pick
+approved + ALWAYS always @(posedge clk)
+approved + LABEL free_pick_proc
+approved + FOR for(fq_pick=0;fq_pick<NA;fq_pick=fq_pick+1)
+approved - FOR for(ac_src=0;ac_src<NS;ac_src=ac_src+1)
+names: 233 items golden, 233 items current, 0 differences
+NAMES: PASS

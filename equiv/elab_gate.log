@@ -1,0 +1,1365 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gate.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/common/l1d_age_matrix.v
+Parsing Verilog input from `rtl/common/l1d_age_matrix.v' to AST representation.
+Generating RTLIL representation for module `\l1d_age_matrix'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/common/l1d_pri_enc.v
+Parsing Verilog input from `rtl/common/l1d_pri_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_pri_enc'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/bank/s0/l1d_req_tracker.v
+Parsing Verilog input from `rtl/bank/s0/l1d_req_tracker.v' to AST representation.
+Generating RTLIL representation for module `\l1d_req_tracker'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \l1d_req_tracker
+Used module:     \l1d_age_matrix
+Used module:         \l1d_pri_enc
+Parameter \N = 8
+Parameter \IDX_W = 3
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Generating RTLIL representation for module `$paramod$9eeafe1549ef80e08ee72281c647b8267694184e\l1d_pri_enc'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Parameter \MULTI_ALLOC = 1
+Parameter \MULTI_GROUPS = 4
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_age_matrix'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Parameter \MULTI_ALLOC = 1
+Parameter \MULTI_GROUPS = 4
+Generating RTLIL representation for module `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix'.
+
+4.4. Analyzing design hierarchy..
+Top module:  \l1d_req_tracker
+Used module:     $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix
+
+4.5. Analyzing design hierarchy..
+Top module:  \l1d_req_tracker
+Used module:     $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix
+Removing unused module `$paramod$9eeafe1549ef80e08ee72281c647b8267694184e\l1d_pri_enc'.
+Removing unused module `\l1d_pri_enc'.
+Removing unused module `\l1d_age_matrix'.
+Removed 3 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+Found and cleaned up 40 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+Cleaned up 41 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 8 switch rules as full_case in process $proc$rtl/common/l1d_age_matrix.v:83$5552 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 64 switch rules as full_case in process $proc$rtl/common/l1d_age_matrix.v:71$5423 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 1 switch rules as full_case in process $proc$rtl/common/l1d_age_matrix.v:44$5422 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 32 switch rules as full_case in process $proc$rtl/common/l1d_age_matrix.v:30$5403 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Removed 1 dead cases from process $proc$rtl/bank/s0/l1d_req_tracker.v:505$5398 in module l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:505$5398 in module l1d_req_tracker.
+Removed 1 dead cases from process $proc$rtl/bank/s0/l1d_req_tracker.v:504$5395 in module l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:504$5395 in module l1d_req_tracker.
+Marked 57 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:640$4997 in module l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:631$4996 in module l1d_req_tracker.
+Marked 68 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:595$4500 in module l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:549$2330 in module l1d_req_tracker.
+Marked 19 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:523$2238 in module l1d_req_tracker.
+Marked 25 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:389$1886 in module l1d_req_tracker.
+Marked 280 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:354$1377 in module l1d_req_tracker.
+Marked 10 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:324$1046 in module l1d_req_tracker.
+Marked 8 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:281$745 in module l1d_req_tracker.
+Marked 40 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:251$504 in module l1d_req_tracker.
+Removed a total of 2 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 21 redundant assignments.
+Promoted 660 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~672 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:83$5552'.
+     1/8: $8\g_oh_enc.idx_or[2:0]
+     2/8: $7\g_oh_enc.idx_or[2:0]
+     3/8: $6\g_oh_enc.idx_or[2:0]
+     4/8: $5\g_oh_enc.idx_or[2:0]
+     5/8: $4\g_oh_enc.idx_or[2:0]
+     6/8: $3\g_oh_enc.idx_or[2:0]
+     7/8: $2\g_oh_enc.idx_or[2:0]
+     8/8: $1\g_oh_enc.idx_or[2:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+     1/64: $64\oldest_onehot[7:7]
+     2/64: $63\oldest_onehot[7:7]
+     3/64: $62\oldest_onehot[7:7]
+     4/64: $61\oldest_onehot[7:7]
+     5/64: $60\oldest_onehot[7:7]
+     6/64: $59\oldest_onehot[7:7]
+     7/64: $58\oldest_onehot[7:7]
+     8/64: $57\oldest_onehot[7:7]
+     9/64: $56\oldest_onehot[6:6]
+    10/64: $55\oldest_onehot[6:6]
+    11/64: $54\oldest_onehot[6:6]
+    12/64: $53\oldest_onehot[6:6]
+    13/64: $52\oldest_onehot[6:6]
+    14/64: $51\oldest_onehot[6:6]
+    15/64: $50\oldest_onehot[6:6]
+    16/64: $49\oldest_onehot[6:6]
+    17/64: $48\oldest_onehot[5:5]
+    18/64: $47\oldest_onehot[5:5]
+    19/64: $46\oldest_onehot[5:5]
+    20/64: $45\oldest_onehot[5:5]
+    21/64: $44\oldest_onehot[5:5]
+    22/64: $43\oldest_onehot[5:5]
+    23/64: $42\oldest_onehot[5:5]
+    24/64: $41\oldest_onehot[5:5]
+    25/64: $40\oldest_onehot[4:4]
+    26/64: $39\oldest_onehot[4:4]
+    27/64: $38\oldest_onehot[4:4]
+    28/64: $37\oldest_onehot[4:4]
+    29/64: $36\oldest_onehot[4:4]
+    30/64: $35\oldest_onehot[4:4]
+    31/64: $34\oldest_onehot[4:4]
+    32/64: $33\oldest_onehot[4:4]
+    33/64: $32\oldest_onehot[3:3]
+    34/64: $31\oldest_onehot[3:3]
+    35/64: $30\oldest_onehot[3:3]
+    36/64: $29\oldest_onehot[3:3]
+    37/64: $28\oldest_onehot[3:3]
+    38/64: $27\oldest_onehot[3:3]
+    39/64: $26\oldest_onehot[3:3]
+    40/64: $25\oldest_onehot[3:3]
+    41/64: $24\oldest_onehot[2:2]
+    42/64: $23\oldest_onehot[2:2]
+    43/64: $22\oldest_onehot[2:2]
+    44/64: $21\oldest_onehot[2:2]
+    45/64: $20\oldest_onehot[2:2]
+    46/64: $19\oldest_onehot[2:2]
+    47/64: $18\oldest_onehot[2:2]
+    48/64: $17\oldest_onehot[2:2]
+    49/64: $16\oldest_onehot[1:1]
+    50/64: $15\oldest_onehot[1:1]
+    51/64: $14\oldest_onehot[1:1]
+    52/64: $13\oldest_onehot[1:1]
+    53/64: $12\oldest_onehot[1:1]
+    54/64: $11\oldest_onehot[1:1]
+    55/64: $10\oldest_onehot[1:1]
+    56/64: $9\oldest_onehot[1:1]
+    57/64: $8\oldest_onehot[0:0]
+    58/64: $7\oldest_onehot[0:0]
+    59/64: $6\oldest_onehot[0:0]
+    60/64: $5\oldest_onehot[0:0]
+    61/64: $4\oldest_onehot[0:0]
+    62/64: $3\oldest_onehot[0:0]
+    63/64: $2\oldest_onehot[0:0]
+    64/64: $1\oldest_onehot[0:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+     1/10: $2\i[31:0]
+     2/10: $1\i[31:0]
+     3/10: $0\older[7][7:0]
+     4/10: $0\older[6][7:0]
+     5/10: $0\older[5][7:0]
+     6/10: $0\older[4][7:0]
+     7/10: $0\older[3][7:0]
+     8/10: $0\older[2][7:0]
+     9/10: $0\older[1][7:0]
+    10/10: $0\older[0][7:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+     1/32: $4\multi_row_next[7][7:0]
+     2/32: $3\multi_row_next[7][7:0]
+     3/32: $2\multi_row_next[7][7:0]
+     4/32: $1\multi_row_next[7][7:0]
+     5/32: $4\multi_row_next[6][7:0]
+     6/32: $3\multi_row_next[6][7:0]
+     7/32: $2\multi_row_next[6][7:0]
+     8/32: $1\multi_row_next[6][7:0]
+     9/32: $4\multi_row_next[5][7:0]
+    10/32: $3\multi_row_next[5][7:0]
+    11/32: $2\multi_row_next[5][7:0]
+    12/32: $1\multi_row_next[5][7:0]
+    13/32: $4\multi_row_next[4][7:0]
+    14/32: $3\multi_row_next[4][7:0]
+    15/32: $2\multi_row_next[4][7:0]
+    16/32: $1\multi_row_next[4][7:0]
+    17/32: $4\multi_row_next[3][7:0]
+    18/32: $3\multi_row_next[3][7:0]
+    19/32: $2\multi_row_next[3][7:0]
+    20/32: $1\multi_row_next[3][7:0]
+    21/32: $4\multi_row_next[2][7:0]
+    22/32: $3\multi_row_next[2][7:0]
+    23/32: $2\multi_row_next[2][7:0]
+    24/32: $1\multi_row_next[2][7:0]
+    25/32: $4\multi_row_next[1][7:0]
+    26/32: $3\multi_row_next[1][7:0]
+    27/32: $2\multi_row_next[1][7:0]
+    28/32: $1\multi_row_next[1][7:0]
+    29/32: $4\multi_row_next[0][7:0]
+    30/32: $3\multi_row_next[0][7:0]
+    31/32: $2\multi_row_next[0][7:0]
+    32/32: $1\multi_row_next[0][7:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:505$5398'.
+     1/1: $1$mem2reg_rd$\deps_q$rtl/bank/s0/l1d_req_tracker.v:505$388_DATA[7:0]$5400
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:504$5395'.
+     1/1: $1$mem2reg_rd$\pc_q$rtl/bank/s0/l1d_req_tracker.v:504$387_DATA[63:0]$5397
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+     1/130: $0\state_q[7][3:0] [3]
+     2/130: $0\state_q[7][3:0] [0]
+     3/130: $0\state_q[7][3:0] [1]
+     4/130: $0\state_q[7][3:0] [2]
+     5/130: $0\state_q[6][3:0] [0]
+     6/130: $0\state_q[6][3:0] [1]
+     7/130: $0\state_q[6][3:0] [2]
+     8/130: $0\wait_nc_q[7:0] [6]
+     9/130: $0\trained_q[7:0] [6]
+    10/130: $0\valid_dup_q[7:0] [6]
+    11/130: $0\valid_q[7:0] [6]
+    12/130: $0\write_q[7:0] [6]
+    13/130: $0\state_q[5][3:0] [0]
+    14/130: $0\state_q[5][3:0] [1]
+    15/130: $0\state_q[5][3:0] [2]
+    16/130: $0\wait_nc_q[7:0] [5]
+    17/130: $0\trained_q[7:0] [5]
+    18/130: $0\valid_dup_q[7:0] [5]
+    19/130: $0\valid_q[7:0] [5]
+    20/130: $0\write_q[7:0] [5]
+    21/130: $0\state_q[4][3:0] [0]
+    22/130: $0\state_q[4][3:0] [1]
+    23/130: $0\state_q[4][3:0] [2]
+    24/130: $0\wait_nc_q[7:0] [4]
+    25/130: $0\trained_q[7:0] [4]
+    26/130: $0\valid_dup_q[7:0] [4]
+    27/130: $0\valid_q[7:0] [4]
+    28/130: $0\write_q[7:0] [4]
+    29/130: $0\state_q[3][3:0] [0]
+    30/130: $0\state_q[3][3:0] [1]
+    31/130: $0\state_q[3][3:0] [2]
+    32/130: $0\wait_nc_q[7:0] [3]
+    33/130: $0\trained_q[7:0] [3]
+    34/130: $0\valid_dup_q[7:0] [3]
+    35/130: $0\valid_q[7:0] [3]
+    36/130: $0\write_q[7:0] [3]
+    37/130: $0\state_q[2][3:0] [0]
+    38/130: $0\state_q[2][3:0] [1]
+    39/130: $0\state_q[2][3:0] [2]
+    40/130: $0\wait_nc_q[7:0] [2]
+    41/130: $0\trained_q[7:0] [2]
+    42/130: $0\valid_dup_q[7:0] [2]
+    43/130: $0\valid_q[7:0] [2]
+    44/130: $0\write_q[7:0] [2]
+    45/130: $0\state_q[1][3:0] [0]
+    46/130: $0\state_q[1][3:0] [1]
+    47/130: $0\state_q[1][3:0] [2]
+    48/130: $0\wait_nc_q[7:0] [1]
+    49/130: $0\trained_q[7:0] [1]
+    50/130: $0\valid_dup_q[7:0] [1]
+    51/130: $0\valid_q[7:0] [1]
+    52/130: $0\write_q[7:0] [1]
+    53/130: $0\state_q[0][3:0] [0]
+    54/130: $0\state_q[0][3:0] [1]
+    55/130: $0\state_q[0][3:0] [2]
+    56/130: $0\wait_nc_q[7:0] [0]
+    57/130: $0\trained_q[7:0] [0]
+    58/130: $0\valid_dup_q[7:0] [0]
+    59/130: $0\valid_q[7:0] [0]
+    60/130: $0\write_q[7:0] [0]
+    61/130: $0\set_dup_q[7][5:0]
+    62/130: $0\set_dup_q[6][5:0]
+    63/130: $0\set_dup_q[5][5:0]
+    64/130: $0\set_dup_q[4][5:0]
+    65/130: $0\set_dup_q[3][5:0]
+    66/130: $0\set_dup_q[2][5:0]
+    67/130: $0\set_dup_q[1][5:0]
+    68/130: $0\set_dup_q[0][5:0]
+    69/130: $0\free_count_q[3:0]
+    70/130: $0\state_q[1][3:0] [3]
+    71/130: $0\wait_vc_q[7][7:0]
+    72/130: $0\wait_vc_q[6][7:0]
+    73/130: $0\wait_vc_q[5][7:0]
+    74/130: $0\wait_vc_q[4][7:0]
+    75/130: $0\wait_vc_q[3][7:0]
+    76/130: $0\wait_vc_q[2][7:0]
+    77/130: $0\wait_vc_q[1][7:0]
+    78/130: $0\wait_vc_q[0][7:0]
+    79/130: $0\wait_mshr_q[7][7:0]
+    80/130: $0\wait_mshr_q[6][7:0]
+    81/130: $0\wait_mshr_q[5][7:0]
+    82/130: $0\wait_mshr_q[4][7:0]
+    83/130: $0\wait_mshr_q[3][7:0]
+    84/130: $0\wait_mshr_q[2][7:0]
+    85/130: $0\wait_mshr_q[1][7:0]
+    86/130: $0\wait_mshr_q[0][7:0]
+    87/130: $0\deps_q[7][7:0]
+    88/130: $0\deps_q[6][7:0]
+    89/130: $0\deps_q[5][7:0]
+    90/130: $0\deps_q[4][7:0]
+    91/130: $0\deps_q[3][7:0]
+    92/130: $0\deps_q[2][7:0]
+    93/130: $0\deps_q[1][7:0]
+    94/130: $0\deps_q[0][7:0]
+    95/130: $0\set_q[7][5:0]
+    96/130: $0\set_q[6][5:0]
+    97/130: $0\set_q[5][5:0]
+    98/130: $0\set_q[4][5:0]
+    99/130: $0\set_q[3][5:0]
+   100/130: $0\set_q[2][5:0]
+   101/130: $0\set_q[1][5:0]
+   102/130: $0\set_q[0][5:0]
+   103/130: $0\pc_q[7][63:0]
+   104/130: $0\pc_q[6][63:0]
+   105/130: $0\pc_q[5][63:0]
+   106/130: $0\pc_q[4][63:0]
+   107/130: $0\pc_q[3][63:0]
+   108/130: $0\pc_q[2][63:0]
+   109/130: $0\pc_q[1][63:0]
+   110/130: $0\pc_q[0][63:0]
+   111/130: $0\packet_q[7][147:0]
+   112/130: $0\packet_q[6][147:0]
+   113/130: $0\packet_q[5][147:0]
+   114/130: $0\packet_q[4][147:0]
+   115/130: $0\packet_q[3][147:0]
+   116/130: $0\packet_q[2][147:0]
+   117/130: $0\packet_q[1][147:0]
+   118/130: $0\packet_q[0][147:0]
+   119/130: $0\state_q[6][3:0] [3]
+   120/130: $0\wait_nc_q[7:0] [7]
+   121/130: $0\trained_q[7:0] [7]
+   122/130: $0\valid_dup_q[7:0] [7]
+   123/130: $0\valid_q[7:0] [7]
+   124/130: $0\write_q[7:0] [7]
+   125/130: $0\state_q[5][3:0] [3]
+   126/130: $0\state_q[4][3:0] [3]
+   127/130: $0\state_q[2][3:0] [3]
+   128/130: $0\state_q[3][3:0] [3]
+   129/130: $1\ent[31:0]
+   130/130: $0\state_q[0][3:0] [3]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:631$4996'.
+     1/5: $0\free_pick_q[31:0] [31:24]
+     2/5: $0\free_pick_q[31:0] [23:16]
+     3/5: $0\free_pick_q[31:0] [15:8]
+     4/5: $0\free_pick_q[31:0] [7:0]
+     5/5: $1\fq_pick[31:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+     1/128: $80\free_pick_freed[31:24]
+     2/128: $79\free_pick_freed[31:24]
+     3/128: $78\free_pick_freed[31:24]
+     4/128: $40\free_pick_kept[31:24]
+     5/128: $77\free_pick_freed[31:24]
+     6/128: $39\free_pick_kept[31:24]
+     7/128: $76\free_pick_freed[31:24]
+     8/128: $75\free_pick_freed[31:24]
+     9/128: $74\free_pick_freed[31:24]
+    10/128: $38\free_pick_kept[31:24]
+    11/128: $73\free_pick_freed[31:24]
+    12/128: $37\free_pick_kept[31:24]
+    13/128: $72\free_pick_freed[31:24]
+    14/128: $71\free_pick_freed[31:24]
+    15/128: $70\free_pick_freed[31:24]
+    16/128: $36\free_pick_kept[31:24]
+    17/128: $69\free_pick_freed[31:24]
+    18/128: $35\free_pick_kept[31:24]
+    19/128: $68\free_pick_freed[31:24]
+    20/128: $67\free_pick_freed[31:24]
+    21/128: $66\free_pick_freed[31:24]
+    22/128: $34\free_pick_kept[31:24]
+    23/128: $65\free_pick_freed[31:24]
+    24/128: $33\free_pick_kept[31:24]
+    25/128: $64\free_pick_freed[31:24]
+    26/128: $63\free_pick_freed[31:24]
+    27/128: $62\free_pick_freed[31:24]
+    28/128: $32\free_pick_kept[31:24]
+    29/128: $61\free_pick_freed[31:24]
+    30/128: $31\free_pick_kept[31:24]
+    31/128: $60\free_pick_freed[23:16]
+    32/128: $59\free_pick_freed[23:16]
+    33/128: $58\free_pick_freed[23:16]
+    34/128: $30\free_pick_kept[23:16]
+    35/128: $57\free_pick_freed[23:16]
+    36/128: $29\free_pick_kept[23:16]
+    37/128: $56\free_pick_freed[23:16]
+    38/128: $55\free_pick_freed[23:16]
+    39/128: $54\free_pick_freed[23:16]
+    40/128: $28\free_pick_kept[23:16]
+    41/128: $53\free_pick_freed[23:16]
+    42/128: $27\free_pick_kept[23:16]
+    43/128: $52\free_pick_freed[23:16]
+    44/128: $51\free_pick_freed[23:16]
+    45/128: $50\free_pick_freed[23:16]
+    46/128: $26\free_pick_kept[23:16]
+    47/128: $49\free_pick_freed[23:16]
+    48/128: $25\free_pick_kept[23:16]
+    49/128: $48\free_pick_freed[23:16]
+    50/128: $47\free_pick_freed[23:16]
+    51/128: $46\free_pick_freed[23:16]
+    52/128: $24\free_pick_kept[23:16]
+    53/128: $45\free_pick_freed[23:16]
+    54/128: $23\free_pick_kept[23:16]
+    55/128: $44\free_pick_freed[23:16]
+    56/128: $43\free_pick_freed[23:16]
+    57/128: $42\free_pick_freed[23:16]
+    58/128: $22\free_pick_kept[23:16]
+    59/128: $41\free_pick_freed[23:16]
+    60/128: $21\free_pick_kept[23:16]
+    61/128: $40\free_pick_freed[15:8]
+    62/128: $39\free_pick_freed[15:8]
+    63/128: $38\free_pick_freed[15:8]
+    64/128: $20\free_pick_kept[15:8]
+    65/128: $37\free_pick_freed[15:8]
+    66/128: $19\free_pick_kept[15:8]
+    67/128: $36\free_pick_freed[15:8]
+    68/128: $35\free_pick_freed[15:8]
+    69/128: $34\free_pick_freed[15:8]
+    70/128: $18\free_pick_kept[15:8]
+    71/128: $33\free_pick_freed[15:8]
+    72/128: $17\free_pick_kept[15:8]
+    73/128: $32\free_pick_freed[15:8]
+    74/128: $31\free_pick_freed[15:8]
+    75/128: $30\free_pick_freed[15:8]
+    76/128: $16\free_pick_kept[15:8]
+    77/128: $29\free_pick_freed[15:8]
+    78/128: $15\free_pick_kept[15:8]
+    79/128: $28\free_pick_freed[15:8]
+    80/128: $27\free_pick_freed[15:8]
+    81/128: $26\free_pick_freed[15:8]
+    82/128: $14\free_pick_kept[15:8]
+    83/128: $25\free_pick_freed[15:8]
+    84/128: $13\free_pick_kept[15:8]
+    85/128: $24\free_pick_freed[15:8]
+    86/128: $23\free_pick_freed[15:8]
+    87/128: $22\free_pick_freed[15:8]
+    88/128: $12\free_pick_kept[15:8]
+    89/128: $21\free_pick_freed[15:8]
+    90/128: $11\free_pick_kept[15:8]
+    91/128: $20\free_pick_freed[7:0]
+    92/128: $19\free_pick_freed[7:0]
+    93/128: $18\free_pick_freed[7:0]
+    94/128: $10\free_pick_kept[7:0]
+    95/128: $17\free_pick_freed[7:0]
+    96/128: $9\free_pick_kept[7:0]
+    97/128: $16\free_pick_freed[7:0]
+    98/128: $15\free_pick_freed[7:0]
+    99/128: $14\free_pick_freed[7:0]
+   100/128: $8\free_pick_kept[7:0]
+   101/128: $13\free_pick_freed[7:0]
+   102/128: $7\free_pick_kept[7:0]
+   103/128: $12\free_pick_freed[7:0]
+   104/128: $11\free_pick_freed[7:0]
+   105/128: $10\free_pick_freed[7:0]
+   106/128: $6\free_pick_kept[7:0]
+   107/128: $9\free_pick_freed[7:0]
+   108/128: $5\free_pick_kept[7:0]
+   109/128: $8\free_pick_freed[7:0]
+   110/128: $7\free_pick_freed[7:0]
+   111/128: $6\free_pick_freed[7:0]
+   112/128: $4\free_pick_kept[7:0]
+   113/128: $5\free_pick_freed[7:0]
+   114/128: $3\free_pick_kept[7:0]
+   115/128: $4\free_pick_freed[7:0]
+   116/128: $3\free_pick_freed[7:0]
+   117/128: $2\free_pick_freed[7:0]
+   118/128: $2\free_pick_kept[7:0]
+   119/128: $1\free_pick_freed[7:0]
+   120/128: $1\free_pick_kept[7:0]
+   121/128: $8\freed_ge[8:0]
+   122/128: $7\freed_ge[8:0]
+   123/128: $6\freed_ge[8:0]
+   124/128: $5\freed_ge[8:0]
+   125/128: $4\freed_ge[8:0]
+   126/128: $3\freed_ge[8:0]
+   127/128: $2\freed_ge[8:0]
+   128/128: $1\freed_ge[8:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:549$2330'.
+     1/2: $0\free_room_dup_q[8:0]
+     2/2: $0\free_room_q[8:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+     1/24: $5\free_room_next[8:0]
+     2/24: $5\free_count_pick[3:0]
+     3/24: $9\room_plus[8:0]
+     4/24: $8\room_plus[8:0]
+     5/24: $5\room_minus[8:0]
+     6/24: $4\free_room_next[8:0]
+     7/24: $4\free_count_pick[3:0]
+     8/24: $7\room_plus[8:0]
+     9/24: $6\room_plus[8:0]
+    10/24: $4\room_minus[8:0]
+    11/24: $3\free_room_next[8:0]
+    12/24: $3\free_count_pick[3:0]
+    13/24: $5\room_plus[8:0]
+    14/24: $4\room_plus[8:0]
+    15/24: $3\room_minus[8:0]
+    16/24: $2\free_room_next[8:0]
+    17/24: $2\free_count_pick[3:0]
+    18/24: $3\room_plus[8:0]
+    19/24: $2\room_plus[8:0]
+    20/24: $2\room_minus[8:0]
+    21/24: $1\free_room_next[8:0]
+    22/24: $1\free_count_pick[3:0]
+    23/24: $1\room_plus[8:0]
+    24/24: $1\room_minus[8:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:508$2202'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:482$2149'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:462$2131'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:441$2106'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+     1/25: $25\pair_block[4:4]
+     2/25: $24\pair_block[4:4]
+     3/25: $23\pair_block[4:4]
+     4/25: $22\pair_block[4:4]
+     5/25: $21\pair_block[4:4]
+     6/25: $20\pair_block[3:3]
+     7/25: $19\pair_block[3:3]
+     8/25: $18\pair_block[3:3]
+     9/25: $17\pair_block[3:3]
+    10/25: $16\pair_block[3:3]
+    11/25: $15\pair_block[2:2]
+    12/25: $14\pair_block[2:2]
+    13/25: $13\pair_block[2:2]
+    14/25: $12\pair_block[2:2]
+    15/25: $11\pair_block[2:2]
+    16/25: $10\pair_block[1:1]
+    17/25: $9\pair_block[1:1]
+    18/25: $8\pair_block[1:1]
+    19/25: $7\pair_block[1:1]
+    20/25: $6\pair_block[1:1]
+    21/25: $5\pair_block[0:0]
+    22/25: $4\pair_block[0:0]
+    23/25: $3\pair_block[0:0]
+    24/25: $2\pair_block[0:0]
+    25/25: $1\pair_block[0:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+     1/280: $20\deps_load[7][7:0]
+     2/280: $19\deps_load[7][7:0]
+     3/280: $18\deps_load[7][7:0]
+     4/280: $17\deps_load[7][7:0]
+     5/280: $16\deps_load[7][7:0]
+     6/280: $15\deps_load[7][7:0]
+     7/280: $14\deps_load[7][7:0]
+     8/280: $13\deps_load[7][7:0]
+     9/280: $12\deps_load[7][7:0]
+    10/280: $11\deps_load[7][7:0]
+    11/280: $10\deps_load[7][7:0]
+    12/280: $9\deps_load[7][7:0]
+    13/280: $8\deps_load[7][7:0]
+    14/280: $7\deps_load[7][7:0]
+    15/280: $6\deps_load[7][7:0]
+    16/280: $5\deps_load[7][7:0]
+    17/280: $4\deps_load[7][7:0]
+    18/280: $3\deps_load[7][7:0]
+    19/280: $2\deps_load[7][7:0]
+    20/280: $1\deps_load[7][7:0]
+    21/280: $20\deps_load[6][7:0]
+    22/280: $19\deps_load[6][7:0]
+    23/280: $18\deps_load[6][7:0]
+    24/280: $17\deps_load[6][7:0]
+    25/280: $16\deps_load[6][7:0]
+    26/280: $15\deps_load[6][7:0]
+    27/280: $14\deps_load[6][7:0]
+    28/280: $13\deps_load[6][7:0]
+    29/280: $12\deps_load[6][7:0]
+    30/280: $11\deps_load[6][7:0]
+    31/280: $10\deps_load[6][7:0]
+    32/280: $9\deps_load[6][7:0]
+    33/280: $8\deps_load[6][7:0]
+    34/280: $7\deps_load[6][7:0]
+    35/280: $6\deps_load[6][7:0]
+    36/280: $5\deps_load[6][7:0]
+    37/280: $4\deps_load[6][7:0]
+    38/280: $3\deps_load[6][7:0]
+    39/280: $2\deps_load[6][7:0]
+    40/280: $1\deps_load[6][7:0]
+    41/280: $20\deps_load[5][7:0]
+    42/280: $19\deps_load[5][7:0]
+    43/280: $18\deps_load[5][7:0]
+    44/280: $17\deps_load[5][7:0]
+    45/280: $16\deps_load[5][7:0]
+    46/280: $15\deps_load[5][7:0]
+    47/280: $14\deps_load[5][7:0]
+    48/280: $13\deps_load[5][7:0]
+    49/280: $12\deps_load[5][7:0]
+    50/280: $11\deps_load[5][7:0]
+    51/280: $10\deps_load[5][7:0]
+    52/280: $9\deps_load[5][7:0]
+    53/280: $8\deps_load[5][7:0]
+    54/280: $7\deps_load[5][7:0]
+    55/280: $6\deps_load[5][7:0]
+    56/280: $5\deps_load[5][7:0]
+    57/280: $4\deps_load[5][7:0]
+    58/280: $3\deps_load[5][7:0]
+    59/280: $2\deps_load[5][7:0]
+    60/280: $1\deps_load[5][7:0]
+    61/280: $20\deps_load[4][7:0]
+    62/280: $19\deps_load[4][7:0]
+    63/280: $18\deps_load[4][7:0]
+    64/280: $17\deps_load[4][7:0]
+    65/280: $16\deps_load[4][7:0]
+    66/280: $15\deps_load[4][7:0]
+    67/280: $14\deps_load[4][7:0]
+    68/280: $13\deps_load[4][7:0]
+    69/280: $12\deps_load[4][7:0]
+    70/280: $11\deps_load[4][7:0]
+    71/280: $10\deps_load[4][7:0]
+    72/280: $9\deps_load[4][7:0]
+    73/280: $8\deps_load[4][7:0]
+    74/280: $7\deps_load[4][7:0]
+    75/280: $6\deps_load[4][7:0]
+    76/280: $5\deps_load[4][7:0]
+    77/280: $4\deps_load[4][7:0]
+    78/280: $3\deps_load[4][7:0]
+    79/280: $2\deps_load[4][7:0]
+    80/280: $1\deps_load[4][7:0]
+    81/280: $20\deps_load[3][7:0]
+    82/280: $19\deps_load[3][7:0]
+    83/280: $18\deps_load[3][7:0]
+    84/280: $17\deps_load[3][7:0]
+    85/280: $16\deps_load[3][7:0]
+    86/280: $15\deps_load[3][7:0]
+    87/280: $14\deps_load[3][7:0]
+    88/280: $13\deps_load[3][7:0]
+    89/280: $12\deps_load[3][7:0]
+    90/280: $11\deps_load[3][7:0]
+    91/280: $10\deps_load[3][7:0]
+    92/280: $9\deps_load[3][7:0]
+    93/280: $8\deps_load[3][7:0]
+    94/280: $7\deps_load[3][7:0]
+    95/280: $6\deps_load[3][7:0]
+    96/280: $5\deps_load[3][7:0]
+    97/280: $4\deps_load[3][7:0]
+    98/280: $3\deps_load[3][7:0]
+    99/280: $2\deps_load[3][7:0]
+   100/280: $1\deps_load[3][7:0]
+   101/280: $20\deps_load[2][7:0]
+   102/280: $19\deps_load[2][7:0]
+   103/280: $18\deps_load[2][7:0]
+   104/280: $17\deps_load[2][7:0]
+   105/280: $16\deps_load[2][7:0]
+   106/280: $15\deps_load[2][7:0]
+   107/280: $14\deps_load[2][7:0]
+   108/280: $13\deps_load[2][7:0]
+   109/280: $12\deps_load[2][7:0]
+   110/280: $11\deps_load[2][7:0]
+   111/280: $10\deps_load[2][7:0]
+   112/280: $9\deps_load[2][7:0]
+   113/280: $8\deps_load[2][7:0]
+   114/280: $7\deps_load[2][7:0]
+   115/280: $6\deps_load[2][7:0]
+   116/280: $5\deps_load[2][7:0]
+   117/280: $4\deps_load[2][7:0]
+   118/280: $3\deps_load[2][7:0]
+   119/280: $2\deps_load[2][7:0]
+   120/280: $1\deps_load[2][7:0]
+   121/280: $20\deps_load[1][7:0]
+   122/280: $19\deps_load[1][7:0]
+   123/280: $18\deps_load[1][7:0]
+   124/280: $17\deps_load[1][7:0]
+   125/280: $16\deps_load[1][7:0]
+   126/280: $15\deps_load[1][7:0]
+   127/280: $14\deps_load[1][7:0]
+   128/280: $13\deps_load[1][7:0]
+   129/280: $12\deps_load[1][7:0]
+   130/280: $11\deps_load[1][7:0]
+   131/280: $10\deps_load[1][7:0]
+   132/280: $9\deps_load[1][7:0]
+   133/280: $8\deps_load[1][7:0]
+   134/280: $7\deps_load[1][7:0]
+   135/280: $6\deps_load[1][7:0]
+   136/280: $5\deps_load[1][7:0]
+   137/280: $4\deps_load[1][7:0]
+   138/280: $3\deps_load[1][7:0]
+   139/280: $2\deps_load[1][7:0]
+   140/280: $1\deps_load[1][7:0]
+   141/280: $20\deps_load[0][7:0]
+   142/280: $19\deps_load[0][7:0]
+   143/280: $18\deps_load[0][7:0]
+   144/280: $17\deps_load[0][7:0]
+   145/280: $16\deps_load[0][7:0]
+   146/280: $15\deps_load[0][7:0]
+   147/280: $14\deps_load[0][7:0]
+   148/280: $13\deps_load[0][7:0]
+   149/280: $12\deps_load[0][7:0]
+   150/280: $11\deps_load[0][7:0]
+   151/280: $10\deps_load[0][7:0]
+   152/280: $9\deps_load[0][7:0]
+   153/280: $8\deps_load[0][7:0]
+   154/280: $7\deps_load[0][7:0]
+   155/280: $6\deps_load[0][7:0]
+   156/280: $5\deps_load[0][7:0]
+   157/280: $4\deps_load[0][7:0]
+   158/280: $3\deps_load[0][7:0]
+   159/280: $2\deps_load[0][7:0]
+   160/280: $1\deps_load[0][7:0]
+   161/280: $25\rank_pair[3][3:0]
+   162/280: $24\rank_pair[3][3:0]
+   163/280: $23\rank_pair[3][3:0]
+   164/280: $22\rank_pair[3][3:0]
+   165/280: $21\rank_pair[3][3:0]
+   166/280: $5\rank_deps_old[3][7:0]
+   167/280: $20\rank_pair[3][3:0]
+   168/280: $19\rank_pair[3][3:0]
+   169/280: $18\rank_pair[3][3:0]
+   170/280: $17\rank_pair[3][3:0]
+   171/280: $16\rank_pair[3][3:0]
+   172/280: $4\rank_deps_old[3][7:0]
+   173/280: $15\rank_pair[3][3:0]
+   174/280: $14\rank_pair[3][3:0]
+   175/280: $13\rank_pair[3][3:0]
+   176/280: $12\rank_pair[3][3:0]
+   177/280: $11\rank_pair[3][3:0]
+   178/280: $3\rank_deps_old[3][7:0]
+   179/280: $10\rank_pair[3][3:0]
+   180/280: $9\rank_pair[3][3:0]
+   181/280: $8\rank_pair[3][3:0]
+   182/280: $7\rank_pair[3][3:0]
+   183/280: $6\rank_pair[3][3:0]
+   184/280: $2\rank_deps_old[3][7:0]
+   185/280: $5\rank_pair[3][3:0]
+   186/280: $4\rank_pair[3][3:0]
+   187/280: $3\rank_pair[3][3:0]
+   188/280: $2\rank_pair[3][3:0]
+   189/280: $1\rank_pair[3][3:0]
+   190/280: $1\rank_deps_old[3][7:0]
+   191/280: $25\rank_pair[2][3:0]
+   192/280: $24\rank_pair[2][3:0]
+   193/280: $23\rank_pair[2][3:0]
+   194/280: $22\rank_pair[2][3:0]
+   195/280: $21\rank_pair[2][3:0]
+   196/280: $5\rank_deps_old[2][7:0]
+   197/280: $20\rank_pair[2][3:0]
+   198/280: $19\rank_pair[2][3:0]
+   199/280: $18\rank_pair[2][3:0]
+   200/280: $17\rank_pair[2][3:0]
+   201/280: $16\rank_pair[2][3:0]
+   202/280: $4\rank_deps_old[2][7:0]
+   203/280: $15\rank_pair[2][3:0]
+   204/280: $14\rank_pair[2][3:0]
+   205/280: $13\rank_pair[2][3:0]
+   206/280: $12\rank_pair[2][3:0]
+   207/280: $11\rank_pair[2][3:0]
+   208/280: $3\rank_deps_old[2][7:0]
+   209/280: $10\rank_pair[2][3:0]
+   210/280: $9\rank_pair[2][3:0]
+   211/280: $8\rank_pair[2][3:0]
+   212/280: $7\rank_pair[2][3:0]
+   213/280: $6\rank_pair[2][3:0]
+   214/280: $2\rank_deps_old[2][7:0]
+   215/280: $5\rank_pair[2][3:0]
+   216/280: $4\rank_pair[2][3:0]
+   217/280: $3\rank_pair[2][3:0]
+   218/280: $2\rank_pair[2][3:0]
+   219/280: $1\rank_pair[2][3:0]
+   220/280: $1\rank_deps_old[2][7:0]
+   221/280: $25\rank_pair[1][3:0]
+   222/280: $24\rank_pair[1][3:0]
+   223/280: $23\rank_pair[1][3:0]
+   224/280: $22\rank_pair[1][3:0]
+   225/280: $21\rank_pair[1][3:0]
+   226/280: $5\rank_deps_old[1][7:0]
+   227/280: $20\rank_pair[1][3:0]
+   228/280: $19\rank_pair[1][3:0]
+   229/280: $18\rank_pair[1][3:0]
+   230/280: $17\rank_pair[1][3:0]
+   231/280: $16\rank_pair[1][3:0]
+   232/280: $4\rank_deps_old[1][7:0]
+   233/280: $15\rank_pair[1][3:0]
+   234/280: $14\rank_pair[1][3:0]
+   235/280: $13\rank_pair[1][3:0]
+   236/280: $12\rank_pair[1][3:0]
+   237/280: $11\rank_pair[1][3:0]
+   238/280: $3\rank_deps_old[1][7:0]
+   239/280: $10\rank_pair[1][3:0]
+   240/280: $9\rank_pair[1][3:0]
+   241/280: $8\rank_pair[1][3:0]
+   242/280: $7\rank_pair[1][3:0]
+   243/280: $6\rank_pair[1][3:0]
+   244/280: $2\rank_deps_old[1][7:0]
+   245/280: $5\rank_pair[1][3:0]
+   246/280: $4\rank_pair[1][3:0]
+   247/280: $3\rank_pair[1][3:0]
+   248/280: $2\rank_pair[1][3:0]
+   249/280: $1\rank_pair[1][3:0]
+   250/280: $1\rank_deps_old[1][7:0]
+   251/280: $25\rank_pair[0][3:0]
+   252/280: $24\rank_pair[0][3:0]
+   253/280: $23\rank_pair[0][3:0]
+   254/280: $22\rank_pair[0][3:0]
+   255/280: $21\rank_pair[0][3:0]
+   256/280: $5\rank_deps_old[0][7:0]
+   257/280: $20\rank_pair[0][3:0]
+   258/280: $19\rank_pair[0][3:0]
+   259/280: $18\rank_pair[0][3:0]
+   260/280: $17\rank_pair[0][3:0]
+   261/280: $16\rank_pair[0][3:0]
+   262/280: $4\rank_deps_old[0][7:0]
+   263/280: $15\rank_pair[0][3:0]
+   264/280: $14\rank_pair[0][3:0]
+   265/280: $13\rank_pair[0][3:0]
+   266/280: $12\rank_pair[0][3:0]
+   267/280: $11\rank_pair[0][3:0]
+   268/280: $3\rank_deps_old[0][7:0]
+   269/280: $10\rank_pair[0][3:0]
+   270/280: $9\rank_pair[0][3:0]
+   271/280: $8\rank_pair[0][3:0]
+   272/280: $7\rank_pair[0][3:0]
+   273/280: $6\rank_pair[0][3:0]
+   274/280: $2\rank_deps_old[0][7:0]
+   275/280: $5\rank_pair[0][3:0]
+   276/280: $4\rank_pair[0][3:0]
+   277/280: $3\rank_pair[0][3:0]
+   278/280: $2\rank_pair[0][3:0]
+   279/280: $1\rank_pair[0][3:0]
+   280/280: $1\rank_deps_old[0][7:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+     1/10: $4\deps_new[4][7:0]
+     2/10: $3\deps_new[4][7:0]
+     3/10: $2\deps_new[4][7:0]
+     4/10: $1\deps_new[4][7:0]
+     5/10: $3\deps_new[3][7:0]
+     6/10: $2\deps_new[3][7:0]
+     7/10: $1\deps_new[3][7:0]
+     8/10: $2\deps_new[2][7:0]
+     9/10: $1\deps_new[2][7:0]
+    10/10: $1\deps_new[1][7:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+     1/8: $1\load_packet[7][147:0]
+     2/8: $1\load_packet[6][147:0]
+     3/8: $1\load_packet[5][147:0]
+     4/8: $1\load_packet[4][147:0]
+     5/8: $1\load_packet[3][147:0]
+     6/8: $1\load_packet[2][147:0]
+     7/8: $1\load_packet[1][147:0]
+     8/8: $1\load_packet[0][147:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+     1/40: $20\age_groups[31:24]
+     2/40: $19\age_groups[31:24]
+     3/40: $18\age_groups[31:24]
+     4/40: $17\age_groups[31:24]
+     5/40: $16\age_groups[31:24]
+     6/40: $15\age_groups[23:16]
+     7/40: $14\age_groups[23:16]
+     8/40: $13\age_groups[23:16]
+     9/40: $12\age_groups[23:16]
+    10/40: $11\age_groups[23:16]
+    11/40: $10\age_groups[15:8]
+    12/40: $9\age_groups[15:8]
+    13/40: $8\age_groups[15:8]
+    14/40: $7\age_groups[15:8]
+    15/40: $6\age_groups[15:8]
+    16/40: $5\age_groups[7:0]
+    17/40: $4\age_groups[7:0]
+    18/40: $3\age_groups[7:0]
+    19/40: $2\age_groups[7:0]
+    20/40: $1\age_groups[7:0]
+    21/40: $4\src_entry[4][7:0]
+    22/40: $3\src_entry[4][7:0]
+    23/40: $2\src_entry[4][7:0]
+    24/40: $1\src_entry[4][7:0]
+    25/40: $4\src_entry[3][7:0]
+    26/40: $3\src_entry[3][7:0]
+    27/40: $2\src_entry[3][7:0]
+    28/40: $1\src_entry[3][7:0]
+    29/40: $4\src_entry[2][7:0]
+    30/40: $3\src_entry[2][7:0]
+    31/40: $2\src_entry[2][7:0]
+    32/40: $1\src_entry[2][7:0]
+    33/40: $4\src_entry[1][7:0]
+    34/40: $3\src_entry[1][7:0]
+    35/40: $2\src_entry[1][7:0]
+    36/40: $1\src_entry[1][7:0]
+    37/40: $4\src_entry[0][7:0]
+    38/40: $3\src_entry[0][7:0]
+    39/40: $2\src_entry[0][7:0]
+    40/40: $1\src_entry[0][7:0]
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+Creating decoders for process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\g_oh_enc.idx_or' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:83$5552'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\g_oh_enc.e' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:83$5552'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\a' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\b' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\oldest_onehot' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_all' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\grp' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\later_grp' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\row_idx' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[0]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[1]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[2]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[3]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[0]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[1]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[2]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[3]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[4]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[5]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[6]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[7]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+No latch inferred for signal `\l1d_req_tracker.$mem2reg_rd$\deps_q$rtl/bank/s0/l1d_req_tracker.v:505$388_DATA' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:505$5398'.
+No latch inferred for signal `\l1d_req_tracker.$mem2reg_rd$\pc_q$rtl/bank/s0/l1d_req_tracker.v:504$387_DATA' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:504$5395'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.fb_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.fb_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\g_pick_count.free_below[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+No latch inferred for signal `\l1d_req_tracker.\free_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\freed_ge' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\freed_any' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\alloc_n_onehot' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_pick_next' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_pick_kept' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_pick_freed' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\fg_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\fr_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\fn_pick' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\fn_count' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\free_ge[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+No latch inferred for signal `\l1d_req_tracker.\ks_lv' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_bit' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_part' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[8]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[9]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[10]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[11]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[12]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[13]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[14]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[15]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[16]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[17]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[18]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[19]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[20]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[21]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[22]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[23]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[24]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[25]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[26]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[27]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[28]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[29]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[30]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\ks_ge[31]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+No latch inferred for signal `\l1d_req_tracker.\free_count_pick' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\s2_frees' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\fc_count' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\count_plus' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\count_minus' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\free_room_next' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\room_now' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\room_plus' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\room_minus' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+No latch inferred for signal `\l1d_req_tracker.\alloc_cnt' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:508$2202'.
+No latch inferred for signal `\l1d_req_tracker.\ac_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:508$2202'.
+No latch inferred for signal `\l1d_req_tracker.\s2_entry_onehot' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:482$2149'.
+No latch inferred for signal `\l1d_req_tracker.\s2_dec' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:482$2149'.
+No latch inferred for signal `\l1d_req_tracker.\or_packet' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:462$2131'.
+No latch inferred for signal `\l1d_req_tracker.\or_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:462$2131'.
+No latch inferred for signal `\l1d_req_tracker.\ready_cand' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:441$2106'.
+No latch inferred for signal `\l1d_req_tracker.\rc_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:441$2106'.
+No latch inferred for signal `\l1d_req_tracker.\ab_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_packet' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_entry_nofresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_entry_fresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_packet_nofresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_packet_fresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\ab_mux' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+No latch inferred for signal `\l1d_req_tracker.\arrival_cand' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\arrival_pick' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\arrival_seen' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\ab_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pick_any' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pair_block' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\cand_nofresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\cand_fresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pick_nofresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pick_fresh' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pb_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\pb_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+No latch inferred for signal `\l1d_req_tracker.\rd_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rd_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rd_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\dl_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\dl_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\dl_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_deps_old[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_deps_old[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_deps_old[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_deps_old[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_pair[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_pair[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_pair[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\rank_pair[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\deps_load[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+No latch inferred for signal `\l1d_req_tracker.\same_set_pair' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\dp_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\dp_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\dp_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_new[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_new[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_new[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_new[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_new[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_old[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_old[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_old[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_old[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\deps_old[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lower_pair[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lower_pair[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lower_pair[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lower_pair[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lower_pair[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+No latch inferred for signal `\l1d_req_tracker.\lowest_req' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+No latch inferred for signal `\l1d_req_tracker.\lowest_port' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+No latch inferred for signal `\l1d_req_tracker.\lowest_credit' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+No latch inferred for signal `\l1d_req_tracker.\lower_req_seen' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+No latch inferred for signal `\l1d_req_tracker.\lo_port' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+No latch inferred for signal `\l1d_req_tracker.\load_line_store' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\ld_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\ld_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_packet[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\load_pc[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+No latch inferred for signal `\l1d_req_tracker.\alloc_en' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\age_groups' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\se_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\se_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\se_entry' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\src_entry[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\src_entry[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\src_entry[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\src_entry[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\src_entry[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[5]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[6]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\data_sel[7]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+No latch inferred for signal `\l1d_req_tracker.\rank_alloc' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\ro_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\ro_rank' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_onehot[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_onehot[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_onehot[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_onehot[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_onehot[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+No latch inferred for signal `\l1d_req_tracker.\rank_src' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank_lower' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank[0]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank[1]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank[2]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank[3]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+No latch inferred for signal `\l1d_req_tracker.\rank[4]' from process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\i' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9787' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[0]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9788' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[1]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9789' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[2]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9790' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[3]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9791' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[4]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9792' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[5]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9793' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[6]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9794' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[7]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+  created $dff cell `$procdff$9795' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\free_count_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9796' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\valid_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9797' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\valid_dup_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9798' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\write_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9799' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_nc_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9800' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\trained_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9801' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\ent' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9802' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9803' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9804' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9805' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9806' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9807' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9808' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9809' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\state_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9810' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9811' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9812' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9813' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9814' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9815' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9816' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9817' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\packet_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9818' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9819' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9820' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9821' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9822' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9823' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9824' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9825' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\pc_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9826' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9827' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9828' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9829' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9830' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9831' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9832' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9833' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9834' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9835' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9836' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9837' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9838' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9839' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9840' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9841' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\set_dup_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9842' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9843' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9844' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9845' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9846' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9847' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9848' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9849' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\deps_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9850' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9851' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9852' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9853' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9854' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9855' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9856' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9857' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_mshr_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9858' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[0]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9859' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[1]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9860' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[2]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9861' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[3]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9862' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[4]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9863' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[5]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9864' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[6]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9865' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\wait_vc_q[7]' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+  created $dff cell `$procdff$9866' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\free_pick_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:631$4996'.
+  created $dff cell `$procdff$9867' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\fq_pick' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:631$4996'.
+  created $dff cell `$procdff$9868' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\free_room_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:549$2330'.
+  created $dff cell `$procdff$9869' with positive edge clock.
+Creating register for signal `\l1d_req_tracker.\free_room_dup_q' using process `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:549$2330'.
+  created $dff cell `$procdff$9870' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 8 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:83$5552'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:83$5552'.
+Found and cleaned up 64 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:71$5423'.
+Found and cleaned up 1 empty switch in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:44$5422'.
+Found and cleaned up 32 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$rtl/common/l1d_age_matrix.v:30$5403'.
+Found and cleaned up 1 empty switch in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:505$5398'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:505$5398'.
+Found and cleaned up 1 empty switch in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:504$5395'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:504$5395'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:212$5282'.
+Found and cleaned up 113 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:640$4997'.
+Found and cleaned up 1 empty switch in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:631$4996'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:631$4996'.
+Found and cleaned up 68 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:595$4500'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:580$2331'.
+Found and cleaned up 1 empty switch in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:549$2330'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:549$2330'.
+Found and cleaned up 19 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:523$2238'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:508$2202'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:482$2149'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:462$2131'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:441$2106'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:417$2061'.
+Found and cleaned up 25 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:389$1886'.
+Found and cleaned up 280 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:354$1377'.
+Found and cleaned up 10 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:324$1046'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:303$1010'.
+Found and cleaned up 8 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:281$745'.
+Found and cleaned up 40 empty switches in `\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$504'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:234$423'.
+Removing empty process `l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:145$390'.
+Cleaned up 672 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+<suppressed ~93 debug messages>
+Optimizing module l1d_req_tracker.
+<suppressed ~2946 debug messages>
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+<suppressed ~1 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_req_tracker..
+Removed 430 unused cells and 6183 unused wires.
+<suppressed ~453 debug messages>
+Renaming module \l1d_req_tracker to \gate.
+
+8. Executing RTLIL backend.
+Output filename: proof/gate.il
+
+End of script. Logfile hash: 48b90bbe32, time: 0.70s, user: 0.69s, system: 0.02s, MEM: 72.79 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 60% 4x read_verilog (0 sec), 14% 1x opt_clean (0 sec), ...

@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/common/l1d_age_matrix.v rtl/common/l1d_pri_enc.v rtl/bank/s0/l1d_req_tracker.v
+hierarchy -top l1d_req_tracker
+proc
+flatten
+opt_clean
+rename l1d_req_tracker gate
+write_rtlil proof/gate.il

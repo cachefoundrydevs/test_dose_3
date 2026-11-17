@@ -176,6 +176,7 @@ module l1d_req_tracker #(
     assign drain_allocated     = alloc[LSU_PORTS];
     assign vec_write_valid     = |(alloc & src_line_store);
     wire [NA*NE-1:0] free_pick;
+    reg  [NA*NE-1:0] free_pick_q;
     generate
         if (NA <= 2) begin : g_pick_chain
             wire [NE-1:0] free_now;
@@ -215,9 +216,7 @@ module l1d_req_tracker #(
             genvar pk_k, pk_e;
             for (pk_k = 0; pk_k < NA; pk_k = pk_k + 1) begin : g_pick_k
                 for (pk_e = 0; pk_e < NE; pk_e = pk_e + 1) begin : g_pick_e
-                    assign free_pick[pk_k*NE + pk_e] = ~valid_q[pk_e] &
-                        (free_below[pk_e] == ((pk_k < RANK_W) ? ((1 << pk_k) - 1) :
-                                              (((1 << RANK_W) - 1) & ~((1 << (pk_k - RANK_W)) - 1))));
+                    assign free_pick[pk_k*NE + pk_e] = free_pick_q[pk_k*NE + pk_e];
                 end
             end
         end
@@ -482,6 +481,59 @@ module l1d_req_tracker #(
                              (alloc_cnt == 5) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 5 :
                              (alloc_cnt == 6) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 6 :
                                                 free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 7;
+    localparam GE_W = 2 * NA + 1;
+    reg  [GE_W-1:0]  free_ge [0:NE-1];
+    reg  [2*NA*NE-1:0] free_rank;
+    reg  [GE_W-1:0]  freed_ge;
+    reg              freed_any;
+    reg  [NA:0]      alloc_n_onehot;
+    reg  [NA*NE-1:0] free_pick_next;
+    integer fg_entry;
+    integer fg_lower;
+    integer fr_rank;
+    integer fn_pick;
+    integer fn_count;
+    always @* begin
+        for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1) begin
+            free_ge[fg_entry] = {{(GE_W-1){1'b0}}, 1'b1};
+            for (fg_lower = 0; fg_lower < fg_entry; fg_lower = fg_lower + 1)
+                if (!valid_q[fg_lower])
+                    free_ge[fg_entry] = free_ge[fg_entry] | (free_ge[fg_entry] << 1);
+            for (fr_rank = 0; fr_rank < 2 * NA; fr_rank = fr_rank + 1)
+                free_rank[fr_rank*NE + fg_entry] = !valid_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
+                                                   !free_ge[fg_entry][fr_rank+1];
+        end
+        freed_any = |(freed_now & valid_q);
+        freed_ge  = {GE_W{1'b0}};
+        for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1)
+            if (freed_now[fg_entry] && valid_q[fg_entry])
+                freed_ge = freed_ge | free_ge[fg_entry];
+        for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
+            alloc_n_onehot[fn_count] = ((fn_count == 0) || rank_alloc[(fn_count > 0) ? fn_count - 1 : 0]) &&
+                                       ((fn_count == NA) || !rank_alloc[(fn_count < NA) ? fn_count : 0]);
+        free_pick_next = {NA*NE{1'b0}};
+        for (fn_pick = 0; fn_pick < NA; fn_pick = fn_pick + 1)
+            for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
+                if (alloc_n_onehot[fn_count]) begin
+                    if (freed_any && ((fn_pick == 0) || freed_ge[fn_pick+fn_count]) && !freed_ge[fn_pick+fn_count+1])
+                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] | (freed_now & valid_q);
+                    else if (freed_any && (fn_pick > 0) && !freed_ge[fn_pick+fn_count])
+                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                            free_rank[(((fn_pick > 0) ? fn_pick - 1 : 0) + fn_count)*NE +: NE];
+                    else if (fn_pick + fn_count < 2 * NA)
+                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                            free_rank[(fn_pick+fn_count)*NE +: NE];
+                end
+    end
+    integer fq_pick;
+    always @(posedge clk) begin : free_pick_proc
+        if (rst) begin
+            for (fq_pick = 0; fq_pick < NA; fq_pick = fq_pick + 1)
+                free_pick_q[fq_pick*NE +: NE] <= {{(NE-1){1'b0}}, 1'b1} << fq_pick;
+        end else begin
+            free_pick_q <= free_pick_next;
+        end
+    end
     integer ent;
     always @(posedge clk) begin : tracker_proc
         if (rst) begin

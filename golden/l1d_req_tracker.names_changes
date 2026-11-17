@@ -25,3 +25,29 @@
 + FOR for(dl_rank=0;dl_rank<NA;dl_rank=dl_rank+1)
 + FOR for(dl_lower=0;dl_lower<NA;dl_lower=dl_lower+1)
 - FOR for(ac_src=0;ac_src<NS;ac_src=ac_src+1)
+# iteration 11 (user approved): registered free pick (free_pick_q) and its next-pick logic
++ DECL reg[NA*NE-1:0]free_pick_q
++ DECL localparam GE_W = 2 * NA + 1
++ DECL reg[GE_W-1:0]free_ge[0:NE-1]
++ DECL reg[2*NA*NE-1:0]free_rank
++ DECL reg[GE_W-1:0]freed_ge
++ DECL reg freed_any
++ DECL reg[NA:0]alloc_n_onehot
++ DECL reg[NA*NE-1:0]free_pick_next
++ DECL integer fg_entry
++ DECL integer fg_lower
++ DECL integer fr_rank
++ DECL integer fn_pick
++ DECL integer fn_count
++ ALWAYS always @*
++ FOR for(fg_entry=0;fg_entry<NE;fg_entry=fg_entry+1)
++ FOR for(fg_lower=0;fg_lower<fg_entry;fg_lower=fg_lower+1)
++ FOR for(fr_rank=0;fr_rank<2*NA;fr_rank=fr_rank+1)
++ FOR for(fg_entry=0;fg_entry<NE;fg_entry=fg_entry+1)
++ FOR for(fn_count=0;fn_count<=NA;fn_count=fn_count+1)
++ FOR for(fn_pick=0;fn_pick<NA;fn_pick=fn_pick+1)
++ FOR for(fn_count=0;fn_count<=NA;fn_count=fn_count+1)
++ DECL integer fq_pick
++ ALWAYS always @(posedge clk)
++ LABEL free_pick_proc
++ FOR for(fq_pick=0;fq_pick<NA;fq_pick=fq_pick+1)

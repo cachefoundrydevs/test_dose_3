@@ -58,3 +58,10 @@
 + DECL integer fc_count
 + ALWAYS always @*
 + FOR for(fc_count=0;fc_count<=NA;fc_count=fc_count+1)
+# iteration 13 (user approved): registered free_room thermometer
++ DECL reg[NE:0]free_room_q
++ DECL reg[TRK_CNT_W-1:0]count_plus
++ DECL reg[TRK_CNT_W-1:0]count_minus
++ DECL reg[NE:0]free_room_next
++ ALWAYS always @(posedge clk)
++ LABEL free_room_proc

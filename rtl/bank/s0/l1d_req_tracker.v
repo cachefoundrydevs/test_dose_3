@@ -153,6 +153,7 @@ module l1d_req_tracker #(
     wire [NS-1:0] alloc;
     wire [NE:0]   free_room;
     reg  [NE:0]   free_room_q;
+    reg  [NE:0]   free_room_dup_q;
     assign free_room = free_room_q;
     genvar al_idx;
     generate
@@ -232,10 +233,10 @@ module l1d_req_tracker #(
         rank_alloc = {NA{1'b0}};
         for (ro_src = 0; ro_src < NS; ro_src = ro_src + 1)
             for (ro_rank = 0; ro_rank < NA; ro_rank = ro_rank + 1) begin
-                rank_onehot[ro_src][ro_rank] = alloc[ro_src] &&
+                rank_onehot[ro_src][ro_rank] = eligible[ro_src] &&
                     (rank[ro_src] == ((ro_rank < RANK_W) ? ((1 << ro_rank) - 1) :
                                       (((1 << RANK_W) - 1) & ~((1 << (ro_rank - RANK_W)) - 1))));
-                rank_alloc[ro_rank] = rank_alloc[ro_rank] | rank_onehot[ro_src][ro_rank];
+                rank_alloc[ro_rank] = rank_alloc[ro_rank] | (rank_onehot[ro_src][ro_rank] & free_room_dup_q[ro_rank]);
             end
     end
     reg  [NE-1:0] src_entry [0:NS-1];
@@ -330,7 +331,9 @@ module l1d_req_tracker #(
                 same_set_pair = alloc[dp_lower] &&
                                 (src_set[dp_lower*INDEX_W +: INDEX_W] == src_set[dp_src*INDEX_W +: INDEX_W]) &&
                                 (src_write[dp_lower] || src_write[dp_src]);
-                lower_pair[dp_src][dp_lower] = same_set_pair;
+                lower_pair[dp_src][dp_lower] = eligible[dp_lower] &&
+                    (src_set[dp_lower*INDEX_W +: INDEX_W] == src_set[dp_src*INDEX_W +: INDEX_W]) &&
+                    (src_write[dp_lower] || src_write[dp_src]);
                 if (same_set_pair)
                     deps_new[dp_src] = deps_new[dp_src] | src_entry[dp_lower];
             end
@@ -372,25 +375,55 @@ module l1d_req_tracker #(
     reg  [NS-1:0] arrival_pick;
     reg           arrival_seen;
     integer ab_src;
+    reg  [NA-1:0] pick_any;
+    reg  [NS-1:0] pair_block;
+    reg  [NS-1:0] cand_nofresh;
+    reg  [NS-1:0] cand_fresh;
+    reg  [NS-1:0] pick_nofresh;
+    reg  [NS-1:0] pick_fresh;
+    integer pb_rank;
+    integer pb_lower;
     always @* begin
+        for (pb_rank = 0; pb_rank < NA; pb_rank = pb_rank + 1)
+            pick_any[pb_rank] = |free_pick[pb_rank*NE +: NE];
         arrival_seen = 1'b0;
         for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
-            arrival_cand[ab_src] = alloc[ab_src] && (deps_new[ab_src] == {NE{1'b0}}) &&
-                                   !(fresh_issue && (rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
-            arrival_pick[ab_src] = arrival_cand[ab_src] && !(|(arrival_cand & ~({NS{1'b1}} << ab_src)));
+            pair_block[ab_src] = 1'b0;
+            for (pb_lower = 0; pb_lower < NS; pb_lower = pb_lower + 1)
+                if (lower_pair[ab_src][pb_lower])
+                    pair_block[ab_src] = pair_block[ab_src] | (|(rank_onehot[pb_lower] & pick_any));
+            cand_nofresh[ab_src] = alloc[ab_src] && (deps_old[ab_src] == {NE{1'b0}}) && !pair_block[ab_src];
+            cand_fresh[ab_src]   = cand_nofresh[ab_src] &&
+                                   !((rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
+        end
+        for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
+            pick_nofresh[ab_src] = cand_nofresh[ab_src] && !(|(cand_nofresh & ~({NS{1'b1}} << ab_src)));
+            pick_fresh[ab_src]   = cand_fresh[ab_src]   && !(|(cand_fresh   & ~({NS{1'b1}} << ab_src)));
+            arrival_cand[ab_src] = fresh_issue ? cand_fresh[ab_src] : cand_nofresh[ab_src];
+            arrival_pick[ab_src] = fresh_issue ? pick_fresh[ab_src] : pick_nofresh[ab_src];
             arrival_seen         = arrival_seen || arrival_cand[ab_src];
         end
     end
     reg  [NE-1:0]          ab_entry;
     reg  [REQ_W-1:0]       ab_packet;
+    reg  [NE-1:0]          ab_entry_nofresh;
+    reg  [NE-1:0]          ab_entry_fresh;
+    reg  [REQ_W-1:0]       ab_packet_nofresh;
+    reg  [REQ_W-1:0]       ab_packet_fresh;
     integer ab_mux;
     always @* begin
-        ab_entry  = {NE{1'b0}};
-        ab_packet = {REQ_W{1'b0}};
+        ab_entry_nofresh  = {NE{1'b0}};
+        ab_entry_fresh    = {NE{1'b0}};
+        ab_packet_nofresh = {REQ_W{1'b0}};
+        ab_packet_fresh   = {REQ_W{1'b0}};
         for (ab_mux = 0; ab_mux < NS; ab_mux = ab_mux + 1) begin
-            ab_entry  = ab_entry  | ({NE{arrival_pick[ab_mux]}}    & src_entry[ab_mux]);
-            ab_packet = ab_packet | ({REQ_W{arrival_pick[ab_mux]}} & src_packet[ab_mux*REQ_W +: REQ_W]);
+            ab_entry_nofresh  = ab_entry_nofresh  | ({NE{pick_nofresh[ab_mux]}}    & src_entry[ab_mux]);
+            ab_entry_fresh    = ab_entry_fresh    | ({NE{pick_fresh[ab_mux]}}      & src_entry[ab_mux]);
+            ab_packet_nofresh = ab_packet_nofresh | ({REQ_W{pick_nofresh[ab_mux]}} & src_packet[ab_mux*REQ_W +: REQ_W]);
+            ab_packet_fresh   = ab_packet_fresh   | ({REQ_W{pick_fresh[ab_mux]}}   & src_packet[ab_mux*REQ_W +: REQ_W]);
         end
+        ab_entry  = fresh_issue ? ab_entry_fresh  : ab_entry_nofresh;
+        ab_packet = fresh_issue ? ab_packet_fresh : ab_packet_nofresh;
     end
     assign arrival_book_valid        = |arrival_pick;
     assign arrival_book_entry_onehot = ab_entry;
@@ -511,10 +544,13 @@ module l1d_req_tracker #(
         end
     end
     always @(posedge clk) begin : free_room_proc
-        if (rst)
-            free_room_q <= ~({(NE+1){1'b1}} << NE_C);
-        else
-            free_room_q <= free_room_next;
+        if (rst) begin
+            free_room_q     <= ~({(NE+1){1'b1}} << NE_C);
+            free_room_dup_q <= ~({(NE+1){1'b1}} << NE_C);
+        end else begin
+            free_room_q     <= free_room_next;
+            free_room_dup_q <= free_room_next;
+        end
     end
     wire [TRK_CNT_W-1:0] free_count_next;
     assign free_count_next = free_count_pick;

@@ -79,3 +79,20 @@
 + FOR for(ks_entry=0;ks_entry<NE;ks_entry=ks_entry+1)
 + FOR for(ks_bit=0;ks_bit<GE_W;ks_bit=ks_bit+1)
 + FOR for(ks_part=0;ks_part<=ks_bit;ks_part=ks_part+1)
+# iteration 15 (user approved): B bundle (room bit last, dup room register, booking without deps_new, fresh carry-select)
++ DECL reg[NE:0]free_room_dup_q
++ DECL reg[NA-1:0]pick_any
++ DECL reg[NS-1:0]pair_block
++ DECL reg[NS-1:0]cand_nofresh
++ DECL reg[NS-1:0]cand_fresh
++ DECL reg[NS-1:0]pick_nofresh
++ DECL reg[NS-1:0]pick_fresh
++ DECL integer pb_rank
++ DECL integer pb_lower
++ FOR for(pb_rank=0;pb_rank<NA;pb_rank=pb_rank+1)
++ FOR for(ab_src=0;ab_src<NS;ab_src=ab_src+1)
++ FOR for(pb_lower=0;pb_lower<NS;pb_lower=pb_lower+1)
++ DECL reg[NE-1:0]ab_entry_nofresh
++ DECL reg[NE-1:0]ab_entry_fresh
++ DECL reg[REQ_W-1:0]ab_packet_nofresh
++ DECL reg[REQ_W-1:0]ab_packet_fresh

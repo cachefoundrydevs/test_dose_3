@@ -152,7 +152,8 @@ module l1d_req_tracker #(
     end
     wire [NS-1:0] alloc;
     wire [NE:0]   free_room;
-    assign free_room = ~({(NE+1){1'b1}} << free_count_q);
+    reg  [NE:0]   free_room_q;
+    assign free_room = free_room_q;
     genvar al_idx;
     generate
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
@@ -348,13 +349,13 @@ module l1d_req_tracker #(
         for (rd_rank = 0; rd_rank < NA; rd_rank = rd_rank + 1) begin
             rank_deps_old[rd_rank] = {NE{1'b0}};
             rank_pair[rd_rank]     = {NA{1'b0}};
-            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1)
-                if (rank_onehot[rd_src][rd_rank]) begin
+            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1) begin
+                if (rank_onehot[rd_src][rd_rank])
                     rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
-                    for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
-                        if (lower_pair[rd_src][rd_lower])
-                            rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
-                end
+                for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
+                    if (rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
+                        rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
+            end
         end
         for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
             deps_load[dl_entry] = {NE{1'b0}};
@@ -477,14 +478,43 @@ module l1d_req_tracker #(
     reg  [TRK_CNT_W-1:0] free_count_pick;
     reg                  s2_frees;
     integer fc_count;
+    reg  [TRK_CNT_W-1:0] count_plus;
+    reg  [TRK_CNT_W-1:0] count_minus;
+    reg  [NE:0]          free_room_next;
+    reg  [NE:0]          room_now;
+    reg  [NE:0]          room_plus;
+    reg  [NE:0]          room_minus;
     always @* begin
         s2_frees        = s2_cpu_valid && s2_free_entry && (s2_seat < NE);
         free_count_pick = {TRK_CNT_W{1'b0}};
-        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1)
+        free_room_next  = {(NE+1){1'b0}};
+        room_now        = ~({(NE+1){1'b1}} << free_count_q);
+        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1) begin
+            count_plus  = free_count_q + 1 - fc_count;
+            count_minus = free_count_q - fc_count;
+            if ((fc_count > 0) && !room_now[(fc_count > 0) ? fc_count - 1 : 0])
+                room_minus = {(NE+1){1'b1}};
+            else
+                room_minus = room_now >> fc_count;
+            if (fc_count == 0)
+                room_plus = (free_count_q == {TRK_CNT_W{1'b1}}) ? {(NE+1){1'b0}} :
+                            ((room_now << 1) | {{NE{1'b0}}, 1'b1});
+            else if ((fc_count > 1) && !room_now[(fc_count > 1) ? fc_count - 2 : 0])
+                room_plus = {(NE+1){1'b1}};
+            else
+                room_plus = room_now >> ((fc_count > 0) ? fc_count - 1 : 0);
             if (((fc_count == 0)  || rank_alloc[(fc_count > 0) ? fc_count - 1 : 0]) &&
-                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0]))
-                free_count_pick = free_count_pick |
-                                  (s2_frees ? (free_count_q + 1 - fc_count) : (free_count_q - fc_count));
+                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0])) begin
+                free_count_pick = free_count_pick | (s2_frees ? count_plus : count_minus);
+                free_room_next  = free_room_next | (s2_frees ? room_plus : room_minus);
+            end
+        end
+    end
+    always @(posedge clk) begin : free_room_proc
+        if (rst)
+            free_room_q <= ~({(NE+1){1'b1}} << NE_C);
+        else
+            free_room_q <= free_room_next;
     end
     wire [TRK_CNT_W-1:0] free_count_next;
     assign free_count_next = free_count_pick;
@@ -500,12 +530,31 @@ module l1d_req_tracker #(
     integer fr_rank;
     integer fn_pick;
     integer fn_count;
+    localparam KS_LV = $clog2(NE);
+    reg  [GE_W-1:0] ks_ge [0:(KS_LV+1)*NE-1];
+    integer ks_lv;
+    integer ks_entry;
+    integer ks_bit;
+    integer ks_part;
+    always @* begin
+        for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1)
+            ks_ge[ks_entry] = {{(GE_W-2){1'b0}}, !valid_q[ks_entry], 1'b1};
+        for (ks_lv = 1; ks_lv <= KS_LV; ks_lv = ks_lv + 1)
+            for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1) begin
+                ks_ge[ks_lv*NE + ks_entry] = {GE_W{1'b0}};
+                for (ks_bit = 0; ks_bit < GE_W; ks_bit = ks_bit + 1)
+                    for (ks_part = 0; ks_part <= ks_bit; ks_part = ks_part + 1)
+                        ks_ge[ks_lv*NE + ks_entry][ks_bit] = ks_ge[ks_lv*NE + ks_entry][ks_bit] |
+                            (ks_ge[(ks_lv-1)*NE + ks_entry][ks_part] &
+                             ((ks_entry >= (1 << (ks_lv-1))) ?
+                                  ks_ge[(ks_lv-1)*NE + ((ks_entry >= (1 << (ks_lv-1))) ? ks_entry - (1 << (ks_lv-1)) : 0)][ks_bit-ks_part] :
+                                  (ks_bit == ks_part)));
+            end
+    end
     always @* begin
         for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1) begin
-            free_ge[fg_entry] = {{(GE_W-1){1'b0}}, 1'b1};
-            for (fg_lower = 0; fg_lower < fg_entry; fg_lower = fg_lower + 1)
-                if (!valid_q[fg_lower])
-                    free_ge[fg_entry] = free_ge[fg_entry] | (free_ge[fg_entry] << 1);
+            free_ge[fg_entry] = (fg_entry == 0) ? {{(GE_W-1){1'b0}}, 1'b1} :
+                                ks_ge[KS_LV*NE + ((fg_entry > 0) ? fg_entry - 1 : 0)];
             for (fr_rank = 0; fr_rank < 2 * NA; fr_rank = fr_rank + 1)
                 free_rank[fr_rank*NE + fg_entry] = !valid_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
                                                    !free_ge[fg_entry][fr_rank+1];

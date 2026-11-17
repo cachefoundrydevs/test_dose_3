@@ -32,8 +32,9 @@ jobs:
       matrix:
         variant:
           - { name: base,     cfg: '' }
-          - { name: abc_d200, cfg: 'ABC_CLOCK_PERIOD_IN_PS=200' }
-          - { name: abc_d150, cfg: 'ABC_CLOCK_PERIOD_IN_PS=150' }
+          - { name: swap_arith, cfg: 'SWAP_ARITH_OPERATORS=1' }
+          - { name: wrapped_ops, cfg: 'SYNTH_WRAPPED_OPERATORS=1' }
+          - { name: retime, cfg: 'SYNTH_RETIME_MODULES=l1d_req_tracker' }
     container:
       image: openroad/orfs:latest
       options: --user root

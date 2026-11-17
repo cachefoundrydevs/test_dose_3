@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/bank/s0/l1d_book_select.v
+hierarchy -top l1d_book_select
+proc
+flatten
+opt_clean
+rename l1d_book_select gate
+write_rtlil proof/gate.il

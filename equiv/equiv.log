@@ -1,0 +1,252 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: book_now_any_gold (\book_now_any_gold), book_now_any_gate (\book_now_any_gate) -> book_now_any
+Presumably equivalent wires: cpu_go_gold (\cpu_go_gold), cpu_go_gate (\cpu_go_gate) -> cpu_go
+Presumably equivalent wires: maint_ok_gold (\maint_ok_gold), maint_ok_gate (\maint_ok_gate) -> maint_ok
+Presumably equivalent wires: refill_ok_gold (\refill_ok_gold), refill_ok_gate (\refill_ok_gate) -> refill_ok
+Presumably equivalent wires: snoop_waits_gold (\snoop_waits_gold), snoop_waits_gate (\snoop_waits_gate) -> snoop_waits
+Presumably equivalent wires: snoop_ok_gold (\snoop_ok_gold), snoop_ok_gate (\snoop_ok_gate) -> snoop_ok
+Presumably equivalent wires: snoop_request_gold (\snoop_request_gold), snoop_request_gate (\snoop_request_gate) -> snoop_request
+Presumably equivalent wires: door_open_next_gold (\door_open_next_gold), door_open_next_gate (\door_open_next_gate) -> door_open_next
+Presumably equivalent wires: starve_q_gold (\starve_q_gold), starve_q_gate (\starve_q_gate) -> starve_q
+Presumably equivalent wires: starve_cnt_q_gold (\starve_cnt_q_gold), starve_cnt_q_gate (\starve_cnt_q_gate) -> starve_cnt_q
+Presumably equivalent wires: skip_open_q_gold (\skip_open_q_gold), skip_open_q_gate (\skip_open_q_gate) -> skip_open_q
+Presumably equivalent wires: skip_q_gold (\skip_q_gold), skip_q_gate (\skip_q_gate) -> skip_q
+Presumably equivalent wires: book_now_prefetch_gold (\book_now_prefetch_gold), book_now_prefetch_gate (\book_now_prefetch_gate) -> book_now_prefetch
+Presumably equivalent wires: book_now_arrival_gold (\book_now_arrival_gold), book_now_arrival_gate (\book_now_arrival_gate) -> book_now_arrival
+Presumably equivalent wires: book_now_entry_gold (\book_now_entry_gold), book_now_entry_gate (\book_now_entry_gate) -> book_now_entry
+Presumably equivalent wires: book_now_maint_gold (\book_now_maint_gold), book_now_maint_gate (\book_now_maint_gate) -> book_now_maint
+Presumably equivalent wires: book_now_refill_gold (\book_now_refill_gold), book_now_refill_gate (\book_now_refill_gate) -> book_now_refill
+Presumably equivalent wires: book_now_snoop_gold (\book_now_snoop_gold), book_now_snoop_gate (\book_now_snoop_gate) -> book_now_snoop
+Presumably equivalent wires: fresh_allowed_q_gold (\fresh_allowed_q_gold), fresh_allowed_q_gate (\fresh_allowed_q_gate) -> fresh_allowed_q
+Presumably equivalent wires: book_kind_q_gold (\book_kind_q_gold), book_kind_q_gate (\book_kind_q_gate) -> book_kind_q
+Presumably equivalent wires: book_valid_q_gold (\book_valid_q_gold), book_valid_q_gate (\book_valid_q_gate) -> book_valid_q
+Presumably equivalent wires: amo_write_next_gold (\amo_write_next_gold), amo_write_next_gate (\amo_write_next_gate) -> amo_write_next
+Presumably equivalent wires: store_in_flight_next_gold (\store_in_flight_next_gold), store_in_flight_next_gate (\store_in_flight_next_gate) -> store_in_flight_next
+Presumably equivalent wires: amo_issued_now_gold (\amo_issued_now_gold), amo_issued_now_gate (\amo_issued_now_gate) -> amo_issued_now
+Presumably equivalent wires: prefetch_valid_gold (\prefetch_valid_gold), prefetch_valid_gate (\prefetch_valid_gate) -> prefetch_valid
+Presumably equivalent wires: arrival_credit_ok_gold (\arrival_credit_ok_gold), arrival_credit_ok_gate (\arrival_credit_ok_gate) -> arrival_credit_ok
+Presumably equivalent wires: arrival_ready_valid_gold (\arrival_ready_valid_gold), arrival_ready_valid_gate (\arrival_ready_valid_gate) -> arrival_ready_valid
+Presumably equivalent wires: entry_credit_ok_gold (\entry_credit_ok_gold), entry_credit_ok_gate (\entry_credit_ok_gate) -> entry_credit_ok
+Presumably equivalent wires: entry_ready_valid_gold (\entry_ready_valid_gold), entry_ready_valid_gate (\entry_ready_valid_gate) -> entry_ready_valid
+Presumably equivalent wires: maint_token_valid_gold (\maint_token_valid_gold), maint_token_valid_gate (\maint_token_valid_gate) -> maint_token_valid
+Presumably equivalent wires: refill_token_valid_gold (\refill_token_valid_gold), refill_token_valid_gate (\refill_token_valid_gate) -> refill_token_valid
+Presumably equivalent wires: snoop_credit_ok_gold (\snoop_credit_ok_gold), snoop_credit_ok_gate (\snoop_credit_ok_gate) -> snoop_credit_ok
+Presumably equivalent wires: snoop_offer_valid_gold (\snoop_offer_valid_gold), snoop_offer_valid_gate (\snoop_offer_valid_gate) -> snoop_offer_valid
+Presumably equivalent wires: rst_gold (\rst_gold), rst_gate (\rst_gate) -> rst
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Changing input A of cell $procmux$110_gate ($mux): \book_now_any_gate -> \book_now_any
+Changing input A of cell $procmux$104_gate ($mux): \book_now_snoop_gate -> \book_now_snoop
+Changing input A of cell $procmux$101_gate ($mux): \book_now_refill_gate -> \book_now_refill
+Changing input A of cell $procmux$98_gate ($mux): \book_now_maint_gate -> \book_now_maint
+Changing input A of cell $procmux$92_gate ($mux): \book_now_prefetch_gate -> \book_now_prefetch
+Changing input S of cell $procmux$86_gate ($mux): \book_now_refill_gate -> \book_now_refill
+Changing input S of cell $procmux$83_gate ($mux): \skip_open_q_gate -> \skip_open_q
+Changing input B of cell $procmux$83_gate ($mux): \skip_q_gate -> \skip_q
+Changing input S of cell $procmux$78_gate ($mux): \book_now_refill_gate -> \book_now_refill
+Changing input S of cell $procmux$75_gate ($mux): \skip_open_q_gate -> \skip_open_q
+Changing input B of cell $procmux$75_gate ($mux): \skip_open_q_gate -> \skip_open_q
+Changing input A of cell $procmux$70_gate ($mux): \starve_cnt_q_gate -> \starve_cnt_q
+Changing input A of cell $procmux$65_gate ($mux): \starve_q_gate -> \starve_q
+Changing input A of cell $eq$rtl/bank/s0/l1d_book_select.v:103$64_gate ($eq): \starve_cnt_q_gate -> \starve_cnt_q
+Changing input A of cell $add$rtl/bank/s0/l1d_book_select.v:102$63_gate ($add): \starve_cnt_q_gate -> \starve_cnt_q
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:101$62_gate ($logic_and): \book_now_snoop_gate -> \book_now_snoop
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:101$61_gate ($logic_not): \starve_q_gate -> \starve_q
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:98$58_gate ($logic_or): \book_now_refill_gate -> \book_now_refill
+Changing input A of cell $eq$rtl/bank/s0/l1d_book_select.v:94$56_gate ($eq): \skip_q_gate -> \skip_q
+Changing input A of cell $sub$rtl/bank/s0/l1d_book_select.v:93$55_gate ($sub): \skip_q_gate -> \skip_q
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:82$52_gate ($logic_and): \cpu_go_gate -> \cpu_go
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:82$51_gate ($logic_not): \book_now_any_gate -> \book_now_any
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:80$50_gate ($logic_or): \book_now_arrival_gate -> \book_now_arrival
+Changing input A of cell $logic_or$rtl/bank/s0/l1d_book_select.v:80$50_gate ($logic_or): \book_now_entry_gate -> \book_now_entry
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$48_gate ($logic_or): \book_now_prefetch_gate -> \book_now_prefetch
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$47_gate ($logic_or): \book_now_arrival_gate -> \book_now_arrival
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$46_gate ($logic_or): \book_now_entry_gate -> \book_now_entry
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$45_gate ($logic_or): \book_now_maint_gate -> \book_now_maint
+Changing input B of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$44_gate ($logic_or): \book_now_refill_gate -> \book_now_refill
+Changing input A of cell $logic_or$rtl/bank/s0/l1d_book_select.v:69$44_gate ($logic_or): \book_now_snoop_gate -> \book_now_snoop
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:67$41_gate ($logic_not): \book_now_arrival_gate -> \book_now_arrival
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:67$40_gate ($logic_and): \cpu_go_gate -> \cpu_go
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:67$39_gate ($logic_not): \book_now_entry_gate -> \book_now_entry
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:66$36_gate ($logic_and): \cpu_go_gate -> \cpu_go
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:66$35_gate ($logic_not): \book_now_entry_gate -> \book_now_entry
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:65$33_gate ($logic_and): \cpu_go_gate -> \cpu_go
+Changing input B of cell $logic_and$rtl/bank/s0/l1d_book_select.v:64$32_gate ($logic_and): \maint_ok_gate -> \maint_ok
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:64$32_gate ($logic_and): \door_open_next_gate -> \door_open_next
+Changing input B of cell $logic_and$rtl/bank/s0/l1d_book_select.v:63$31_gate ($logic_and): \refill_ok_gate -> \refill_ok
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:63$31_gate ($logic_and): \door_open_next_gate -> \door_open_next
+Changing input B of cell $logic_and$rtl/bank/s0/l1d_book_select.v:62$30_gate ($logic_and): \snoop_ok_gate -> \snoop_ok
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:62$30_gate ($logic_and): \door_open_next_gate -> \door_open_next
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:60$22_gate ($logic_not): \snoop_waits_gate -> \snoop_waits
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:60$21_gate ($logic_and): \door_open_next_gate -> \door_open_next
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:60$20_gate ($logic_not): \snoop_ok_gate -> \snoop_ok
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:59$14_gate ($logic_not): \snoop_ok_gate -> \snoop_ok
+Changing input A of cell $logic_not$rtl/bank/s0/l1d_book_select.v:58$10_gate ($logic_not): \snoop_ok_gate -> \snoop_ok
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:57$9_gate ($logic_and): \snoop_request_gate -> \snoop_request
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:56$8_gate ($logic_and): \snoop_request_gate -> \snoop_request
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:55$4_gate ($logic_and): \starve_q_gate -> \starve_q
+Changing input A of cell $logic_and$rtl/bank/s0/l1d_book_select.v:54$2_gate ($logic_and): \skip_open_q_gate -> \skip_open_q
+Changing input A of cell $procmux$110_gold ($mux): \book_now_any_gold -> \book_now_any
+Changing input A of cell $procmux$104_gold ($mux): \book_now_snoop_gold -> \book_now_snoop
+Changing input A of cell $procmux$101_gold ($mux): \book_now_refill_gold -> \book_now_refill
+Changing input A of cell $procmux$98_gold ($mux): \book_now_maint_gold -> \book_now_maint
+Changing input A of cell $procmux$92_gold ($mux): \book_now_prefetch_gold -> \book_now_prefetch
+Changing input S of cell $procmux$86_gold ($mux): \book_now_refill_gold -> \book_now_refill
+Changing input S of cell $procmux$83_gold ($mux): \skip_open_q_gold -> \skip_open_q
+Changing input B of cell $procmux$83_gold ($mux): \skip_q_gold -> \skip_q
+Changing input S of cell $procmux$78_gold ($mux): \book_now_refill_gold -> \book_now_refill
+Changing input S of cell $procmux$75_gold ($mux): \skip_open_q_gold -> \skip_open_q
+Changing input B of cell $procmux$75_gold ($mux): \skip_open_q_gold -> \skip_open_q
+Changing input A of cell $procmux$70_gold ($mux): \starve_cnt_q_gold -> \starve_cnt_q
+Changing input A of cell $procmux$65_gold ($mux): \starve_q_gold -> \starve_q
+Changing input A of cell $eq$golden/l1d_book_select.v:103$64_gold ($eq): \starve_cnt_q_gold -> \starve_cnt_q
+Changing input A of cell $add$golden/l1d_book_select.v:102$63_gold ($add): \starve_cnt_q_gold -> \starve_cnt_q
+Changing input A of cell $logic_and$golden/l1d_book_select.v:101$62_gold ($logic_and): \book_now_snoop_gold -> \book_now_snoop
+Changing input A of cell $logic_not$golden/l1d_book_select.v:101$61_gold ($logic_not): \starve_q_gold -> \starve_q
+Changing input B of cell $logic_or$golden/l1d_book_select.v:98$58_gold ($logic_or): \book_now_refill_gold -> \book_now_refill
+Changing input A of cell $eq$golden/l1d_book_select.v:94$56_gold ($eq): \skip_q_gold -> \skip_q
+Changing input A of cell $sub$golden/l1d_book_select.v:93$55_gold ($sub): \skip_q_gold -> \skip_q
+Changing input A of cell $logic_and$golden/l1d_book_select.v:82$52_gold ($logic_and): \cpu_go_gold -> \cpu_go
+Changing input A of cell $logic_not$golden/l1d_book_select.v:82$51_gold ($logic_not): \book_now_any_gold -> \book_now_any
+Changing input B of cell $logic_or$golden/l1d_book_select.v:80$50_gold ($logic_or): \book_now_arrival_gold -> \book_now_arrival
+Changing input A of cell $logic_or$golden/l1d_book_select.v:80$50_gold ($logic_or): \book_now_entry_gold -> \book_now_entry
+Changing input B of cell $logic_or$golden/l1d_book_select.v:69$48_gold ($logic_or): \book_now_prefetch_gold -> \book_now_prefetch
+Changing input B of cell $logic_or$golden/l1d_book_select.v:69$47_gold ($logic_or): \book_now_arrival_gold -> \book_now_arrival
+Changing input B of cell $logic_or$golden/l1d_book_select.v:69$46_gold ($logic_or): \book_now_entry_gold -> \book_now_entry
+Changing input B of cell $logic_or$golden/l1d_book_select.v:69$45_gold ($logic_or): \book_now_maint_gold -> \book_now_maint
+Changing input B of cell $logic_or$golden/l1d_book_select.v:69$44_gold ($logic_or): \book_now_refill_gold -> \book_now_refill
+Changing input A of cell $logic_or$golden/l1d_book_select.v:69$44_gold ($logic_or): \book_now_snoop_gold -> \book_now_snoop
+Changing input A of cell $logic_not$golden/l1d_book_select.v:67$41_gold ($logic_not): \book_now_arrival_gold -> \book_now_arrival
+Changing input A of cell $logic_and$golden/l1d_book_select.v:67$40_gold ($logic_and): \cpu_go_gold -> \cpu_go
+Changing input A of cell $logic_not$golden/l1d_book_select.v:67$39_gold ($logic_not): \book_now_entry_gold -> \book_now_entry
+Changing input A of cell $logic_and$golden/l1d_book_select.v:66$36_gold ($logic_and): \cpu_go_gold -> \cpu_go
+Changing input A of cell $logic_not$golden/l1d_book_select.v:66$35_gold ($logic_not): \book_now_entry_gold -> \book_now_entry
+Changing input A of cell $logic_and$golden/l1d_book_select.v:65$33_gold ($logic_and): \cpu_go_gold -> \cpu_go
+Changing input B of cell $logic_and$golden/l1d_book_select.v:64$32_gold ($logic_and): \maint_ok_gold -> \maint_ok
+Changing input A of cell $logic_and$golden/l1d_book_select.v:64$32_gold ($logic_and): \door_open_next_gold -> \door_open_next
+Changing input B of cell $logic_and$golden/l1d_book_select.v:63$31_gold ($logic_and): \refill_ok_gold -> \refill_ok
+Changing input A of cell $logic_and$golden/l1d_book_select.v:63$31_gold ($logic_and): \door_open_next_gold -> \door_open_next
+Changing input B of cell $logic_and$golden/l1d_book_select.v:62$30_gold ($logic_and): \snoop_ok_gold -> \snoop_ok
+Changing input A of cell $logic_and$golden/l1d_book_select.v:62$30_gold ($logic_and): \door_open_next_gold -> \door_open_next
+Changing input A of cell $logic_not$golden/l1d_book_select.v:60$22_gold ($logic_not): \snoop_waits_gold -> \snoop_waits
+Changing input A of cell $logic_and$golden/l1d_book_select.v:60$21_gold ($logic_and): \door_open_next_gold -> \door_open_next
+Changing input A of cell $logic_not$golden/l1d_book_select.v:60$20_gold ($logic_not): \snoop_ok_gold -> \snoop_ok
+Changing input A of cell $logic_not$golden/l1d_book_select.v:59$14_gold ($logic_not): \snoop_ok_gold -> \snoop_ok
+Changing input A of cell $logic_not$golden/l1d_book_select.v:58$10_gold ($logic_not): \snoop_ok_gold -> \snoop_ok
+Changing input A of cell $logic_and$golden/l1d_book_select.v:57$9_gold ($logic_and): \snoop_request_gold -> \snoop_request
+Changing input A of cell $logic_and$golden/l1d_book_select.v:56$8_gold ($logic_and): \snoop_request_gold -> \snoop_request
+Changing input A of cell $logic_and$golden/l1d_book_select.v:55$4_gold ($logic_and): \starve_q_gold -> \starve_q
+Changing input A of cell $logic_and$golden/l1d_book_select.v:54$2_gold ($logic_and): \skip_open_q_gold -> \skip_open_q
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 29 unproven $equiv cells (21 groups) in equiv:
+  Trying to prove $equiv for \book_valid_q:ezsat
+ezsat
+ success!
+ Grouping SAT models for \book_kind_q:
+  Trying to prove $equiv for \book_kind_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \book_kind_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \book_kind_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \book_kind_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \book_kind_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \fresh_allowed_q:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \book_now_snoop:ezsat
+ success!
+  Trying to prove $equiv for \book_now_refill:ezsat
+ success!
+  Trying to prove $equiv for \book_now_maint:ezsat
+ success!
+  Trying to prove $equiv for \book_now_entry:ezsat
+ success!
+  Trying to prove $equiv for \book_now_arrival:ezsat
+ success!
+  Trying to prove $equiv for \book_now_prefetch:ezsat
+ success!
+ Grouping SAT models for \skip_q:
+  Trying to prove $equiv for \skip_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \skip_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \skip_open_q:ezsat
+ezsat
+ success!
+ Grouping SAT models for \starve_cnt_q:
+  Trying to prove $equiv for \starve_cnt_q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \starve_cnt_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \starve_cnt_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \starve_cnt_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \starve_q:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \door_open_next:ezsat
+ success!
+  Trying to prove $equiv for \snoop_request:ezsat
+ success!
+  Trying to prove $equiv for \snoop_ok:ezsat
+ success!
+  Trying to prove $equiv for \snoop_waits:ezsat
+ success!
+  Trying to prove $equiv for \refill_ok:ezsat
+ success!
+  Trying to prove $equiv for \maint_ok:ezsat
+ success!
+  Trying to prove $equiv for \cpu_go:ezsat
+ success!
+  Trying to prove $equiv for \book_now_any:ezsat
+ success!
+Proved 29 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 29 $equiv cells in equiv:
+  Of those cells 29 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 5190c7f99a, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 22.62 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 90% 1x equiv_simple (0 sec), 5% 1x equiv_make (0 sec), ...

@@ -51,3 +51,10 @@
 + ALWAYS always @(posedge clk)
 + LABEL free_pick_proc
 + FOR for(fq_pick=0;fq_pick<NA;fq_pick=fq_pick+1)
+# iteration 12 (user approved): free_room thermometer, parallel free count select
++ DECL wire[NE:0]free_room
++ DECL reg[TRK_CNT_W-1:0]free_count_pick
++ DECL reg s2_frees
++ DECL integer fc_count
++ ALWAYS always @*
++ FOR for(fc_count=0;fc_count<=NA;fc_count=fc_count+1)

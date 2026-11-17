@@ -151,16 +151,18 @@ module l1d_req_tracker #(
         end
     end
     wire [NS-1:0] alloc;
+    wire [NE:0]   free_room;
+    assign free_room = ~({(NE+1){1'b1}} << free_count_q);
     genvar al_idx;
     generate
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
             wire rank_in_room;
             wire rank_in_max;
-            assign rank_in_room = ((rank[al_idx] == 3'b000) && (free_count_q > 0)) ||
-                                  ((rank[al_idx] == 3'b001) && (free_count_q > 1)) ||
-                                  ((rank[al_idx] == 3'b011) && (free_count_q > 2)) ||
-                                  ((rank[al_idx] == 3'b111) && (free_count_q > 3)) ||
-                                  ((rank[al_idx] == 3'b110) && (free_count_q > 4));
+            assign rank_in_room = ((rank[al_idx] == 3'b000) && free_room[0]) ||
+                                  ((rank[al_idx] == 3'b001) && free_room[1]) ||
+                                  ((rank[al_idx] == 3'b011) && free_room[2]) ||
+                                  ((rank[al_idx] == 3'b111) && free_room[3]) ||
+                                  ((rank[al_idx] == 3'b110) && free_room[4]);
             assign rank_in_max  = ((rank[al_idx] == 3'b000) && (0 < NA)) ||
                                   ((rank[al_idx] == 3'b001) && (1 < NA)) ||
                                   ((rank[al_idx] == 3'b011) && (2 < NA)) ||
@@ -298,7 +300,7 @@ module l1d_req_tracker #(
         lowest_credit  = 1'b0;
         lower_req_seen = 1'b0;
         for (lo_port = 0; lo_port < LSU_PORTS; lo_port = lo_port + 1) begin
-            lowest_req[lo_port]  = src_valid[lo_port] & !lower_req_seen;
+            lowest_req[lo_port]  = src_valid[lo_port] & ~|(src_valid[LSU_PORTS-1:0] & ~({LSU_PORTS{1'b1}} << lo_port));
             lower_req_seen       = lower_req_seen | src_valid[lo_port];
             lowest_port[lo_port] = lowest_req[lo_port] & alloc[lo_port];
             lowest_credit        = lowest_credit | (lowest_port[lo_port] & credit_q[lo_port]);
@@ -374,7 +376,7 @@ module l1d_req_tracker #(
         for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
             arrival_cand[ab_src] = alloc[ab_src] && (deps_new[ab_src] == {NE{1'b0}}) &&
                                    !(fresh_issue && (rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
-            arrival_pick[ab_src] = arrival_cand[ab_src] && !arrival_seen;
+            arrival_pick[ab_src] = arrival_cand[ab_src] && !(|(arrival_cand & ~({NS{1'b1}} << ab_src)));
             arrival_seen         = arrival_seen || arrival_cand[ab_src];
         end
     end
@@ -472,15 +474,20 @@ module l1d_req_tracker #(
             alloc_cnt = alloc[ac_src] ? {rank[ac_src][2], ~rank[ac_src][2] & rank[ac_src][0],
                                          ~rank[ac_src][0] | (rank[ac_src][1] & ~rank[ac_src][2])} : alloc_cnt;
     end
+    reg  [TRK_CNT_W-1:0] free_count_pick;
+    reg                  s2_frees;
+    integer fc_count;
+    always @* begin
+        s2_frees        = s2_cpu_valid && s2_free_entry && (s2_seat < NE);
+        free_count_pick = {TRK_CNT_W{1'b0}};
+        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1)
+            if (((fc_count == 0)  || rank_alloc[(fc_count > 0) ? fc_count - 1 : 0]) &&
+                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0]))
+                free_count_pick = free_count_pick |
+                                  (s2_frees ? (free_count_q + 1 - fc_count) : (free_count_q - fc_count));
+    end
     wire [TRK_CNT_W-1:0] free_count_next;
-    assign free_count_next = (alloc_cnt == 0) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now}     :
-                             (alloc_cnt == 1) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 1 :
-                             (alloc_cnt == 2) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 2 :
-                             (alloc_cnt == 3) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 3 :
-                             (alloc_cnt == 4) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 4 :
-                             (alloc_cnt == 5) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 5 :
-                             (alloc_cnt == 6) ? free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 6 :
-                                                free_count_q + {{(TRK_CNT_W-1){1'b0}}, |freed_now} - 7;
+    assign free_count_next = free_count_pick;
     localparam GE_W = 2 * NA + 1;
     reg  [GE_W-1:0]  free_ge [0:NE-1];
     reg  [2*NA*NE-1:0] free_rank;

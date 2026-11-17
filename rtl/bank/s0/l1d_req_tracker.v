@@ -108,6 +108,7 @@ module l1d_req_tracker #(
     reg  [REQ_W-1:0]        packet_q [0:NE-1];
     reg  [PC_W-1:0]         pc_q [0:NE-1];
     reg  [INDEX_W-1:0]      set_q [0:NE-1];
+    reg  [INDEX_W-1:0]      set_dup_q [0:NE-1];
     reg  [NE-1:0]           write_q;
     reg  [NE-1:0]           deps_q [0:NE-1];
     reg  [MSHR_ENTRIES-1:0] wait_mshr_q [0:NE-1];
@@ -324,7 +325,8 @@ module l1d_req_tracker #(
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
             for (dp_entry = 0; dp_entry < NE; dp_entry = dp_entry + 1)
                 deps_old[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
-                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]) &
+                                             (((dp_src < 3) ? set_q[dp_entry] : set_dup_q[dp_entry]) ==
+                                              src_set[dp_src*INDEX_W +: INDEX_W]) &
                                              (write_q[dp_entry] | src_write[dp_src]);
             deps_new[dp_src]   = deps_old[dp_src];
             lower_pair[dp_src] = {NS{1'b0}};
@@ -562,6 +564,8 @@ module l1d_req_tracker #(
     reg              freed_any;
     reg  [NA:0]      alloc_n_onehot;
     reg  [NA*NE-1:0] free_pick_next;
+    reg  [NA*NE-1:0] free_pick_kept;
+    reg  [NA*NE-1:0] free_pick_freed;
     integer fg_entry;
     integer fg_lower;
     integer fr_rank;
@@ -604,19 +608,24 @@ module l1d_req_tracker #(
         for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
             alloc_n_onehot[fn_count] = ((fn_count == 0) || rank_alloc[(fn_count > 0) ? fn_count - 1 : 0]) &&
                                        ((fn_count == NA) || !rank_alloc[(fn_count < NA) ? fn_count : 0]);
-        free_pick_next = {NA*NE{1'b0}};
+        free_pick_kept  = {NA*NE{1'b0}};
+        free_pick_freed = {NA*NE{1'b0}};
         for (fn_pick = 0; fn_pick < NA; fn_pick = fn_pick + 1)
             for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
                 if (alloc_n_onehot[fn_count]) begin
-                    if (freed_any && ((fn_pick == 0) || freed_ge[fn_pick+fn_count]) && !freed_ge[fn_pick+fn_count+1])
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] | (freed_now & valid_q);
-                    else if (freed_any && (fn_pick > 0) && !freed_ge[fn_pick+fn_count])
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                    if (fn_pick + fn_count < 2 * NA)
+                        free_pick_kept[fn_pick*NE +: NE] = free_pick_kept[fn_pick*NE +: NE] |
+                            free_rank[(fn_pick+fn_count)*NE +: NE];
+                    if (((fn_pick == 0) || freed_ge[fn_pick+fn_count]) && !freed_ge[fn_pick+fn_count+1])
+                        free_pick_freed[fn_pick*NE +: NE] = free_pick_freed[fn_pick*NE +: NE] | (freed_now & valid_q);
+                    else if ((fn_pick > 0) && !freed_ge[fn_pick+fn_count])
+                        free_pick_freed[fn_pick*NE +: NE] = free_pick_freed[fn_pick*NE +: NE] |
                             free_rank[(((fn_pick > 0) ? fn_pick - 1 : 0) + fn_count)*NE +: NE];
                     else if (fn_pick + fn_count < 2 * NA)
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                        free_pick_freed[fn_pick*NE +: NE] = free_pick_freed[fn_pick*NE +: NE] |
                             free_rank[(fn_pick+fn_count)*NE +: NE];
                 end
+        free_pick_next = freed_any ? free_pick_freed : free_pick_kept;
     end
     integer fq_pick;
     always @(posedge clk) begin : free_pick_proc
@@ -637,6 +646,7 @@ module l1d_req_tracker #(
             trained_q    <= {NE{1'b0}};
             free_count_q <= NE_C;
             for (ent = 0; ent < NE; ent = ent + 1) begin
+                set_dup_q[ent]   <= set_q[ent];
                 state_q[ent]     <= {TRK_STATE_W{1'b0}};
                 deps_q[ent]      <= {NE{1'b0}};
                 wait_mshr_q[ent] <= {MSHR_ENTRIES{1'b0}};
@@ -646,6 +656,7 @@ module l1d_req_tracker #(
             free_count_q <= free_count_next;
             valid_dup_q  <= valid_q;
             for (ent = 0; ent < NE; ent = ent + 1) begin
+                set_dup_q[ent] <= valid_q[ent] ? set_q[ent] : load_packet[ent][SET_IN_REQ +: INDEX_W];
                 if (!valid_q[ent]) begin
                     packet_q[ent] <= load_packet[ent];
                     pc_q[ent]     <= load_pc[ent];

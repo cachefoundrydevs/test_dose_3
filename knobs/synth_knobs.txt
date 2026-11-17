@@ -1,0 +1,178 @@
+synth.tcl:34:source $::env(SCRIPTS_DIR)/synth_preamble.tcl
+synth.tcl:35:if { [env_var_exists_and_non_empty SYNTH_CHECKPOINT] } {
+synth.tcl:36:  read_checkpoint $::env(SYNTH_CHECKPOINT)
+synth.tcl:38:  read_checkpoint $::env(RESULTS_DIR)/1_1_yosys_canonicalize.rtlil
+synth.tcl:65:set synth_blackboxes [env_var_or_empty SYNTH_BLACKBOXES]
+synth.tcl:66:if { [env_var_exists_and_non_empty SYNTH_BLACKBOXES_FILE] } {
+synth.tcl:67:  set fid [open $::env(SYNTH_BLACKBOXES_FILE) r]
+synth.tcl:80:hierarchy -check -top $::env(DESIGN_NAME)
+synth.tcl:82:if { $::env(SYNTH_GUT) } {
+synth.tcl:85:  delete $::env(DESIGN_NAME)/c:*
+synth.tcl:88:if { [env_var_exists_and_non_empty SYNTH_KEEP_MODULES] } {
+synth.tcl:89:  foreach module $::env(SYNTH_KEEP_MODULES) {
+synth.tcl:108:      ![env_var_exists_and_non_empty SYNTH_CHECKPOINT]
+synth.tcl:118:if { [env_var_exists_and_non_empty SYNTH_HIER_SEPARATOR] } {
+synth.tcl:119:  scratchpad -set flatten.separator $::env(SYNTH_HIER_SEPARATOR)
+synth.tcl:122:set synth_full_args [env_var_or_empty SYNTH_ARGS]
+synth.tcl:123:if { [env_var_exists_and_non_empty SYNTH_OPERATIONS_ARGS] } {
+synth.tcl:124:  set synth_full_args [concat $synth_full_args $::env(SYNTH_OPERATIONS_ARGS)]
+synth.tcl:127:    "-extra-map $::env(FLOW_HOME)/platforms/common/lcu_kogge_stone.v"]
+synth.tcl:129:if { [env_var_equals SYNTH_OPT_HIER 1] } {
+synth.tcl:134:  [env_var_exists_and_non_empty SYNTH_CHECKPOINT] &&
+synth.tcl:135:  $::env(SYNTH_SKIP_KEEP)
+synth.tcl:141:} elseif { [env_var_exists_and_non_empty SYNTH_CHECKPOINT] } {
+synth.tcl:145:} elseif { !$::env(SYNTH_HIERARCHICAL) } {
+synth.tcl:153:  if { [env_var_exists_and_non_empty SYNTH_MINIMUM_KEEP_SIZE] } {
+synth.tcl:154:    set ungroup_threshold $::env(SYNTH_MINIMUM_KEEP_SIZE)
+synth.tcl:169:if { [env_var_equals SYNTH_HDL_FRONTEND slang] } {
+synth.tcl:175:set mocked [synth_memory_max_bits $::env(SYNTH_MEMORY_MAX_BITS) \
+synth.tcl:176:  $::env(SYNTH_MOCK_LARGE_MEMORIES) $::env(SYNTH_KEEP_MOCKED_MEMORIES)]
+synth.tcl:177:if { $::env(SYNTH_MOCK_LARGE_MEMORIES) } {
+synth.tcl:178:  set report_file [open $::env(REPORTS_DIR)/synth_mocked_memories.txt "w"]
+synth.tcl:191:if { [env_var_exists_and_non_empty SYNTH_RETIME_MODULES] } {
+synth.tcl:192:  select {*}$::env(SYNTH_RETIME_MODULES)
+synth.tcl:197:  abc -dff -script $::env(SCRIPTS_DIR)/abc_retime.script
+synth.tcl:202:  [env_var_equals SYNTH_WRAPPED_OPERATORS 1] ||
+synth.tcl:203:  [env_var_equals SWAP_ARITH_OPERATORS 1]
+synth.tcl:205:  log_cmd source $::env(SCRIPTS_DIR)/synth_wrap_operators.tcl
+synth.tcl:207:  synth -top $::env(DESIGN_NAME) -run fine: -noabc {*}$synth_full_args
+synth.tcl:224:  [env_var_exists_and_non_empty ADDER_MAP_FILE] &&
+synth.tcl:226:    (![env_var_equals SYNTH_WRAPPED_OPERATORS 1] &&
+synth.tcl:227:      ![env_var_equals SWAP_ARITH_OPERATORS 1]) ||
+synth.tcl:228:    (([env_var_equals SYNTH_WRAPPED_OPERATORS 1] ||
+synth.tcl:229:        [env_var_equals SWAP_ARITH_OPERATORS 1]) &&
+synth.tcl:236:  techmap -map $::env(ADDER_MAP_FILE)
+synth.tcl:243:if { [env_var_exists_and_non_empty LATCH_MAP_FILE] } {
+synth.tcl:246:  dfflegalize {*}[get_dfflegalize_args $::env(LATCH_MAP_FILE)] {t:$_DLATCH_*}
+synth.tcl:247:  techmap -map $::env(LATCH_MAP_FILE)
+synth.tcl:251:if { [env_var_equals INFER_CLKGATES 1] } {
+synth.tcl:254:    [env_var_exists_and_non_empty POS_CLKGATE_AND_PORTS] ||
+synth.tcl:255:    [env_var_exists_and_non_empty NEG_CLKGATE_AND_PORTS]
+synth.tcl:257:    if { [env_var_exists_and_non_empty POS_CLKGATE_AND_PORTS] } {
+synth.tcl:259:      lappend clkgate_args {*}$::env(POS_CLKGATE_AND_PORTS)
+synth.tcl:261:    if { [env_var_exists_and_non_empty NEG_CLKGATE_AND_PORTS] } {
+synth.tcl:263:      lappend clkgate_args {*}$::env(NEG_CLKGATE_AND_PORTS)
+synth.tcl:274:if { [env_var_exists_and_non_empty DFF_LIB_FILE] } {
+synth.tcl:275:  dfflibmap -liberty $::env(DFF_LIB_FILE) {*}$lib_dont_use_args
+synth.tcl:276:} elseif { [env_var_exists_and_non_empty DFF_MAP_FILE] } {
+synth.tcl:277:  set legalize_args [get_dfflegalize_args $::env(DFF_MAP_FILE)]
+synth.tcl:279:  techmap -map $::env(DFF_MAP_FILE)
+synth.tcl:289:  ![env_var_equals SYNTH_WRAPPED_OPERATORS 1] &&
+synth.tcl:290:  ![env_var_equals SWAP_ARITH_OPERATORS 1]
+synth.tcl:296:  scratchpad -set abc9.script $::env(SCRIPTS_DIR)/abc_speed_gia_only.script
+synth.tcl:315:  -hicell {*}$::env(TIEHI_CELL_AND_PORT) \
+synth.tcl:316:  -locell {*}$::env(TIELO_CELL_AND_PORT)
+synth.tcl:318:if { $::env(SYNTH_INSBUF) } {
+synth.tcl:320:  insbuf -buf {*}$::env(MIN_BUF_CELL_AND_PORTS)
+synth.tcl:324:tee -o $::env(REPORTS_DIR)/synth_check.txt check
+synth.tcl:326:tee -o $::env(REPORTS_DIR)/synth_stat.txt stat -hierarchy {*}$lib_args
+synth.tcl:331:  ![env_var_equals SYNTH_WRAPPED_OPERATORS 1] &&
+synth.tcl:332:  ![env_var_equals SWAP_ARITH_OPERATORS 1]
+synth.tcl:342:if { $::env(SYNTH_REPEATABLE_BUILD) } {
+synth.tcl:351:write_verilog -nohex -nodec $::env(RESULTS_DIR)/1_2_yosys.v
+synth_canonicalize.tcl:1:source $::env(SCRIPTS_DIR)/synth_preamble.tcl
+synth_canonicalize.tcl:4:hierarchy -check -top $::env(DESIGN_NAME)
+synth_canonicalize.tcl:6:source_env_var_if_exists SYNTH_CANONICALIZE_TCL
+synth_canonicalize.tcl:10:if { $::env(SYNTH_REPEATABLE_BUILD) } {
+synth_canonicalize.tcl:16:write_rtlil $::env(RESULTS_DIR)/1_1_yosys_canonicalize.rtlil
+synth_metrics.tcl:2:source $::env(SCRIPTS_DIR)/load.tcl
+synth_odb.tcl:2:source $::env(SCRIPTS_DIR)/load.tcl
+synth_odb.tcl:3:source $::env(SCRIPTS_DIR)/formal_check.tcl
+synth_odb.tcl:36:orfs_write_db $::env(RESULTS_DIR)/1_synth.odb
+synth_odb.tcl:37:if { $::env(LEC_CHECK) || $::env(SEC_CHECK) } {
+synth_preamble.tcl:3:source $::env(SCRIPTS_DIR)/util.tcl
+synth_preamble.tcl:17:if { [env_var_exists_and_non_empty SYNTH_NETLIST_FILES] } {
+synth_preamble.tcl:18:  if { [llength $::env(SYNTH_NETLIST_FILES)] == 1 } {
+synth_preamble.tcl:19:    log_cmd exec cp $::env(SYNTH_NETLIST_FILES) $::env(RESULTS_DIR)/1_2_yosys.v
+synth_preamble.tcl:20:    log_cmd exec touch -r $::env(SYNTH_NETLIST_FILES) \
+synth_preamble.tcl:21:      $::env(RESULTS_DIR)/1_2_yosys.v
+synth_preamble.tcl:25:    log_cmd exec cat {*}$::env(SYNTH_NETLIST_FILES) > $::env(RESULTS_DIR)/1_2_yosys.v
+synth_preamble.tcl:27:  if { [env_var_exists_and_non_empty CACHED_REPORTS] } {
+synth_preamble.tcl:28:    foreach report $::env(CACHED_REPORTS) {
+synth_preamble.tcl:29:      set dst $::env(REPORTS_DIR)/[file tail $report]
+synth_preamble.tcl:51:source $::env(SCRIPTS_DIR)/memories/check_blackboxed.tcl
+synth_preamble.tcl:52:source $::env(SCRIPTS_DIR)/memories/max_bits.tcl
+synth_preamble.tcl:53:source $::env(SCRIPTS_DIR)/memories/drop_parameters.tcl
+synth_preamble.tcl:70:    read_verilog -overwrite "$::env(RESULTS_DIR)/memories/$m.v"
+synth_preamble.tcl:76:  source $::env(SCRIPTS_DIR)/synth_stdcells.tcl
+synth_preamble.tcl:80:  if { [env_var_exists_and_non_empty VERILOG_INCLUDE_DIRS] } {
+synth_preamble.tcl:81:    foreach dir $::env(VERILOG_INCLUDE_DIRS) {
+synth_preamble.tcl:87:  if { [env_var_equals SYNTH_HDL_FRONTEND slang] } {
+synth_preamble.tcl:90:      -D SYNTHESIS --keep-hierarchy --compat=vcs --ignore-assertions --top $::env(DESIGN_NAME) \
+synth_preamble.tcl:91:      {*}$vIdirsArgs {*}[env_var_or_empty VERILOG_DEFINES]]
+synth_preamble.tcl:97:    if { [env_var_exists_and_non_empty CLKGATE_MAP_FILE] } {
+synth_preamble.tcl:98:      lappend slang_args $::env(CLKGATE_MAP_FILE)
+synth_preamble.tcl:102:    dict for {key value} [env_var_or_empty VERILOG_TOP_PARAMS] {
+synth_preamble.tcl:110:    if { [env_var_exists_and_non_empty ADDITIONAL_LIBS] } {
+synth_preamble.tcl:119:    if { [env_var_exists_and_non_empty SYNTH_BLACKBOXES] } {
+synth_preamble.tcl:120:      foreach m $::env(SYNTH_BLACKBOXES) {
+synth_preamble.tcl:132:    lappend slang_args {*}$::env(SYNTH_SLANG_ARGS)
+synth_preamble.tcl:148:  } elseif { [env_var_equals SYNTH_HDL_FRONTEND verific] } {
+synth_preamble.tcl:149:    if { [env_var_exists_and_non_empty VERILOG_INCLUDE_DIRS] } {
+synth_preamble.tcl:150:      verific -vlog-incdir {*}$::env(VERILOG_INCLUDE_DIRS)
+synth_preamble.tcl:152:    if { [env_var_exists_and_non_empty VERILOG_DEFINES] } {
+synth_preamble.tcl:153:      verific -vlog-define {*}$::env(VERILOG_DEFINES)
+synth_preamble.tcl:156:    verific -import -no-split-complex-ports $::env(DESIGN_NAME)
+synth_preamble.tcl:158:    dict for {key value} [env_var_or_empty VERILOG_TOP_PARAMS] {
+synth_preamble.tcl:160:      chparam -set $key $value $::env(DESIGN_NAME)
+synth_preamble.tcl:163:    if { [env_var_exists_and_non_empty SYNTH_BLACKBOXES] } {
+synth_preamble.tcl:167:      error "AUTO_MEMORIES unsupported with HDL frontend \"$::env(SYNTH_HDL_FRONTEND)\""
+synth_preamble.tcl:169:  } elseif { ![env_var_exists_and_non_empty SYNTH_HDL_FRONTEND] } {
+synth_preamble.tcl:171:    if { [env_var_exists_and_non_empty VERILOG_DEFINES] } {
+synth_preamble.tcl:172:      verilog_defaults -add {*}$::env(VERILOG_DEFINES)
+synth_preamble.tcl:178:    if { [env_var_exists_and_non_empty CLKGATE_MAP_FILE] } {
+synth_preamble.tcl:179:      read_verilog -defer $::env(CLKGATE_MAP_FILE)
+synth_preamble.tcl:183:    dict for {key value} [env_var_or_empty VERILOG_TOP_PARAMS] {
+synth_preamble.tcl:185:      chparam -set $key $value $::env(DESIGN_NAME)
+synth_preamble.tcl:194:      hierarchy -top $::env(DESIGN_NAME)
+synth_preamble.tcl:200:      hierarchy -check -top $::env(DESIGN_NAME)
+synth_preamble.tcl:204:      hierarchy -check -top $::env(DESIGN_NAME)
+synth_preamble.tcl:206:    if { [env_var_exists_and_non_empty SYNTH_BLACKBOXES] } {
+synth_preamble.tcl:207:      hierarchy -check -top $::env(DESIGN_NAME)
+synth_preamble.tcl:208:      foreach m $::env(SYNTH_BLACKBOXES) {
+synth_preamble.tcl:213:    error "Unrecognized HDL frontend: $::env(SYNTH_HDL_FRONTEND)"
+synth_preamble.tcl:217:if { [env_var_exists_and_non_empty ABC_SCRIPT] } {
+synth_preamble.tcl:218:  puts "Using ABC script $::env(ABC_SCRIPT)."
+synth_preamble.tcl:219:  set abc_script $::env(ABC_SCRIPT)
+synth_preamble.tcl:220:} elseif { $::env(ABC_AREA) } {
+synth_preamble.tcl:222:  set abc_script $::env(SCRIPTS_DIR)/abc_area.script
+synth_preamble.tcl:225:  set abc_script $::env(SCRIPTS_DIR)/abc_speed.script
+synth_preamble.tcl:230:foreach lib $::env(LIB_FILES) {
+synth_preamble.tcl:237:if { [env_var_exists_and_non_empty DONT_USE_CELLS] } {
+synth_preamble.tcl:238:  foreach cell $::env(DONT_USE_CELLS) {
+synth_preamble.tcl:244:if { [env_var_exists_and_non_empty BLOCKS] } {
+synth_preamble.tcl:245:  foreach block $::env(BLOCKS) {
+synth_preamble.tcl:252:  {*}$lib_args {*}$lib_dont_use_args -constr $::env(OBJECTS_DIR)/abc.constr]
+synth_preamble.tcl:254:set constr [open $::env(OBJECTS_DIR)/abc.constr w]
+synth_preamble.tcl:255:puts $constr "set_driving_cell $::env(ABC_DRIVER_CELL)"
+synth_preamble.tcl:256:puts $constr "set_load $::env(ABC_LOAD_IN_FF)"
+synth_stdcells.tcl:2:read_liberty -overwrite -setattr liberty_cell -lib {*}$::env(LIB_FILES)
+synth_stdcells.tcl:4:  -unit_delay -wb -ignore_miss_func -ignore_buses {*}$::env(LIB_FILES)
+synth_stdcells.tcl:5:if { [info exists ::env(UNSET_ABC9_BOX_CELLS)] } {
+synth_stdcells.tcl:6:  setattr -mod -unset abc9_box {*}$::env(UNSET_ABC9_BOX_CELLS)
+synth_syn.tcl:2:source $::env(SCRIPTS_DIR)/load.tcl
+synth_syn.tcl:3:source $::env(SCRIPTS_DIR)/formal_check.tcl
+synth_syn.tcl:6:source_env_var_if_exists PLATFORM_TCL
+synth_syn.tcl:7:source $::env(SCRIPTS_DIR)/read_liberty.tcl
+synth_syn.tcl:9:log_cmd read_lef $::env(TECH_LEF)
+synth_syn.tcl:10:log_cmd read_lef $::env(SC_LEF)
+synth_syn.tcl:11:if { [env_var_exists_and_non_empty ADDITIONAL_LEFS] } {
+synth_syn.tcl:12:  foreach lef $::env(ADDITIONAL_LEFS) {
+synth_syn.tcl:16:if { [env_var_exists_and_non_empty DONT_USE_CELLS] } {
+synth_syn.tcl:17:  log_cmd set_dont_use $::env(DONT_USE_CELLS)
+synth_syn.tcl:22:if { [env_var_exists_and_non_empty VERILOG_INCLUDE_DIRS] } {
+synth_syn.tcl:23:  foreach dir $::env(VERILOG_INCLUDE_DIRS) {
+synth_syn.tcl:30:  -D SYNTHESIS --compat=vcs --ignore-assertions --no-implicit-memories --top $::env(DESIGN_NAME) \
+synth_syn.tcl:31:  {*}$vIdirsArgs {*}[env_var_or_empty VERILOG_DEFINES]]
+synth_syn.tcl:37:dict for {key value} [env_var_or_empty VERILOG_TOP_PARAMS] {
+synth_syn.tcl:44:if { [env_var_exists_and_non_empty SYNTH_BLACKBOXES] } {
+synth_syn.tcl:45:  foreach m $::env(SYNTH_BLACKBOXES) {
+synth_syn.tcl:50:lappend elaborate_args {*}$::env(SYNTH_SLANG_ARGS)
+synth_syn.tcl:68:log_cmd read_sdc $::env(SDC_FILE)
+synth_syn.tcl:77:orfs_write_db $::env(RESULTS_DIR)/1_synth.odb
+synth_syn.tcl:83:if { $::env(LEC_CHECK) || $::env(SEC_CHECK) } {
+synth_wrap_operators.tcl:14:    [list BOOTH -max_iter 1 -map $::env(SCRIPTS_DIR)/synth_wrap_operators-booth.v] \
+synth_wrap_operators.tcl:18:proc reorder_deferred_cells { deferred_cells_var index env_var } {
+synth_wrap_operators.tcl:21:  if { ![info exists ::env($env_var)] } {
+synth_wrap_operators.tcl:35:  foreach name [split $::env($env_var) ","] {
+synth_wrap_operators.tcl:39:      puts "Warning: Unknown choice '$name' ignored for $env_var"

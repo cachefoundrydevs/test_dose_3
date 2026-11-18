@@ -1,0 +1,31 @@
+PASS tb_s0_stress_TINY_SEED_8_NOPS_5000 (178 s)  [tb_s0_stress -d TINY -d SEED=8 -d NOPS=5000]
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+memory matches the reference after flush
+coverage: skid full P0 5342 P1 4605 P2 3848, late sends 576, ring max 6, from ring 3182, replay max 8
+coverage: pipe conflicts 500, replay conflicts 3486, replay entries held 344753, replay credit stalls 903
+monitor errors: skid 0, order 0, replay 0, stage R cancel 0
+  ok: coverage: the skid of every scalar port held 2 requests
+  ok: coverage: requests were sent while their stop was 1 (late LSU)
+  ok: coverage: an order ring held 4 or more requests
+  ok: coverage: requests were granted from an order ring
+  ok: coverage: a request tracker held 2 or more entries (was the replay queue)
+  ok: a fresh request was cancelled in stage R by a same-set hazard (ghost, re-issued)
+  ok: overage: an arriving request got a dependency on an older same-set tracker entry
+stats: 5195 requests (LD 3553, ST 1481, LR 0, SC 0, AMO 161), 5195 answered; max latency per port: P0 537 P1 560 P2 503 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 139 74 67 86 137 594 3099 999
+TEST PASSED: tb_s0_stress (5195 requests, seed 8)
+tb/common/tb_ports_common.vh:701: $finish called at 478230000 (1ps)

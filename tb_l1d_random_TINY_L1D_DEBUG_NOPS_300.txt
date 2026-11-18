@@ -1,0 +1,31 @@
+PASS tb_l1d_random_TINY_L1D_DEBUG_NOPS_300 (71 s)  [tb_l1d_random -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D B3 S3 RESP from pipeline  seat=1 idx=5     LD data=570f28759ebbc4e1 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=5     LD (visible next cycle)
+[0] L1D PF   stride request line=00000000000019c0 unique=0 captured
+[0] L1D B3 S1 LSU entry=4 idx=0 LD C  addr=00000000000019f0 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D PF   hint to bank 3 line=00000000000019c0 unique=0
+[0] L1D TOP  DONE  port 0 idx=5 LD C  addr=00000000000019e8 latency=13 cycles
+[0] L1D MERGE bank 3 -> output  idx=0     LD (visible next cycle)
+[0] L1D B3 S3 RESP from pipeline  seat=4 idx=0     LD data=b2868865511f13a2 (resp_free=170)
+[0] L1D B3 S2 LSU  idx=0 LD   addr=00000000000019f0 -> HIT way=0 data=b2868865511f13a2                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f0 LD miss=0 pf_hit=0           
+[0] L1D B3 S0 ISSUE BOOKED entry 5 port 0 idx=2 LD addr=00000000000019f8
+[0] L1D TRACKER bank 3: entry 4 freed (free next = 7)
+[0] L1D TOP  DONE  port 0 idx=0 LD C  addr=00000000000019f0 latency=14 cycles
+[0] L1D B3 S1 LSU entry=5 idx=2 LD C  addr=00000000000019f8 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D B3 S0 ISSUE PREFETCH line=00000000000019c0 unique=0
+[0] L1D TRACKER bank 3: entry 5 freed (free next = 8)
+[0] L1D B3 S0 ISSUE PREFETCH line=00000000000019c0 unique=0
+[0] L1D B3 S2 LSU  idx=2 LD   addr=00000000000019f8 -> HIT way=0 data=0be61117440bad88                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f8 LD miss=0 pf_hit=0           
+[0] L1D B3 S3 RESP from pipeline  seat=5 idx=2     LD data=0be61117440bad88 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=2     LD (visible next cycle)
+[0] L1D B3 S1 PF  entry=0 idx=0 LD C  addr=00000000000019c0 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D B3 S1 PF  entry=0 idx=0 LD C  addr=00000000000019c0 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D B3 S2 PF   line=00000000000019c0 unique=0 ->        dropped: in the cache
+[0] L1D TOP  DONE  port 0 idx=2 LD C  addr=00000000000019f8 latency=17 cycles
+events: hits 1194, line fetches 730, victim-cache load hits 46, swaps 46, writebacks 327
+        wait-for-MSHR 482, MSHR full 302, wait-for-writeback 3, refill held 1, NC accesses 77
+        v2: lines installed S 0, S-to-M upgrades 0
+TEST PASSED: tb_l1d_random (1796 requests, seed 1)
+tb/tests/tb_l1d_random.v:361: $finish called at 149100000 (1ps)

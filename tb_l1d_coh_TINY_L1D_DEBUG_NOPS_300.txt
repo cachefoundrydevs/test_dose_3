@@ -1,0 +1,31 @@
+PASS tb_l1d_coh_TINY_L1D_DEBUG_NOPS_300 (28 s)  [tb_l1d_coh -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f0 LD miss=0 pf_hit=0           
+[0] L1D B3 S0 ISSUE BOOKED entry 4 port 0 idx=0 LD addr=00000000000019f8
+[0] L1D TRACKER bank 3: entry 0 freed (free next = 7)
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry R beat 1 of 4 last=0 err=0 data=15385f6289acf3163d40678ad1f41b3e
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry R beat 2 of 4 last=0 err=0 data=a5c8ef32597c83a6cd10375a6184abce
+[0] L1D TOP  DONE  port 0 idx=4 LD C  addr=00000000000019f0 latency=11 cycles
+[0] L1D B3 S1 LSU entry=4 idx=0 LD C  addr=00000000000019f8 set=1 ->           HIT way=0 state=1                                                     
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry R beat 3 of 4 last=1 err=0 data=7598bfc2e90c53769da0c7ea31547b9e
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry: DATA -> MERGE  line=0000000000001a00 fetch primary idx=0 LD err=0
+[0] L1D TRACKER bank 3: entry 4 freed (free next = 8)
+[0] L1D B3 S2 LSU  idx=0 LD   addr=00000000000019f8 -> HIT way=0 data=b2dff8052e4b94b1                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f8 LD miss=0 pf_hit=0           
+[0] L1D B3 S3 RESP from pipeline  seat=4 idx=0     LD data=b2dff8052e4b94b1 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=0     LD (visible next cycle)
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry: MERGE -> TOKEN  line=0000000000001a00 fetch primary idx=0 LD err=0
+[0] L1D B0 S0 ISSUE refill token  mshr=0 line=0000000000001a00
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry: TOKEN -> INSTALL  line=0000000000001a00 fetch primary idx=0 LD err=0
+[0] L1D B0 S1 REFILL mshr=0 line=0000000000001a00 set=2 victim way=0 state=2 swap=0 slot=0 install=2 pf=1        
+[0] L1D VC   tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_vc insert slot 0 line=0000000000001200 dirty=0 as  VALID (old state VALID)
+[0] L1D B0 S2 EVICT line=0000000000001200
+[0] L1D B0 S2 REFILL mshr=0 line=0000000000001a00 INSTALLED (line + tag written), entry freed
+[0] L1D B0 S2 victim line 0000000000001200 (dirty=0 shared=0) -> victim-cache slot 0
+[0] L1D DATA tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_r.u_data word write set/way=2/0 data=17bef72423a011827598bfc2e90c53769da0c7ea31547b9ea5c8ef32597c83a6cd10375a6184abce15385f6289acf3163d40678ad1f41b3e45688fd2f91c23466db0d7fa01244b6e
+[0] L1D TAG  tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_r.u_tags write set=2 ways=01 word=00c0000000000006
+[0] L1D TOP  DONE  port 0 idx=0 LD C  addr=00000000000019f8 latency=17 cycles
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_mshr.g_entry[0].u_entry: INSTALL -> IDLE  line=0000000000001a00 fetch primary idx=0 LD err=0
+events: snoop tag hits 53 (M handed over 28), snoop on VC slot 17, snoop waits install 1 / writeback 2, snoop vs MSHR still fetching 58
+        S installs 47, upgrades 11, cycles with a snoop buffered while a lock holds snoops 0, refill victim moved off the locked line 0
+TEST PASSED: tb_l1d_coh (748 requests, 243 snoops, mode A, seed 1)
+tb/tests/tb_l1d_coh.v:679: $finish called at 58740000 (1ps)

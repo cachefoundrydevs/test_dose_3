@@ -511,12 +511,12 @@ module l1d_req_tracker #(
     assign oldest_ready_line       = or_packet[LINE_IN_REQ +: LINE_ADDR_W];
     assign oldest_ready_port       = or_packet[REQ_PORT_LSB +: PORT_W];
     reg     oldest_credit_or;
+    reg  [NE-1:0] entry_port_credit_per_entry;
     integer oc_entry;
     always @* begin
-        oldest_credit_or = 1'b0;
         for (oc_entry = 0; oc_entry < NE; oc_entry = oc_entry + 1)
-            oldest_credit_or = oldest_credit_or | (oldest_ready_onehot[oc_entry] &
-                               credit_book_next[packet_q[oc_entry][REQ_PORT_LSB +: PORT_W]]);
+            entry_port_credit_per_entry[oc_entry] = credit_book_next[packet_q[oc_entry][REQ_PORT_LSB +: PORT_W]];
+        oldest_credit_or = |(oldest_ready_onehot & entry_port_credit_per_entry);
     end
     assign oldest_ready_credit_ok  = oldest_credit_or;
     assign oldest_ready_is_write   = or_packet[REQ_RDWR_BIT];

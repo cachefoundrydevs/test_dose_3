@@ -64,7 +64,7 @@ module l1d_book_select #(
     assign book_now_snoop    = door_open_next && snoop_ok;
     assign book_now_refill   = door_open_next && refill_ok;
     assign book_now_maint    = door_open_next && maint_ok;
-    assign book_now_entry    = cpu_go && entry_ready_valid && entry_credit_ok;
+    assign book_now_entry    = cpu_go && entry_credit_ok;
     assign book_arrival_allowed = cpu_go && !book_now_entry;
     assign book_now_arrival  = book_arrival_allowed && arrival_ready_valid && arrival_credit_ok;
     assign book_now_prefetch_no_arrival = cpu_go && !book_now_entry && prefetch_valid;

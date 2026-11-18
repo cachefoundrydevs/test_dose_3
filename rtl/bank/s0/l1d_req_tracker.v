@@ -458,20 +458,26 @@ module l1d_req_tracker #(
     reg              booked_is_amo_or;
     integer bk_src;
     assign arrival_booked_source = arrival_pick & src_credit_ok & {NS{arrival_book_allowed}};
+    localparam BOOKED_FIELDS_W = NE + LINE_ADDR_W + PORT_W + 2;
+    wire [NS-1:0] arrival_booked_source_nofresh;
+    wire [NS-1:0] arrival_booked_source_fresh;
+    reg  [BOOKED_FIELDS_W-1:0] booked_fields_nofresh_or;
+    reg  [BOOKED_FIELDS_W-1:0] booked_fields_fresh_or;
+    assign arrival_booked_source_nofresh = pick_nofresh & src_credit_ok & {NS{arrival_book_allowed}};
+    assign arrival_booked_source_fresh   = pick_fresh   & src_credit_ok & {NS{arrival_book_allowed}};
     always @* begin
-        booked_entry_or    = {NE{1'b0}};
-        booked_line_or     = {LINE_ADDR_W{1'b0}};
-        booked_port_or     = {PORT_W{1'b0}};
-        booked_is_write_or = 1'b0;
-        booked_is_amo_or   = 1'b0;
+        booked_fields_nofresh_or = {BOOKED_FIELDS_W{1'b0}};
+        booked_fields_fresh_or   = {BOOKED_FIELDS_W{1'b0}};
         for (bk_src = 0; bk_src < NS; bk_src = bk_src + 1) begin
-            booked_entry_or    = booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
-            booked_line_or     = booked_line_or     | ({LINE_ADDR_W{arrival_booked_source[bk_src]}} & src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W]);
-            booked_port_or     = booked_port_or     | ({PORT_W{arrival_booked_source[bk_src]}}     & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]);
-            booked_is_write_or = booked_is_write_or | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]);
-            booked_is_amo_or   = booked_is_amo_or   | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_AMO_BIT] &
-                                                       src_packet[bk_src*REQ_W + REQ_SEQ_BIT]);
+            booked_fields_nofresh_or = booked_fields_nofresh_or | ({BOOKED_FIELDS_W{arrival_booked_source_nofresh[bk_src]}} &
+                {src_entry[bk_src], src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W], src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W],
+                 src_packet[bk_src*REQ_W + REQ_RDWR_BIT], src_packet[bk_src*REQ_W + REQ_AMO_BIT] & src_packet[bk_src*REQ_W + REQ_SEQ_BIT]});
+            booked_fields_fresh_or   = booked_fields_fresh_or   | ({BOOKED_FIELDS_W{arrival_booked_source_fresh[bk_src]}} &
+                {src_entry[bk_src], src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W], src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W],
+                 src_packet[bk_src*REQ_W + REQ_RDWR_BIT], src_packet[bk_src*REQ_W + REQ_AMO_BIT] & src_packet[bk_src*REQ_W + REQ_SEQ_BIT]});
         end
+        {booked_entry_or, booked_line_or, booked_port_or, booked_is_write_or, booked_is_amo_or} =
+            fresh_issue ? booked_fields_fresh_or : booked_fields_nofresh_or;
     end
     assign arrival_book_go              = |arrival_booked_source;
     assign arrival_booked_entry_onehot  = booked_entry_or;

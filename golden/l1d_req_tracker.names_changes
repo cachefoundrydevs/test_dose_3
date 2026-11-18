@@ -98,3 +98,8 @@
 + DECL reg[REQ_W-1:0]ab_packet_fresh
 # iteration 16 (user approved): valid_q copy for the free count
 + DECL reg[NE-1:0]valid_dup_q
++ DECL localparam BOOKED_FIELDS_W = NE + LINE_ADDR_W + PORT_W + 2
++ DECL wire[NS-1:0]arrival_booked_source_nofresh
++ DECL wire[NS-1:0]arrival_booked_source_fresh
++ DECL reg[BOOKED_FIELDS_W-1:0]booked_fields_nofresh_or
++ DECL reg[BOOKED_FIELDS_W-1:0]booked_fields_fresh_or

@@ -1,0 +1,31 @@
+FAIL tb_ecc (no TEST PASSED / ERROR / timeout after 3 s)  [tb_ecc]
+[0] L1D TRACKER ERROR bank 0: S2 result for entry 0, which is not in flight
+ERROR: response for idle idx 0
+  CHECK 3: the CPU gets the right data: OK
+  CHECK 3: one ecc_correctable_pulse: OK
+  CHECK 3: the check bit was repaired: OK
+=== 4. one TAG bit flipped (tag bit 3) ===
+  CHECK 4: the SRAM tag is now wrong: OK
+
+=== 4 ===
+[0] L1D TRACKER ERROR bank 0: an entry is booked and issued in one cycle
+[0] L1D TRACKER ERROR bank 0: S2 result for entry 0, which is free
+[0] L1D TRACKER ERROR bank 0: S2 result for entry 0, which is not in flight
+ERROR: response for idle idx 0
+  load with a single-bit tag error: data 0000000000004500, latency 10
+  CHECK 4: the CPU gets A's data (no false miss / hit): OK
+  CHECK 4: an ecc_correctable_pulse for the tag scrub: OK
+  CHECK 4: the SRAM tag was repaired: OK
+  CHECK 4: still no uncorrectable error: OK
+=== 5. store hit, then load: new data, new check bits, no ECC event ===
+
+=== 5 ===
+  CHECK 5: the load returns the stored data: OK
+  CHECK 5: no ECC event (the store wrote good check bits): OK
+=== 6. two data bits flipped in one granule (line bits 70 and 75) ===
+
+=== 6 ===
+  load with a double-bit data error: data 000045085a5a0840 (not checked), latency 4
+  CHECK 6: ecc_uncorrectable_sticky is set: OK
+TEST FAILED: tb_ecc (3 errors)
+tb/tests/tb_ecc.v:385: $finish called at 5000000 (1ps)

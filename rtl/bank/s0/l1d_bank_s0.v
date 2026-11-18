@@ -210,6 +210,13 @@ module l1d_bank_s0 #(
     wire                   arrival_book_is_line_op;
     wire                   arrival_book_is_amo;
     wire                   arrival_book_credit_ok;
+    wire                   book_arrival_allowed;
+    wire                   arrival_book_go;
+    wire [NE-1:0]          arrival_booked_entry_onehot;
+    wire [LINE_ADDR_W-1:0] arrival_booked_line;
+    wire [PORT_W-1:0]      arrival_booked_port;
+    wire                   arrival_booked_is_write;
+    wire                   arrival_booked_is_amo;
     reg  [LSU_PORTS-1:0] credit_book_next;
     wire [NE-1:0]          book_entry_onehot;
     wire [NE-1:0]          book_ready_onehot;
@@ -270,6 +277,13 @@ module l1d_bank_s0 #(
         .arrival_book_is_line_op   (arrival_book_is_line_op),
         .arrival_book_is_amo       (arrival_book_is_amo),
         .arrival_book_credit_ok    (arrival_book_credit_ok),
+        .arrival_book_allowed      (book_arrival_allowed),
+        .arrival_book_go           (arrival_book_go),
+        .arrival_booked_entry_onehot (arrival_booked_entry_onehot),
+        .arrival_booked_line       (arrival_booked_line),
+        .arrival_booked_port       (arrival_booked_port),
+        .arrival_booked_is_write   (arrival_booked_is_write),
+        .arrival_booked_is_amo     (arrival_booked_is_amo),
         .book_entry_onehot         (book_entry_onehot),
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
@@ -427,10 +441,11 @@ module l1d_bank_s0 #(
         .book_now_entry       (book_now_entry),
         .book_now_arrival     (book_now_arrival),
         .book_now_prefetch    (book_now_prefetch),
-        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival)
+        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival),
+        .book_arrival_allowed         (book_arrival_allowed)
     );
     assign book_ready_onehot = {NE{book_now_entry}} & oldest_ready_onehot;
-    assign book_entry_onehot = book_ready_onehot | ({NE{book_now_arrival}} & arrival_book_entry_onehot);
+    assign book_entry_onehot = book_ready_onehot | arrival_booked_entry_onehot;
     wire [LINE_ADDR_W-1:0] mt_line;
     assign mt_line = {{TAG_W{1'b0}}, mt_set, BANK_C};
     reg  [LINE_ADDR_W-1:0] book_line_q;
@@ -459,10 +474,10 @@ module l1d_bank_s0 #(
     assign book_is_write_no_arrival = book_now_entry & oldest_ready_is_write;
     assign book_is_amo_no_arrival   = book_now_entry & oldest_ready_is_amo;
     always @* begin
-        book_line_next     = book_now_arrival ? arrival_book_line     : book_line_no_arrival;
-        book_port_next     = book_now_arrival ? arrival_book_port     : book_port_no_arrival;
-        book_is_write_next = book_now_arrival ? arrival_book_is_write : book_is_write_no_arrival;
-        book_is_amo_next   = book_now_arrival ? arrival_book_is_amo   : book_is_amo_no_arrival;
+        book_line_next     = arrival_booked_line     | (book_line_no_arrival & ~{LINE_ADDR_W{arrival_book_go}});
+        book_port_next     = arrival_booked_port     | book_port_no_arrival;
+        book_is_write_next = arrival_booked_is_write | book_is_write_no_arrival;
+        book_is_amo_next   = arrival_booked_is_amo   | book_is_amo_no_arrival;
     end
     integer cp_idx;
     always @(posedge clk) begin : book_fields_proc

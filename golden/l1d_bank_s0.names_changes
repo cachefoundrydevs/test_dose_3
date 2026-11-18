@@ -15,3 +15,11 @@
 + DECL wire[PORT_W-1:0]book_port_no_arrival
 + DECL wire book_is_write_no_arrival
 + DECL wire book_is_amo_no_arrival
+# iteration 5 (user approved 2026-11-18): the pick selects the booked arrival fields itself (new tracker outputs, zero unless booked)
++ DECL wire book_arrival_allowed
++ DECL wire arrival_book_go
++ DECL wire[NE-1:0]arrival_booked_entry_onehot
++ DECL wire[LINE_ADDR_W-1:0]arrival_booked_line
++ DECL wire[PORT_W-1:0]arrival_booked_port
++ DECL wire arrival_booked_is_write
++ DECL wire arrival_booked_is_amo

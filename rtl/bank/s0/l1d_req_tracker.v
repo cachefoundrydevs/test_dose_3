@@ -14,7 +14,8 @@ module l1d_req_tracker #(
     arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated, oldest_ready_valid, oldest_ready_onehot,
     oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
     arrival_book_valid, arrival_book_entry_onehot, arrival_book_set, arrival_book_line, arrival_book_port, arrival_book_is_write,
-    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, book_entry_onehot, book_ready_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
+    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, arrival_book_allowed, arrival_book_go, arrival_booked_entry_onehot, arrival_booked_line,
+    arrival_booked_port, arrival_booked_is_write, arrival_booked_is_amo, book_entry_onehot, book_ready_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
     s2_cpu_valid, s2_seat, s2_kill, s2_answered, act_valid, act_code,
     act_id, s2_train_sent, s2_seat_trained, s2_seat_pc, mshr_freed, vc_freed,
     nc_freed, free_count_q, entry_valid_q, tracker_empty,
@@ -74,6 +75,13 @@ module l1d_req_tracker #(
     output wire arrival_book_is_line_op;
     output wire arrival_book_is_amo;
     output wire arrival_book_credit_ok;
+    input  wire arrival_book_allowed;
+    output wire arrival_book_go;
+    output wire [TRK_ENTRIES-1:0]      arrival_booked_entry_onehot;
+    output wire [LINE_ADDR_W-1:0]      arrival_booked_line;
+    output wire [PORT_W-1:0]           arrival_booked_port;
+    output wire                        arrival_booked_is_write;
+    output wire                        arrival_booked_is_amo;
     input  wire [TRK_ENTRIES-1:0]      book_entry_onehot;
     input  wire [TRK_ENTRIES-1:0]      book_ready_onehot;
     input  wire [TRK_ENTRIES-1:0]      issue_entry_onehot;
@@ -440,6 +448,35 @@ module l1d_req_tracker #(
     assign arrival_book_is_line_op   = ab_packet[REQ_LINE_BIT];
     assign arrival_book_is_amo       = ab_packet[REQ_AMO_BIT] & ab_packet[REQ_SEQ_BIT];
     assign arrival_book_credit_ok    = |(arrival_pick & src_credit_ok);
+    wire [NS-1:0] arrival_booked_source;
+    reg  [NE-1:0]    booked_entry_or;
+    reg  [LINE_ADDR_W-1:0] booked_line_or;
+    reg  [PORT_W-1:0] booked_port_or;
+    reg              booked_is_write_or;
+    reg              booked_is_amo_or;
+    integer bk_src;
+    assign arrival_booked_source = arrival_pick & src_credit_ok & {NS{arrival_book_allowed}};
+    always @* begin
+        booked_entry_or    = {NE{1'b0}};
+        booked_line_or     = {LINE_ADDR_W{1'b0}};
+        booked_port_or     = {PORT_W{1'b0}};
+        booked_is_write_or = 1'b0;
+        booked_is_amo_or   = 1'b0;
+        for (bk_src = 0; bk_src < NS; bk_src = bk_src + 1) begin
+            booked_entry_or    = booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
+            booked_line_or     = booked_line_or     | ({LINE_ADDR_W{arrival_booked_source[bk_src]}} & src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W]);
+            booked_port_or     = booked_port_or     | ({PORT_W{arrival_booked_source[bk_src]}}     & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]);
+            booked_is_write_or = booked_is_write_or | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]);
+            booked_is_amo_or   = booked_is_amo_or   | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_AMO_BIT] &
+                                                       src_packet[bk_src*REQ_W + REQ_SEQ_BIT]);
+        end
+    end
+    assign arrival_book_go              = |arrival_booked_source;
+    assign arrival_booked_entry_onehot  = booked_entry_or;
+    assign arrival_booked_line          = booked_line_or;
+    assign arrival_booked_port          = booked_port_or;
+    assign arrival_booked_is_write      = booked_is_write_or;
+    assign arrival_booked_is_amo        = booked_is_amo_or;
     reg  [NE-1:0] ready_cand;
     integer rc_entry;
     always @* begin

@@ -198,7 +198,6 @@ module l1d_bank_s0 #(
     wire [INDEX_W-1:0]     oldest_ready_set;
     wire [LINE_ADDR_W-1:0] oldest_ready_line;
     wire [PORT_W-1:0]      oldest_ready_port;
-    wire                   oldest_ready_credit_ok;
     wire                   oldest_ready_is_write;
     wire                   oldest_ready_is_line_op;
     wire                   oldest_ready_is_amo;
@@ -266,7 +265,6 @@ module l1d_bank_s0 #(
         .oldest_ready_set          (oldest_ready_set),
         .oldest_ready_line         (oldest_ready_line),
         .oldest_ready_port         (oldest_ready_port),
-        .oldest_ready_credit_ok    (oldest_ready_credit_ok),
         .oldest_ready_is_write     (oldest_ready_is_write),
         .oldest_ready_is_line_op   (oldest_ready_is_line_op),
         .oldest_ready_is_amo       (oldest_ready_is_amo),
@@ -349,7 +347,7 @@ module l1d_bank_s0 #(
     end
     wire entry_credit_ok;
     wire arrival_credit_ok;
-    assign entry_credit_ok   = oldest_ready_credit_ok;
+    assign entry_credit_ok   = credit_book_next[oldest_ready_port];
     assign arrival_credit_ok = arrival_book_credit_ok;
     wire                   sn_sel_valid;
     wire                   sn_sel_inv;

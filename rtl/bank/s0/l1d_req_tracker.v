@@ -336,9 +336,10 @@ module l1d_req_tracker #(
     always @* begin
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
             for (dp_entry = 0; dp_entry < NE; dp_entry = dp_entry + 1)
-                deps_old[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
-                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]) &
-                                             (write_q[dp_entry] | src_write[dp_src]);
+                deps_old[dp_src][dp_entry] = (src_write[dp_src] ? valid_q[dp_entry]
+                                                                : (valid_q[dp_entry] & write_q[dp_entry])) &
+                                             ~freed_now[dp_entry] &
+                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]);
             deps_new[dp_src]   = deps_old[dp_src];
             lower_pair[dp_src] = {NS{1'b0}};
             for (dp_lower = 0; dp_lower < dp_src; dp_lower = dp_lower + 1) begin

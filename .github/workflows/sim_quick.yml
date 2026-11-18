@@ -1,0 +1,84 @@
+name: sim quick
+on:
+  push:
+    paths:
+      - 'request/sim_request.txt'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      tests: ${{ steps.p.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "tests=$(grep -v '^[#]' request/sim_tests.txt | sed '/^\s*$/d' | tr -d '\r' | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+  sim:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        t: ${{ fromJSON(needs.plan.outputs.tests) }}
+    env:
+      TEST_LINE: ${{ matrix.t }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y iverilog
+      - name: compile and run one test
+        shell: bash
+        run: |
+          set -u
+          mkdir -p build logs
+          RTL=$(grep -v '^[-#]' filelists/rtl.f | sed '/^\s*$/d')
+          DL2=$(grep -v '^[-#]' filelists/dummy_l2.f | sed '/^\s*$/d')
+          SPW=$(grep -v '^[-#]' filelists/single_port.f | sed '/^\s*$/d')
+          INC="-Irtl/include -Irtl/prefetch/stride"
+          TBC="tb/common/axi_mem_model.v tb/common/snoop_gen.v"
+          set -- $(echo "$TEST_LINE" | tr -d '"')
+          t=$1; shift; defs=""; name=$t
+          while [ $# -gt 0 ]; do
+            if [ "$1" = "-d" ]; then defs="$defs -D$2"; name="${name}_$(echo "$2" | tr '=' '_')"; shift 2; else shift; fi
+          done
+          src=tb/tests/$t.v; [ -f "$src" ] || src=tb/tests/$t.sv
+          res=FAIL; why=compile
+          if iverilog -g2012 $INC -Itb/common $defs -s $t -o build/$name.vvp $RTL $DL2 $SPW $TBC $src > logs/compile.log 2>&1; then
+            why=run; start=$(date +%s)
+            timeout 3600 vvp -n build/$name.vvp > logs/run.log 2>&1 || true
+            if grep -q "TEST PASSED" logs/run.log && ! grep -q "L1D.*ERROR" logs/run.log; then res=PASS; why="$(( $(date +%s) - start )) s"; else why="no TEST PASSED / ERROR / timeout after $(( $(date +%s) - start )) s"; fi
+          fi
+          mkdir -p out; echo "$res $name ($why)  [$TEST_LINE]" > out/result.txt
+          tail -n 30 logs/run.log >> out/result.txt 2>/dev/null || head -30 logs/compile.log >> out/result.txt
+          cat out/result.txt
+          echo "$name" | tr -c 'A-Za-z0-9_\n' '_' > out/name.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sim-${{ strategy.job-index }}
+          path: out
+  publish:
+    needs: sim
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+        continue-on-error: true
+      - shell: bash
+        run: |
+          mkdir -p /tmp/res; git rev-parse HEAD > /tmp/res/commit.txt
+          for d in artifacts/*/; do head -1 "$d/result.txt"; done | sort > /tmp/res/summary.txt
+          { echo "passed: $(grep -c '^PASS' /tmp/res/summary.txt)  failed: $(grep -c '^FAIL' /tmp/res/summary.txt)"; } >> /tmp/res/summary.txt
+          cat /tmp/res/summary.txt
+          for d in artifacts/*/; do cp "$d/result.txt" "/tmp/res/$(cat $d/name.txt).txt"; done
+          B="sim-$(echo "${GITHUB_REF_NAME}" | tr -c 'A-Za-z0-9_.\n-' '-')"
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan "$B"; git rm -rq --cached . ; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "sim quick"; git push -f origin "$B"

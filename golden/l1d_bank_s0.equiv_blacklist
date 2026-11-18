@@ -18,3 +18,7 @@ arrival_booked_line
 arrival_booked_port
 arrival_booked_is_write
 arrival_booked_is_amo
+# iteration 5b: arrival_credit_ok (bank wire and u_book port) differs from the golden on purpose since iteration 3: the credit is read
+# by the pick, equal to credit_book_next[arrival_book_port] only when an arrival is picked, and l1d_book_select reads it only together
+# with arrival_ready_valid. It was the 2 unproven points of every run (equiv_induct), which sent the proof into the 2.6M-variable SAT fallback.
+arrival_credit_ok

@@ -74,9 +74,11 @@ flatten
 opt -fast
 sat -verify -tempinduct -prove-asserts -set-init-zero -set-at 1 in_rst 1 -seq 1 -maxsteps 20 -show-ports miter
 YS
-if yosys -l "$OUT/miter.log" -s "$OUT/miter.ys" > /dev/null 2>&1; then
+# the fallback runs on the whole flattened miter (millions of variables): cap it, a timeout is a FAIL, not an endless job
+if timeout "${MITER_TIMEOUT_S:-1500}" yosys -l "$OUT/miter.log" -s "$OUT/miter.ys" > /dev/null 2>&1; then
     grep -E 'Induction step proven|SUCCESS|reached' "$OUT/miter.log" | tail -3
     echo "EQUIV: PASS (miter, sat -tempinduct)"; exit 0
 fi
 grep -E 'failed|FAIL|counter|Induction' "$OUT/miter.log" | tail -10
+[[ -f "$OUT/miter.log" ]] && ! grep -q "SUCCESS" "$OUT/miter.log" && echo "(miter stopped by the time cap or did not finish: not proven)"
 echo "EQUIV: FAIL"; exit 1

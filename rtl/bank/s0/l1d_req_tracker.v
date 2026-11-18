@@ -10,12 +10,11 @@ module l1d_req_tracker #(
     arrival_packet_0, arrival_packet_1, arrival_packet_2, arrival_packet_3, arrival_pc_0, arrival_pc_1,
     arrival_pc_2, arrival_pc_3, drain_request, drain_packet, drain_pc, vec_slot_available,
     vec_write_slot, vec_write_valid, fresh_allowed_q, credit_q_0, credit_q_1, credit_q_2,
-    credit_q_3, credit_book_next, fresh_issue, fresh_port_onehot, fresh_entry_onehot, any_pins_arrival, arrival_allocated_0,
+    credit_q_3, fresh_issue, fresh_port_onehot, fresh_entry_onehot, any_pins_arrival, arrival_allocated_0,
     arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated, oldest_ready_valid, oldest_ready_onehot,
-    oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_credit_ok, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
+    oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
     arrival_book_valid, arrival_book_entry_onehot, arrival_book_set, arrival_book_line, arrival_book_port, arrival_book_is_write,
-    arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, arrival_book_allowed, arrival_book_go, arrival_booked_entry_onehot, arrival_booked_line,
-    arrival_booked_port, arrival_booked_is_write, arrival_booked_is_amo, book_entry_onehot, book_ready_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
+    arrival_book_is_line_op, arrival_book_is_amo, book_entry_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
     s2_cpu_valid, s2_seat, s2_kill, s2_answered, act_valid, act_code,
     act_id, s2_train_sent, s2_seat_trained, s2_seat_pc, mshr_freed, vc_freed,
     nc_freed, free_count_q, entry_valid_q, tracker_empty,
@@ -48,7 +47,6 @@ module l1d_req_tracker #(
     input  wire credit_q_1;
     input  wire credit_q_2;
     input  wire credit_q_3;
-    input  wire [LSU_PORTS-1:0] credit_book_next;
     output wire fresh_issue;
     output wire [3:0]                  fresh_port_onehot;
     output wire [TRK_ENTRIES-1:0]      fresh_entry_onehot;
@@ -63,7 +61,6 @@ module l1d_req_tracker #(
     output wire [INDEX_W-1:0] oldest_ready_set;
     output wire [LINE_ADDR_W-1:0] oldest_ready_line;
     output wire [PORT_W-1:0] oldest_ready_port;
-    output wire oldest_ready_credit_ok;
     output wire oldest_ready_is_write;
     output wire oldest_ready_is_line_op;
     output wire oldest_ready_is_amo;
@@ -75,16 +72,7 @@ module l1d_req_tracker #(
     output wire arrival_book_is_write;
     output wire arrival_book_is_line_op;
     output wire arrival_book_is_amo;
-    output wire arrival_book_credit_ok;
-    input  wire arrival_book_allowed;
-    output wire arrival_book_go;
-    output wire [TRK_ENTRIES-1:0]      arrival_booked_entry_onehot;
-    output wire [LINE_ADDR_W-1:0]      arrival_booked_line;
-    output wire [PORT_W-1:0]           arrival_booked_port;
-    output wire                        arrival_booked_is_write;
-    output wire                        arrival_booked_is_amo;
     input  wire [TRK_ENTRIES-1:0]      book_entry_onehot;
-    input  wire [TRK_ENTRIES-1:0]      book_ready_onehot;
     input  wire [TRK_ENTRIES-1:0]      issue_entry_onehot;
     output wire [TRK_ENTRIES*REQ_W-1:0] entry_packet_flat;
     output wire [TRK_ENTRIES*PC_W-1:0] entry_pc_flat;
@@ -115,7 +103,6 @@ module l1d_req_tracker #(
     localparam [TRK_CNT_W-1:0] NE_C = NE;
     localparam [REQ_W-1:0] SLOT_MASK = {{(REQ_W-VEC_SLOT_W){1'b0}}, {VEC_SLOT_W{1'b1}}} << REQ_DATA_LSB;
     reg  [NE-1:0]           valid_q;
-    reg  [NE-1:0]           valid_dup_q;
     reg  [TRK_STATE_W-1:0]  state_q [0:NE-1];
     reg  [REQ_W-1:0]        packet_q [0:NE-1];
     reg  [PC_W-1:0]         pc_q [0:NE-1];
@@ -135,7 +122,6 @@ module l1d_req_tracker #(
     wire [NS-1:0]       src_place_ok;
     wire [NS-1:0]       eligible;
     wire [NS*INDEX_W-1:0] src_set;
-    wire [NS-1:0]       src_credit_ok;
     assign src_valid  = {drain_request, arrival_request_3, arrival_request_2, arrival_request_1, arrival_request_0};
     assign src_packet = {drain_packet, arrival_packet_3, arrival_packet_2, arrival_packet_1, arrival_packet_0};
     assign src_pc     = {drain_pc, arrival_pc_3, arrival_pc_2, arrival_pc_1, arrival_pc_0};
@@ -148,7 +134,6 @@ module l1d_req_tracker #(
             assign src_place_ok[src_idx]   = !src_line_store[src_idx] | vec_slot_available;
             assign eligible[src_idx]       = src_valid[src_idx] & src_place_ok[src_idx];
             assign src_set[src_idx*INDEX_W +: INDEX_W] = src_packet[src_idx*REQ_W + SET_IN_REQ +: INDEX_W];
-            assign src_credit_ok[src_idx]  = credit_book_next[src_packet[src_idx*REQ_W + REQ_PORT_LSB +: PORT_W]];
         end
     endgenerate
     assign any_pins_arrival = |src_valid[LSU_PORTS-1:0];
@@ -159,32 +144,17 @@ module l1d_req_tracker #(
         for (rank_src = 0; rank_src < NS; rank_src = rank_src + 1) begin
             rank[rank_src] = {RANK_W{1'b0}};
             for (rank_lower = 0; rank_lower < rank_src; rank_lower = rank_lower + 1)
-                rank[rank_src] = eligible[rank_lower] ?
-                                 {rank[rank_src][1] | rank[rank_src][2],
-                                  rank[rank_src][0], ~rank[rank_src][2]} :
-                                 rank[rank_src];
+                rank[rank_src] = rank[rank_src] + {{(RANK_W-1){1'b0}}, eligible[rank_lower]};
         end
     end
     wire [NS-1:0] alloc;
-    wire [NE:0]   free_room;
-    reg  [NE:0]   free_room_q;
-    reg  [NE:0]   free_room_dup_q;
-    assign free_room = free_room_q;
     genvar al_idx;
     generate
         for (al_idx = 0; al_idx < NS; al_idx = al_idx + 1) begin : g_alloc
             wire rank_in_room;
             wire rank_in_max;
-            assign rank_in_room = ((rank[al_idx] == 3'b000) && free_room[0]) ||
-                                  ((rank[al_idx] == 3'b001) && free_room[1]) ||
-                                  ((rank[al_idx] == 3'b011) && free_room[2]) ||
-                                  ((rank[al_idx] == 3'b111) && free_room[3]) ||
-                                  ((rank[al_idx] == 3'b110) && free_room[4]);
-            assign rank_in_max  = ((rank[al_idx] == 3'b000) && (0 < NA)) ||
-                                  ((rank[al_idx] == 3'b001) && (1 < NA)) ||
-                                  ((rank[al_idx] == 3'b011) && (2 < NA)) ||
-                                  ((rank[al_idx] == 3'b111) && (3 < NA)) ||
-                                  ((rank[al_idx] == 3'b110) && (4 < NA));
+            assign rank_in_room = ({{(TRK_CNT_W-RANK_W){1'b0}}, rank[al_idx]} < free_count_q);
+            assign rank_in_max  = (rank[al_idx] < NA);
             assign alloc[al_idx] = eligible[al_idx] & rank_in_room & rank_in_max;
         end
     endgenerate
@@ -195,7 +165,6 @@ module l1d_req_tracker #(
     assign drain_allocated     = alloc[LSU_PORTS];
     assign vec_write_valid     = |(alloc & src_line_store);
     wire [NA*NE-1:0] free_pick;
-    reg  [NA*NE-1:0] free_pick_q;
     generate
         if (NA <= 2) begin : g_pick_chain
             wire [NE-1:0] free_now;
@@ -226,34 +195,17 @@ module l1d_req_tracker #(
                 for (fb_entry = 0; fb_entry < NE; fb_entry = fb_entry + 1) begin
                     free_below[fb_entry] = {RANK_W{1'b0}};
                     for (fb_lower = 0; fb_lower < fb_entry; fb_lower = fb_lower + 1)
-                        free_below[fb_entry] = ~valid_q[fb_lower] ?
-                                               {free_below[fb_entry][1] | free_below[fb_entry][2],
-                                                free_below[fb_entry][0], ~free_below[fb_entry][2]} :
-                                               free_below[fb_entry];
+                        free_below[fb_entry] = free_below[fb_entry] + {{(RANK_W-1){1'b0}}, ~valid_q[fb_lower]};
                 end
             end
             genvar pk_k, pk_e;
             for (pk_k = 0; pk_k < NA; pk_k = pk_k + 1) begin : g_pick_k
                 for (pk_e = 0; pk_e < NE; pk_e = pk_e + 1) begin : g_pick_e
-                    assign free_pick[pk_k*NE + pk_e] = free_pick_q[pk_k*NE + pk_e];
+                    assign free_pick[pk_k*NE + pk_e] = ~valid_q[pk_e] & (free_below[pk_e] == pk_k);
                 end
             end
         end
     endgenerate
-    reg  [NA-1:0] rank_onehot [0:NS-1];
-    reg  [NA-1:0] rank_alloc;
-    integer ro_src;
-    integer ro_rank;
-    always @* begin
-        rank_alloc = {NA{1'b0}};
-        for (ro_src = 0; ro_src < NS; ro_src = ro_src + 1)
-            for (ro_rank = 0; ro_rank < NA; ro_rank = ro_rank + 1) begin
-                rank_onehot[ro_src][ro_rank] = eligible[ro_src] &&
-                    (rank[ro_src] == ((ro_rank < RANK_W) ? ((1 << ro_rank) - 1) :
-                                      (((1 << RANK_W) - 1) & ~((1 << (ro_rank - RANK_W)) - 1))));
-                rank_alloc[ro_rank] = rank_alloc[ro_rank] | (rank_onehot[ro_src][ro_rank] & free_room_dup_q[ro_rank]);
-            end
-    end
     reg  [NE-1:0] src_entry [0:NS-1];
     reg  [NS-1:0] data_sel [0:NE-1];
     reg  [NE-1:0] alloc_en;
@@ -265,25 +217,21 @@ module l1d_req_tracker #(
         for (se_src = 0; se_src < NS; se_src = se_src + 1) begin
             src_entry[se_src] = {NE{1'b0}};
             for (se_rank = 0; se_rank < NA; se_rank = se_rank + 1)
-                if (rank[se_src] == ((se_rank < RANK_W) ? ((1 << se_rank) - 1) :
-                                     (((1 << RANK_W) - 1) & ~((1 << (se_rank - RANK_W)) - 1))))
+                if (rank[se_src] == se_rank)
                     src_entry[se_src] = src_entry[se_src] | free_pick[se_rank*NE +: NE];
         end
         for (se_entry = 0; se_entry < NE; se_entry = se_entry + 1) begin
             alloc_en[se_entry] = 1'b0;
             for (se_src = 0; se_src < NS; se_src = se_src + 1) begin
                 data_sel[se_entry][se_src] = eligible[se_src] & src_entry[se_src][se_entry];
-                alloc_en[se_entry] = alloc_en[se_entry] |
-                    ((se_src < NA) &&
-                     rank_alloc[(se_src < NA) ? se_src : 0] &&
-                     free_pick[((se_src < NA) ? se_src : 0)*NE + se_entry]);
+                alloc_en[se_entry] = alloc_en[se_entry] | (alloc[se_src] & src_entry[se_src][se_entry]);
             end
         end
         for (se_rank = 0; se_rank < NA; se_rank = se_rank + 1) begin
             age_groups[se_rank*NE +: NE] = {NE{1'b0}};
             for (se_src = 0; se_src < NS; se_src = se_src + 1)
-                if ((se_src == se_rank) && rank_alloc[se_rank])
-                    age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | free_pick[se_rank*NE +: NE];
+                if (alloc[se_src] && (rank[se_src] == se_rank))
+                    age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | src_entry[se_src];
         end
     end
     reg  [REQ_W-1:0] load_packet [0:NE-1];
@@ -317,7 +265,7 @@ module l1d_req_tracker #(
         lowest_credit  = 1'b0;
         lower_req_seen = 1'b0;
         for (lo_port = 0; lo_port < LSU_PORTS; lo_port = lo_port + 1) begin
-            lowest_req[lo_port]  = src_valid[lo_port] & ~|(src_valid[LSU_PORTS-1:0] & ~({LSU_PORTS{1'b1}} << lo_port));
+            lowest_req[lo_port]  = src_valid[lo_port] & !lower_req_seen;
             lower_req_seen       = lower_req_seen | src_valid[lo_port];
             lowest_port[lo_port] = lowest_req[lo_port] & alloc[lo_port];
             lowest_credit        = lowest_credit | (lowest_port[lo_port] & credit_q[lo_port]);
@@ -332,58 +280,18 @@ module l1d_req_tracker #(
     integer dp_src;
     integer dp_entry;
     integer dp_lower;
-    reg  [NE-1:0] deps_old [0:NS-1];
-    reg  [NS-1:0] lower_pair [0:NS-1];
     always @* begin
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
             for (dp_entry = 0; dp_entry < NE; dp_entry = dp_entry + 1)
-                deps_old[dp_src][dp_entry] = (src_write[dp_src] ? valid_q[dp_entry]
-                                                                : (valid_q[dp_entry] & write_q[dp_entry])) &
-                                             ~freed_now[dp_entry] &
-                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]);
-            deps_new[dp_src]   = deps_old[dp_src];
-            lower_pair[dp_src] = {NS{1'b0}};
+                deps_new[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
+                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]) &
+                                             (write_q[dp_entry] | src_write[dp_src]);
             for (dp_lower = 0; dp_lower < dp_src; dp_lower = dp_lower + 1) begin
                 same_set_pair = alloc[dp_lower] &&
                                 (src_set[dp_lower*INDEX_W +: INDEX_W] == src_set[dp_src*INDEX_W +: INDEX_W]) &&
                                 (src_write[dp_lower] || src_write[dp_src]);
-                lower_pair[dp_src][dp_lower] = eligible[dp_lower] &&
-                    (src_set[dp_lower*INDEX_W +: INDEX_W] == src_set[dp_src*INDEX_W +: INDEX_W]) &&
-                    (src_write[dp_lower] || src_write[dp_src]);
                 if (same_set_pair)
                     deps_new[dp_src] = deps_new[dp_src] | src_entry[dp_lower];
-            end
-        end
-    end
-    reg  [NE-1:0] rank_deps_old [0:NA-1];
-    reg  [NA-1:0] rank_pair [0:NA-1];
-    reg  [NE-1:0] deps_load [0:NE-1];
-    integer rd_rank;
-    integer rd_src;
-    integer rd_lower;
-    integer dl_entry;
-    integer dl_rank;
-    integer dl_lower;
-    always @* begin
-        for (rd_rank = 0; rd_rank < NA; rd_rank = rd_rank + 1) begin
-            rank_deps_old[rd_rank] = {NE{1'b0}};
-            rank_pair[rd_rank]     = {NA{1'b0}};
-            for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1) begin
-                if (rank_onehot[rd_src][rd_rank])
-                    rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
-                for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
-                    if (rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
-                        rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
-            end
-        end
-        for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
-            deps_load[dl_entry] = {NE{1'b0}};
-            for (dl_rank = 0; dl_rank < NA; dl_rank = dl_rank + 1) begin
-                if (free_pick[dl_rank*NE + dl_entry])
-                    deps_load[dl_entry] = deps_load[dl_entry] | rank_deps_old[dl_rank];
-                for (dl_lower = 0; dl_lower < NA; dl_lower = dl_lower + 1)
-                    if (free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
-                        deps_load[dl_entry] = deps_load[dl_entry] | free_pick[dl_lower*NE +: NE];
             end
         end
     end
@@ -391,57 +299,27 @@ module l1d_req_tracker #(
     reg  [NS-1:0] arrival_pick;
     reg           arrival_seen;
     integer ab_src;
-    reg  [NA-1:0] pick_any;
-    reg  [NS-1:0] pair_block;
-    reg  [NS-1:0] cand_nofresh;
-    reg  [NS-1:0] cand_fresh;
-    reg  [NS-1:0] pick_nofresh;
-    reg  [NS-1:0] pick_fresh;
-    integer pb_rank;
-    integer pb_lower;
     always @* begin
-        for (pb_rank = 0; pb_rank < NA; pb_rank = pb_rank + 1)
-            pick_any[pb_rank] = |free_pick[pb_rank*NE +: NE];
         arrival_seen = 1'b0;
         for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
-            pair_block[ab_src] = 1'b0;
-            for (pb_lower = 0; pb_lower < NS; pb_lower = pb_lower + 1)
-                if (lower_pair[ab_src][pb_lower])
-                    pair_block[ab_src] = pair_block[ab_src] | (|(rank_onehot[pb_lower] & pick_any));
-            cand_nofresh[ab_src] = alloc[ab_src] && (deps_old[ab_src] == {NE{1'b0}}) && !pair_block[ab_src];
-            cand_fresh[ab_src]   = cand_nofresh[ab_src] &&
-                                   !((rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
-        end
-        for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
-            pick_nofresh[ab_src] = cand_nofresh[ab_src] && !(|(cand_nofresh & ~({NS{1'b1}} << ab_src)));
-            pick_fresh[ab_src]   = cand_fresh[ab_src]   && !(|(cand_fresh   & ~({NS{1'b1}} << ab_src)));
-            arrival_cand[ab_src] = fresh_issue ? cand_fresh[ab_src] : cand_nofresh[ab_src];
-            arrival_pick[ab_src] = fresh_issue ? pick_fresh[ab_src] : pick_nofresh[ab_src];
+            arrival_cand[ab_src] = alloc[ab_src] && (deps_new[ab_src] == {NE{1'b0}}) &&
+                                   !(fresh_issue && (rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
+            arrival_pick[ab_src] = arrival_cand[ab_src] && !arrival_seen;
             arrival_seen         = arrival_seen || arrival_cand[ab_src];
         end
     end
     reg  [NE-1:0]          ab_entry;
     reg  [REQ_W-1:0]       ab_packet;
-    reg  [NE-1:0]          ab_entry_nofresh;
-    reg  [NE-1:0]          ab_entry_fresh;
-    reg  [REQ_W-1:0]       ab_packet_nofresh;
-    reg  [REQ_W-1:0]       ab_packet_fresh;
     integer ab_mux;
     always @* begin
-        ab_entry_nofresh  = {NE{1'b0}};
-        ab_entry_fresh    = {NE{1'b0}};
-        ab_packet_nofresh = {REQ_W{1'b0}};
-        ab_packet_fresh   = {REQ_W{1'b0}};
+        ab_entry  = {NE{1'b0}};
+        ab_packet = {REQ_W{1'b0}};
         for (ab_mux = 0; ab_mux < NS; ab_mux = ab_mux + 1) begin
-            ab_entry_nofresh  = ab_entry_nofresh  | ({NE{pick_nofresh[ab_mux]}}    & src_entry[ab_mux]);
-            ab_entry_fresh    = ab_entry_fresh    | ({NE{pick_fresh[ab_mux]}}      & src_entry[ab_mux]);
-            ab_packet_nofresh = ab_packet_nofresh | ({REQ_W{pick_nofresh[ab_mux]}} & src_packet[ab_mux*REQ_W +: REQ_W]);
-            ab_packet_fresh   = ab_packet_fresh   | ({REQ_W{pick_fresh[ab_mux]}}   & src_packet[ab_mux*REQ_W +: REQ_W]);
+            ab_entry  = ab_entry  | ({NE{arrival_pick[ab_mux]}}    & src_entry[ab_mux]);
+            ab_packet = ab_packet | ({REQ_W{arrival_pick[ab_mux]}} & src_packet[ab_mux*REQ_W +: REQ_W]);
         end
-        ab_entry  = fresh_issue ? ab_entry_fresh  : ab_entry_nofresh;
-        ab_packet = fresh_issue ? ab_packet_fresh : ab_packet_nofresh;
     end
-    assign arrival_book_valid        = arrival_seen;
+    assign arrival_book_valid        = |arrival_pick;
     assign arrival_book_entry_onehot = ab_entry;
     assign arrival_book_set          = ab_packet[SET_IN_REQ +: INDEX_W];
     assign arrival_book_line         = ab_packet[LINE_IN_REQ +: LINE_ADDR_W];
@@ -449,36 +327,6 @@ module l1d_req_tracker #(
     assign arrival_book_is_write     = ab_packet[REQ_RDWR_BIT];
     assign arrival_book_is_line_op   = ab_packet[REQ_LINE_BIT];
     assign arrival_book_is_amo       = ab_packet[REQ_AMO_BIT] & ab_packet[REQ_SEQ_BIT];
-    assign arrival_book_credit_ok    = |(arrival_pick & src_credit_ok);
-    wire [NS-1:0] arrival_booked_source;
-    reg  [NE-1:0]    booked_entry_or;
-    reg  [LINE_ADDR_W-1:0] booked_line_or;
-    reg  [PORT_W-1:0] booked_port_or;
-    reg              booked_is_write_or;
-    reg              booked_is_amo_or;
-    integer bk_src;
-    assign arrival_booked_source = arrival_pick & src_credit_ok & {NS{arrival_book_allowed}};
-    always @* begin
-        booked_entry_or    = {NE{1'b0}};
-        booked_line_or     = {LINE_ADDR_W{1'b0}};
-        booked_port_or     = {PORT_W{1'b0}};
-        booked_is_write_or = 1'b0;
-        booked_is_amo_or   = 1'b0;
-        for (bk_src = 0; bk_src < NS; bk_src = bk_src + 1) begin
-            booked_entry_or    = booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
-            booked_line_or     = booked_line_or     | ({LINE_ADDR_W{arrival_booked_source[bk_src]}} & src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W]);
-            booked_port_or     = booked_port_or     | ({PORT_W{arrival_booked_source[bk_src]}}     & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]);
-            booked_is_write_or = booked_is_write_or | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]);
-            booked_is_amo_or   = booked_is_amo_or   | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_AMO_BIT] &
-                                                       src_packet[bk_src*REQ_W + REQ_SEQ_BIT]);
-        end
-    end
-    assign arrival_book_go              = |arrival_booked_source;
-    assign arrival_booked_entry_onehot  = booked_entry_or;
-    assign arrival_booked_line          = booked_line_or;
-    assign arrival_booked_port          = booked_port_or;
-    assign arrival_booked_is_write      = booked_is_write_or;
-    assign arrival_booked_is_amo        = booked_is_amo_or;
     reg  [NE-1:0] ready_cand;
     integer rc_entry;
     always @* begin
@@ -510,15 +358,6 @@ module l1d_req_tracker #(
     assign oldest_ready_set        = or_packet[SET_IN_REQ +: INDEX_W];
     assign oldest_ready_line       = or_packet[LINE_IN_REQ +: LINE_ADDR_W];
     assign oldest_ready_port       = or_packet[REQ_PORT_LSB +: PORT_W];
-    reg     oldest_credit_or;
-    integer oc_entry;
-    always @* begin
-        oldest_credit_or = 1'b0;
-        for (oc_entry = 0; oc_entry < NE; oc_entry = oc_entry + 1)
-            oldest_credit_or = oldest_credit_or | (oldest_ready_onehot[oc_entry] &
-                               credit_book_next[packet_q[oc_entry][REQ_PORT_LSB +: PORT_W]]);
-    end
-    assign oldest_ready_credit_ok  = oldest_credit_or;
     assign oldest_ready_is_write   = or_packet[REQ_RDWR_BIT];
     assign oldest_ready_is_line_op = or_packet[REQ_LINE_BIT];
     assign oldest_ready_is_amo     = or_packet[REQ_AMO_BIT] & or_packet[REQ_SEQ_BIT];
@@ -560,132 +399,14 @@ module l1d_req_tracker #(
     always @* begin
         alloc_cnt = {RANK_W{1'b0}};
         for (ac_src = 0; ac_src < NS; ac_src = ac_src + 1)
-            alloc_cnt = alloc[ac_src] ? {rank[ac_src][2], ~rank[ac_src][2] & rank[ac_src][0],
-                                         ~rank[ac_src][0] | (rank[ac_src][1] & ~rank[ac_src][2])} : alloc_cnt;
-    end
-    reg  [TRK_CNT_W-1:0] free_count_pick;
-    reg                  s2_frees;
-    integer fc_count;
-    reg  [TRK_CNT_W-1:0] count_plus;
-    reg  [TRK_CNT_W-1:0] count_minus;
-    reg  [NE:0]          free_room_next;
-    reg  [NE:0]          room_now;
-    reg  [NE:0]          room_plus;
-    reg  [NE:0]          room_minus;
-    always @* begin
-        s2_frees        = s2_cpu_valid && s2_free_entry && (s2_seat < NE);
-        free_count_pick = {TRK_CNT_W{1'b0}};
-        free_room_next  = {(NE+1){1'b0}};
-        room_now        = ~({(NE+1){1'b1}} << free_count_q);
-        for (fc_count = 0; fc_count <= NA; fc_count = fc_count + 1) begin
-            count_plus  = free_count_q + 1 - fc_count;
-            count_minus = free_count_q - fc_count;
-            if ((fc_count > 0) && !room_now[(fc_count > 0) ? fc_count - 1 : 0])
-                room_minus = {(NE+1){1'b1}};
-            else
-                room_minus = room_now >> fc_count;
-            if (fc_count == 0)
-                room_plus = (free_count_q == {TRK_CNT_W{1'b1}}) ? {(NE+1){1'b0}} :
-                            ((room_now << 1) | {{NE{1'b0}}, 1'b1});
-            else if ((fc_count > 1) && !room_now[(fc_count > 1) ? fc_count - 2 : 0])
-                room_plus = {(NE+1){1'b1}};
-            else
-                room_plus = room_now >> ((fc_count > 0) ? fc_count - 1 : 0);
-            if (((fc_count == 0)  || rank_alloc[(fc_count > 0) ? fc_count - 1 : 0]) &&
-                ((fc_count == NA) || !rank_alloc[(fc_count < NA) ? fc_count : 0])) begin
-                free_count_pick = free_count_pick | (s2_frees ? count_plus : count_minus);
-                free_room_next  = free_room_next | (s2_frees ? room_plus : room_minus);
-            end
-        end
-    end
-    always @(posedge clk) begin : free_room_proc
-        if (rst) begin
-            free_room_q     <= ~({(NE+1){1'b1}} << NE_C);
-            free_room_dup_q <= ~({(NE+1){1'b1}} << NE_C);
-        end else begin
-            free_room_q     <= free_room_next;
-            free_room_dup_q <= free_room_next;
-        end
+            alloc_cnt = alloc_cnt + {{(RANK_W-1){1'b0}}, alloc[ac_src]};
     end
     wire [TRK_CNT_W-1:0] free_count_next;
-    assign free_count_next = free_count_pick;
-    localparam GE_W = 2 * NA + 1;
-    reg  [GE_W-1:0]  free_ge [0:NE-1];
-    reg  [2*NA*NE-1:0] free_rank;
-    reg  [GE_W-1:0]  freed_ge;
-    reg              freed_any;
-    reg  [NA:0]      alloc_n_onehot;
-    reg  [NA*NE-1:0] free_pick_next;
-    integer fg_entry;
-    integer fg_lower;
-    integer fr_rank;
-    integer fn_pick;
-    integer fn_count;
-    localparam KS_LV = $clog2(NE);
-    reg  [GE_W-1:0] ks_ge [0:(KS_LV+1)*NE-1];
-    integer ks_lv;
-    integer ks_entry;
-    integer ks_bit;
-    integer ks_part;
-    always @* begin
-        for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1)
-            ks_ge[ks_entry] = {{(GE_W-2){1'b0}}, !valid_dup_q[ks_entry], 1'b1};
-        for (ks_lv = 1; ks_lv <= KS_LV; ks_lv = ks_lv + 1)
-            for (ks_entry = 0; ks_entry < NE; ks_entry = ks_entry + 1) begin
-                ks_ge[ks_lv*NE + ks_entry] = {GE_W{1'b0}};
-                for (ks_bit = 0; ks_bit < GE_W; ks_bit = ks_bit + 1)
-                    for (ks_part = 0; ks_part <= ks_bit; ks_part = ks_part + 1)
-                        ks_ge[ks_lv*NE + ks_entry][ks_bit] = ks_ge[ks_lv*NE + ks_entry][ks_bit] |
-                            (ks_ge[(ks_lv-1)*NE + ks_entry][ks_part] &
-                             ((ks_entry >= (1 << (ks_lv-1))) ?
-                                  ks_ge[(ks_lv-1)*NE + ((ks_entry >= (1 << (ks_lv-1))) ? ks_entry - (1 << (ks_lv-1)) : 0)][ks_bit-ks_part] :
-                                  (ks_bit == ks_part)));
-            end
-    end
-    always @* begin
-        for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1) begin
-            free_ge[fg_entry] = (fg_entry == 0) ? {{(GE_W-1){1'b0}}, 1'b1} :
-                                ks_ge[KS_LV*NE + ((fg_entry > 0) ? fg_entry - 1 : 0)];
-            for (fr_rank = 0; fr_rank < 2 * NA; fr_rank = fr_rank + 1)
-                free_rank[fr_rank*NE + fg_entry] = !valid_dup_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
-                                                   !free_ge[fg_entry][fr_rank+1];
-        end
-        freed_any = |(freed_now & valid_q);
-        freed_ge  = {GE_W{1'b0}};
-        for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1)
-            if (freed_now[fg_entry] && valid_q[fg_entry])
-                freed_ge = freed_ge | free_ge[fg_entry];
-        for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
-            alloc_n_onehot[fn_count] = ((fn_count == 0) || rank_alloc[(fn_count > 0) ? fn_count - 1 : 0]) &&
-                                       ((fn_count == NA) || !rank_alloc[(fn_count < NA) ? fn_count : 0]);
-        free_pick_next = {NA*NE{1'b0}};
-        for (fn_pick = 0; fn_pick < NA; fn_pick = fn_pick + 1)
-            for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
-                if (alloc_n_onehot[fn_count]) begin
-                    if (freed_any && ((fn_pick == 0) || freed_ge[fn_pick+fn_count]) && !freed_ge[fn_pick+fn_count+1])
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] | (freed_now & valid_q);
-                    else if (freed_any && (fn_pick > 0) && !freed_ge[fn_pick+fn_count])
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
-                            free_rank[(((fn_pick > 0) ? fn_pick - 1 : 0) + fn_count)*NE +: NE];
-                    else if (fn_pick + fn_count < 2 * NA)
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
-                            free_rank[(fn_pick+fn_count)*NE +: NE];
-                end
-    end
-    integer fq_pick;
-    always @(posedge clk) begin : free_pick_proc
-        if (rst) begin
-            for (fq_pick = 0; fq_pick < NA; fq_pick = fq_pick + 1)
-                free_pick_q[fq_pick*NE +: NE] <= {{(NE-1){1'b0}}, 1'b1} << fq_pick;
-        end else begin
-            free_pick_q <= free_pick_next;
-        end
-    end
+    assign free_count_next = free_count_q - {{(TRK_CNT_W-RANK_W){1'b0}}, alloc_cnt} + {{(TRK_CNT_W-1){1'b0}}, |freed_now};
     integer ent;
     always @(posedge clk) begin : tracker_proc
         if (rst) begin
             valid_q      <= {NE{1'b0}};
-            valid_dup_q  <= {NE{1'b0}};
             write_q      <= {NE{1'b0}};
             wait_nc_q    <= {NE{1'b0}};
             trained_q    <= {NE{1'b0}};
@@ -698,7 +419,6 @@ module l1d_req_tracker #(
             end
         end else begin
             free_count_q <= free_count_next;
-            valid_dup_q  <= valid_q;
             for (ent = 0; ent < NE; ent = ent + 1) begin
                 if (!valid_q[ent]) begin
                     packet_q[ent] <= load_packet[ent];
@@ -708,7 +428,6 @@ module l1d_req_tracker #(
                 end
                 if (alloc_en[ent]) begin
                     valid_q[ent]     <= 1'b1;
-                    valid_dup_q[ent] <= 1'b1;
                     trained_q[ent]   <= 1'b0;
                     wait_nc_q[ent]   <= 1'b0;
                     wait_mshr_q[ent] <= {MSHR_ENTRIES{1'b0}};
@@ -720,13 +439,15 @@ module l1d_req_tracker #(
                         state_q[ent][TRK_BOOKED_B] <= 1'b1;
                     else
                         state_q[ent][TRK_READY_B]  <= 1'b1;
-                    deps_q[ent] <= deps_load[ent];
+                    deps_q[ent] <= {NE{1'b0}};
+                    for (ac_src = 0; ac_src < NS; ac_src = ac_src + 1)
+                        if (alloc[ac_src] && src_entry[ac_src][ent])
+                            deps_q[ent] <= deps_new[ac_src];
                 end else if (valid_q[ent]) begin
                     deps_q[ent] <= deps_q[ent] & ~freed_now;
                     if (s2_entry_onehot[ent]) begin
                         if (s2_free_entry) begin
                             valid_q[ent] <= 1'b0;
-                            valid_dup_q[ent] <= 1'b0;
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                         end else if (s2_to_ready) begin
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
@@ -746,7 +467,7 @@ module l1d_req_tracker #(
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                             state_q[ent][TRK_READY_B] <= 1'b1;
                         end
-                        if (book_ready_onehot[ent] && state_q[ent][TRK_READY_B]) begin
+                        if (book_entry_onehot[ent] && state_q[ent][TRK_READY_B]) begin
                             state_q[ent] <= {TRK_STATE_W{1'b0}};
                             state_q[ent][TRK_BOOKED_B] <= 1'b1;
                         end

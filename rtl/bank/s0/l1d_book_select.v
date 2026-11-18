@@ -29,9 +29,7 @@ module l1d_book_select #(
     output wire                   book_now_maint,
     output wire                   book_now_entry,
     output wire                   book_now_arrival,
-    output wire                   book_now_prefetch,
-    output wire                   book_now_prefetch_no_arrival,
-    output wire                   book_arrival_allowed
+    output wire                   book_now_prefetch
 );
     localparam SKIP_W   = (REFILL_SKIP > 0) ? $clog2(REFILL_SKIP + 1) : 1;
     localparam STARVE_W = $clog2(SNP_STARVE + 1);
@@ -65,15 +63,10 @@ module l1d_book_select #(
     assign book_now_refill   = door_open_next && refill_ok;
     assign book_now_maint    = door_open_next && maint_ok;
     assign book_now_entry    = cpu_go && entry_ready_valid && entry_credit_ok;
-    assign book_arrival_allowed = cpu_go && !book_now_entry;
-    assign book_now_arrival  = book_arrival_allowed && arrival_ready_valid && arrival_credit_ok;
-    assign book_now_prefetch_no_arrival = cpu_go && !book_now_entry && prefetch_valid;
-    assign book_now_prefetch = book_now_prefetch_no_arrival && !book_now_arrival;
-    wire book_now_any_no_arrival;
-    assign book_now_any_no_arrival = book_now_snoop || book_now_refill || book_now_maint || book_now_entry ||
-                                     book_now_prefetch_no_arrival;
+    assign book_now_arrival  = cpu_go && !book_now_entry && arrival_ready_valid && arrival_credit_ok;
+    assign book_now_prefetch = cpu_go && !book_now_entry && !book_now_arrival && prefetch_valid;
     wire book_now_any;
-    assign book_now_any = book_now_arrival || book_now_any_no_arrival;
+    assign book_now_any = book_now_snoop || book_now_refill || book_now_maint || book_now_entry || book_now_arrival || book_now_prefetch;
     always @(posedge clk) begin : book_proc
         if (rst) begin
             book_valid_q    <= 1'b0;

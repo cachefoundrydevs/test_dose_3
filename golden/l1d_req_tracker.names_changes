@@ -98,3 +98,13 @@
 + DECL reg[REQ_W-1:0]ab_packet_fresh
 # iteration 16 (user approved): valid_q copy for the free count
 + DECL reg[NE-1:0]valid_dup_q
++ DECL wire entry_offer_bookable
++ DECL wire arrival_offer_bookable
++ DECL reg[NA*REQ_W-1:0]rank_load_packet
++ DECL reg[NA*PC_W-1:0]rank_load_pc
++ DECL reg[NA-1:0]rank_load_line_store
++ DECL integer rl_rank
++ DECL integer rl_src
++ ALWAYS always @*
++ FOR for(rl_rank=0;rl_rank<NA;rl_rank=rl_rank+1)
++ FOR for(rl_src=0;rl_src<NS;rl_src=rl_src+1)

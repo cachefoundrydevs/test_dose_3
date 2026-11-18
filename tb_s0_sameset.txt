@@ -1,0 +1,31 @@
+FAIL tb_s0_sameset (no TEST PASSED / ERROR / timeout after 1173 s)  [tb_s0_sameset]
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+  differs: address 000081c8 memory b1 reference b4 (tag 2 set 1 bank 3)
+  differs: address 0000c1c8 memory 31 reference 34 (tag 3 set 1 bank 3)
+  differs: address 000101c8 memory b1 reference b4 (tag 4 set 1 bank 3)
+  differs: address 000141e8 memory 51 reference 54 (tag 5 set 1 bank 3)
+  differs: address 0001c1e8 memory 51 reference 54 (tag 7 set 1 bank 3)
+  differs: address 000201e8 memory d1 reference d4 (tag 8 set 1 bank 3)
+ERROR: memory differs from the reference in 24 bytes after flush
+coverage: skid full P0 0 P1 0 P2 0, late sends 0, ring max 3, from ring 31, replay max -1
+coverage: pipe conflicts 16, replay conflicts 131, replay entries held 5372, replay credit stalls 12
+monitor errors: skid 0, order 0, replay 0, stage R cancel 0
+  ok: a fresh request was cancelled in stage R by a same-set hazard (ghost, re-issued)
+  ok: stage R never saw a hazard on a BOOKED request
+stats: 144 requests (LD 64, ST 64, LR 0, SC 0, AMO 16), 171 answered; max latency per port: P0 151 P1 179 P2 188 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 28 3 1 3 8 25 59 0
+ERROR: 17 requests still outstanding at the end
+TEST FAILED: tb_s0_sameset (115 errors)
+tb/common/tb_ports_common.vh:701: $finish called at 4024720000 (1ps)

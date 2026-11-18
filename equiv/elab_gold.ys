@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include   rtl/bank/fifo/l1d_snoop_buf.v rtl/bank/s0/l1d_req_tracker.v rtl/bank/s0/l1d_book_select.v proof/l1d_age_matrix_a1.v rtl/common/l1d_pri_enc.v  golden/l1d_bank_s0.v
+hierarchy -top l1d_bank_s0
+proc
+flatten
+opt_clean
+rename l1d_bank_s0 gold
+write_rtlil proof/gold.il

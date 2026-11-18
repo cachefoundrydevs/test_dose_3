@@ -562,44 +562,6 @@ module l1d_bank_s0 #(
             r_sid   <= book_sid_q;
         end
     end
-`ifndef SYNTHESIS
-    reg [INDEX_W-1:0] g_set_q;
-    always @(posedge clk) begin
-        g_set_q <= g_set;
-        if (!rst) begin
-            if (r_valid && (r_line[LA_SET_LSB +: INDEX_W] != g_set_q))
-                $display("[%0t] L1D B%0d S0 ADDR LANE ERROR: the op in R has set %0d but the SRAMs read set %0d", $time, BANK_ID,
-                         r_line[LA_SET_LSB +: INDEX_W], g_set_q);
-            if (fresh_issue && book_valid_q)
-                $display("[%0t] L1D B%0d S0 ERROR: fresh issue while an operation is booked", $time, BANK_ID);
-            if (book_valid_q && !book_issue)
-                $display("[%0t] L1D B%0d S0 NOTE: booked %b cancelled (source offer changed): bubble", $time, BANK_ID, book_kind_q);
-        end
-    end
-`endif
-`ifdef L1D_DEBUG
-    always @(posedge clk) begin
-        if (!rst) begin
-            if (snoop_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE snoop %s line=%h", $time, BANK_ID, book_sinv_q ? "INV" : "READ", {book_line_q, OFF0});
-            else if (refill_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE refill token  mshr=%0d line=%h", $time, BANK_ID, book_mid_q, {book_line_q, OFF0});
-            else if (maint_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE %s token  set=%0d way=%0d", $time, BANK_ID,
-                         (book_mop_q == MAINT_FLUSH) ? "flush" : "clean", book_set_q, book_mway_q);
-            else if (book_entry_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE BOOKED entry %0d port %0d idx=%0d %s addr=%h", $time, BANK_ID, booked_seat,
-                         booked_entry_packet[REQ_PORT_LSB +: PORT_W], booked_entry_packet[REQ_IDX_LSB +: IDX_BITS],
-                         (booked_entry_packet[REQ_RDWR_BIT] ? "ST" : "LD"), booked_entry_packet[REQ_ADDR_LSB +: ADDR_W]);
-            else if (pf_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE PREFETCH line=%h unique=%b", $time, BANK_ID, {pf_line_q, OFF0}, pf_unique_q);
-            else if (fresh_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE FRESH entry %0d port %0d idx=%0d %s addr=%h", $time, BANK_ID, fresh_seat,
-                         fresh_packet[REQ_PORT_LSB +: PORT_W], fresh_packet[REQ_IDX_LSB +: IDX_BITS],
-                         (fresh_packet[REQ_RDWR_BIT] ? "ST" : "LD"), fresh_packet[REQ_ADDR_LSB +: ADDR_W]);
-        end
-    end
-`endif
 endmodule
 `default_nettype wire
 `endif

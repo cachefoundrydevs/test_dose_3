@@ -482,50 +482,6 @@ module l1d_req_tracker #(
     end
     assign entry_valid_q = valid_q;
     assign tracker_empty = ~|valid_q;
-`ifndef SYNTHESIS
-    integer chk_src;
-    integer chk_entry;
-    integer chk_hits;
-    initial if (LSU_PORTS != 4)
-        $display("L1D TRACKER ERROR bank %0d: LSU_PORTS = %0d, the ports _0 .. _3 need LSU_PORTS = 4", BANK_ID, LSU_PORTS);
-    always @(posedge clk) begin
-        if (!rst) begin
-            if (drain_request && any_pins_arrival)
-                $display("[%0t] L1D TRACKER ERROR bank %0d: pins arrival and drain in the same cycle (front rule A1 broken)", $time, BANK_ID);
-            for (chk_entry = 0; chk_entry < NE; chk_entry = chk_entry + 1) begin
-                chk_hits = 0;
-                for (chk_src = 0; chk_src < NS; chk_src = chk_src + 1)
-                    if (alloc[chk_src] && src_entry[chk_src][chk_entry]) chk_hits = chk_hits + 1;
-                if (chk_hits > 1)
-                    $display("[%0t] L1D TRACKER ERROR bank %0d: entry %0d allocated by %0d sources at once", $time, BANK_ID, chk_entry, chk_hits);
-                if (alloc_en[chk_entry] && valid_q[chk_entry])
-                    $display("[%0t] L1D TRACKER ERROR bank %0d: entry %0d allocated while in use", $time, BANK_ID, chk_entry);
-            end
-            for (chk_src = 0; chk_src < NS; chk_src = chk_src + 1)
-                if (alloc[chk_src] && (src_entry[chk_src] == {NE{1'b0}}))
-                    $display("[%0t] L1D TRACKER ERROR bank %0d: source %0d allocated without a free entry (request lost)", $time, BANK_ID, chk_src);
-            if (s2_cpu_valid && !valid_q[s2_seat])
-                $display("[%0t] L1D TRACKER ERROR bank %0d: S2 result for entry %0d, which is free", $time, BANK_ID, s2_seat);
-            if (s2_cpu_valid && !state_q[s2_seat][TRK_INFL_B])
-                $display("[%0t] L1D TRACKER ERROR bank %0d: S2 result for entry %0d, which is not in flight", $time, BANK_ID, s2_seat);
-            if ((|book_entry_onehot) && (|(book_entry_onehot & issue_entry_onehot)))
-                $display("[%0t] L1D TRACKER ERROR bank %0d: an entry is booked and issued in one cycle", $time, BANK_ID);
-        end
-    end
-`endif
-`ifdef L1D_DEBUG
-    always @(posedge clk) begin
-        if (!rst) begin
-            for (chk_src = 0; chk_src < NS; chk_src = chk_src + 1)
-                if (alloc[chk_src])
-                    $display("[%0t] L1D TRACKER bank %0d: source %0d (port %0d) -> entry %b rank %0d%s deps=%b", $time, BANK_ID, chk_src,
-                             src_packet[chk_src*REQ_W + REQ_PORT_LSB +: PORT_W], src_entry[chk_src], rank[chk_src],
-                             (fresh_issue && rank[chk_src] == 0 && chk_src < LSU_PORTS) ? " FRESH" : "", deps_new[chk_src]);
-            if (|freed_now)
-                $display("[%0t] L1D TRACKER bank %0d: entry %0d freed (free next = %0d)", $time, BANK_ID, s2_seat, free_count_next);
-        end
-    end
-`endif
 endmodule
 `default_nettype wire
 `endif

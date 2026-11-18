@@ -431,7 +431,7 @@ module l1d_bank_s0 #(
         .entry_credit_ok      (entry_credit_ok),
         .arrival_ready_valid  (arrival_book_valid),
         .arrival_credit_ok    (arrival_credit_ok),
-        .prefetch_valid       (pf_valid_q),
+        .prefetch_valid       (pf_valid_q && !pf_booked_q),
         .amo_issued_now       (amo_issued_now),
         .store_in_flight_next (store_in_flight_next),
         .amo_write_next       (s2_amo_in_s2),

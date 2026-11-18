@@ -458,6 +458,8 @@ module l1d_req_tracker #(
     reg              booked_is_amo_or;
     integer bk_src;
     assign arrival_booked_source = arrival_pick & src_credit_ok & {NS{arrival_book_allowed}};
+    wire [NS-1:0] arrival_source_credit_allowed;
+    assign arrival_source_credit_allowed = src_credit_ok & {NS{arrival_book_allowed}};
     always @* begin
         booked_entry_or    = {NE{1'b0}};
         booked_line_or     = {LINE_ADDR_W{1'b0}};
@@ -467,10 +469,13 @@ module l1d_req_tracker #(
         for (bk_src = 0; bk_src < NS; bk_src = bk_src + 1) begin
             booked_entry_or    = booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
             booked_line_or     = booked_line_or     | ({LINE_ADDR_W{arrival_booked_source[bk_src]}} & src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W]);
-            booked_port_or     = booked_port_or     | ({PORT_W{arrival_booked_source[bk_src]}}     & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]);
-            booked_is_write_or = booked_is_write_or | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]);
-            booked_is_amo_or   = booked_is_amo_or   | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_AMO_BIT] &
-                                                       src_packet[bk_src*REQ_W + REQ_SEQ_BIT]);
+            booked_port_or     = booked_port_or     | ({PORT_W{arrival_pick[bk_src]}} &
+                                                       ({PORT_W{arrival_source_credit_allowed[bk_src]}} & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]));
+            booked_is_write_or = booked_is_write_or | (arrival_pick[bk_src] &
+                                                       (arrival_source_credit_allowed[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]));
+            booked_is_amo_or   = booked_is_amo_or   | (arrival_pick[bk_src] &
+                                                       (arrival_source_credit_allowed[bk_src] & src_packet[bk_src*REQ_W + REQ_AMO_BIT] &
+                                                        src_packet[bk_src*REQ_W + REQ_SEQ_BIT]));
         end
     end
     assign arrival_book_go              = |arrival_booked_source;

@@ -198,7 +198,6 @@ module l1d_bank_s0 #(
     wire [INDEX_W-1:0]     oldest_ready_set;
     wire [LINE_ADDR_W-1:0] oldest_ready_line;
     wire [PORT_W-1:0]      oldest_ready_port;
-    wire                   oldest_ready_credit_ok;
     wire                   oldest_ready_is_write;
     wire                   oldest_ready_is_line_op;
     wire                   oldest_ready_is_amo;
@@ -211,13 +210,6 @@ module l1d_bank_s0 #(
     wire                   arrival_book_is_line_op;
     wire                   arrival_book_is_amo;
     wire                   arrival_book_credit_ok;
-    wire                   book_arrival_allowed;
-    wire                   arrival_book_go;
-    wire [NE-1:0]          arrival_booked_entry_onehot;
-    wire [LINE_ADDR_W-1:0] arrival_booked_line;
-    wire [PORT_W-1:0]      arrival_booked_port;
-    wire                   arrival_booked_is_write;
-    wire                   arrival_booked_is_amo;
     reg  [LSU_PORTS-1:0] credit_book_next;
     wire [NE-1:0]          book_entry_onehot;
     wire [NE-1:0]          book_ready_onehot;
@@ -266,7 +258,6 @@ module l1d_bank_s0 #(
         .oldest_ready_set          (oldest_ready_set),
         .oldest_ready_line         (oldest_ready_line),
         .oldest_ready_port         (oldest_ready_port),
-        .oldest_ready_credit_ok    (oldest_ready_credit_ok),
         .oldest_ready_is_write     (oldest_ready_is_write),
         .oldest_ready_is_line_op   (oldest_ready_is_line_op),
         .oldest_ready_is_amo       (oldest_ready_is_amo),
@@ -279,13 +270,6 @@ module l1d_bank_s0 #(
         .arrival_book_is_line_op   (arrival_book_is_line_op),
         .arrival_book_is_amo       (arrival_book_is_amo),
         .arrival_book_credit_ok    (arrival_book_credit_ok),
-        .arrival_book_allowed      (book_arrival_allowed),
-        .arrival_book_go           (arrival_book_go),
-        .arrival_booked_entry_onehot (arrival_booked_entry_onehot),
-        .arrival_booked_line       (arrival_booked_line),
-        .arrival_booked_port       (arrival_booked_port),
-        .arrival_booked_is_write   (arrival_booked_is_write),
-        .arrival_booked_is_amo     (arrival_booked_is_amo),
         .book_entry_onehot         (book_entry_onehot),
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
@@ -333,10 +317,10 @@ module l1d_bank_s0 #(
             issue_is_port[cr_port] = (book_entry_issue && (book_port_q == cr_port)) || (fresh_issue && fresh_port_onehot[cr_port]);
             promised_next          = {{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, issue_is_port[cr_port]} + CREDIT_TWO;
             credit_next[cr_port]   = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= promised_next);
-            credit_book_if_none[cr_port]  = r_is_port[cr_port] ? ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >  CREDIT_TWO)
-                                                               : ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= CREDIT_TWO);
-            credit_book_if_issue[cr_port] = r_is_port[cr_port] ? ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >  CREDIT_THREE)
-                                                               : ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= CREDIT_THREE);
+            credit_book_if_none[cr_port]  = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >=
+                                             ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + CREDIT_TWO));
+            credit_book_if_issue[cr_port] = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >=
+                                             ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + CREDIT_THREE));
             credit_book_next[cr_port] = issue_is_port[cr_port] ? credit_book_if_issue[cr_port] : credit_book_if_none[cr_port];
             port_miss_ok[cr_port]  = ({1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]} >
                                       ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, s1_is_port[cr_port]}));
@@ -349,7 +333,7 @@ module l1d_bank_s0 #(
     end
     wire entry_credit_ok;
     wire arrival_credit_ok;
-    assign entry_credit_ok   = oldest_ready_credit_ok;
+    assign entry_credit_ok   = credit_book_next[oldest_ready_port];
     assign arrival_credit_ok = arrival_book_credit_ok;
     wire                   sn_sel_valid;
     wire                   sn_sel_inv;
@@ -443,11 +427,10 @@ module l1d_bank_s0 #(
         .book_now_entry       (book_now_entry),
         .book_now_arrival     (book_now_arrival),
         .book_now_prefetch    (book_now_prefetch),
-        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival),
-        .book_arrival_allowed         (book_arrival_allowed)
+        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival)
     );
     assign book_ready_onehot = {NE{book_now_entry}} & oldest_ready_onehot;
-    assign book_entry_onehot = book_ready_onehot | arrival_booked_entry_onehot;
+    assign book_entry_onehot = book_ready_onehot | ({NE{book_now_arrival}} & arrival_book_entry_onehot);
     wire [LINE_ADDR_W-1:0] mt_line;
     assign mt_line = {{TAG_W{1'b0}}, mt_set, BANK_C};
     reg  [LINE_ADDR_W-1:0] book_line_q;
@@ -472,21 +455,14 @@ module l1d_bank_s0 #(
                                       ({LINE_ADDR_W{book_now_maint}}               & mt_line) |
                                       ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q) |
                                       ({LINE_ADDR_W{book_now_entry}}               & oldest_ready_line);
-    wire [LINE_ADDR_W-1:0] book_line_other_next;
-    assign book_line_other_next = ({LINE_ADDR_W{book_now_snoop}}               & sn_sel_line) |
-                                  ({LINE_ADDR_W{book_now_refill}}              & tok_line) |
-                                  ({LINE_ADDR_W{book_now_maint}}               & mt_line) |
-                                  ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q);
-    wire [INDEX_W-1:0]     book_set_next;
-    assign book_set_next = book_line_next[LA_SET_LSB +: INDEX_W];
     assign book_port_no_arrival     = {PORT_W{book_now_entry}} & oldest_ready_port;
     assign book_is_write_no_arrival = book_now_entry & oldest_ready_is_write;
     assign book_is_amo_no_arrival   = book_now_entry & oldest_ready_is_amo;
     always @* begin
-        book_line_next     = arrival_booked_line     | (book_line_no_arrival & ~{LINE_ADDR_W{arrival_book_go}});
-        book_port_next     = arrival_booked_port     | book_port_no_arrival;
-        book_is_write_next = arrival_booked_is_write | book_is_write_no_arrival;
-        book_is_amo_next   = arrival_booked_is_amo   | book_is_amo_no_arrival;
+        book_line_next     = book_now_arrival ? arrival_book_line     : book_line_no_arrival;
+        book_port_next     = book_now_arrival ? arrival_book_port     : book_port_no_arrival;
+        book_is_write_next = book_now_arrival ? arrival_book_is_write : book_is_write_no_arrival;
+        book_is_amo_next   = book_now_arrival ? arrival_book_is_amo   : book_is_amo_no_arrival;
     end
     integer cp_idx;
     always @(posedge clk) begin : book_fields_proc
@@ -495,8 +471,8 @@ module l1d_bank_s0 #(
             for (cp_idx = 0; cp_idx < 4; cp_idx = cp_idx + 1) book_entry_sel_q[cp_idx] <= {NE{1'b0}};
             pf_booked_q <= 1'b0;
         end else begin
-            book_line_q         <= book_line_other_next;
-            book_set_q          <= book_set_next;
+            book_line_q         <= book_line_next;
+            book_set_q          <= book_line_next[LA_SET_LSB +: INDEX_W];
             book_port_q         <= book_port_next;
             book_is_write_q     <= book_is_write_next;
             book_is_amo_q       <= book_is_amo_next;
@@ -580,8 +556,7 @@ module l1d_bank_s0 #(
             r_fast  <= fresh_issue;
             r_kind  <= book_valid_q ? booked_kind : K_LSU;
             r_req   <= book_valid_q ? booked_packet : fresh_packet;
-            r_line  <= book_valid_q ? (book_kind_q[BOOK_ENTRY_B] ? booked_entry_packet[LINE_IN_REQ +: LINE_ADDR_W] : book_line_q)
-                                    : fresh_line;
+            r_line  <= book_valid_q ? book_line_q : fresh_line;
             r_seat  <= book_valid_q ? booked_seat : fresh_seat;
             r_mid   <= book_mid_q;
             r_mway  <= book_mway_q;

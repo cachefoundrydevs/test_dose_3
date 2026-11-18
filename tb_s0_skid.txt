@@ -1,0 +1,31 @@
+FAIL tb_s0_skid (no TEST PASSED / ERROR / timeout after 1158 s)  [tb_s0_skid]
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+memory matches the reference after flush
+coverage: skid full P0 32 P1 79 P2 17, late sends 27, ring max 6, from ring 67, replay max -1
+coverage: pipe conflicts 0, replay conflicts 23, replay entries held 661, replay credit stalls 7
+monitor errors: skid 0, order 0, replay 0, stage R cancel 1
+  ok: coverage: the skid of P0 held 2 requests
+  ok: coverage: the skid of P1 held 2 requests
+  ok: coverage: the skid of P2 held 2 requests
+  ok: coverage: requests were sent while their stop was 1 (late LSU)
+stats: 88 requests (LD 64, ST 24, LR 0, SC 0, AMO 0), 94 answered; max latency per port: P0 104 P1 146 P2 196 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 20 0 0 0 0 16 37 0
+ERROR: 15 requests still outstanding at the end
+TEST FAILED: tb_s0_skid (65 errors)
+tb/common/tb_ports_common.vh:701: $finish called at 4017140000 (1ps)

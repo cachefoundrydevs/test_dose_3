@@ -1,0 +1,31 @@
+FAIL tb_s0_order (no TEST PASSED / ERROR / timeout after 1160 s)  [tb_s0_order]
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+  differs: address 00000040 memory 1a reference a4 (tag 0 set 0 bank 1)
+  differs: address 00000041 memory 3f reference 11 (tag 0 set 0 bank 1)
+  differs: address 00000042 memory d0 reference 33 (tag 0 set 0 bank 1)
+  differs: address 00000043 memory f5 reference 52 (tag 0 set 0 bank 1)
+  differs: address 00000044 memory 8e reference 76 (tag 0 set 0 bank 1)
+  differs: address 00000045 memory a3 reference d0 (tag 0 set 0 bank 1)
+ERROR: memory differs from the reference in 56 bytes after flush
+coverage: skid full P0 61 P1 49 P2 12, late sends 28, ring max 6, from ring 71, replay max -1
+coverage: pipe conflicts 0, replay conflicts 72, replay entries held 1171, replay credit stalls 4
+monitor errors: skid 0, order 0, replay 0, stage R cancel 1
+  ok: coverage: an order ring held 4 or more requests
+  ok: coverage: requests were granted from an order ring
+stats: 116 requests (LD 84, ST 32, LR 0, SC 0, AMO 0), 124 answered; max latency per port: P0 117 P1 155 P2 155 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 34 0 0 0 0 32 29 0
+ERROR: 21 requests still outstanding at the end
+TEST FAILED: tb_s0_order (114 errors)
+tb/common/tb_ports_common.vh:701: $finish called at 4017140000 (1ps)

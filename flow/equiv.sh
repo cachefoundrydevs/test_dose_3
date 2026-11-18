@@ -19,6 +19,15 @@ while [[ -n "$QUEUE" ]]; do
     done
 done
 echo "children of $M:$KIDS"
+# Assumption A1 (user decision 2026-11-18): only when golden/$M.assume_age_onehot exists, both sides use a copy of l1d_age_matrix whose
+# pick is one-hot by construction (flow/age_assume_a1.pl). The proof then reads "equal for all states, given A1"; A1 is checked by simulation.
+A1=0
+if [[ -f golden/$M.assume_age_onehot && " $KIDS " == *" rtl/common/l1d_age_matrix.v "* ]]; then
+    perl flow/age_assume_a1.pl rtl/common/l1d_age_matrix.v > "$OUT/l1d_age_matrix_a1.v" || { echo "EQUIV: FAIL (A1 patch)"; exit 1; }
+    KIDS=$(echo " $KIDS " | sed "s#  *rtl/common/l1d_age_matrix.v # $OUT/l1d_age_matrix_a1.v #")
+    A1=1
+    echo "ASSUMPTION A1: age matrix pick is one-hot or zero (proof is equal for all states given A1)"
+fi
 elab() {   # $1 = source file of MODULE, $2 = new name, $3 = output .il
     cat > "$OUT/elab_$2.ys" <<YS
 read_verilog -DSYNTHESIS -mem2reg -Irtl/include $KIDS $1
@@ -60,7 +69,7 @@ equiv_status -assert
 YS
 if yosys -l "$OUT/equiv.log" -s "$OUT/equiv.ys" > /dev/null 2>&1; then
     grep -E 'Found [0-9]+ \$equiv cells|Of those cells|proven|unproven' "$OUT/equiv.log" | tail -5
-    echo "EQUIV: PASS (equiv_make / equiv_simple / equiv_induct)"; exit 0
+    echo "EQUIV: PASS (equiv_make / equiv_simple / equiv_induct)"; [[ $A1 == 1 ]] && echo "EQUIV: PASS holds under assumption A1 (age pick one-hot)"; exit 0
 fi
 grep -E 'Found [0-9]+ \$equiv|Of those|unproven' "$OUT/equiv.log" | tail -8
 echo "equiv flow did not prove all points; fallback: miter + sat -tempinduct"

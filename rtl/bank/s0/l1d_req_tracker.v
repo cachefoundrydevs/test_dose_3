@@ -369,11 +369,11 @@ module l1d_req_tracker #(
             rank_deps_old[rd_rank] = {NE{1'b0}};
             rank_pair[rd_rank]     = {NA{1'b0}};
             for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1) begin
-                if (rank_onehot[rd_src][rd_rank])
+                if ((rd_src >= rd_rank) && rank_onehot[rd_src][rd_rank])
                     rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
                 for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
-                    if (rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
-                        rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
+                    if ((rd_src >= rd_rank) && rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
+                        rank_pair[rd_rank] = rank_pair[rd_rank] | (rank_onehot[rd_lower] & ~({NA{1'b1}} << rd_rank));
             end
         end
         for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
@@ -382,7 +382,7 @@ module l1d_req_tracker #(
                 if (free_pick[dl_rank*NE + dl_entry])
                     deps_load[dl_entry] = deps_load[dl_entry] | rank_deps_old[dl_rank];
                 for (dl_lower = 0; dl_lower < NA; dl_lower = dl_lower + 1)
-                    if (free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
+                    if ((dl_lower < dl_rank) && free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
                         deps_load[dl_entry] = deps_load[dl_entry] | free_pick[dl_lower*NE +: NE];
             end
         end

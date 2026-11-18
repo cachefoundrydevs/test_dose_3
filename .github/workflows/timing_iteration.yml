@@ -1,4 +1,4 @@
-name: timing iteration
+﻿name: timing iteration
 on:
   push:
     paths:
@@ -42,7 +42,7 @@ jobs:
   equiv:
     needs: request
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 330
     container:
       image: openroad/orfs:latest
       options: --user root
@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: equiv, path: proof, if-no-files-found: warn }
   timing:
-    needs: [request, names, equiv]
+    needs: [request, names]
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     container:

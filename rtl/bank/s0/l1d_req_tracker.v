@@ -166,6 +166,8 @@ module l1d_req_tracker #(
         end
     end
     wire [NS-1:0] alloc;
+    wire [NS-1:0] src_rank_in_room;
+    wire [NS-1:0] src_rank_in_max;
     wire [NE:0]   free_room;
     reg  [NE:0]   free_room_q;
     reg  [NE:0]   free_room_dup_q;
@@ -186,6 +188,8 @@ module l1d_req_tracker #(
                                   ((rank[al_idx] == 3'b111) && (3 < NA)) ||
                                   ((rank[al_idx] == 3'b110) && (4 < NA));
             assign alloc[al_idx] = eligible[al_idx] & rank_in_room & rank_in_max;
+            assign src_rank_in_room[al_idx] = rank_in_room;
+            assign src_rank_in_max[al_idx]  = rank_in_max;
         end
     endgenerate
     assign arrival_allocated_0 = alloc[0];
@@ -397,6 +401,8 @@ module l1d_req_tracker #(
     reg  [NS-1:0] cand_fresh;
     reg  [NS-1:0] pick_nofresh;
     reg  [NS-1:0] pick_fresh;
+    reg  [NS-1:0] cand_nofresh_no_room_check;
+    reg  [NS-1:0] cand_fresh_no_room_check;
     integer pb_rank;
     integer pb_lower;
     always @* begin
@@ -411,10 +417,16 @@ module l1d_req_tracker #(
             cand_nofresh[ab_src] = alloc[ab_src] && (deps_old[ab_src] == {NE{1'b0}}) && !pair_block[ab_src];
             cand_fresh[ab_src]   = cand_nofresh[ab_src] &&
                                    !((rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
+            cand_nofresh_no_room_check[ab_src] = eligible[ab_src] && src_rank_in_max[ab_src] &&
+                                                 (deps_old[ab_src] == {NE{1'b0}}) && !pair_block[ab_src];
+            cand_fresh_no_room_check[ab_src]   = cand_nofresh_no_room_check[ab_src] &&
+                                                 !((rank[ab_src] == {RANK_W{1'b0}}) && (ab_src < LSU_PORTS));
         end
         for (ab_src = 0; ab_src < NS; ab_src = ab_src + 1) begin
-            pick_nofresh[ab_src] = cand_nofresh[ab_src] && !(|(cand_nofresh & ~({NS{1'b1}} << ab_src)));
-            pick_fresh[ab_src]   = cand_fresh[ab_src]   && !(|(cand_fresh   & ~({NS{1'b1}} << ab_src)));
+            pick_nofresh[ab_src] = cand_nofresh_no_room_check[ab_src] &&
+                                   !(|(cand_nofresh_no_room_check & ~({NS{1'b1}} << ab_src))) && src_rank_in_room[ab_src];
+            pick_fresh[ab_src]   = cand_fresh_no_room_check[ab_src] &&
+                                   !(|(cand_fresh_no_room_check   & ~({NS{1'b1}} << ab_src))) && src_rank_in_room[ab_src];
             arrival_cand[ab_src] = fresh_issue ? cand_fresh[ab_src] : cand_nofresh[ab_src];
             arrival_pick[ab_src] = fresh_issue ? pick_fresh[ab_src] : pick_nofresh[ab_src];
             arrival_seen         = arrival_seen || arrival_cand[ab_src];

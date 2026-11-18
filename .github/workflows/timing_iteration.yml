@@ -12,6 +12,7 @@ jobs:
       module: ${{ steps.r.outputs.module }}
       period: ${{ steps.r.outputs.period }}
       iteration: ${{ steps.r.outputs.iteration }}
+      trial: ${{ steps.r.outputs.trial }}
       path: ${{ steps.r.outputs.path }}
     steps:
       - uses: actions/checkout@v4
@@ -20,12 +21,12 @@ jobs:
         run: |
           set -euo pipefail
           get() { sed -n "s/^$1=\([A-Za-z0-9_.-]*\).*/\1/p" request/timing_request.txt | tr -d '\r' | head -1; }
-          m=$(get module); p=$(get period); k=$(get iteration)
+          m=$(get module); p=$(get period); k=$(get iteration); tr=$(get trial)
           [[ -n "$m" && "$p" =~ ^[0-9]+$ ]] || { echo "bad request"; cat request/timing_request.txt; exit 1; }
           f=$(grep -v '^[-#]' filelists/rtl.f | grep "/$m.v$" | head -1)
           [[ -n "$f" && -f golden/$m.v ]] || { echo "no rtl file or no golden copy for $m"; exit 1; }
           echo "module=$m" >> "$GITHUB_OUTPUT"; echo "period=$p" >> "$GITHUB_OUTPUT"
-          echo "iteration=$k" >> "$GITHUB_OUTPUT"; echo "path=$f" >> "$GITHUB_OUTPUT"
+          echo "iteration=$k" >> "$GITHUB_OUTPUT"; echo "trial=$tr" >> "$GITHUB_OUTPUT"; echo "path=$f" >> "$GITHUB_OUTPUT"
   names:
     needs: request
     runs-on: ubuntu-24.04
@@ -105,6 +106,7 @@ jobs:
             echo "timing=${{ needs.timing.result }}"
           } > /tmp/res/status.txt
           B=timing-${{ needs.request.outputs.module }}
+          if [ -n "${{ needs.request.outputs.trial }}" ]; then B=$B-${{ needs.request.outputs.trial }}; fi
           git config user.name ci; git config user.email ci@example.invalid
           git checkout --orphan "$B"; git rm -rq --cached . ; git clean -fdq
           cp -r /tmp/res/* .; git add -A; git commit -qm "timing iteration ${{ needs.request.outputs.iteration }}"; git push -f origin "$B"

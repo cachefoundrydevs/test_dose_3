@@ -1,0 +1,31 @@
+PASS tb_latency (7 s)  [tb_latency]
+    c0+3  S2  answer pushed to the merger (pipeline), seat 0 freed
+    c0+4  OUT response idx 0 (store ack)
+    c0+5  S1  tag hit way 0 (                      load)
+    c0+6  S2  response built (  data array)
+    c0+6  S2  answer pushed to the merger (pipeline), seat 1 freed
+    c0+7  OUT response idx 1 (load data)
+  RESULT 16: store hit: latency 4 cycles (expected 4) OK
+  RESULT : load hit, other line, during the write: latency 4 cycles (expected 4) OK
+
+=== 17. store hit, then a load of the same bytes arriving in the store's write cycle (blocked one cycle) ===
+    c0+0  G   FRESH issue of an arriving request (tag + data read of all ways)
+    c0+2  S1  tag hit way 0 (store: bytes written in S2)
+    c0+3  G   FRESH issue of an arriving request (tag + data read of all ways)
+    c0+3  S2  response built (  data array)
+    c0+3  S2  answer pushed to the merger (pipeline), seat 0 freed
+    c0+4  R   fresh issue cancelled (dependency or set written), ghost, entry back to READY
+    c0+4  OUT response idx 0 (store ack)
+    c0+5  S1  tag miss
+    c0+6  S2  seat 1 -> action 0 (1=WMSHR 2=WANY 3=WVC 4=WNC 5=OWNED) id 0              
+    c0+8  G   issue BOOKED tracker entry (waited, or arrived behind another request)
+    c0+10  S1  tag hit way 0 (                      load)
+    c0+11  S2  response built (  data array)
+    c0+11  S2  answer pushed to the merger (pipeline), seat 1 freed
+    c0+12  OUT response idx 1 (load data)
+  RESULT 17: store hit: latency 4 cycles (expected 4) OK
+  RESULT  of the stored bytes (blocked one cycle): latency 9 cycles (expected 9) OK
+  RESULT 17: load returns the store's data 000045185a5a0000 OK
+
+TEST PASSED
+tb/tests/tb_latency.v:477: $finish called at 15710000 (1ps)

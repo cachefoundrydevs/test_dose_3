@@ -1,0 +1,31 @@
+PASS tb_l1d_soc_L1D_DEBUG_NOPS_200 (22 s)  [tb_l1d_soc -d L1D_DEBUG -d "NOPS=200"]
+[0] L1D B3 S2 MAINT                                done
+[0] L1D B0 S0 ISSUE clean token  set=63 way=1
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 ISSUE clean token  set=63 way=3
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S1 MAINT set=63 way=1 state=0        
+[0] L1D B0 S2 MAINT                                done
+[0] L1D B3 S1 MAINT set=63 way=3 state=0        
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[3].u_bank.u_maint walked sets 0..63
+[0] L1D B3 S2 MAINT                                done
+[0] L1D B0 S0 ISSUE clean token  set=63 way=2
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[3].u_bank.u_maint: RUN -> FINAL (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[3].u_bank.u_maint: FINAL -> IDLE (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[3].u_bank.u_maint done
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S1 MAINT set=63 way=2 state=0        
+[0] L1D B0 S2 MAINT                                done
+[0] L1D B0 S0 ISSUE clean token  set=63 way=3
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S1 MAINT set=63 way=3 state=0        
+[0] L1D B0 S2 MAINT                                done
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[0].u_bank.u_maint walked sets 0..63
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[0].u_bank.u_maint: RUN -> FINAL (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[0].u_bank.u_maint: FINAL -> IDLE (clean)
+[0] L1D MAINT tb_l1d_soc.dcache_dut.u_l1d.u_ports.u_dcache.g_bank[0].u_bank.u_maint done
+[0] L1D TOP  MAINT all banks done
+[0] L1D SOC  clean_complete
+issued 200, answered 200; AR 74 (one-beat 13), AW 52 (one-beat 10), W beats 178; stop cycles 0
+TEST PASSED
+tb/tests/tb_l1d_soc.v:482: $finish called at 28460000 (1ps)

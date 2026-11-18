@@ -1,0 +1,31 @@
+PASS tb_l1d_coh_TINY_L1D_DEBUG_NOPS_300 (28 s)  [tb_l1d_coh -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D B3 S0 ISSUE BOOKED entry 4 port 0 idx=0 LD addr=00000000000019e8
+[0] L1D TRACKER bank 3: entry 3 freed (free next = 5)
+[0] L1D TOP  DONE  port 0 idx=4 LD C  addr=00000000000019e0 latency=11 cycles
+[0] L1D B3 S1 LSU entry=4 idx=0 LD C  addr=00000000000019e8 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D TRACKER bank 3: entry 4 freed (free next = 6)
+[0] L1D B3 S0 ISSUE BOOKED entry 1 port 0 idx=1 LD addr=00000000000019f0
+[0] L1D B3 S2 LSU  idx=0 LD   addr=00000000000019e8 -> HIT way=0 data=e20f28759ebbc4e1                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019e8 LD miss=0 pf_hit=0           
+[0] L1D B3 S3 RESP from pipeline  seat=4 idx=0     LD data=e20f28759ebbc4e1 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=0     LD (visible next cycle)
+[0] L1D B3 S1 LSU entry=1 idx=1 LD C  addr=00000000000019f0 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D TOP  DONE  port 0 idx=0 LD C  addr=00000000000019e8 latency=14 cycles
+[0] L1D MERGE bank 3 -> output  idx=1     LD (visible next cycle)
+[0] L1D B3 S3 RESP from pipeline  seat=1 idx=1     LD data=dae7002d7693bcd9 (resp_free=170)
+[0] L1D B3 S2 LSU  idx=1 LD   addr=00000000000019f0 -> HIT way=0 data=dae7002d7693bcd9                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f0 LD miss=0 pf_hit=0           
+[0] L1D B3 S0 ISSUE BOOKED entry 5 port 0 idx=7 LD addr=00000000000019f8
+[0] L1D TRACKER bank 3: entry 1 freed (free next = 7)
+[0] L1D TOP  DONE  port 0 idx=1 LD C  addr=00000000000019f0 latency=14 cycles
+[0] L1D B3 S1 LSU entry=5 idx=7 LD C  addr=00000000000019f8 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D TRACKER bank 3: entry 5 freed (free next = 8)
+[0] L1D B3 S2 LSU  idx=7 LD   addr=00000000000019f8 -> HIT way=0 data=b2dff8052e4b94b1                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f8 LD miss=0 pf_hit=0           
+[0] L1D B3 S3 RESP from pipeline  seat=5 idx=7     LD data=b2dff8052e4b94b1 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=7     LD (visible next cycle)
+[0] L1D TOP  DONE  port 0 idx=7 LD C  addr=00000000000019f8 latency=16 cycles
+events: snoop tag hits 62 (M handed over 24), snoop on VC slot 14, snoop waits install 4 / writeback 1, snoop vs MSHR still fetching 55
+        S installs 57, upgrades 18, cycles with a snoop buffered while a lock holds snoops 0, refill victim moved off the locked line 0
+TEST PASSED: tb_l1d_coh (748 requests, 243 snoops, mode A, seed 1)
+tb/tests/tb_l1d_coh.v:679: $finish called at 58900000 (1ps)

@@ -1,0 +1,31 @@
+PASS tb_l1d_random_TINY_L1D_DEBUG_NOPS_300 (66 s)  [tb_l1d_random -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019e8 LD miss=0 pf_hit=0           
+[0] L1D B3 S0 ISSUE BOOKED entry 0 port 0 idx=0 LD addr=00000000000019f0
+[0] L1D TRACKER bank 3: entry 3 freed (free next = 6)
+[0] L1D B2 S3 RESP from pipeline  seat=4 idx=6     LD data=73d8bbe76e8bd4f1 (resp_free=170)
+[0] L1D B2 S2 LSU  idx=6 LD   addr=00000000000019b8 -> HIT way=0 data=73d8bbe76e8bd4f1                         
+[0] L1D B2 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019b8 LD miss=0 pf_hit=0           
+[0] L1D TRACKER bank 2: entry 4 freed (free next = 8)
+[0] L1D MERGE bank 2 -> output  idx=6     LD (visible next cycle)
+[0] L1D TOP  DONE  port 0 idx=3 LD C  addr=00000000000019e8 latency=10 cycles
+[0] L1D B3 S1 LSU entry=0 idx=0 LD C  addr=00000000000019f0 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D TOP  DONE  port 0 idx=6 LD C  addr=00000000000019b8 latency=21 cycles
+[0] L1D TRACKER bank 3: entry 0 freed (free next = 7)
+[0] L1D B3 S0 ISSUE BOOKED entry 4 port 0 idx=4 LD addr=00000000000019f8
+[0] L1D B3 S2 LSU  idx=0 LD   addr=00000000000019f0 -> HIT way=0 data=b2868865511f13a2                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f0 LD miss=0 pf_hit=0           
+[0] L1D B3 S3 RESP from pipeline  seat=0 idx=0     LD data=b2868865511f13a2 (resp_free=170)
+[0] L1D MERGE bank 3 -> output  idx=0     LD (visible next cycle)
+[0] L1D B3 S1 LSU entry=4 idx=4 LD C  addr=00000000000019f8 set=1 ->           HIT way=0 state=2                                                     
+[0] L1D TOP  DONE  port 0 idx=0 LD C  addr=00000000000019f0 latency=12 cycles
+[0] L1D MERGE bank 3 -> output  idx=4     LD (visible next cycle)
+[0] L1D B3 S3 RESP from pipeline  seat=4 idx=4     LD data=0be61117440bad88 (resp_free=170)
+[0] L1D B3 S2 LSU  idx=4 LD   addr=00000000000019f8 -> HIT way=0 data=0be61117440bad88                         
+[0] L1D B3 S2 TRAIN port=0 pc=0000000000000000 addr=00000000000019f8 LD miss=0 pf_hit=0           
+[0] L1D TRACKER bank 3: entry 4 freed (free next = 8)
+[0] L1D TOP  DONE  port 0 idx=4 LD C  addr=00000000000019f8 latency=13 cycles
+events: hits 1196, line fetches 728, victim-cache load hits 52, swaps 48, writebacks 337
+        wait-for-MSHR 498, MSHR full 321, wait-for-writeback 4, refill held 0, NC accesses 77
+        v2: lines installed S 0, S-to-M upgrades 0
+TEST PASSED: tb_l1d_random (1796 requests, seed 1)
+tb/tests/tb_l1d_random.v:361: $finish called at 150780000 (1ps)

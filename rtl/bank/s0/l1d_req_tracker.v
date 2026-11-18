@@ -12,7 +12,7 @@ module l1d_req_tracker #(
     vec_write_slot, vec_write_valid, fresh_allowed_q, credit_q_0, credit_q_1, credit_q_2,
     credit_q_3, credit_book_next, fresh_issue, fresh_port_onehot, fresh_entry_onehot, any_pins_arrival, arrival_allocated_0,
     arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated, oldest_ready_valid, oldest_ready_onehot,
-    oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_credit_ok, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
+    oldest_ready_set, oldest_ready_line, oldest_ready_port, oldest_ready_is_write, oldest_ready_is_line_op, oldest_ready_is_amo,
     arrival_book_valid, arrival_book_entry_onehot, arrival_book_set, arrival_book_line, arrival_book_port, arrival_book_is_write,
     arrival_book_is_line_op, arrival_book_is_amo, arrival_book_credit_ok, arrival_book_allowed, arrival_book_go, arrival_booked_entry_onehot, arrival_booked_line,
     arrival_booked_port, arrival_booked_is_write, arrival_booked_is_amo, book_entry_onehot, book_ready_onehot, issue_entry_onehot, entry_packet_flat, entry_pc_flat,
@@ -63,7 +63,6 @@ module l1d_req_tracker #(
     output wire [INDEX_W-1:0] oldest_ready_set;
     output wire [LINE_ADDR_W-1:0] oldest_ready_line;
     output wire [PORT_W-1:0] oldest_ready_port;
-    output wire oldest_ready_credit_ok;
     output wire oldest_ready_is_write;
     output wire oldest_ready_is_line_op;
     output wire oldest_ready_is_amo;
@@ -337,10 +336,9 @@ module l1d_req_tracker #(
     always @* begin
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
             for (dp_entry = 0; dp_entry < NE; dp_entry = dp_entry + 1)
-                deps_old[dp_src][dp_entry] = (src_write[dp_src] ? valid_q[dp_entry]
-                                                                : (valid_q[dp_entry] & write_q[dp_entry])) &
-                                             ~freed_now[dp_entry] &
-                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]);
+                deps_old[dp_src][dp_entry] = valid_q[dp_entry] & ~freed_now[dp_entry] &
+                                             (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]) &
+                                             (write_q[dp_entry] | src_write[dp_src]);
             deps_new[dp_src]   = deps_old[dp_src];
             lower_pair[dp_src] = {NS{1'b0}};
             for (dp_lower = 0; dp_lower < dp_src; dp_lower = dp_lower + 1) begin
@@ -510,15 +508,6 @@ module l1d_req_tracker #(
     assign oldest_ready_set        = or_packet[SET_IN_REQ +: INDEX_W];
     assign oldest_ready_line       = or_packet[LINE_IN_REQ +: LINE_ADDR_W];
     assign oldest_ready_port       = or_packet[REQ_PORT_LSB +: PORT_W];
-    reg     oldest_credit_or;
-    integer oc_entry;
-    always @* begin
-        oldest_credit_or = 1'b0;
-        for (oc_entry = 0; oc_entry < NE; oc_entry = oc_entry + 1)
-            oldest_credit_or = oldest_credit_or | (oldest_ready_onehot[oc_entry] &
-                               credit_book_next[packet_q[oc_entry][REQ_PORT_LSB +: PORT_W]]);
-    end
-    assign oldest_ready_credit_ok  = oldest_credit_or;
     assign oldest_ready_is_write   = or_packet[REQ_RDWR_BIT];
     assign oldest_ready_is_line_op = or_packet[REQ_LINE_BIT];
     assign oldest_ready_is_amo     = or_packet[REQ_AMO_BIT] & or_packet[REQ_SEQ_BIT];

@@ -1,0 +1,8 @@
+read_rtlil proof/gold.il
+read_rtlil proof/gate.il
+async2sync
+miter -equiv -flatten -make_assert -ignore_gold_x gold gate miter
+hierarchy -top miter
+flatten
+opt -fast
+sat -verify -tempinduct -prove-asserts -set-init-zero -set-at 1 in_rst 1 -seq 1 -maxsteps 20 -show-ports miter

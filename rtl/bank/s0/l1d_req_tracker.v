@@ -456,16 +456,19 @@ module l1d_req_tracker #(
     reg  [PORT_W-1:0] booked_port_or;
     reg              booked_is_write_or;
     reg              booked_is_amo_or;
+    reg  [NE-1:0]    arrival_credit_entry_or;
     integer bk_src;
     assign arrival_booked_source = arrival_pick & src_credit_ok & {NS{arrival_book_allowed}};
     always @* begin
+        arrival_credit_entry_or = {NE{1'b0}};
         booked_entry_or    = {NE{1'b0}};
         booked_line_or     = {LINE_ADDR_W{1'b0}};
         booked_port_or     = {PORT_W{1'b0}};
         booked_is_write_or = 1'b0;
         booked_is_amo_or   = 1'b0;
         for (bk_src = 0; bk_src < NS; bk_src = bk_src + 1) begin
-            booked_entry_or    = booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
+            arrival_credit_entry_or = arrival_credit_entry_or | ({NE{arrival_pick[bk_src] & src_credit_ok[bk_src]}} & src_entry[bk_src]);
+            booked_entry_or    =booked_entry_or    | ({NE{arrival_booked_source[bk_src]}}        & src_entry[bk_src]);
             booked_line_or     = booked_line_or     | ({LINE_ADDR_W{arrival_booked_source[bk_src]}} & src_packet[bk_src*REQ_W + LINE_IN_REQ +: LINE_ADDR_W]);
             booked_port_or     = booked_port_or     | ({PORT_W{arrival_booked_source[bk_src]}}     & src_packet[bk_src*REQ_W + REQ_PORT_LSB +: PORT_W]);
             booked_is_write_or = booked_is_write_or | (arrival_booked_source[bk_src] & src_packet[bk_src*REQ_W + REQ_RDWR_BIT]);
@@ -716,7 +719,8 @@ module l1d_req_tracker #(
                     state_q[ent]     <= {TRK_STATE_W{1'b0}};
                     if (fresh_issue && fresh_entry_onehot[ent])
                         state_q[ent][TRK_INFL_B]   <= 1'b1;
-                    else if (book_entry_onehot[ent])
+                    else if (arrival_book_allowed ? (book_ready_onehot[ent] | arrival_credit_entry_or[ent])
+                                                  : book_ready_onehot[ent])
                         state_q[ent][TRK_BOOKED_B] <= 1'b1;
                     else
                         state_q[ent][TRK_READY_B]  <= 1'b1;

@@ -1,0 +1,517 @@
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_entry_onehot_q[1]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+    10    8.899   12.550   18.472  326.288 ^ _23881_/Y (BUFx6f_ASAP7_75t_R)
+     5    3.100   10.929   22.171  348.459 ^ _24000_/Y (AND3x4_ASAP7_75t_R)
+     2    2.140   17.041   21.579  370.038 ^ _24041_/Y (AO22x1_ASAP7_75t_R)
+     1    0.621    7.408   22.872  392.911 ^ _24048_/Y (OA31x2_ASAP7_75t_R)
+                   7.408    0.000  392.911 ^ book_entry_onehot_q[1]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                                   392.911   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_entry_onehot_q[1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.149  174.851   library setup time
+                                   174.851   data required time
+---------------------------------------------------------------------------------
+                                   174.851   data required time
+                                  -392.911   data arrival time
+---------------------------------------------------------------------------------
+                                  -218.059   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_port_q[1]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+    10    8.899   12.550   18.472  326.288 ^ _23881_/Y (BUFx6f_ASAP7_75t_R)
+     5    3.590   25.654   27.221  353.509 ^ _24003_/Y (AND3x1_ASAP7_75t_R)
+     1    0.648    7.725   23.309  376.818 ^ _39085_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.436   14.522  391.340 ^ _39087_/Y (OA21x2_ASAP7_75t_R)
+                   6.436    0.000  391.340 ^ book_port_q[1]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   391.340   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_port_q[1]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.042  174.958   library setup time
+                                   174.958   data required time
+---------------------------------------------------------------------------------
+                                   174.958   data required time
+                                  -391.340   data arrival time
+---------------------------------------------------------------------------------
+                                  -216.382   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[49]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24288_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24290_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[49]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[49]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[50]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24282_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24284_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[50]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[50]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[51]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24271_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24275_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[51]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[51]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[52]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24265_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24267_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[52]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[52]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[53]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24259_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24261_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[53]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[53]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[54]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24253_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24255_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[54]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[54]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[55]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24247_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24249_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[55]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[55]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[56]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24241_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.664   14.525  390.783 ^ _24243_/Y (OA21x2_ASAP7_75t_R)
+                   6.664    0.000  390.783 ^ book_line_q[56]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[56]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.067  174.933   library setup time
+                                   174.933   data required time
+---------------------------------------------------------------------------------
+                                   174.933   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.850   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: book_line_q[48]$_DFFE_PN_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+     8    4.619   13.572   25.185  333.001 ^ _24231_/Y (AND3x4_ASAP7_75t_R)
+    10    5.846   20.288   21.869  354.870 ^ _24232_/Y (BUFx2_ASAP7_75t_R)
+     1    0.648    7.738   21.388  376.257 ^ _24296_/Y (AO222x2_ASAP7_75t_R)
+     1    0.621    6.591   14.525  390.783 ^ _24298_/Y (OA21x2_ASAP7_75t_R)
+                   6.591    0.000  390.783 ^ book_line_q[48]$_DFFE_PN_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.783   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ book_line_q[48]$_DFFE_PN_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.059  174.941   library setup time
+                                   174.941   data required time
+---------------------------------------------------------------------------------
+                                   174.941   data required time
+                                  -390.783   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.842   slack (VIOLATED)
+
+
+Startpoint: u_tracker.deps_q[1][5]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_tracker.state_q[6][3]$_SDFFE_PP0P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                   0.000    0.000    0.000 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3    2.785   25.339   40.634   40.634 ^ u_tracker.deps_q[1][5]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.562    9.096    7.528   48.162 v _22915_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.694   11.186   32.076   80.239 v _22916_/Y (OR5x1_ASAP7_75t_R)
+     8    5.190   11.897   17.940   98.178 v _22917_/Y (BUFx3_ASAP7_75t_R)
+     3    2.908   16.223   33.651  131.829 v _22972_/Y (OA33x2_ASAP7_75t_R)
+     8    6.790   21.110   31.720  163.549 v _22973_/Y (AND5x2_ASAP7_75t_R)
+     1    0.521    8.859   32.359  195.908 v _22991_/Y (AO222x2_ASAP7_75t_R)
+     1    0.930   12.495   32.661  228.569 v _23007_/Y (OR5x1_ASAP7_75t_R)
+     7    8.171   76.120   40.406  268.975 ^ _23040_/Y (AOI221x1_ASAP7_75t_R)
+     4    4.072   19.526   38.841  307.816 ^ _23077_/Y (AND3x2_ASAP7_75t_R)
+    10    8.899   12.550   18.472  326.288 ^ _23881_/Y (BUFx6f_ASAP7_75t_R)
+    10    7.776    8.308   14.576  340.864 ^ _24004_/Y (BUFx12f_ASAP7_75t_R)
+     2    1.297    9.781   20.018  360.882 ^ _39707_/Y (OA211x2_ASAP7_75t_R)
+     1    0.610    6.420   15.069  375.951 ^ _39709_/Y (OA21x2_ASAP7_75t_R)
+     1    0.621    6.543   14.747  390.699 ^ _39712_/Y (OA21x2_ASAP7_75t_R)
+                   6.543    0.000  390.699 ^ u_tracker.state_q[6][3]$_SDFFE_PP0P_/D (DFFHQNx1_ASAP7_75t_R)
+                                   390.699   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                                   190.000 ^ u_tracker.state_q[6][3]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -15.053  174.947   library setup time
+                                   174.947   data required time
+---------------------------------------------------------------------------------
+                                   174.947   data required time
+                                  -390.699   data arrival time
+---------------------------------------------------------------------------------
+                                  -215.752   slack (VIOLATED)
+
+

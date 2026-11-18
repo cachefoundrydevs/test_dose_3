@@ -287,6 +287,7 @@ module l1d_bank_s0 #(
         .arrival_booked_is_write   (arrival_booked_is_write),
         .arrival_booked_is_amo     (arrival_booked_is_amo),
         .book_entry_onehot         (book_entry_onehot),
+        .book_ready_onehot         (book_ready_onehot),
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
         .entry_pc_flat             (entry_pc_flat),

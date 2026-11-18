@@ -286,6 +286,26 @@ module l1d_req_tracker #(
                     age_groups[se_rank*NE +: NE] = age_groups[se_rank*NE +: NE] | free_pick[se_rank*NE +: NE];
         end
     end
+    reg  [NA*REQ_W-1:0] rank_load_packet;
+    reg  [NA*PC_W-1:0]  rank_load_pc;
+    reg  [NA-1:0]       rank_load_line_store;
+    integer rl_rank;
+    integer rl_src;
+    always @* begin
+        for (rl_rank = 0; rl_rank < NA; rl_rank = rl_rank + 1) begin
+            rank_load_packet[rl_rank*REQ_W +: REQ_W] = {REQ_W{1'b0}};
+            rank_load_pc[rl_rank*PC_W +: PC_W]       = {PC_W{1'b0}};
+            rank_load_line_store[rl_rank]            = 1'b0;
+            for (rl_src = 0; rl_src < NS; rl_src = rl_src + 1) begin
+                rank_load_packet[rl_rank*REQ_W +: REQ_W] = rank_load_packet[rl_rank*REQ_W +: REQ_W] |
+                    ({REQ_W{rank_onehot[rl_src][rl_rank]}} & src_packet[rl_src*REQ_W +: REQ_W]);
+                rank_load_pc[rl_rank*PC_W +: PC_W] = rank_load_pc[rl_rank*PC_W +: PC_W] |
+                    ({PC_W{rank_onehot[rl_src][rl_rank]}} & src_pc[rl_src*PC_W +: PC_W]);
+                rank_load_line_store[rl_rank] = rank_load_line_store[rl_rank] |
+                    (rank_onehot[rl_src][rl_rank] & src_line_store[rl_src]);
+            end
+        end
+    end
     reg  [REQ_W-1:0] load_packet [0:NE-1];
     reg  [PC_W-1:0]  load_pc [0:NE-1];
     reg  [NE-1:0]    load_line_store;
@@ -297,9 +317,15 @@ module l1d_req_tracker #(
             load_pc[ld_entry]         = {PC_W{1'b0}};
             load_line_store[ld_entry] = 1'b0;
             for (ld_src = 0; ld_src < NS; ld_src = ld_src + 1) begin
-                load_packet[ld_entry] = load_packet[ld_entry] | ({REQ_W{data_sel[ld_entry][ld_src]}} & src_packet[ld_src*REQ_W +: REQ_W]);
-                load_pc[ld_entry]     = load_pc[ld_entry]     | ({PC_W{data_sel[ld_entry][ld_src]}}  & src_pc[ld_src*PC_W +: PC_W]);
-                load_line_store[ld_entry] = load_line_store[ld_entry] | (data_sel[ld_entry][ld_src] & src_line_store[ld_src]);
+                load_packet[ld_entry] = load_packet[ld_entry] |
+                    ({REQ_W{(ld_src < NA) && free_pick[((ld_src < NA) ? ld_src : 0)*NE + ld_entry]}} &
+                     rank_load_packet[((ld_src < NA) ? ld_src : 0)*REQ_W +: REQ_W]);
+                load_pc[ld_entry]     = load_pc[ld_entry] |
+                    ({PC_W{(ld_src < NA) && free_pick[((ld_src < NA) ? ld_src : 0)*NE + ld_entry]}} &
+                     rank_load_pc[((ld_src < NA) ? ld_src : 0)*PC_W +: PC_W]);
+                load_line_store[ld_entry] = load_line_store[ld_entry] |
+                    ((ld_src < NA) && free_pick[((ld_src < NA) ? ld_src : 0)*NE + ld_entry] &&
+                     rank_load_line_store[(ld_src < NA) ? ld_src : 0]);
             end
             if (load_line_store[ld_entry])
                 load_packet[ld_entry] = (load_packet[ld_entry] & ~SLOT_MASK) |
@@ -369,11 +395,11 @@ module l1d_req_tracker #(
             rank_deps_old[rd_rank] = {NE{1'b0}};
             rank_pair[rd_rank]     = {NA{1'b0}};
             for (rd_src = 0; rd_src < NS; rd_src = rd_src + 1) begin
-                if (rank_onehot[rd_src][rd_rank])
+                if ((rd_src >= rd_rank) && rank_onehot[rd_src][rd_rank])
                     rank_deps_old[rd_rank] = rank_deps_old[rd_rank] | deps_old[rd_src];
                 for (rd_lower = 0; rd_lower < NS; rd_lower = rd_lower + 1)
-                    if (rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
-                        rank_pair[rd_rank] = rank_pair[rd_rank] | rank_onehot[rd_lower];
+                    if ((rd_src >= rd_rank) && rank_onehot[rd_src][rd_rank] && lower_pair[rd_src][rd_lower])
+                        rank_pair[rd_rank] = rank_pair[rd_rank] | (rank_onehot[rd_lower] & ~({NA{1'b1}} << rd_rank));
             end
         end
         for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
@@ -382,7 +408,7 @@ module l1d_req_tracker #(
                 if (free_pick[dl_rank*NE + dl_entry])
                     deps_load[dl_entry] = deps_load[dl_entry] | rank_deps_old[dl_rank];
                 for (dl_lower = 0; dl_lower < NA; dl_lower = dl_lower + 1)
-                    if (free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
+                    if ((dl_lower < dl_rank) && free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
                         deps_load[dl_entry] = deps_load[dl_entry] | free_pick[dl_lower*NE +: NE];
             end
         end

@@ -1,0 +1,19 @@
+children of l1d_bank_s0: rtl/bank/fifo/l1d_snoop_buf.v rtl/bank/s0/l1d_req_tracker.v rtl/bank/s0/l1d_book_select.v rtl/common/l1d_age_matrix.v rtl/common/l1d_pri_enc.v
+ASSUMPTION A1: age matrix pick is one-hot or zero (proof is equal for all states given A1)
+blacklisted internal signals: arrival_credit_ok credit_book_next entry_credit_ok u_book.arrival_credit_ok u_book.entry_credit_ok 
+Found 15811 unproven $equiv cells (633 groups) in equiv:
+Proved 15695 previously unproven $equiv cells.
+Found 116 unproven $equiv cells in module equiv:
+Proved 0 previously unproven $equiv cells.
+Found 15811 $equiv cells in equiv:
+  Of those cells 15695 are proven and 116 are unproven.
+Found a total of 116 unproven $equiv cells.
+ERROR: Found 116 unproven $equiv cells in 'equiv_status -assert'.
+equiv flow did not prove all points; fallback: miter + sat -tempinduct
+Induction step failed. Incrementing induction length.
+Induction step failed. Incrementing induction length.
+Induction step failed. Incrementing induction length.
+Induction step failed. Incrementing induction length.
+SAT temporal induction proof finished - model found for base case: FAIL!
+(miter stopped by the time cap or did not finish: not proven)
+EQUIV: FAIL

@@ -1,0 +1,1928 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gold.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/bank/fifo/l1d_snoop_buf.v
+Parsing Verilog input from `rtl/bank/fifo/l1d_snoop_buf.v' to AST representation.
+Generating RTLIL representation for module `\l1d_snoop_buf'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/bank/s0/l1d_req_tracker.v
+Parsing Verilog input from `rtl/bank/s0/l1d_req_tracker.v' to AST representation.
+Generating RTLIL representation for module `\l1d_req_tracker'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/bank/s0/l1d_book_select.v
+Parsing Verilog input from `rtl/bank/s0/l1d_book_select.v' to AST representation.
+Generating RTLIL representation for module `\l1d_book_select'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: proof/l1d_age_matrix_a1.v
+Parsing Verilog input from `proof/l1d_age_matrix_a1.v' to AST representation.
+Generating RTLIL representation for module `\l1d_age_matrix'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/common/l1d_pri_enc.v
+Parsing Verilog input from `rtl/common/l1d_pri_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_pri_enc'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: golden/l1d_bank_s0.v
+Parsing Verilog input from `golden/l1d_bank_s0.v' to AST representation.
+Generating RTLIL representation for module `\l1d_bank_s0'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \l1d_bank_s0
+Used module:     \l1d_book_select
+Used module:     \l1d_snoop_buf
+Used module:         \l1d_age_matrix
+Used module:             \l1d_pri_enc
+Used module:     \l1d_req_tracker
+Parameter \N = 2
+Parameter \IDX_W = 1
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_age_matrix'.
+Parameter \N = 2
+Parameter \IDX_W = 1
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Generating RTLIL representation for module `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+
+7.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Generating RTLIL representation for module `$paramod$9eeafe1549ef80e08ee72281c647b8267694184e\l1d_pri_enc'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Parameter \MULTI_ALLOC = 1
+Parameter \MULTI_GROUPS = 4
+
+7.4. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_age_matrix'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Parameter \MULTI_ALLOC = 1
+Parameter \MULTI_GROUPS = 4
+Generating RTLIL representation for module `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix'.
+Parameter \REFILL_SKIP = 3
+Parameter \SNP_STARVE = 8
+Parameter \BOOK_KIND_W = 5
+
+7.5. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_book_select'.
+Parameter \REFILL_SKIP = 3
+Parameter \SNP_STARVE = 8
+Parameter \BOOK_KIND_W = 5
+Generating RTLIL representation for module `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select'.
+Parameter \ADDR_W = 64
+Parameter \LINE_BYTES = 64
+Parameter \NUM_BANKS = 4
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \MASTER_ID_BITS = 2
+Parameter \IDX_BITS = 3
+Parameter \LSU_BUF_DEPTH = 8
+Parameter \TRK_ENTRIES = 8
+Parameter \TRK_REFILL_RSV = 2
+Parameter \MSHR_ENTRIES = 8
+Parameter \MSHR_NC_ENTRIES = 2
+Parameter \VC_SLOTS = 8
+Parameter \RESP_FIFO_DEPTH = 4
+Parameter \REFILL_SKIP = 2
+Parameter \SNP_BUF_DEPTH = 2
+Parameter \SNP_RESP_DEPTH = 2
+Parameter \PF_FIFO_DEPTH = 4
+Parameter \SNP_STARVE = 8
+Parameter \LOCK_TIMEOUT = 1024
+Parameter \RSV_CLR_ON_EVICT = 1
+Parameter \HAS_SNOOP = 1
+Parameter \HAS_AMO = 1
+Parameter \AXI_DATA_W = 128
+Parameter \AXI_ADDR_W = 64
+Parameter \LSU_PORTS = 4
+Parameter \PC_W = 64
+Parameter \TRK_ALLOC_MAX = 4
+Parameter \PF_MSHR_MAX = 2
+Parameter \HAS_ECC = 1
+Parameter \HAS_PF = 1
+
+7.6. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_snoop_buf'.
+Parameter \ADDR_W = 64
+Parameter \LINE_BYTES = 64
+Parameter \NUM_BANKS = 4
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \MASTER_ID_BITS = 2
+Parameter \IDX_BITS = 3
+Parameter \LSU_BUF_DEPTH = 8
+Parameter \TRK_ENTRIES = 8
+Parameter \TRK_REFILL_RSV = 2
+Parameter \MSHR_ENTRIES = 8
+Parameter \MSHR_NC_ENTRIES = 2
+Parameter \VC_SLOTS = 8
+Parameter \RESP_FIFO_DEPTH = 4
+Parameter \REFILL_SKIP = 2
+Parameter \SNP_BUF_DEPTH = 2
+Parameter \SNP_RESP_DEPTH = 2
+Parameter \PF_FIFO_DEPTH = 4
+Parameter \SNP_STARVE = 8
+Parameter \LOCK_TIMEOUT = 1024
+Parameter \RSV_CLR_ON_EVICT = 1
+Parameter \HAS_SNOOP = 1
+Parameter \HAS_AMO = 1
+Parameter \AXI_DATA_W = 128
+Parameter \AXI_ADDR_W = 64
+Parameter \LSU_PORTS = 4
+Parameter \PC_W = 64
+Parameter \TRK_ALLOC_MAX = 4
+Parameter \PF_MSHR_MAX = 2
+Parameter \HAS_ECC = 1
+Parameter \HAS_PF = 1
+Generating RTLIL representation for module `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf'.
+Parameter \ADDR_W = 64
+Parameter \LINE_BYTES = 64
+Parameter \NUM_BANKS = 4
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \MASTER_ID_BITS = 2
+Parameter \IDX_BITS = 3
+Parameter \LSU_BUF_DEPTH = 8
+Parameter \TRK_ENTRIES = 8
+Parameter \TRK_REFILL_RSV = 2
+Parameter \MSHR_ENTRIES = 8
+Parameter \MSHR_NC_ENTRIES = 2
+Parameter \VC_SLOTS = 8
+Parameter \RESP_FIFO_DEPTH = 4
+Parameter \REFILL_SKIP = 2
+Parameter \SNP_BUF_DEPTH = 2
+Parameter \SNP_RESP_DEPTH = 2
+Parameter \PF_FIFO_DEPTH = 4
+Parameter \SNP_STARVE = 8
+Parameter \LOCK_TIMEOUT = 1024
+Parameter \RSV_CLR_ON_EVICT = 1
+Parameter \HAS_SNOOP = 1
+Parameter \HAS_AMO = 1
+Parameter \AXI_DATA_W = 128
+Parameter \AXI_ADDR_W = 64
+Parameter \LSU_PORTS = 4
+Parameter \PC_W = 64
+Parameter \TRK_ALLOC_MAX = 4
+Parameter \PF_MSHR_MAX = 2
+Parameter \HAS_ECC = 1
+Parameter \HAS_PF = 1
+Parameter \BANK_ID = 0
+
+7.7. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_req_tracker'.
+Parameter \ADDR_W = 64
+Parameter \LINE_BYTES = 64
+Parameter \NUM_BANKS = 4
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \MASTER_ID_BITS = 2
+Parameter \IDX_BITS = 3
+Parameter \LSU_BUF_DEPTH = 8
+Parameter \TRK_ENTRIES = 8
+Parameter \TRK_REFILL_RSV = 2
+Parameter \MSHR_ENTRIES = 8
+Parameter \MSHR_NC_ENTRIES = 2
+Parameter \VC_SLOTS = 8
+Parameter \RESP_FIFO_DEPTH = 4
+Parameter \REFILL_SKIP = 2
+Parameter \SNP_BUF_DEPTH = 2
+Parameter \SNP_RESP_DEPTH = 2
+Parameter \PF_FIFO_DEPTH = 4
+Parameter \SNP_STARVE = 8
+Parameter \LOCK_TIMEOUT = 1024
+Parameter \RSV_CLR_ON_EVICT = 1
+Parameter \HAS_SNOOP = 1
+Parameter \HAS_AMO = 1
+Parameter \AXI_DATA_W = 128
+Parameter \AXI_ADDR_W = 64
+Parameter \LSU_PORTS = 4
+Parameter \PC_W = 64
+Parameter \TRK_ALLOC_MAX = 4
+Parameter \PF_MSHR_MAX = 2
+Parameter \HAS_ECC = 1
+Parameter \HAS_PF = 1
+Parameter \BANK_ID = 0
+Generating RTLIL representation for module `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker'.
+
+7.8. Analyzing design hierarchy..
+Top module:  \l1d_bank_s0
+Used module:     $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select
+Used module:     $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf
+Used module:         \l1d_age_matrix
+Used module:             $paramod$9eeafe1549ef80e08ee72281c647b8267694184e\l1d_pri_enc
+Used module:     $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker
+Parameter \N = 2
+Parameter \IDX_W = 1
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Found cached RTLIL representation for module `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix'.
+Parameter \N = 8
+Parameter \IDX_W = 3
+Parameter \ONEHOT_ALLOC = 1
+Parameter \ONEHOT_ENC = 1
+Parameter \MULTI_ALLOC = 1
+Parameter \MULTI_GROUPS = 4
+Found cached RTLIL representation for module `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix'.
+
+7.9. Analyzing design hierarchy..
+Top module:  \l1d_bank_s0
+Used module:     $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select
+Used module:     $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf
+Used module:         $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix
+Used module:     $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker
+Used module:         $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix
+
+7.10. Analyzing design hierarchy..
+Top module:  \l1d_bank_s0
+Used module:     $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select
+Used module:     $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf
+Used module:         $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix
+Used module:     $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker
+Used module:         $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix
+Removing unused module `$paramod$9eeafe1549ef80e08ee72281c647b8267694184e\l1d_pri_enc'.
+Removing unused module `\l1d_pri_enc'.
+Removing unused module `\l1d_age_matrix'.
+Removing unused module `\l1d_book_select'.
+Removing unused module `\l1d_req_tracker'.
+Removing unused module `\l1d_snoop_buf'.
+Removed 6 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 32 empty switches in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+Found and cleaned up 2 empty switches in `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+Found and cleaned up 1 empty switch in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+Found and cleaned up 20 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+Found and cleaned up 2 empty switches in `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+Cleaned up 57 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:542$6038 in module l1d_bank_s0.
+Marked 16 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:534$6021 in module l1d_bank_s0.
+Marked 2 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:499$5949 in module l1d_bank_s0.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:464$5931 in module l1d_bank_s0.
+Marked 6 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:441$5930 in module l1d_bank_s0.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:326$5884 in module l1d_bank_s0.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s0.v:175$5791 in module l1d_bank_s0.
+Marked 13 switch rules as full_case in process $proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369 in module $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.
+Marked 4 switch rules as full_case in process $proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324 in module $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.
+Marked 2 switch rules as full_case in process $proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320 in module $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_book_select.v:104$6297 in module $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.
+Marked 2 switch rules as full_case in process $proc$rtl/bank/s0/l1d_book_select.v:92$6293 in module $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_book_select.v:77$6289 in module $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.
+Marked 8 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:85$6231 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 64 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:73$6102 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 1 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:46$6101 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Marked 32 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:32$6082 in module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Removed 1 dead cases from process $proc$rtl/bank/s0/l1d_req_tracker.v:569$11603 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:569$11603 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Removed 1 dead cases from process $proc$rtl/bank/s0/l1d_req_tracker.v:568$11600 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:568$11600 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 57 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:697$11205 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:688$11204 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 68 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:657$10689 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:613$8519 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 19 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:587$8427 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 25 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:408$7935 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 280 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:371$7426 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 10 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:341$7095 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 8 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:298$6794 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 40 switch rules as full_case in process $proc$rtl/bank/s0/l1d_req_tracker.v:268$6553 in module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Marked 2 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:85$6073 in module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+Marked 4 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:73$6064 in module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+Marked 5 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:46$6061 in module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+Marked 8 switch rules as full_case in process $proc$proof/l1d_age_matrix_a1.v:32$6048 in module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+Removed a total of 2 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 27 redundant assignments.
+Promoted 794 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~760 debug messages>
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+     1/13: $0\r_fast[0:0]
+     2/13: $0\r_pf_q[0:0]
+     3/13: $0\r_cpu_q[0:0]
+     4/13: $0\r_valid[0:0]
+     5/13: $0\r_sid[0:0]
+     6/13: $0\r_sinv[0:0]
+     7/13: $0\r_mop[0:0]
+     8/13: $0\r_mway[1:0]
+     9/13: $0\r_line[57:0]
+    10/13: $0\r_mid[2:0]
+    11/13: $0\r_req[147:0]
+    12/13: $0\r_kind[1:0]
+    13/13: $0\r_seat[2:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+     1/16: $8\fresh_seat[2:0]
+     2/16: $8\booked_seat[2:0]
+     3/16: $7\fresh_seat[2:0]
+     4/16: $7\booked_seat[2:0]
+     5/16: $6\fresh_seat[2:0]
+     6/16: $6\booked_seat[2:0]
+     7/16: $5\fresh_seat[2:0]
+     8/16: $5\booked_seat[2:0]
+     9/16: $4\fresh_seat[2:0]
+    10/16: $4\booked_seat[2:0]
+    11/16: $3\fresh_seat[2:0]
+    12/16: $3\booked_seat[2:0]
+    13/16: $2\fresh_seat[2:0]
+    14/16: $2\booked_seat[2:0]
+    15/16: $1\fresh_seat[2:0]
+    16/16: $1\booked_seat[2:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+     1/3: $0\pf_unique_q[0:0]
+     2/3: $0\pf_line_q[57:0]
+     3/3: $0\pf_valid_q[0:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+     1/17: $0\pf_booked_q[0:0]
+     2/17: $1\cp_idx[31:0]
+     3/17: $0\book_entry_sel_q[3][7:0]
+     4/17: $0\book_entry_sel_q[2][7:0]
+     5/17: $0\book_entry_sel_q[1][7:0]
+     6/17: $0\book_entry_sel_q[0][7:0]
+     7/17: $0\book_entry_onehot_q[7:0]
+     8/17: $0\book_mop_q[0:0]
+     9/17: $0\book_mway_q[1:0]
+    10/17: $0\book_mid_q[2:0]
+    11/17: $0\book_sinv_q[0:0]
+    12/17: $0\book_sid_q[0:0]
+    13/17: $0\book_set_q[5:0]
+    14/17: $0\book_line_q[57:0]
+    15/17: $0\book_is_amo_q[0:0]
+    16/17: $0\book_is_write_q[0:0]
+    17/17: $0\book_port_q[1:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+     1/12: $2\book_is_amo_next[0:0]
+     2/12: $2\book_is_write_next[0:0]
+     3/12: $2\book_port_next[1:0]
+     4/12: $6\book_line_next[57:0]
+     5/12: $1\book_is_amo_next[0:0]
+     6/12: $1\book_is_write_next[0:0]
+     7/12: $1\book_port_next[1:0]
+     8/12: $5\book_line_next[57:0]
+     9/12: $4\book_line_next[57:0]
+    10/12: $3\book_line_next[57:0]
+    11/12: $2\book_line_next[57:0]
+    12/12: $1\book_line_next[57:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:326$5884'.
+     1/1: $0\credit_q[3:0]
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+Creating decoders for process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:175$5791'.
+     1/1: $1\fresh_packet[0:0]
+Creating decoders for process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+     1/38: $4\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.$result[1:0]$6423
+     2/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.id[2:0]$6422
+     3/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.code[1:0]$6421
+     4/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.$result[1:0]$6420
+     5/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.id[2:0]$6418
+     6/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.code[1:0]$6417
+     7/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.$result[1:0]$6416
+     8/38: $0\sm[1][1:0] [1]
+     9/38: $0\sm[1][1:0] [0]
+    10/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.id[2:0]$6399
+    11/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.code[1:0]$6398
+    12/38: $3\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.$result[1:0]$6397
+    13/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.id[2:0]$6395
+    14/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.code[1:0]$6394
+    15/38: $2\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.$result[1:0]$6393
+    16/38: $0\lm_q[1:0] [1]
+    17/38: $0\lm_q[1:0] [0]
+    18/38: $0\sm[0][1:0] [0]
+    19/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.id[2:0]$6381
+    20/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.code[1:0]$6380
+    21/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.$result[1:0]$6379
+    22/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.id[2:0]$6378
+    23/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.code[1:0]$6377
+    24/38: $1\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.$result[1:0]$6376
+    25/38: $1\j2[31:0]
+    26/38: $4\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.$result[1:0]$6400
+    27/38: $1\s[31:0]
+    28/38: $0\wid[1][2:0]
+    29/38: $0\wid[0][2:0]
+    30/38: $0\ei[1][0:0]
+    31/38: $0\ei[0][0:0]
+    32/38: $0\el[1][57:0]
+    33/38: $0\el[0][57:0]
+    34/38: $0\hs[1][1:0]
+    35/38: $0\hs[0][1:0]
+    36/38: $0\ev[1][0:0]
+    37/38: $0\ev[0][0:0]
+    38/38: $0\sm[0][1:0] [1]
+Creating decoders for process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:107$6356'.
+Creating decoders for process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+     1/4: $4\cand[1:1]
+     2/4: $3\cand[1:1]
+     3/4: $2\cand[0:0]
+     4/4: $1\cand[0:0]
+Creating decoders for process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320'.
+     1/2: $2\free_id[0:0]
+     2/2: $1\free_id[0:0]
+Creating decoders for process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:50$6307'.
+Creating decoders for process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:104$6297'.
+     1/2: $0\starve_q[0:0]
+     2/2: $0\starve_cnt_q[3:0]
+Creating decoders for process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:92$6293'.
+     1/2: $0\skip_open_q[0:0]
+     2/2: $0\skip_q[1:0]
+Creating decoders for process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+     1/7: $0\book_kind_q[4:0] [4]
+     2/7: $0\book_kind_q[4:0] [3]
+     3/7: $0\book_kind_q[4:0] [2]
+     4/7: $0\book_kind_q[4:0] [1]
+     5/7: $0\book_kind_q[4:0] [0]
+     6/7: $0\fresh_allowed_q[0:0]
+     7/7: $0\book_valid_q[0:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6231'.
+     1/8: $8\g_oh_enc.idx_or[2:0]
+     2/8: $7\g_oh_enc.idx_or[2:0]
+     3/8: $6\g_oh_enc.idx_or[2:0]
+     4/8: $5\g_oh_enc.idx_or[2:0]
+     5/8: $4\g_oh_enc.idx_or[2:0]
+     6/8: $3\g_oh_enc.idx_or[2:0]
+     7/8: $2\g_oh_enc.idx_or[2:0]
+     8/8: $1\g_oh_enc.idx_or[2:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+     1/64: $64\oldest_raw[7:7]
+     2/64: $63\oldest_raw[7:7]
+     3/64: $62\oldest_raw[7:7]
+     4/64: $61\oldest_raw[7:7]
+     5/64: $60\oldest_raw[7:7]
+     6/64: $59\oldest_raw[7:7]
+     7/64: $58\oldest_raw[7:7]
+     8/64: $57\oldest_raw[7:7]
+     9/64: $56\oldest_raw[6:6]
+    10/64: $55\oldest_raw[6:6]
+    11/64: $54\oldest_raw[6:6]
+    12/64: $53\oldest_raw[6:6]
+    13/64: $52\oldest_raw[6:6]
+    14/64: $51\oldest_raw[6:6]
+    15/64: $50\oldest_raw[6:6]
+    16/64: $49\oldest_raw[6:6]
+    17/64: $48\oldest_raw[5:5]
+    18/64: $47\oldest_raw[5:5]
+    19/64: $46\oldest_raw[5:5]
+    20/64: $45\oldest_raw[5:5]
+    21/64: $44\oldest_raw[5:5]
+    22/64: $43\oldest_raw[5:5]
+    23/64: $42\oldest_raw[5:5]
+    24/64: $41\oldest_raw[5:5]
+    25/64: $40\oldest_raw[4:4]
+    26/64: $39\oldest_raw[4:4]
+    27/64: $38\oldest_raw[4:4]
+    28/64: $37\oldest_raw[4:4]
+    29/64: $36\oldest_raw[4:4]
+    30/64: $35\oldest_raw[4:4]
+    31/64: $34\oldest_raw[4:4]
+    32/64: $33\oldest_raw[4:4]
+    33/64: $32\oldest_raw[3:3]
+    34/64: $31\oldest_raw[3:3]
+    35/64: $30\oldest_raw[3:3]
+    36/64: $29\oldest_raw[3:3]
+    37/64: $28\oldest_raw[3:3]
+    38/64: $27\oldest_raw[3:3]
+    39/64: $26\oldest_raw[3:3]
+    40/64: $25\oldest_raw[3:3]
+    41/64: $24\oldest_raw[2:2]
+    42/64: $23\oldest_raw[2:2]
+    43/64: $22\oldest_raw[2:2]
+    44/64: $21\oldest_raw[2:2]
+    45/64: $20\oldest_raw[2:2]
+    46/64: $19\oldest_raw[2:2]
+    47/64: $18\oldest_raw[2:2]
+    48/64: $17\oldest_raw[2:2]
+    49/64: $16\oldest_raw[1:1]
+    50/64: $15\oldest_raw[1:1]
+    51/64: $14\oldest_raw[1:1]
+    52/64: $13\oldest_raw[1:1]
+    53/64: $12\oldest_raw[1:1]
+    54/64: $11\oldest_raw[1:1]
+    55/64: $10\oldest_raw[1:1]
+    56/64: $9\oldest_raw[1:1]
+    57/64: $8\oldest_raw[0:0]
+    58/64: $7\oldest_raw[0:0]
+    59/64: $6\oldest_raw[0:0]
+    60/64: $5\oldest_raw[0:0]
+    61/64: $4\oldest_raw[0:0]
+    62/64: $3\oldest_raw[0:0]
+    63/64: $2\oldest_raw[0:0]
+    64/64: $1\oldest_raw[0:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+     1/10: $2\i[31:0]
+     2/10: $1\i[31:0]
+     3/10: $0\older[7][7:0]
+     4/10: $0\older[6][7:0]
+     5/10: $0\older[5][7:0]
+     6/10: $0\older[4][7:0]
+     7/10: $0\older[3][7:0]
+     8/10: $0\older[2][7:0]
+     9/10: $0\older[1][7:0]
+    10/10: $0\older[0][7:0]
+Creating decoders for process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+     1/32: $4\multi_row_next[7][7:0]
+     2/32: $3\multi_row_next[7][7:0]
+     3/32: $2\multi_row_next[7][7:0]
+     4/32: $1\multi_row_next[7][7:0]
+     5/32: $4\multi_row_next[6][7:0]
+     6/32: $3\multi_row_next[6][7:0]
+     7/32: $2\multi_row_next[6][7:0]
+     8/32: $1\multi_row_next[6][7:0]
+     9/32: $4\multi_row_next[5][7:0]
+    10/32: $3\multi_row_next[5][7:0]
+    11/32: $2\multi_row_next[5][7:0]
+    12/32: $1\multi_row_next[5][7:0]
+    13/32: $4\multi_row_next[4][7:0]
+    14/32: $3\multi_row_next[4][7:0]
+    15/32: $2\multi_row_next[4][7:0]
+    16/32: $1\multi_row_next[4][7:0]
+    17/32: $4\multi_row_next[3][7:0]
+    18/32: $3\multi_row_next[3][7:0]
+    19/32: $2\multi_row_next[3][7:0]
+    20/32: $1\multi_row_next[3][7:0]
+    21/32: $4\multi_row_next[2][7:0]
+    22/32: $3\multi_row_next[2][7:0]
+    23/32: $2\multi_row_next[2][7:0]
+    24/32: $1\multi_row_next[2][7:0]
+    25/32: $4\multi_row_next[1][7:0]
+    26/32: $3\multi_row_next[1][7:0]
+    27/32: $2\multi_row_next[1][7:0]
+    28/32: $1\multi_row_next[1][7:0]
+    29/32: $4\multi_row_next[0][7:0]
+    30/32: $3\multi_row_next[0][7:0]
+    31/32: $2\multi_row_next[0][7:0]
+    32/32: $1\multi_row_next[0][7:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:569$11603'.
+     1/1: $1$mem2reg_rd$\deps_q$rtl/bank/s0/l1d_req_tracker.v:569$6437_DATA[7:0]$11605
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:568$11600'.
+     1/1: $1$mem2reg_rd$\pc_q$rtl/bank/s0/l1d_req_tracker.v:568$6436_DATA[63:0]$11602
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+     1/122: $0\state_q[7][3:0] [3]
+     2/122: $0\state_q[7][3:0] [0]
+     3/122: $0\state_q[7][3:0] [1]
+     4/122: $0\state_q[7][3:0] [2]
+     5/122: $0\state_q[6][3:0] [0]
+     6/122: $0\state_q[6][3:0] [1]
+     7/122: $0\state_q[6][3:0] [2]
+     8/122: $0\wait_nc_q[7:0] [6]
+     9/122: $0\trained_q[7:0] [6]
+    10/122: $0\valid_dup_q[7:0] [6]
+    11/122: $0\valid_q[7:0] [6]
+    12/122: $0\write_q[7:0] [6]
+    13/122: $0\state_q[5][3:0] [0]
+    14/122: $0\state_q[5][3:0] [1]
+    15/122: $0\state_q[5][3:0] [2]
+    16/122: $0\wait_nc_q[7:0] [5]
+    17/122: $0\trained_q[7:0] [5]
+    18/122: $0\valid_dup_q[7:0] [5]
+    19/122: $0\valid_q[7:0] [5]
+    20/122: $0\write_q[7:0] [5]
+    21/122: $0\state_q[4][3:0] [0]
+    22/122: $0\state_q[4][3:0] [1]
+    23/122: $0\state_q[4][3:0] [2]
+    24/122: $0\wait_nc_q[7:0] [4]
+    25/122: $0\trained_q[7:0] [4]
+    26/122: $0\valid_dup_q[7:0] [4]
+    27/122: $0\valid_q[7:0] [4]
+    28/122: $0\write_q[7:0] [4]
+    29/122: $0\state_q[3][3:0] [0]
+    30/122: $0\state_q[3][3:0] [1]
+    31/122: $0\state_q[3][3:0] [2]
+    32/122: $0\wait_nc_q[7:0] [3]
+    33/122: $0\trained_q[7:0] [3]
+    34/122: $0\valid_dup_q[7:0] [3]
+    35/122: $0\valid_q[7:0] [3]
+    36/122: $0\write_q[7:0] [3]
+    37/122: $0\state_q[2][3:0] [0]
+    38/122: $0\state_q[2][3:0] [1]
+    39/122: $0\state_q[2][3:0] [2]
+    40/122: $0\wait_nc_q[7:0] [2]
+    41/122: $0\trained_q[7:0] [2]
+    42/122: $0\valid_dup_q[7:0] [2]
+    43/122: $0\valid_q[7:0] [2]
+    44/122: $0\write_q[7:0] [2]
+    45/122: $0\state_q[1][3:0] [0]
+    46/122: $0\state_q[1][3:0] [1]
+    47/122: $0\state_q[1][3:0] [2]
+    48/122: $0\wait_nc_q[7:0] [1]
+    49/122: $0\trained_q[7:0] [1]
+    50/122: $0\valid_dup_q[7:0] [1]
+    51/122: $0\valid_q[7:0] [1]
+    52/122: $0\write_q[7:0] [1]
+    53/122: $0\state_q[0][3:0] [0]
+    54/122: $0\state_q[0][3:0] [1]
+    55/122: $0\state_q[0][3:0] [2]
+    56/122: $0\wait_nc_q[7:0] [0]
+    57/122: $0\trained_q[7:0] [0]
+    58/122: $0\valid_dup_q[7:0] [0]
+    59/122: $0\valid_q[7:0] [0]
+    60/122: $0\write_q[7:0] [0]
+    61/122: $0\free_count_q[3:0]
+    62/122: $0\state_q[1][3:0] [3]
+    63/122: $0\wait_vc_q[7][7:0]
+    64/122: $0\wait_vc_q[6][7:0]
+    65/122: $0\wait_vc_q[5][7:0]
+    66/122: $0\wait_vc_q[4][7:0]
+    67/122: $0\wait_vc_q[3][7:0]
+    68/122: $0\wait_vc_q[2][7:0]
+    69/122: $0\wait_vc_q[1][7:0]
+    70/122: $0\wait_vc_q[0][7:0]
+    71/122: $0\wait_mshr_q[7][7:0]
+    72/122: $0\wait_mshr_q[6][7:0]
+    73/122: $0\wait_mshr_q[5][7:0]
+    74/122: $0\wait_mshr_q[4][7:0]
+    75/122: $0\wait_mshr_q[3][7:0]
+    76/122: $0\wait_mshr_q[2][7:0]
+    77/122: $0\wait_mshr_q[1][7:0]
+    78/122: $0\wait_mshr_q[0][7:0]
+    79/122: $0\deps_q[7][7:0]
+    80/122: $0\deps_q[6][7:0]
+    81/122: $0\deps_q[5][7:0]
+    82/122: $0\deps_q[4][7:0]
+    83/122: $0\deps_q[3][7:0]
+    84/122: $0\deps_q[2][7:0]
+    85/122: $0\deps_q[1][7:0]
+    86/122: $0\deps_q[0][7:0]
+    87/122: $0\set_q[7][5:0]
+    88/122: $0\set_q[6][5:0]
+    89/122: $0\set_q[5][5:0]
+    90/122: $0\set_q[4][5:0]
+    91/122: $0\set_q[3][5:0]
+    92/122: $0\set_q[2][5:0]
+    93/122: $0\set_q[1][5:0]
+    94/122: $0\set_q[0][5:0]
+    95/122: $0\pc_q[7][63:0]
+    96/122: $0\pc_q[6][63:0]
+    97/122: $0\pc_q[5][63:0]
+    98/122: $0\pc_q[4][63:0]
+    99/122: $0\pc_q[3][63:0]
+   100/122: $0\pc_q[2][63:0]
+   101/122: $0\pc_q[1][63:0]
+   102/122: $0\pc_q[0][63:0]
+   103/122: $0\packet_q[7][147:0]
+   104/122: $0\packet_q[6][147:0]
+   105/122: $0\packet_q[5][147:0]
+   106/122: $0\packet_q[4][147:0]
+   107/122: $0\packet_q[3][147:0]
+   108/122: $0\packet_q[2][147:0]
+   109/122: $0\packet_q[1][147:0]
+   110/122: $0\packet_q[0][147:0]
+   111/122: $0\state_q[6][3:0] [3]
+   112/122: $0\wait_nc_q[7:0] [7]
+   113/122: $0\trained_q[7:0] [7]
+   114/122: $0\valid_dup_q[7:0] [7]
+   115/122: $0\valid_q[7:0] [7]
+   116/122: $0\write_q[7:0] [7]
+   117/122: $0\state_q[5][3:0] [3]
+   118/122: $0\state_q[4][3:0] [3]
+   119/122: $0\state_q[2][3:0] [3]
+   120/122: $0\state_q[3][3:0] [3]
+   121/122: $1\ent[31:0]
+   122/122: $0\state_q[0][3:0] [3]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:688$11204'.
+     1/5: $0\free_pick_q[31:0] [31:24]
+     2/5: $0\free_pick_q[31:0] [23:16]
+     3/5: $0\free_pick_q[31:0] [15:8]
+     4/5: $0\free_pick_q[31:0] [7:0]
+     5/5: $1\fq_pick[31:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+     1/88: $80\free_pick_next[31:24]
+     2/88: $79\free_pick_next[31:24]
+     3/88: $78\free_pick_next[31:24]
+     4/88: $77\free_pick_next[31:24]
+     5/88: $76\free_pick_next[31:24]
+     6/88: $75\free_pick_next[31:24]
+     7/88: $74\free_pick_next[31:24]
+     8/88: $73\free_pick_next[31:24]
+     9/88: $72\free_pick_next[31:24]
+    10/88: $71\free_pick_next[31:24]
+    11/88: $70\free_pick_next[31:24]
+    12/88: $69\free_pick_next[31:24]
+    13/88: $68\free_pick_next[31:24]
+    14/88: $67\free_pick_next[31:24]
+    15/88: $66\free_pick_next[31:24]
+    16/88: $65\free_pick_next[31:24]
+    17/88: $64\free_pick_next[31:24]
+    18/88: $63\free_pick_next[31:24]
+    19/88: $62\free_pick_next[31:24]
+    20/88: $61\free_pick_next[31:24]
+    21/88: $60\free_pick_next[23:16]
+    22/88: $59\free_pick_next[23:16]
+    23/88: $58\free_pick_next[23:16]
+    24/88: $57\free_pick_next[23:16]
+    25/88: $56\free_pick_next[23:16]
+    26/88: $55\free_pick_next[23:16]
+    27/88: $54\free_pick_next[23:16]
+    28/88: $53\free_pick_next[23:16]
+    29/88: $52\free_pick_next[23:16]
+    30/88: $51\free_pick_next[23:16]
+    31/88: $50\free_pick_next[23:16]
+    32/88: $49\free_pick_next[23:16]
+    33/88: $48\free_pick_next[23:16]
+    34/88: $47\free_pick_next[23:16]
+    35/88: $46\free_pick_next[23:16]
+    36/88: $45\free_pick_next[23:16]
+    37/88: $44\free_pick_next[23:16]
+    38/88: $43\free_pick_next[23:16]
+    39/88: $42\free_pick_next[23:16]
+    40/88: $41\free_pick_next[23:16]
+    41/88: $40\free_pick_next[15:8]
+    42/88: $39\free_pick_next[15:8]
+    43/88: $38\free_pick_next[15:8]
+    44/88: $37\free_pick_next[15:8]
+    45/88: $36\free_pick_next[15:8]
+    46/88: $35\free_pick_next[15:8]
+    47/88: $34\free_pick_next[15:8]
+    48/88: $33\free_pick_next[15:8]
+    49/88: $32\free_pick_next[15:8]
+    50/88: $31\free_pick_next[15:8]
+    51/88: $30\free_pick_next[15:8]
+    52/88: $29\free_pick_next[15:8]
+    53/88: $28\free_pick_next[15:8]
+    54/88: $27\free_pick_next[15:8]
+    55/88: $26\free_pick_next[15:8]
+    56/88: $25\free_pick_next[15:8]
+    57/88: $24\free_pick_next[15:8]
+    58/88: $23\free_pick_next[15:8]
+    59/88: $22\free_pick_next[15:8]
+    60/88: $21\free_pick_next[15:8]
+    61/88: $20\free_pick_next[7:0]
+    62/88: $19\free_pick_next[7:0]
+    63/88: $18\free_pick_next[7:0]
+    64/88: $17\free_pick_next[7:0]
+    65/88: $16\free_pick_next[7:0]
+    66/88: $15\free_pick_next[7:0]
+    67/88: $14\free_pick_next[7:0]
+    68/88: $13\free_pick_next[7:0]
+    69/88: $12\free_pick_next[7:0]
+    70/88: $11\free_pick_next[7:0]
+    71/88: $10\free_pick_next[7:0]
+    72/88: $9\free_pick_next[7:0]
+    73/88: $8\free_pick_next[7:0]
+    74/88: $7\free_pick_next[7:0]
+    75/88: $6\free_pick_next[7:0]
+    76/88: $5\free_pick_next[7:0]
+    77/88: $4\free_pick_next[7:0]
+    78/88: $3\free_pick_next[7:0]
+    79/88: $2\free_pick_next[7:0]
+    80/88: $1\free_pick_next[7:0]
+    81/88: $8\freed_ge[8:0]
+    82/88: $7\freed_ge[8:0]
+    83/88: $6\freed_ge[8:0]
+    84/88: $5\freed_ge[8:0]
+    85/88: $4\freed_ge[8:0]
+    86/88: $3\freed_ge[8:0]
+    87/88: $2\freed_ge[8:0]
+    88/88: $1\freed_ge[8:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:613$8519'.
+     1/2: $0\free_room_dup_q[8:0]
+     2/2: $0\free_room_q[8:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+     1/24: $5\free_room_next[8:0]
+     2/24: $5\free_count_pick[3:0]
+     3/24: $9\room_plus[8:0]
+     4/24: $8\room_plus[8:0]
+     5/24: $5\room_minus[8:0]
+     6/24: $4\free_room_next[8:0]
+     7/24: $4\free_count_pick[3:0]
+     8/24: $7\room_plus[8:0]
+     9/24: $6\room_plus[8:0]
+    10/24: $4\room_minus[8:0]
+    11/24: $3\free_room_next[8:0]
+    12/24: $3\free_count_pick[3:0]
+    13/24: $5\room_plus[8:0]
+    14/24: $4\room_plus[8:0]
+    15/24: $3\room_minus[8:0]
+    16/24: $2\free_room_next[8:0]
+    17/24: $2\free_count_pick[3:0]
+    18/24: $3\room_plus[8:0]
+    19/24: $2\room_plus[8:0]
+    20/24: $2\room_minus[8:0]
+    21/24: $1\free_room_next[8:0]
+    22/24: $1\free_count_pick[3:0]
+    23/24: $1\room_plus[8:0]
+    24/24: $1\room_minus[8:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:572$8391'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:546$8338'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:527$8312'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:517$8295'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:496$8270'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+     1/25: $25\pair_block[4:4]
+     2/25: $24\pair_block[4:4]
+     3/25: $23\pair_block[4:4]
+     4/25: $22\pair_block[4:4]
+     5/25: $21\pair_block[4:4]
+     6/25: $20\pair_block[3:3]
+     7/25: $19\pair_block[3:3]
+     8/25: $18\pair_block[3:3]
+     9/25: $17\pair_block[3:3]
+    10/25: $16\pair_block[3:3]
+    11/25: $15\pair_block[2:2]
+    12/25: $14\pair_block[2:2]
+    13/25: $13\pair_block[2:2]
+    14/25: $12\pair_block[2:2]
+    15/25: $11\pair_block[2:2]
+    16/25: $10\pair_block[1:1]
+    17/25: $9\pair_block[1:1]
+    18/25: $8\pair_block[1:1]
+    19/25: $7\pair_block[1:1]
+    20/25: $6\pair_block[1:1]
+    21/25: $5\pair_block[0:0]
+    22/25: $4\pair_block[0:0]
+    23/25: $3\pair_block[0:0]
+    24/25: $2\pair_block[0:0]
+    25/25: $1\pair_block[0:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+     1/280: $20\deps_load[7][7:0]
+     2/280: $19\deps_load[7][7:0]
+     3/280: $18\deps_load[7][7:0]
+     4/280: $17\deps_load[7][7:0]
+     5/280: $16\deps_load[7][7:0]
+     6/280: $15\deps_load[7][7:0]
+     7/280: $14\deps_load[7][7:0]
+     8/280: $13\deps_load[7][7:0]
+     9/280: $12\deps_load[7][7:0]
+    10/280: $11\deps_load[7][7:0]
+    11/280: $10\deps_load[7][7:0]
+    12/280: $9\deps_load[7][7:0]
+    13/280: $8\deps_load[7][7:0]
+    14/280: $7\deps_load[7][7:0]
+    15/280: $6\deps_load[7][7:0]
+    16/280: $5\deps_load[7][7:0]
+    17/280: $4\deps_load[7][7:0]
+    18/280: $3\deps_load[7][7:0]
+    19/280: $2\deps_load[7][7:0]
+    20/280: $1\deps_load[7][7:0]
+    21/280: $20\deps_load[6][7:0]
+    22/280: $19\deps_load[6][7:0]
+    23/280: $18\deps_load[6][7:0]
+    24/280: $17\deps_load[6][7:0]
+    25/280: $16\deps_load[6][7:0]
+    26/280: $15\deps_load[6][7:0]
+    27/280: $14\deps_load[6][7:0]
+    28/280: $13\deps_load[6][7:0]
+    29/280: $12\deps_load[6][7:0]
+    30/280: $11\deps_load[6][7:0]
+    31/280: $10\deps_load[6][7:0]
+    32/280: $9\deps_load[6][7:0]
+    33/280: $8\deps_load[6][7:0]
+    34/280: $7\deps_load[6][7:0]
+    35/280: $6\deps_load[6][7:0]
+    36/280: $5\deps_load[6][7:0]
+    37/280: $4\deps_load[6][7:0]
+    38/280: $3\deps_load[6][7:0]
+    39/280: $2\deps_load[6][7:0]
+    40/280: $1\deps_load[6][7:0]
+    41/280: $20\deps_load[5][7:0]
+    42/280: $19\deps_load[5][7:0]
+    43/280: $18\deps_load[5][7:0]
+    44/280: $17\deps_load[5][7:0]
+    45/280: $16\deps_load[5][7:0]
+    46/280: $15\deps_load[5][7:0]
+    47/280: $14\deps_load[5][7:0]
+    48/280: $13\deps_load[5][7:0]
+    49/280: $12\deps_load[5][7:0]
+    50/280: $11\deps_load[5][7:0]
+    51/280: $10\deps_load[5][7:0]
+    52/280: $9\deps_load[5][7:0]
+    53/280: $8\deps_load[5][7:0]
+    54/280: $7\deps_load[5][7:0]
+    55/280: $6\deps_load[5][7:0]
+    56/280: $5\deps_load[5][7:0]
+    57/280: $4\deps_load[5][7:0]
+    58/280: $3\deps_load[5][7:0]
+    59/280: $2\deps_load[5][7:0]
+    60/280: $1\deps_load[5][7:0]
+    61/280: $20\deps_load[4][7:0]
+    62/280: $19\deps_load[4][7:0]
+    63/280: $18\deps_load[4][7:0]
+    64/280: $17\deps_load[4][7:0]
+    65/280: $16\deps_load[4][7:0]
+    66/280: $15\deps_load[4][7:0]
+    67/280: $14\deps_load[4][7:0]
+    68/280: $13\deps_load[4][7:0]
+    69/280: $12\deps_load[4][7:0]
+    70/280: $11\deps_load[4][7:0]
+    71/280: $10\deps_load[4][7:0]
+    72/280: $9\deps_load[4][7:0]
+    73/280: $8\deps_load[4][7:0]
+    74/280: $7\deps_load[4][7:0]
+    75/280: $6\deps_load[4][7:0]
+    76/280: $5\deps_load[4][7:0]
+    77/280: $4\deps_load[4][7:0]
+    78/280: $3\deps_load[4][7:0]
+    79/280: $2\deps_load[4][7:0]
+    80/280: $1\deps_load[4][7:0]
+    81/280: $20\deps_load[3][7:0]
+    82/280: $19\deps_load[3][7:0]
+    83/280: $18\deps_load[3][7:0]
+    84/280: $17\deps_load[3][7:0]
+    85/280: $16\deps_load[3][7:0]
+    86/280: $15\deps_load[3][7:0]
+    87/280: $14\deps_load[3][7:0]
+    88/280: $13\deps_load[3][7:0]
+    89/280: $12\deps_load[3][7:0]
+    90/280: $11\deps_load[3][7:0]
+    91/280: $10\deps_load[3][7:0]
+    92/280: $9\deps_load[3][7:0]
+    93/280: $8\deps_load[3][7:0]
+    94/280: $7\deps_load[3][7:0]
+    95/280: $6\deps_load[3][7:0]
+    96/280: $5\deps_load[3][7:0]
+    97/280: $4\deps_load[3][7:0]
+    98/280: $3\deps_load[3][7:0]
+    99/280: $2\deps_load[3][7:0]
+   100/280: $1\deps_load[3][7:0]
+   101/280: $20\deps_load[2][7:0]
+   102/280: $19\deps_load[2][7:0]
+   103/280: $18\deps_load[2][7:0]
+   104/280: $17\deps_load[2][7:0]
+   105/280: $16\deps_load[2][7:0]
+   106/280: $15\deps_load[2][7:0]
+   107/280: $14\deps_load[2][7:0]
+   108/280: $13\deps_load[2][7:0]
+   109/280: $12\deps_load[2][7:0]
+   110/280: $11\deps_load[2][7:0]
+   111/280: $10\deps_load[2][7:0]
+   112/280: $9\deps_load[2][7:0]
+   113/280: $8\deps_load[2][7:0]
+   114/280: $7\deps_load[2][7:0]
+   115/280: $6\deps_load[2][7:0]
+   116/280: $5\deps_load[2][7:0]
+   117/280: $4\deps_load[2][7:0]
+   118/280: $3\deps_load[2][7:0]
+   119/280: $2\deps_load[2][7:0]
+   120/280: $1\deps_load[2][7:0]
+   121/280: $20\deps_load[1][7:0]
+   122/280: $19\deps_load[1][7:0]
+   123/280: $18\deps_load[1][7:0]
+   124/280: $17\deps_load[1][7:0]
+   125/280: $16\deps_load[1][7:0]
+   126/280: $15\deps_load[1][7:0]
+   127/280: $14\deps_load[1][7:0]
+   128/280: $13\deps_load[1][7:0]
+   129/280: $12\deps_load[1][7:0]
+   130/280: $11\deps_load[1][7:0]
+   131/280: $10\deps_load[1][7:0]
+   132/280: $9\deps_load[1][7:0]
+   133/280: $8\deps_load[1][7:0]
+   134/280: $7\deps_load[1][7:0]
+   135/280: $6\deps_load[1][7:0]
+   136/280: $5\deps_load[1][7:0]
+   137/280: $4\deps_load[1][7:0]
+   138/280: $3\deps_load[1][7:0]
+   139/280: $2\deps_load[1][7:0]
+   140/280: $1\deps_load[1][7:0]
+   141/280: $20\deps_load[0][7:0]
+   142/280: $19\deps_load[0][7:0]
+   143/280: $18\deps_load[0][7:0]
+   144/280: $17\deps_load[0][7:0]
+   145/280: $16\deps_load[0][7:0]
+   146/280: $15\deps_load[0][7:0]
+   147/280: $14\deps_load[0][7:0]
+   148/280: $13\deps_load[0][7:0]
+   149/280: $12\deps_load[0][7:0]
+   150/280: $11\deps_load[0][7:0]
+   151/280: $10\deps_load[0][7:0]
+   152/280: $9\deps_load[0][7:0]
+   153/280: $8\deps_load[0][7:0]
+   154/280: $7\deps_load[0][7:0]
+   155/280: $6\deps_load[0][7:0]
+   156/280: $5\deps_load[0][7:0]
+   157/280: $4\deps_load[0][7:0]
+   158/280: $3\deps_load[0][7:0]
+   159/280: $2\deps_load[0][7:0]
+   160/280: $1\deps_load[0][7:0]
+   161/280: $25\rank_pair[3][3:0]
+   162/280: $24\rank_pair[3][3:0]
+   163/280: $23\rank_pair[3][3:0]
+   164/280: $22\rank_pair[3][3:0]
+   165/280: $21\rank_pair[3][3:0]
+   166/280: $5\rank_deps_old[3][7:0]
+   167/280: $20\rank_pair[3][3:0]
+   168/280: $19\rank_pair[3][3:0]
+   169/280: $18\rank_pair[3][3:0]
+   170/280: $17\rank_pair[3][3:0]
+   171/280: $16\rank_pair[3][3:0]
+   172/280: $4\rank_deps_old[3][7:0]
+   173/280: $15\rank_pair[3][3:0]
+   174/280: $14\rank_pair[3][3:0]
+   175/280: $13\rank_pair[3][3:0]
+   176/280: $12\rank_pair[3][3:0]
+   177/280: $11\rank_pair[3][3:0]
+   178/280: $3\rank_deps_old[3][7:0]
+   179/280: $10\rank_pair[3][3:0]
+   180/280: $9\rank_pair[3][3:0]
+   181/280: $8\rank_pair[3][3:0]
+   182/280: $7\rank_pair[3][3:0]
+   183/280: $6\rank_pair[3][3:0]
+   184/280: $2\rank_deps_old[3][7:0]
+   185/280: $5\rank_pair[3][3:0]
+   186/280: $4\rank_pair[3][3:0]
+   187/280: $3\rank_pair[3][3:0]
+   188/280: $2\rank_pair[3][3:0]
+   189/280: $1\rank_pair[3][3:0]
+   190/280: $1\rank_deps_old[3][7:0]
+   191/280: $25\rank_pair[2][3:0]
+   192/280: $24\rank_pair[2][3:0]
+   193/280: $23\rank_pair[2][3:0]
+   194/280: $22\rank_pair[2][3:0]
+   195/280: $21\rank_pair[2][3:0]
+   196/280: $5\rank_deps_old[2][7:0]
+   197/280: $20\rank_pair[2][3:0]
+   198/280: $19\rank_pair[2][3:0]
+   199/280: $18\rank_pair[2][3:0]
+   200/280: $17\rank_pair[2][3:0]
+   201/280: $16\rank_pair[2][3:0]
+   202/280: $4\rank_deps_old[2][7:0]
+   203/280: $15\rank_pair[2][3:0]
+   204/280: $14\rank_pair[2][3:0]
+   205/280: $13\rank_pair[2][3:0]
+   206/280: $12\rank_pair[2][3:0]
+   207/280: $11\rank_pair[2][3:0]
+   208/280: $3\rank_deps_old[2][7:0]
+   209/280: $10\rank_pair[2][3:0]
+   210/280: $9\rank_pair[2][3:0]
+   211/280: $8\rank_pair[2][3:0]
+   212/280: $7\rank_pair[2][3:0]
+   213/280: $6\rank_pair[2][3:0]
+   214/280: $2\rank_deps_old[2][7:0]
+   215/280: $5\rank_pair[2][3:0]
+   216/280: $4\rank_pair[2][3:0]
+   217/280: $3\rank_pair[2][3:0]
+   218/280: $2\rank_pair[2][3:0]
+   219/280: $1\rank_pair[2][3:0]
+   220/280: $1\rank_deps_old[2][7:0]
+   221/280: $25\rank_pair[1][3:0]
+   222/280: $24\rank_pair[1][3:0]
+   223/280: $23\rank_pair[1][3:0]
+   224/280: $22\rank_pair[1][3:0]
+   225/280: $21\rank_pair[1][3:0]
+   226/280: $5\rank_deps_old[1][7:0]
+   227/280: $20\rank_pair[1][3:0]
+   228/280: $19\rank_pair[1][3:0]
+   229/280: $18\rank_pair[1][3:0]
+   230/280: $17\rank_pair[1][3:0]
+   231/280: $16\rank_pair[1][3:0]
+   232/280: $4\rank_deps_old[1][7:0]
+   233/280: $15\rank_pair[1][3:0]
+   234/280: $14\rank_pair[1][3:0]
+   235/280: $13\rank_pair[1][3:0]
+   236/280: $12\rank_pair[1][3:0]
+   237/280: $11\rank_pair[1][3:0]
+   238/280: $3\rank_deps_old[1][7:0]
+   239/280: $10\rank_pair[1][3:0]
+   240/280: $9\rank_pair[1][3:0]
+   241/280: $8\rank_pair[1][3:0]
+   242/280: $7\rank_pair[1][3:0]
+   243/280: $6\rank_pair[1][3:0]
+   244/280: $2\rank_deps_old[1][7:0]
+   245/280: $5\rank_pair[1][3:0]
+   246/280: $4\rank_pair[1][3:0]
+   247/280: $3\rank_pair[1][3:0]
+   248/280: $2\rank_pair[1][3:0]
+   249/280: $1\rank_pair[1][3:0]
+   250/280: $1\rank_deps_old[1][7:0]
+   251/280: $25\rank_pair[0][3:0]
+   252/280: $24\rank_pair[0][3:0]
+   253/280: $23\rank_pair[0][3:0]
+   254/280: $22\rank_pair[0][3:0]
+   255/280: $21\rank_pair[0][3:0]
+   256/280: $5\rank_deps_old[0][7:0]
+   257/280: $20\rank_pair[0][3:0]
+   258/280: $19\rank_pair[0][3:0]
+   259/280: $18\rank_pair[0][3:0]
+   260/280: $17\rank_pair[0][3:0]
+   261/280: $16\rank_pair[0][3:0]
+   262/280: $4\rank_deps_old[0][7:0]
+   263/280: $15\rank_pair[0][3:0]
+   264/280: $14\rank_pair[0][3:0]
+   265/280: $13\rank_pair[0][3:0]
+   266/280: $12\rank_pair[0][3:0]
+   267/280: $11\rank_pair[0][3:0]
+   268/280: $3\rank_deps_old[0][7:0]
+   269/280: $10\rank_pair[0][3:0]
+   270/280: $9\rank_pair[0][3:0]
+   271/280: $8\rank_pair[0][3:0]
+   272/280: $7\rank_pair[0][3:0]
+   273/280: $6\rank_pair[0][3:0]
+   274/280: $2\rank_deps_old[0][7:0]
+   275/280: $5\rank_pair[0][3:0]
+   276/280: $4\rank_pair[0][3:0]
+   277/280: $3\rank_pair[0][3:0]
+   278/280: $2\rank_pair[0][3:0]
+   279/280: $1\rank_pair[0][3:0]
+   280/280: $1\rank_deps_old[0][7:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+     1/10: $4\deps_new[4][7:0]
+     2/10: $3\deps_new[4][7:0]
+     3/10: $2\deps_new[4][7:0]
+     4/10: $1\deps_new[4][7:0]
+     5/10: $3\deps_new[3][7:0]
+     6/10: $2\deps_new[3][7:0]
+     7/10: $1\deps_new[3][7:0]
+     8/10: $2\deps_new[2][7:0]
+     9/10: $1\deps_new[2][7:0]
+    10/10: $1\deps_new[1][7:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+     1/8: $1\load_packet[7][147:0]
+     2/8: $1\load_packet[6][147:0]
+     3/8: $1\load_packet[5][147:0]
+     4/8: $1\load_packet[4][147:0]
+     5/8: $1\load_packet[3][147:0]
+     6/8: $1\load_packet[2][147:0]
+     7/8: $1\load_packet[1][147:0]
+     8/8: $1\load_packet[0][147:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+     1/40: $20\age_groups[31:24]
+     2/40: $19\age_groups[31:24]
+     3/40: $18\age_groups[31:24]
+     4/40: $17\age_groups[31:24]
+     5/40: $16\age_groups[31:24]
+     6/40: $15\age_groups[23:16]
+     7/40: $14\age_groups[23:16]
+     8/40: $13\age_groups[23:16]
+     9/40: $12\age_groups[23:16]
+    10/40: $11\age_groups[23:16]
+    11/40: $10\age_groups[15:8]
+    12/40: $9\age_groups[15:8]
+    13/40: $8\age_groups[15:8]
+    14/40: $7\age_groups[15:8]
+    15/40: $6\age_groups[15:8]
+    16/40: $5\age_groups[7:0]
+    17/40: $4\age_groups[7:0]
+    18/40: $3\age_groups[7:0]
+    19/40: $2\age_groups[7:0]
+    20/40: $1\age_groups[7:0]
+    21/40: $4\src_entry[4][7:0]
+    22/40: $3\src_entry[4][7:0]
+    23/40: $2\src_entry[4][7:0]
+    24/40: $1\src_entry[4][7:0]
+    25/40: $4\src_entry[3][7:0]
+    26/40: $3\src_entry[3][7:0]
+    27/40: $2\src_entry[3][7:0]
+    28/40: $1\src_entry[3][7:0]
+    29/40: $4\src_entry[2][7:0]
+    30/40: $3\src_entry[2][7:0]
+    31/40: $2\src_entry[2][7:0]
+    32/40: $1\src_entry[2][7:0]
+    33/40: $4\src_entry[1][7:0]
+    34/40: $3\src_entry[1][7:0]
+    35/40: $2\src_entry[1][7:0]
+    36/40: $1\src_entry[1][7:0]
+    37/40: $4\src_entry[0][7:0]
+    38/40: $3\src_entry[0][7:0]
+    39/40: $2\src_entry[0][7:0]
+    40/40: $1\src_entry[0][7:0]
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+Creating decoders for process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+Creating decoders for process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6073'.
+     1/2: $2\g_oh_enc.idx_or[0:0]
+     2/2: $1\g_oh_enc.idx_or[0:0]
+Creating decoders for process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+     1/4: $4\oldest_raw[1:1]
+     2/4: $3\oldest_raw[1:1]
+     3/4: $2\oldest_raw[0:0]
+     4/4: $1\oldest_raw[0:0]
+Creating decoders for process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+     1/5: $3\i[31:0]
+     2/5: $2\i[31:0]
+     3/5: $1\i[31:0]
+     4/5: $0\older[1][1:0]
+     5/5: $0\older[0][1:0]
+Creating decoders for process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+     1/8: $4\multi_row_next[1][1:0]
+     2/8: $3\multi_row_next[1][1:0]
+     3/8: $2\multi_row_next[1][1:0]
+     4/8: $1\multi_row_next[1][1:0]
+     5/8: $4\multi_row_next[0][1:0]
+     6/8: $3\multi_row_next[0][1:0]
+     7/8: $2\multi_row_next[0][1:0]
+     8/8: $1\multi_row_next[0][1:0]
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_bank_s0.\booked_seat' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+No latch inferred for signal `\l1d_bank_s0.\fresh_seat' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+No latch inferred for signal `\l1d_bank_s0.\en_idx' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+No latch inferred for signal `\l1d_bank_s0.\booked_entry_packet' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+No latch inferred for signal `\l1d_bank_s0.\be_entry' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+No latch inferred for signal `\l1d_bank_s0.\be_group' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+No latch inferred for signal `\l1d_bank_s0.\book_line_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+No latch inferred for signal `\l1d_bank_s0.\book_port_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+No latch inferred for signal `\l1d_bank_s0.\book_is_write_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+No latch inferred for signal `\l1d_bank_s0.\book_is_amo_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+No latch inferred for signal `\l1d_bank_s0.\credit_book_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\r_is_port' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\s1_is_port' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\issue_is_port' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\credit_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\credit_book_if_none' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\credit_book_if_issue' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\port_miss_ok' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\promised_next' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\cr_port' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+No latch inferred for signal `\l1d_bank_s0.\fresh_packet' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:175$5791'.
+No latch inferred for signal `\l1d_bank_s0.\fp_port' from process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:175$5791'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\offer_line_r' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:107$6356'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\offer_inv_r' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:107$6356'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\pk' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:107$6356'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\c' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\o' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\cand' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\free_id' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\fj' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\free_g_r' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:50$6307'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\free_seen' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:50$6307'.
+No latch inferred for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\fi' from process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:50$6307'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\g_oh_enc.idx_or' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6231'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\g_oh_enc.e' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6231'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\a' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\b' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\oldest_raw' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_all' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\grp' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\later_grp' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\row_idx' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[0]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[1]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[2]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_later[3]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[0]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[1]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[2]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[3]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[4]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[5]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[6]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\multi_row_next[7]' from process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$mem2reg_rd$\deps_q$rtl/bank/s0/l1d_req_tracker.v:569$6437_DATA' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:569$11603'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$mem2reg_rd$\pc_q$rtl/bank/s0/l1d_req_tracker.v:568$6436_DATA' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:568$11600'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.fb_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.fb_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\g_pick_count.free_below[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\freed_ge' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\freed_any' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\alloc_n_onehot' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_pick_next' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fg_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fr_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fn_pick' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fn_count' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_ge[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_lv' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_bit' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_part' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[8]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[9]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[10]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[11]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[12]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[13]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[14]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[15]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[16]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[17]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[18]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[19]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[20]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[21]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[22]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[23]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[24]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[25]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[26]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[27]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[28]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[29]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[30]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ks_ge[31]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_count_pick' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\s2_frees' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fc_count' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\count_plus' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\count_minus' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_room_next' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\room_now' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\room_plus' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\room_minus' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\alloc_cnt' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:572$8391'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ac_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:572$8391'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\s2_entry_onehot' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:546$8338'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\s2_dec' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:546$8338'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\oldest_credit_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:527$8312'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\oc_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:527$8312'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\or_packet' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:517$8295'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\or_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:517$8295'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ready_cand' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:496$8270'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rc_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:496$8270'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\booked_entry_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\booked_line_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\booked_port_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\booked_is_write_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\booked_is_amo_or' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\bk_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_packet' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_entry_nofresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_entry_fresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_packet_nofresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_packet_fresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_mux' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\arrival_cand' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\arrival_pick' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\arrival_seen' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ab_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pick_any' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pair_block' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\cand_nofresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\cand_fresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pick_nofresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pick_fresh' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\cand_nofresh_no_room_check' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\cand_fresh_no_room_check' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pb_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pb_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rd_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rd_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rd_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dl_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dl_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dl_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_deps_old[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_deps_old[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_deps_old[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_deps_old[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_pair[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_pair[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_pair[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_pair[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_load[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\same_set_pair' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dp_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dp_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\dp_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_new[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_new[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_new[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_new[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_new[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_old[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_old[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_old[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_old[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_old[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_pair[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_pair[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_pair[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_pair[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_pair[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lowest_req' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lowest_port' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lowest_credit' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lower_req_seen' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\lo_port' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_line_store' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ld_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ld_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_packet[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\load_pc[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\alloc_en' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\age_groups' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\se_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\se_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\se_entry' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\src_entry[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\src_entry[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\src_entry[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\src_entry[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\src_entry[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[5]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[6]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\data_sel[7]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_alloc' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ro_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ro_rank' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_onehot[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_onehot[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_onehot[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_onehot[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_onehot[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_src' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank_lower' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank[0]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank[1]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank[2]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank[3]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\rank[4]' from process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\g_oh_enc.idx_or' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6073'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\g_oh_enc.e' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6073'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\a' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\b' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\oldest_raw' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_all' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\grp' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\later_grp' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\row_idx' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_later[0]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_later[1]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_later[2]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_later[3]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_row_next[0]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+No latch inferred for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\multi_row_next[1]' from process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_bank_s0.\r_seat' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16301' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_valid' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16302' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_kind' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16303' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_req' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16304' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_fast' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16305' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_mid' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16306' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_line' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16307' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_mway' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16308' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_mop' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16309' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_sinv' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16310' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_sid' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16311' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_cpu_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16312' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\r_pf_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+  created $dff cell `$procdff$16313' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\pf_valid_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+  created $dff cell `$procdff$16314' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\pf_line_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+  created $dff cell `$procdff$16315' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\pf_unique_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+  created $dff cell `$procdff$16316' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_port_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16317' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_is_write_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16318' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_is_amo_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16319' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\pf_booked_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16320' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_line_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16321' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_set_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16322' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_entry_onehot_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16323' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_sid_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16324' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_sinv_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16325' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_mid_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16326' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_mway_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16327' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_mop_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16328' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\cp_idx' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16329' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_entry_sel_q[0]' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16330' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_entry_sel_q[1]' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16331' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_entry_sel_q[2]' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16332' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\book_entry_sel_q[3]' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+  created $dff cell `$procdff$16333' with positive edge clock.
+Creating register for signal `\l1d_bank_s0.\credit_q' using process `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:326$5884'.
+  created $dff cell `$procdff$16334' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\lm_q' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16335' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\s' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16336' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\j2' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16337' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\ev[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16338' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\ev[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16339' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\hs[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16340' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\hs[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16341' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\el[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16342' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\el[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16343' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\ei[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16344' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\ei[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16345' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wid[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16346' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wid[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16347' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\sm[0]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16348' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\sm[1]' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16349' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.$result' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16350' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.code' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16351' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6305.id' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16352' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.$result' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16353' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.code' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16354' with positive edge clock.
+Creating register for signal `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.\wait_state$func$rtl/bank/fifo/l1d_snoop_buf.v:182$6306.id' using process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+  created $dff cell `$procdff$16355' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\starve_cnt_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:104$6297'.
+  created $dff cell `$procdff$16356' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\starve_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:104$6297'.
+  created $dff cell `$procdff$16357' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\skip_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:92$6293'.
+  created $dff cell `$procdff$16358' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\skip_open_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:92$6293'.
+  created $dff cell `$procdff$16359' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\fresh_allowed_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+  created $dff cell `$procdff$16360' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\book_valid_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+  created $dff cell `$procdff$16361' with positive edge clock.
+Creating register for signal `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.\book_kind_q' using process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+  created $dff cell `$procdff$16362' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\i' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16363' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[0]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16364' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[1]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16365' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[2]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16366' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[3]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16367' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[4]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16368' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[5]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16369' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[6]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16370' with positive edge clock.
+Creating register for signal `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.\older[7]' using process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+  created $dff cell `$procdff$16371' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_count_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16372' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\valid_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16373' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\valid_dup_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16374' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\write_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16375' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_nc_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16376' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\trained_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16377' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\ent' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16378' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16379' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16380' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16381' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16382' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16383' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16384' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16385' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\state_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16386' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16387' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16388' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16389' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16390' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16391' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16392' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16393' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\packet_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16394' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16395' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16396' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16397' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16398' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16399' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16400' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16401' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\pc_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16402' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16403' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16404' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16405' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16406' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16407' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16408' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16409' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\set_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16410' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16411' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16412' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16413' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16414' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16415' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16416' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16417' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\deps_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16418' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16419' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16420' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16421' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16422' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16423' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16424' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16425' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_mshr_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16426' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[0]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16427' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[1]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16428' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[2]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16429' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[3]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16430' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[4]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16431' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[5]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16432' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[6]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16433' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\wait_vc_q[7]' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+  created $dff cell `$procdff$16434' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_pick_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:688$11204'.
+  created $dff cell `$procdff$16435' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\fq_pick' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:688$11204'.
+  created $dff cell `$procdff$16436' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_room_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:613$8519'.
+  created $dff cell `$procdff$16437' with positive edge clock.
+Creating register for signal `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.\free_room_dup_q' using process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:613$8519'.
+  created $dff cell `$procdff$16438' with positive edge clock.
+Creating register for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\i' using process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+  created $dff cell `$procdff$16439' with positive edge clock.
+Creating register for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\older[0]' using process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+  created $dff cell `$procdff$16440' with positive edge clock.
+Creating register for signal `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.\older[1]' using process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+  created $dff cell `$procdff$16441' with positive edge clock.
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:542$6038'.
+Found and cleaned up 16 empty switches in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:534$6021'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:517$5952'.
+Found and cleaned up 4 empty switches in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:499$5949'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:464$5931'.
+Found and cleaned up 6 empty switches in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:441$5930'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:326$5884'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:326$5884'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:309$5802'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s0.$proc$golden/l1d_bank_s0.v:175$5791'.
+Removing empty process `l1d_bank_s0.$proc$golden/l1d_bank_s0.v:175$5791'.
+Found and cleaned up 27 empty switches in `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+Removing empty process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:141$6369'.
+Removing empty process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:107$6356'.
+Found and cleaned up 4 empty switches in `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+Removing empty process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:80$6324'.
+Found and cleaned up 2 empty switches in `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320'.
+Removing empty process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:61$6320'.
+Removing empty process `$paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.$proc$rtl/bank/fifo/l1d_snoop_buf.v:50$6307'.
+Found and cleaned up 2 empty switches in `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:104$6297'.
+Removing empty process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:104$6297'.
+Found and cleaned up 3 empty switches in `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:92$6293'.
+Removing empty process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:92$6293'.
+Found and cleaned up 1 empty switch in `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+Removing empty process `$paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.$proc$rtl/bank/s0/l1d_book_select.v:77$6289'.
+Found and cleaned up 8 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6231'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6231'.
+Found and cleaned up 64 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6102'.
+Found and cleaned up 1 empty switch in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6101'.
+Found and cleaned up 32 empty switches in `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+Removing empty process `$paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6082'.
+Found and cleaned up 1 empty switch in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:569$11603'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:569$11603'.
+Found and cleaned up 1 empty switch in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:568$11600'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:568$11600'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:229$11487'.
+Found and cleaned up 113 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:697$11205'.
+Found and cleaned up 1 empty switch in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:688$11204'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:688$11204'.
+Found and cleaned up 68 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:657$10689'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:642$8520'.
+Found and cleaned up 1 empty switch in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:613$8519'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:613$8519'.
+Found and cleaned up 19 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:587$8427'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:572$8391'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:546$8338'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:527$8312'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:517$8295'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:496$8270'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:473$8213'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:442$8165'.
+Found and cleaned up 25 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:408$7935'.
+Found and cleaned up 280 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:371$7426'.
+Found and cleaned up 10 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:341$7095'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:320$7059'.
+Found and cleaned up 8 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:298$6794'.
+Found and cleaned up 40 empty switches in `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:268$6553'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:251$6472'.
+Removing empty process `$paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.$proc$rtl/bank/s0/l1d_req_tracker.v:158$6439'.
+Found and cleaned up 2 empty switches in `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6073'.
+Removing empty process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:85$6073'.
+Found and cleaned up 4 empty switches in `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+Removing empty process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:73$6064'.
+Found and cleaned up 5 empty switches in `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+Removing empty process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:46$6061'.
+Found and cleaned up 8 empty switches in `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+Removing empty process `$paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.$proc$proof/l1d_age_matrix_a1.v:32$6048'.
+Cleaned up 760 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module l1d_bank_s0.
+<suppressed ~30 debug messages>
+Optimizing module $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.
+<suppressed ~27 debug messages>
+Optimizing module $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+<suppressed ~93 debug messages>
+Optimizing module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+<suppressed ~2924 debug messages>
+Optimizing module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+<suppressed ~15 debug messages>
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$e3bfbf5ca88ecd796f613ca4d54bdbb7c4eeab28\l1d_snoop_buf.
+Deleting now unused module $paramod$1160ef114eff96acd0ed3ea14d91d19c0e431c8a\l1d_book_select.
+Deleting now unused module $paramod$2aafe56150e19bce4703863a037fec363396659e\l1d_age_matrix.
+Deleting now unused module $paramod$66db83aa9bde3ae8991dd351488361826e499b29\l1d_req_tracker.
+Deleting now unused module $paramod$29dbb8b9f6d511fd8b23c10e81dba3114ef784ed\l1d_age_matrix.
+<suppressed ~5 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_bank_s0..
+Removed 568 unused cells and 6900 unused wires.
+<suppressed ~630 debug messages>
+Renaming module \l1d_bank_s0 to \gold.
+
+11. Executing RTLIL backend.
+Output filename: proof/gold.il
+
+End of script. Logfile hash: 93669a344b, time: 1.50s, user: 1.47s, system: 0.06s, MEM: 93.28 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 36% 7x read_verilog (0 sec), 35% 1x hierarchy (0 sec), ...

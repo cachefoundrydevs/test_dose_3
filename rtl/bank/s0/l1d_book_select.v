@@ -68,12 +68,17 @@ module l1d_book_select #(
     assign book_arrival_allowed = cpu_go && !book_now_entry;
     assign book_now_arrival  = book_arrival_allowed && arrival_ready_valid && arrival_credit_ok;
     assign book_now_prefetch_no_arrival = cpu_go && !book_now_entry && prefetch_valid;
-    assign book_now_prefetch = book_now_prefetch_no_arrival && !book_now_arrival;
+    wire entry_offer_bookable;
+    wire arrival_offer_bookable;
+    assign entry_offer_bookable   = entry_ready_valid && entry_credit_ok;
+    assign arrival_offer_bookable = arrival_ready_valid && arrival_credit_ok;
+    assign book_now_prefetch = cpu_go && !entry_offer_bookable && !arrival_offer_bookable && prefetch_valid;
     wire book_now_any_no_arrival;
     assign book_now_any_no_arrival = book_now_snoop || book_now_refill || book_now_maint || book_now_entry ||
                                      book_now_prefetch_no_arrival;
     wire book_now_any;
-    assign book_now_any = book_now_arrival || book_now_any_no_arrival;
+    assign book_now_any = book_now_snoop || book_now_refill || book_now_maint ||
+                          (cpu_go && (entry_offer_bookable || arrival_offer_bookable || prefetch_valid));
     always @(posedge clk) begin : book_proc
         if (rst) begin
             book_valid_q    <= 1'b0;
@@ -84,9 +89,9 @@ module l1d_book_select #(
             book_kind_q[BOOK_SNOOP_B]   <= book_now_snoop;
             book_kind_q[BOOK_REFILL_B]  <= book_now_refill;
             book_kind_q[BOOK_MAINT_B]   <= book_now_maint;
-            book_kind_q[BOOK_ENTRY_B]   <= book_now_entry || book_now_arrival;
+            book_kind_q[BOOK_ENTRY_B]   <= cpu_go && (entry_offer_bookable || arrival_offer_bookable);
             book_kind_q[BOOK_PF_B]      <= book_now_prefetch;
-            fresh_allowed_q             <= cpu_go && !book_now_any;
+            fresh_allowed_q             <= cpu_go && !(entry_offer_bookable || arrival_offer_bookable || prefetch_valid);
         end
     end
     always @(posedge clk) begin : skip_proc

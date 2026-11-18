@@ -266,6 +266,7 @@ module l1d_bank_s0 #(
         .arrival_book_is_line_op   (arrival_book_is_line_op),
         .arrival_book_is_amo       (arrival_book_is_amo),
         .book_entry_onehot         (book_entry_onehot),
+        .book_ready_onehot         ({NE{book_now_entry}} & oldest_ready_onehot),
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
         .entry_pc_flat             (entry_pc_flat),

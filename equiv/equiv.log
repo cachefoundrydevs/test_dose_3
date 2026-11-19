@@ -1,0 +1,313 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: flip_gold (\flip_gold), flip_gate (\flip_gate) -> flip
+Presumably equivalent wires: fixed_gold (\fixed_gold), fixed_gate (\fixed_gate) -> fixed
+Presumably equivalent wires: fix_enable_gold (\fix_enable_gold), fix_enable_gate (\fix_enable_gate) -> fix_enable
+Presumably equivalent wires: syndrome_gold (\syndrome_gold), syndrome_gate (\syndrome_gate) -> syndrome
+Presumably equivalent wires: data_gold (\data_gold), data_gate (\data_gate) -> data
+Changing input B of cell $xor$rtl/common/l1d_ecc_fix.v:53$67_gate ($xor): \flip_gate -> \flip
+Changing input B of cell $xor$golden/l1d_ecc_fix.v:41$67_gold ($xor): \flip_gold -> \flip
+Setting undriven nets to undef: \hi_hot_gate [15:9]
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 128 unproven $equiv cells (2 groups) in equiv:
+ Grouping SAT models for \fixed:
+  Trying to prove $equiv for \fixed [0]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [1]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [2]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [3]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [4]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [5]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [6]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [7]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [8]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [9]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [10]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [11]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [12]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [13]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [14]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [15]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [16]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [17]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [18]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [19]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [20]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [21]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [22]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [23]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [24]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [25]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [26]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [27]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [28]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [29]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [30]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [31]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [32]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [33]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [34]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [35]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [36]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [37]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [38]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [39]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [40]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [41]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [42]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [43]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [44]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [45]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [46]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [47]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [48]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [49]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [50]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [51]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [52]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [53]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [54]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [55]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [56]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [57]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [58]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [59]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [60]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [61]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [62]:ezsat
+ success!
+  Trying to prove $equiv for \fixed [63]:ezsat
+ success!
+ Grouping SAT models for \flip:
+  Trying to prove $equiv for \flip [0]:ezsat
+ success!
+  Trying to prove $equiv for \flip [1]:ezsat
+ success!
+  Trying to prove $equiv for \flip [2]:ezsat
+ success!
+  Trying to prove $equiv for \flip [3]:ezsat
+ success!
+  Trying to prove $equiv for \flip [4]:ezsat
+ success!
+  Trying to prove $equiv for \flip [5]:ezsat
+ success!
+  Trying to prove $equiv for \flip [6]:ezsat
+ success!
+  Trying to prove $equiv for \flip [7]:ezsat
+ success!
+  Trying to prove $equiv for \flip [8]:ezsat
+ success!
+  Trying to prove $equiv for \flip [9]:ezsat
+ success!
+  Trying to prove $equiv for \flip [10]:ezsat
+ success!
+  Trying to prove $equiv for \flip [11]:ezsat
+ success!
+  Trying to prove $equiv for \flip [12]:ezsat
+ success!
+  Trying to prove $equiv for \flip [13]:ezsat
+ success!
+  Trying to prove $equiv for \flip [14]:ezsat
+ success!
+  Trying to prove $equiv for \flip [15]:ezsat
+ success!
+  Trying to prove $equiv for \flip [16]:ezsat
+ success!
+  Trying to prove $equiv for \flip [17]:ezsat
+ success!
+  Trying to prove $equiv for \flip [18]:ezsat
+ success!
+  Trying to prove $equiv for \flip [19]:ezsat
+ success!
+  Trying to prove $equiv for \flip [20]:ezsat
+ success!
+  Trying to prove $equiv for \flip [21]:ezsat
+ success!
+  Trying to prove $equiv for \flip [22]:ezsat
+ success!
+  Trying to prove $equiv for \flip [23]:ezsat
+ success!
+  Trying to prove $equiv for \flip [24]:ezsat
+ success!
+  Trying to prove $equiv for \flip [25]:ezsat
+ success!
+  Trying to prove $equiv for \flip [26]:ezsat
+ success!
+  Trying to prove $equiv for \flip [27]:ezsat
+ success!
+  Trying to prove $equiv for \flip [28]:ezsat
+ success!
+  Trying to prove $equiv for \flip [29]:ezsat
+ success!
+  Trying to prove $equiv for \flip [30]:ezsat
+ success!
+  Trying to prove $equiv for \flip [31]:ezsat
+ success!
+  Trying to prove $equiv for \flip [32]:ezsat
+ success!
+  Trying to prove $equiv for \flip [33]:ezsat
+ success!
+  Trying to prove $equiv for \flip [34]:ezsat
+ success!
+  Trying to prove $equiv for \flip [35]:ezsat
+ success!
+  Trying to prove $equiv for \flip [36]:ezsat
+ success!
+  Trying to prove $equiv for \flip [37]:ezsat
+ success!
+  Trying to prove $equiv for \flip [38]:ezsat
+ success!
+  Trying to prove $equiv for \flip [39]:ezsat
+ success!
+  Trying to prove $equiv for \flip [40]:ezsat
+ success!
+  Trying to prove $equiv for \flip [41]:ezsat
+ success!
+  Trying to prove $equiv for \flip [42]:ezsat
+ success!
+  Trying to prove $equiv for \flip [43]:ezsat
+ success!
+  Trying to prove $equiv for \flip [44]:ezsat
+ success!
+  Trying to prove $equiv for \flip [45]:ezsat
+ success!
+  Trying to prove $equiv for \flip [46]:ezsat
+ success!
+  Trying to prove $equiv for \flip [47]:ezsat
+ success!
+  Trying to prove $equiv for \flip [48]:ezsat
+ success!
+  Trying to prove $equiv for \flip [49]:ezsat
+ success!
+  Trying to prove $equiv for \flip [50]:ezsat
+ success!
+  Trying to prove $equiv for \flip [51]:ezsat
+ success!
+  Trying to prove $equiv for \flip [52]:ezsat
+ success!
+  Trying to prove $equiv for \flip [53]:ezsat
+ success!
+  Trying to prove $equiv for \flip [54]:ezsat
+ success!
+  Trying to prove $equiv for \flip [55]:ezsat
+ success!
+  Trying to prove $equiv for \flip [56]:ezsat
+ success!
+  Trying to prove $equiv for \flip [57]:ezsat
+ success!
+  Trying to prove $equiv for \flip [58]:ezsat
+ success!
+  Trying to prove $equiv for \flip [59]:ezsat
+ success!
+  Trying to prove $equiv for \flip [60]:ezsat
+ success!
+  Trying to prove $equiv for \flip [61]:ezsat
+ success!
+  Trying to prove $equiv for \flip [62]:ezsat
+ success!
+  Trying to prove $equiv for \flip [63]:ezsat
+ success!
+Proved 128 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 128 $equiv cells in equiv:
+  Of those cells 128 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 8ec82cd353, time: 0.03s, user: 0.03s, system: 0.00s, MEM: 23.50 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 92% 1x equiv_simple (0 sec), 3% 1x equiv_make (0 sec), ...

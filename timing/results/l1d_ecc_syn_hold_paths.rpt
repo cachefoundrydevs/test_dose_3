@@ -1,0 +1,149 @@
+Startpoint: data[57] (input port clocked by vclk)
+Endpoint: syndrome[6] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    1.945    0.000    0.000    0.000 ^ data[57] (in)
+     1    0.756    5.444   14.353   14.353 ^ _148_/Y (XNOR2x2_ASAP7_75t_R)
+     2    0.814    5.598   15.803   30.156 ^ _149_/Y (XNOR2x2_ASAP7_75t_R)
+                   5.598    0.000   30.156 ^ syndrome[6] (out)
+                                    30.156   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -30.156   data arrival time
+---------------------------------------------------------------------------------
+                                    20.156   slack (MET)
+
+
+Startpoint: data[56] (input port clocked by vclk)
+Endpoint: syndrome[4] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.215    0.000    0.000    0.000 ^ data[56] (in)
+     3    2.459   10.222   17.442   17.442 ^ _157_/Y (XNOR2x2_ASAP7_75t_R)
+     1    0.000    3.306   15.005   32.447 ^ _180_/Y (XNOR2x2_ASAP7_75t_R)
+                   3.306    0.000   32.447 ^ syndrome[4] (out)
+                                    32.447   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -32.447   data arrival time
+---------------------------------------------------------------------------------
+                                    22.447   slack (MET)
+
+
+Startpoint: data[56] (input port clocked by vclk)
+Endpoint: syndrome[5] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.215    0.000    0.000    0.000 ^ data[56] (in)
+     3    2.459   10.222   17.442   17.442 ^ _157_/Y (XNOR2x2_ASAP7_75t_R)
+     1    0.000    3.306   15.005   32.447 ^ _200_/Y (XNOR2x2_ASAP7_75t_R)
+                   3.306    0.000   32.447 ^ syndrome[5] (out)
+                                    32.447   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -32.447   data arrival time
+---------------------------------------------------------------------------------
+                                    22.447   slack (MET)
+
+
+Startpoint: data[57] (input port clocked by vclk)
+Endpoint: uncorrectable (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    1.945    0.000    0.000    0.000 ^ data[57] (in)
+     1    0.756    5.444   14.353   14.353 ^ _148_/Y (XNOR2x2_ASAP7_75t_R)
+     2    0.814    5.598   15.803   30.156 ^ _149_/Y (XNOR2x2_ASAP7_75t_R)
+     1    0.990    7.659    7.229   37.385 v _283_/Y (AOI211x1_ASAP7_75t_R)
+     1    0.000    5.031    5.370   42.755 ^ _294_/Y (AOI21x1_ASAP7_75t_R)
+                   5.031    0.000   42.755 ^ uncorrectable (out)
+                                    42.755   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -42.755   data arrival time
+---------------------------------------------------------------------------------
+                                    32.755   slack (MET)
+
+
+Startpoint: data[60] (input port clocked by vclk)
+Endpoint: correctable (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    1.729    0.000    0.000    0.000 ^ data[60] (in)
+     2    2.513   10.375   17.541   17.541 ^ _146_/Y (XNOR2x2_ASAP7_75t_R)
+     1    1.541    8.903    8.825   26.366 v _291_/Y (XOR2x1_ASAP7_75t_R)
+     1    1.541   11.434    8.950   35.316 v _292_/Y (XNOR2x1_ASAP7_75t_R)
+     3    1.177    9.347    8.530   43.846 v _293_/Y (XNOR2x1_ASAP7_75t_R)
+                   9.347    0.000   43.846 v correctable (out)
+                                    43.846   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -43.846   data arrival time
+---------------------------------------------------------------------------------
+                                    33.846   slack (MET)
+
+

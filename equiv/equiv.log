@@ -1,0 +1,271 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: u_enc.ham_gold (\recomputed_gold [6:0]), u_enc.ham_gate (\recomputed_gate [6:0]) -> u_enc.ham
+Presumably equivalent wires: u_enc.check_gold (\recomputed_gold), u_enc.check_gate (\recomputed_gate) -> u_enc.check
+  Skipping signal bit u_enc.check_gate [7]: undriven on gate side.
+Presumably equivalent wires: u_enc.data_gold (\data_gold), u_enc.data_gate (\data_gate) -> u_enc.data
+Presumably equivalent wires: syndrome_nonzero_gold (\syndrome_nonzero_gold), syndrome_nonzero_gate (\syndrome_nonzero_gate) -> syndrome_nonzero
+Presumably equivalent wires: recomputed_gold (\recomputed_gold), recomputed_gate (\recomputed_gate) -> recomputed
+  Skipping signal bit recomputed_gate [7]: undriven on gate side.
+Presumably equivalent wires: uncorrectable_gold (\uncorrectable_gold), uncorrectable_gate (\uncorrectable_gate) -> uncorrectable
+Presumably equivalent wires: correctable_gold (\parity_odd_gold), correctable_gate (\parity_odd_gate) -> correctable
+Presumably equivalent wires: parity_odd_gold (\parity_odd_gold), parity_odd_gate (\parity_odd_gate) -> parity_odd
+Presumably equivalent wires: syndrome_gold (\syndrome_gold), syndrome_gate (\syndrome_gate) -> syndrome
+Presumably equivalent wires: check_gold (\check_gold), check_gate (\check_gate) -> check
+Presumably equivalent wires: data_gold (\data_gold), data_gate (\data_gate) -> data
+Changing input A of cell $and$rtl/common/l1d_ecc_syn.v:25$480_gate ($and): \syndrome_nonzero_gate -> \syndrome_nonzero
+Changing input A of cell $not$rtl/common/l1d_ecc_syn.v:25$479_gate ($not): \parity_odd_gate -> \parity_odd
+Changing input A of cell $reduce_or$rtl/common/l1d_ecc_syn.v:22$477_gate ($reduce_or): \syndrome_gate -> \syndrome
+Changing input A of cell $xor$rtl/common/l1d_ecc_syn.v:21$476_gate ($xor): \recomputed_gate [6:0] -> \recomputed [6:0]
+Changing input A of cell $flatten\u_enc.$reduce_xor$rtl/common/l1d_ecc_enc.v:47$939_gold ($reduce_xor): \recomputed_gold [6:0] -> \recomputed [6:0]
+Changing input A of cell $and$golden/l1d_ecc_syn.v:25$482_gold ($and): \syndrome_nonzero_gold -> \syndrome_nonzero
+Changing input A of cell $not$golden/l1d_ecc_syn.v:25$481_gold ($not): \parity_odd_gold -> \parity_odd
+Changing input A of cell $reduce_xor$golden/l1d_ecc_syn.v:23$479_gold ($reduce_xor): \syndrome_gold -> \syndrome
+Changing input A of cell $reduce_or$golden/l1d_ecc_syn.v:22$477_gold ($reduce_or): \syndrome_gold -> \syndrome
+Changing input A of cell $xor$golden/l1d_ecc_syn.v:21$476_gold ($xor): \recomputed_gold [6:0] -> \recomputed [6:0]
+Presumably equivalent cells: u_enc_gold u_enc_gate ($scopeinfo) -> u_enc
+Setting undriven nets to undef: \recomputed [7]
+Setting undriven nets to undef: \u_enc.check [7]
+Setting undriven nets to undef: \recomputed_gate [7]
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 96 unproven $equiv cells (9 groups) in equiv:
+ Grouping SAT models for \syndrome:
+  Trying to prove $equiv for \syndrome [0]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [1]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [2]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [3]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [4]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [5]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome [6]:ezsat
+ success!
+  Trying to prove $equiv for \parity_odd:ezsat
+ success!
+  Trying to prove $equiv for \correctable:ezsat
+ success!
+  Trying to prove $equiv for \uncorrectable:ezsat
+ success!
+ Grouping SAT models for \recomputed [6:0]:
+  Trying to prove $equiv for \recomputed [0]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [1]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [2]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [3]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [4]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [5]:ezsat
+ success!
+  Trying to prove $equiv for \recomputed [6]:ezsat
+ success!
+  Trying to prove $equiv for \syndrome_nonzero:ezsat
+ success!
+ Grouping SAT models for \u_enc.data:
+  Trying to prove $equiv for \u_enc.data [0]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [6]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [7]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [8]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [9]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [10]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [11]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [12]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [13]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [14]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [15]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [16]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [17]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [18]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [19]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [20]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [21]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [22]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [23]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [24]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [25]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [26]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [27]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [28]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [29]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [30]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [31]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [32]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [33]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [34]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [35]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [36]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [37]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [38]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [39]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [40]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [41]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [42]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [43]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [44]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [45]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [46]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [47]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [48]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [49]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [50]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [51]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [52]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [53]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [54]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [55]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [56]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [57]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [58]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [59]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [60]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [61]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [62]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.data [63]:ezsat
+ success!
+ Grouping SAT models for \u_enc.check [6:0]:
+  Trying to prove $equiv for \u_enc.check [0]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.check [6]:ezsat
+ success!
+ Grouping SAT models for \u_enc.ham:
+  Trying to prove $equiv for \u_enc.ham [0]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_enc.ham [6]:ezsat
+ success!
+Proved 96 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 96 $equiv cells in equiv:
+  Of those cells 96 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: bd4c6ed413, time: 0.02s, user: 0.02s, system: 0.01s, MEM: 23.03 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 94% 1x equiv_simple (0 sec), 3% 1x equiv_make (0 sec), ...

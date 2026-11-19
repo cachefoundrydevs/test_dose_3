@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/common/l1d_ecc_enc.v rtl/common/l1d_ecc_syn.v
+hierarchy -top l1d_ecc_syn
+proc
+flatten
+opt_clean
+rename l1d_ecc_syn gate
+write_rtlil proof/gate.il

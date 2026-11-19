@@ -345,11 +345,25 @@ module l1d_bank_s1 #(
         end
     endgenerate
     assign v_locked = |(victim_onehot & lock_way);
-    assign vict_way = v_locked ? (victim_way ^ {{(WAY_W-1){1'b0}}, 1'b1}) : victim_way;
-    assign v_st     = m_states[2*vict_way +: 2];
+    reg  [WAY_W-1:0] vict_way_pick;
+    reg  [1:0]       vict_st_pick;
+    reg  [TAG_W-1:0] vict_tag_pick;
+    integer          vp;
+    always @* begin
+        vict_way_pick = {WAY_W{1'b0}};
+        vict_st_pick  = 2'b00;
+        vict_tag_pick = {TAG_W{1'b0}};
+        for (vp = 0; vp < WAYS; vp = vp + 1) begin
+            vict_way_pick = vict_way_pick | ({WAY_W{vict_onehot[vp]}} & vp[WAY_W-1:0]);
+            vict_st_pick  = vict_st_pick  | ({2{vict_onehot[vp]}}     & m_states[2*vp +: 2]);
+            vict_tag_pick = vict_tag_pick | ({TAG_W{vict_onehot[vp]}} & tag_q[vp*TAG_W +: TAG_W]);
+        end
+    end
+    assign vict_way = vict_way_pick;
+    assign v_st     = vict_st_pick;
     assign v_valid  = !any_invalid || |(inv_first & lock_way & partner_valid);
     assign v_dirty  = (v_st == ST_M);
-    assign v_line   = {tag_q[vict_way*TAG_W +: TAG_W], s1_set, BANK_C};
+    assign v_line   = {vict_tag_pick, s1_set, BANK_C};
     assign r_slot   = q1_swap ? q1_slot : vc_al_slot;
     assign r_held   = s1_refill && v_valid && !q1_swap && !vc_al_ok;
     wire [1:0]             mt_st;

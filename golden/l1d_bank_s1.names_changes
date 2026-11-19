@@ -3,6 +3,10 @@
 + DECL wire[WAYS-1:0]st_we_way
 + DECL wire[2*WAYS-1:0]st_val_way
 + DECL wire[WAYS-1:0]pf_we_way
++ DECL wire[WAYS-1:0]tag_err_way
++ DECL genvar tw
++ FOR for(tw=0;tw<WAYS;tw=tw+1)
++ LABEL g_tag_err
 + DECL wire[WAYS-2:0]plru_next_lookup
 + DECL wire hit_lookup
 + DECL wire[WAYS-1:0]way_tag_match
@@ -59,6 +63,7 @@
 + DECL wire refill_ok
 + DECL wire[WAYS-1:0]inst_way
 + DECL wire[WAYS-1:0]mway_hot
++ DECL wire[WAYS-1:0]walk_way
 + DECL genvar pw
 + FOR for(pw=0;pw<WAYS;pw=pw+1)
 + LABEL g_write_way

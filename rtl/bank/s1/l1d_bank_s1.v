@@ -381,6 +381,8 @@ module l1d_bank_s1 #(
     always @* begin
         if (s1_snp)
             hit_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
+        else if (s1_maint)
+            hit_ev = (s1_mop == MAINT_FLUSH) ? EV_FLUSH : EV_CLEAN;
         else
             hit_ev = s1_store ? EV_WRITE_HIT : (s1_amo ? EV_UNIQ_HIT : EV_LOAD_HIT);
     end
@@ -459,6 +461,7 @@ module l1d_bank_s1 #(
     wire       refill_ok;
     wire [WAYS-1:0] inst_way;
     wire [WAYS-1:0] mway_hot;
+    wire [WAYS-1:0] walk_way;
     assign refill_ok = q1_swap || vc_al_ok;
     genvar pw;
     generate
@@ -466,14 +469,14 @@ module l1d_bank_s1 #(
             wire [WAY_W-1:0] write_cand;
             assign write_cand    = pw;
             assign mway_hot[pw]  = (s1_mway == write_cand);
+            assign walk_way[pw]  = s1_maint && mway_hot[pw] && !((m_states[2*pw +: 2] == ST_M) && !vc_al_ok);
             assign inst_way[pw]  = s1_refill && vict_onehot[pw] && (!way_valid[pw] || refill_ok);
             assign st_we_way[pw] = (((s1_lsu_go && !tag_err_any) || s1_snp) && hit_first[pw] && way_we[pw]) ||
-                                   inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
-            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :
-                                           (s1_kind == K_MAINT)  ? mt_nxt : way_nxt[2*pw +: 2];
+                                   inst_way[pw] || (walk_way[pw] && way_we[pw]);
+            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state : way_nxt[2*pw +: 2];
             assign pf_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw] && m_pf_bits[pw]) ||
                                    inst_way[pw] || (s1_snp && s1_sinv && hit_first[pw]) ||
-                                   (case_walk && (s1_mop == MAINT_FLUSH) && mway_hot[pw]);
+                                   (walk_way[pw] && (s1_mop == MAINT_FLUSH));
         end
     endgenerate
     reg  [LINE_BYTES-1:0] st_be;

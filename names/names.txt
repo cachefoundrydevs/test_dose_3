@@ -1,0 +1,72 @@
+approved + DECL wire[WAYS-1:0]m_valid
+approved + DECL wire[WAYS-1:0]st_we_way
+approved + DECL wire[2*WAYS-1:0]st_val_way
+approved + DECL wire[WAYS-1:0]pf_we_way
+approved + DECL wire[WAYS-2:0]plru_next_lookup
+approved + DECL wire hit_lookup
+approved + DECL wire[WAYS-1:0]way_tag_match
+approved + DECL wire[WAYS-1:0]hit_onehot
+approved + DECL wire[WAYS-1:0]vict_onehot
+approved + DECL wire[WAYS-1:0]acc_onehot
+approved + DECL wire[WAYS*(WAYS-1)-1:0]plru_cand
+approved + DECL wire[WAYS-1:0]hit_first
+approved + DECL wire[WAYS*WAY_W-1:0]plru_vict_way
+approved + DECL wire[WAYS-1:0]inv_first
+approved + DECL wire any_invalid
+approved + DECL wire[WAYS-1:0]plru_vict_hot
+approved + DECL wire[WAYS-1:0]victim_onehot
+approved + DECL wire[WAYS-1:0]lock_way
+approved + DECL wire[WAYS-1:0]partner_valid
+approved + DECL genvar hw
+approved + FOR for(hw=0;hw<WAYS;hw=hw+1)
+approved + LABEL g_hit_onehot
+approved + DECL wire[WAY_W-1:0]cand_way
+approved + LABEL g_first
+approved + LABEL g_rest
+approved + DECL reg[WAYS-2:0]plru_pick
+approved + DECL reg[1:0]hit_st_pick
+approved + DECL integer pk
+approved + ALWAYS always @*
+approved + FOR for(pk=0;pk<WAYS;pk=pk+1)
+approved + DECL wire s1_lsu_th_early
+approved + DECL wire s1_lsu_go
+approved + DECL wire[WAYS-1:0]lock_match
+approved + DECL genvar lw
+approved + FOR for(lw=0;lw<WAYS;lw=lw+1)
+approved + LABEL g_lock_match
+approved + DECL genvar vh
+approved + FOR for(vh=0;vh<WAYS;vh=vh+1)
+approved + LABEL g_vict_onehot
+approved + DECL wire[WAY_W-1:0]vict_cand
+approved + DECL reg[WAY_W-1:0]vict_way_pick
+approved + DECL reg[1:0]vict_st_pick
+approved + DECL reg[TAG_W-1:0]vict_tag_pick
+approved + DECL integer vp
+approved + ALWAYS always @*
+approved + FOR for(vp=0;vp<WAYS;vp=vp+1)
+approved + DECL reg[3:0]hit_ev
+approved + ALWAYS always @*
+approved + DECL wire[2*WAYS-1:0]way_nxt
+approved + DECL wire[WAYS-1:0]way_we,way_upg,way_hand
+approved + DECL genvar mw
+approved + FOR for(mw=0;mw<WAYS;mw=mw+1)
+approved + LABEL g_mesi_way
+approved + DECL wire[1:0]hit_nxt
+approved + DECL wire hit_we,hit_upg,hit_hand
+approved + DECL reg[1:0]hit_nxt_pick
+approved + DECL reg hit_we_pick,hit_upg_pick,hit_hand_pick
+approved + DECL integer hp
+approved + ALWAYS always @*
+approved + FOR for(hp=0;hp<WAYS;hp=hp+1)
+approved + DECL wire[1:0]mt_nxt
+approved + DECL wire mt_we,mt_upg_unused,mt_hand_unused
+approved + DECL wire case_cpu,case_inst,case_walk,case_snp
+approved + DECL wire refill_ok
+approved + DECL wire[WAYS-1:0]inst_way
+approved + DECL wire[WAYS-1:0]mway_hot
+approved + DECL genvar pw
+approved + FOR for(pw=0;pw<WAYS;pw=pw+1)
+approved + LABEL g_write_way
+approved + DECL wire[WAY_W-1:0]write_cand
+names: 168 items golden, 168 items current, 0 differences
+NAMES: PASS

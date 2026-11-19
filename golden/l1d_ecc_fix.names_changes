@@ -1,0 +1,9 @@
+# approved name changes (user request 2026-11-19: 'optimise the ecc rtl, 5 iterations')
++ DECL localparam LO_W = HAM_W / 2
++ DECL wire[(1 << LO_W)-1:0]lo_hot
++ DECL wire[(1 << (HAM_W - LO_W))-1:0]hi_hot
++ DECL genvar lv,hv
++ FOR for(lv=0;lv<(1<<LO_W);lv=lv+1)
++ LABEL g_lo
++ FOR for(hv=0
++ LABEL g_hi

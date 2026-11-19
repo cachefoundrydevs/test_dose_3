@@ -1,0 +1,111 @@
+name: timing files
+# Times each listed module ALONE (ASAP7, post-synthesis, ideal clock, no wires) at one clock period, one job per module, and publishes
+# one table with the Fmax of every module. Started by a push that changes request/timing_files_request.txt:
+#   period=<ps>        clock period of the run, for example 200
+#   modules=<names>    space separated module names (each must be in filelists/rtl.f)
+#   trial=<name>       results go to the branch timing-files-<trial>
+on:
+  push:
+    paths:
+      - 'request/timing_files_request.txt'
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      period: ${{ steps.r.outputs.period }}
+      trial: ${{ steps.r.outputs.trial }}
+      matrix: ${{ steps.r.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: r
+        shell: bash
+        run: |
+          set -euo pipefail
+          get() { sed -n "s/^$1=\(.*\)/\1/p" request/timing_files_request.txt | tr -d '\r' | head -1; }
+          p=$(get period); m=$(get modules); t=$(get trial)
+          [[ "$p" =~ ^[0-9]+$ && -n "$m" && "$t" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "bad request"; cat request/timing_files_request.txt; exit 1; }
+          for x in $m; do
+            f=$(grep -v '^[-#]' filelists/rtl.f | grep "/$x.v$" | head -1)
+            [[ -n "$f" ]] || { echo "module $x is not in filelists/rtl.f"; exit 1; }
+          done
+          echo "period=$p" >> "$GITHUB_OUTPUT"; echo "trial=$t" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(printf '%s\n' $m | jq -R . | jq -sc '{module: .}')" >> "$GITHUB_OUTPUT"
+  timing:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    container:
+      image: openroad/orfs:latest
+      options: --user root
+    env:
+      PERIOD: ${{ needs.plan.outputs.period }}
+      MODULES: ${{ matrix.module }}
+      OUT: timing_results/${{ matrix.module }}
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          bash flow/asap7/run_timing.sh 2>&1 | tee "$OUT/run.log"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing-${{ matrix.module }}
+          path: |
+            timing_results/${{ matrix.module }}/results
+            timing_results/${{ matrix.module }}/run.log
+          if-no-files-found: warn
+  publish:
+    needs: [plan, timing]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+        continue-on-error: true
+      - shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/res; cp -r artifacts /tmp/res/artifacts 2>/dev/null || true
+          cp request/timing_files_request.txt /tmp/res/request.txt
+          git rev-parse HEAD > /tmp/res/commit.txt
+          echo "run=${{ github.run_id }}" > /tmp/res/status.txt
+          echo "timing=${{ needs.timing.result }}" >> /tmp/res/status.txt
+          python3 - <<'PY'
+          import csv, glob, os
+          rows = []
+          for f in sorted(glob.glob('/tmp/res/artifacts/*/results/modules.csv')):
+              with open(f, newline='') as fh:
+                  rows += list(csv.DictReader(fh))
+          def num(x):
+              try: return float(x)
+              except Exception: return None
+          out = []
+          out.append('| module | clocked | target ps | flop-to-flop slack ps | flop-to-flop Fmax GHz | all-paths slack ps | all-paths Fmax GHz | area um2 | status |')
+          out.append('|---|---|---:|---:|---:|---:|---:|---:|---|')
+          for r in rows:
+              p = num(r.get('period_ps')); sa = num(r.get('slack_all')); sr = num(r.get('slack_r2r'))
+              fa = '%.2f' % (1000.0 / (p - sa)) if p is not None and sa is not None and p - sa > 0 else '-'
+              fr = '%.2f' % (1000.0 / (p - sr)) if p is not None and sr is not None and p - sr > 0 else '-'
+              out.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
+                  r.get('module'), 'yes' if r.get('has_clk') == '1' else 'no (virtual clock)', r.get('period_ps'),
+                  r.get('slack_r2r') or '-', fr, r.get('slack_all') or '-', fa, r.get('area_um2') or '-', r.get('status')))
+          open('/tmp/res/FMAX.md', 'w').write('\n'.join(out) + '\n')
+          if rows:
+              with open('/tmp/res/modules_all.csv', 'w', newline='') as fh:
+                  w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+                  w.writeheader(); w.writerows(rows)
+          print('\n'.join(out))
+          PY
+          B=timing-files-${{ needs.plan.outputs.trial }}
+          git config user.name ci; git config user.email ci@example.invalid
+          git checkout --orphan "$B"; git rm -rq --cached .; git clean -fdq
+          cp -r /tmp/res/* .; git add -A; git commit -qm "timing files ${{ needs.plan.outputs.trial }}"; git push -f origin "$B"

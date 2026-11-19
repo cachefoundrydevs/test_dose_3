@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/common/l1d_ecc_enc.v golden/l1d_ecc_syn.v
+hierarchy -top l1d_ecc_syn
+proc
+flatten
+opt_clean
+rename l1d_ecc_syn gold
+write_rtlil proof/gold.il

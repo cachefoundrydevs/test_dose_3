@@ -252,6 +252,8 @@ module l1d_bank_s1 #(
     assign s1_live   = s1_lsu && !s1_kill && !s1_pf && !tag_err_any;
     assign s1_scfail = s1_live && s1_cache && s1_is_sc && !sc_ok;
     assign s1_lsu_th = s1_live && s1_cache && hit && !s1_scfail;
+    wire s1_lsu_th_early;
+    assign s1_lsu_th_early = s1_lsu && !s1_kill && !s1_pf && s1_cache && hit && !(s1_is_sc && !sc_ok);
     wire [LINE_ADDR_W-1:0] v0_line;
     wire                   v_locked;
     wire [1:0]             v_st;
@@ -259,7 +261,14 @@ module l1d_bank_s1 #(
     wire [LINE_ADDR_W-1:0] v_line;
     wire [VC_ID_W-1:0]     r_slot;
     assign v0_line  = {tag_q[victim_way*TAG_W +: TAG_W], s1_set, BANK_C};
-    assign v_locked = lock_valid && (v0_line == lock_line);
+    wire [WAYS-1:0] lock_match;
+    genvar lw;
+    generate
+        for (lw = 0; lw < WAYS; lw = lw + 1) begin : g_lock_match
+            assign lock_match[lw] = ({tag_q[lw*TAG_W +: TAG_W], s1_set, BANK_C} == lock_line);
+        end
+    endgenerate
+    assign v_locked = lock_valid && lock_match[victim_way];
     assign vict_way = v_locked ? (victim_way ^ {{(WAY_W-1){1'b0}}, 1'b1}) : victim_way;
     assign v_st     = m_states[2*vict_way +: 2];
     assign v_valid  = (v_st != ST_I);
@@ -292,17 +301,59 @@ module l1d_bank_s1 #(
         end else if (s1_snp && hit)
             m_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
     end
+    reg  [3:0] hit_ev;
+    always @* begin
+        if (s1_snp)
+            hit_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
+        else
+            hit_ev = s1_store ? EV_WRITE_HIT : (s1_amo ? EV_UNIQ_HIT : EV_LOAD_HIT);
+    end
+    wire [2*WAYS-1:0] way_nxt;
+    wire [WAYS-1:0]   way_we, way_upg, way_hand;
+    genvar mw;
+    generate
+        for (mw = 0; mw < WAYS; mw = mw + 1) begin : g_mesi_way
+            l1d_mesi_next u_mesi_way (
+                .event_code            (hit_ev),
+                .current_state         (m_states[2*mw +: 2]),
+                .install_state         (q1_state),
+                .next_state            (way_nxt[2*mw +: 2]),
+                .state_write_enable    (way_we[mw]),
+                .upgrade_needed        (way_upg[mw]),
+                .snoop_hands_over_data (way_hand[mw])
+            );
+        end
+    endgenerate
+    wire [1:0] hit_nxt;
+    wire       hit_we, hit_upg, hit_hand;
+    assign hit_nxt  = way_nxt[2*hit_way +: 2];
+    assign hit_we   = way_we[hit_way];
+    assign hit_upg  = way_upg[hit_way];
+    assign hit_hand = way_hand[hit_way];
+    wire [1:0] mt_nxt;
+    wire       mt_we, mt_upg_unused, mt_hand_unused;
     l1d_mesi_next u_mesi (
-        .event_code            (m_ev),
-        .current_state         (m_cur),
+        .event_code            ((s1_mop == MAINT_FLUSH) ? EV_FLUSH : EV_CLEAN),
+        .current_state         (mt_st),
         .install_state         (q1_state),
-        .next_state            (m_nxt),
-        .state_write_enable    (m_we),
-        .upgrade_needed        (m_upg),
-        .snoop_hands_over_data (m_hand)
+        .next_state            (mt_nxt),
+        .state_write_enable    (mt_we),
+        .upgrade_needed        (mt_upg_unused),
+        .snoop_hands_over_data (mt_hand_unused)
     );
+    wire case_cpu, case_inst, case_walk, case_snp;
+    assign case_cpu  = s1_lsu_th;
+    assign case_inst = s1_refill && !r_held;
+    assign case_walk = s1_maint && !m_held;
+    assign case_snp  = s1_snp && hit;
+    assign m_we   = (s1_lsu_th_early && hit_we && !tag_err_any) || case_inst || (case_walk && mt_we) || (case_snp && hit_we);
+    assign m_upg  = s1_lsu_th_early && hit_upg && !tag_err_any;
+    assign m_hand = case_snp && hit_hand;
+    assign m_nxt  = (case_cpu || case_snp) ? hit_nxt :
+                    case_inst              ? q1_state :
+                    case_walk              ? mt_nxt : hit_st;
     wire s1_hit;
-    assign s1_hit = s1_lsu_th && !m_upg;
+    assign s1_hit = s1_lsu_th_early && !hit_upg && !tag_err_any;
     assign s1_way = (s1_kind == K_REFILL) ? vict_way :
                     (s1_kind == K_MAINT)  ? s1_mway : hit_way;
     assign st_we  = m_we;

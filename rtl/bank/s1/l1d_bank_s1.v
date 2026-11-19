@@ -151,6 +151,8 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   st_we_way;
     wire [2*WAYS-1:0] st_val_way;
     wire [WAYS-1:0]   pf_we_way;
+    wire [WAYS-1:0]   m_victim_hot;
+    wire              m_any_invalid;
     l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
                      .READ_ONEHOT(1), .WRITE_ONEHOT(1)) u_meta (
         .clk                    (clk),
@@ -160,6 +162,8 @@ module l1d_bank_s1 #(
         .read_way_valid         (m_valid),
         .read_plru_bits         (m_plru),
         .read_pf_bits           (m_pf_bits),
+        .read_victim_hot        (m_victim_hot),
+        .read_any_invalid       (m_any_invalid),
         .state_write_enable     (st_we),
         .state_write_set        (s1_set),
         .state_write_way        (st_way),
@@ -264,7 +268,7 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   victim_onehot;
     wire [WAYS-1:0]   lock_way;
     wire [WAYS-1:0]   partner_valid;
-    assign any_invalid = !(&way_valid);
+    assign any_invalid = m_any_invalid;
     genvar hw;
     generate
         for (hw = 0; hw < WAYS; hw = hw + 1) begin : g_hit_onehot
@@ -338,18 +342,32 @@ module l1d_bank_s1 #(
             wire [WAY_W-1:0] vict_cand;
             assign vict_cand          = vh;
             assign plru_vict_hot[vh]  = (plru_vict_way[WAY_W-1:0] == vict_cand);
-            assign victim_onehot[vh]  = any_invalid ? inv_first[vh] : plru_vict_hot[vh];
+            assign victim_onehot[vh]  = m_victim_hot[vh];
             assign lock_way[vh]       = lock_valid && lock_match[vh];
             assign partner_valid[vh]  = way_valid[vh ^ 1];
             assign vict_onehot[vh]    = (victim_onehot[vh] && !lock_way[vh]) || (victim_onehot[vh ^ 1] && lock_way[vh ^ 1]);
         end
     endgenerate
     assign v_locked = |(victim_onehot & lock_way);
-    assign vict_way = v_locked ? (victim_way ^ {{(WAY_W-1){1'b0}}, 1'b1}) : victim_way;
-    assign v_st     = m_states[2*vict_way +: 2];
-    assign v_valid  = !any_invalid || |(inv_first & lock_way & partner_valid);
+    reg  [WAY_W-1:0] vict_way_pick;
+    reg  [1:0]       vict_st_pick;
+    reg  [TAG_W-1:0] vict_tag_pick;
+    integer          vp;
+    always @* begin
+        vict_way_pick = {WAY_W{1'b0}};
+        vict_st_pick  = 2'b00;
+        vict_tag_pick = {TAG_W{1'b0}};
+        for (vp = 0; vp < WAYS; vp = vp + 1) begin
+            vict_way_pick = vict_way_pick | ({WAY_W{vict_onehot[vp]}} & vp[WAY_W-1:0]);
+            vict_st_pick  = vict_st_pick  | ({2{vict_onehot[vp]}}     & m_states[2*vp +: 2]);
+            vict_tag_pick = vict_tag_pick | ({TAG_W{vict_onehot[vp]}} & tag_q[vp*TAG_W +: TAG_W]);
+        end
+    end
+    assign vict_way = vict_way_pick;
+    assign v_st     = vict_st_pick;
+    assign v_valid  = !any_invalid || |(victim_onehot & lock_way & partner_valid);
     assign v_dirty  = (v_st == ST_M);
-    assign v_line   = {tag_q[vict_way*TAG_W +: TAG_W], s1_set, BANK_C};
+    assign v_line   = {vict_tag_pick, s1_set, BANK_C};
     assign r_slot   = q1_swap ? q1_slot : vc_al_slot;
     assign r_held   = s1_refill && v_valid && !q1_swap && !vc_al_ok;
     wire [1:0]             mt_st;

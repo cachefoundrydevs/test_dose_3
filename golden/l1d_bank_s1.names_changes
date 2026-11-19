@@ -3,6 +3,8 @@
 + DECL wire[WAYS-1:0]st_we_way
 + DECL wire[2*WAYS-1:0]st_val_way
 + DECL wire[WAYS-1:0]pf_we_way
++ DECL wire[WAYS-1:0]m_victim_hot
++ DECL wire m_any_invalid
 + DECL wire[WAYS-2:0]plru_next_lookup
 + DECL wire hit_lookup
 + DECL wire[WAYS-1:0]way_tag_match
@@ -39,6 +41,12 @@
 + FOR for(vh=0;vh<WAYS;vh=vh+1)
 + LABEL g_vict_onehot
 + DECL wire[WAY_W-1:0]vict_cand
++ DECL reg[WAY_W-1:0]vict_way_pick
++ DECL reg[1:0]vict_st_pick
++ DECL reg[TAG_W-1:0]vict_tag_pick
++ DECL integer vp
++ ALWAYS always @*
++ FOR for(vp=0;vp<WAYS;vp=vp+1)
 + DECL reg[3:0]hit_ev
 + ALWAYS always @*
 + DECL wire[2*WAYS-1:0]way_nxt

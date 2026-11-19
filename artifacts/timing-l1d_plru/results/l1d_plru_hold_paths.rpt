@@ -1,0 +1,141 @@
+Startpoint: accessed_way[1] (input port clocked by vclk)
+Endpoint: plru_bits_next[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     4    3.124    0.000    0.000    0.000 ^ accessed_way[1] (in)
+     2    0.457    1.185    2.439    2.439 v _11_/Y (INVx2_ASAP7_75t_R)
+                   1.185    0.000    2.439 v plru_bits_next[0] (out)
+                                     2.439   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                    -2.439   data arrival time
+---------------------------------------------------------------------------------
+                                    -7.561   slack (VIOLATED)
+
+
+Startpoint: plru_bits[0] (input port clocked by vclk)
+Endpoint: victim_way[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     3    1.972    0.000    0.000    0.000 ^ plru_bits[0] (in)
+     1    0.000    3.525    8.972    8.972 ^ _15_/Y (BUFx2_ASAP7_75t_R)
+                   3.525    0.000    8.972 ^ victim_way[1] (out)
+                                     8.972   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                    -8.972   data arrival time
+---------------------------------------------------------------------------------
+                                    -1.028   slack (VIOLATED)
+
+
+Startpoint: plru_bits[2] (input port clocked by vclk)
+Endpoint: plru_bits_next[2] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    1.174    0.000    0.000    0.000 ^ plru_bits[2] (in)
+     1    0.000    2.912   10.991   10.991 ^ _13_/Y (AO21x2_ASAP7_75t_R)
+                   2.912    0.000   10.991 ^ plru_bits_next[2] (out)
+                                    10.991   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -10.991   data arrival time
+---------------------------------------------------------------------------------
+                                     0.991   slack (MET)
+
+
+Startpoint: accessed_way[1] (input port clocked by vclk)
+Endpoint: plru_bits_next[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     4    3.124    0.000    0.000    0.000 ^ accessed_way[1] (in)
+     1    0.000    3.845   11.753   11.753 ^ _08_/Y (OA21x2_ASAP7_75t_R)
+                   3.845    0.000   11.753 ^ plru_bits_next[1] (out)
+                                    11.753   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -11.753   data arrival time
+---------------------------------------------------------------------------------
+                                     1.753   slack (MET)
+
+
+Startpoint: plru_bits[0] (input port clocked by vclk)
+Endpoint: victim_way[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     3    1.972    0.000    0.000    0.000 ^ plru_bits[0] (in)
+     1    0.441    4.996    4.705    4.705 v _10_/Y (OAI21x1_ASAP7_75t_R)
+     1    0.000    3.567   11.183   15.888 v _14_/Y (BUFx2_ASAP7_75t_R)
+                   3.567    0.000   15.888 v victim_way[0] (out)
+                                    15.888   data arrival time
+
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                            0.000   10.000   output external delay
+                                    10.000   data required time
+---------------------------------------------------------------------------------
+                                    10.000   data required time
+                                   -15.888   data arrival time
+---------------------------------------------------------------------------------
+                                     5.888   slack (MET)
+
+

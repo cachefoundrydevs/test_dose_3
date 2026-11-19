@@ -1,0 +1,83 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: ham_gold (\ham_gold), ham_gate (\check_gate [6:0]) -> ham
+Presumably equivalent wires: check_gold ({ \check_gold [7] \ham_gold }), check_gate (\check_gate) -> check
+Presumably equivalent wires: data_gold (\data_gold), data_gate (\data_gate) -> data
+Changing input A of cell $reduce_xor$golden/l1d_ecc_enc.v:47$460_gold ($reduce_xor): \ham_gold -> \check [6:0]
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 15 unproven $equiv cells (2 groups) in equiv:
+ Grouping SAT models for \check:
+  Trying to prove $equiv for \check [0]:ezsat
+ success!
+  Trying to prove $equiv for \check [1]:ezsat
+ success!
+  Trying to prove $equiv for \check [2]:ezsat
+ success!
+  Trying to prove $equiv for \check [3]:ezsat
+ success!
+  Trying to prove $equiv for \check [4]:ezsat
+ success!
+  Trying to prove $equiv for \check [5]:ezsat
+ success!
+  Trying to prove $equiv for \check [6]:ezsat
+ success!
+  Trying to prove $equiv for \check [7]:ezsat
+ success!
+ Grouping SAT models for \ham:
+  Trying to prove $equiv for \ham [0]:ezsat
+ success!
+  Trying to prove $equiv for \ham [1]:ezsat
+ success!
+  Trying to prove $equiv for \ham [2]:ezsat
+ success!
+  Trying to prove $equiv for \ham [3]:ezsat
+ success!
+  Trying to prove $equiv for \ham [4]:ezsat
+ success!
+  Trying to prove $equiv for \ham [5]:ezsat
+ success!
+  Trying to prove $equiv for \ham [6]:ezsat
+ success!
+Proved 15 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 15 $equiv cells in equiv:
+  Of those cells 15 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 2ea184f261, time: 961.34s, user: 961.21s, system: 0.04s, MEM: 39.56 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 99% 1x equiv_simple (961 sec), 0% 1x equiv_make (0 sec), ...

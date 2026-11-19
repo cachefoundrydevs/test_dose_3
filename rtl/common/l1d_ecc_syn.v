@@ -20,7 +20,7 @@ module l1d_ecc_syn #(
     wire syndrome_nonzero;
     assign syndrome         = recomputed[HAM_W-1:0] ^ check[HAM_W-1:0];
     assign syndrome_nonzero = |syndrome;
-    assign parity_odd    = recomputed[HAM_W] ^ check[HAM_W] ^ (^syndrome);
+    assign parity_odd    = (^data) ^ (^check);
     assign correctable   = parity_odd;
     assign uncorrectable = syndrome_nonzero & ~parity_odd;
 endmodule

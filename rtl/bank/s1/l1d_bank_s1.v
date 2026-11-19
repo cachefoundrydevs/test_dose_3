@@ -147,24 +147,33 @@ module l1d_bank_s1 #(
     wire              pf_we;
     wire              pf_val;
     wire [WAY_W-1:0]  s1_way;
-    l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W)) u_meta (
-        .clk                  (clk),
-        .rst                  (rst),
-        .read_set             (s1_set),
-        .read_way_states_flat (m_states),
-        .read_plru_bits       (m_plru),
-        .read_pf_bits         (m_pf_bits),
-        .state_write_enable   (st_we),
-        .state_write_set      (s1_set),
-        .state_write_way      (st_way),
-        .state_write_value    (st_val),
-        .plru_write_enable    (pl_we),
-        .plru_write_set       (s1_set),
-        .plru_write_value     (plru_new),
-        .pf_write_enable      (pf_we),
-        .pf_write_set         (s1_set),
-        .pf_write_way         (s1_way),
-        .pf_write_value       (pf_val)
+    wire [WAYS-1:0]   m_valid;
+    wire [WAYS-1:0]   st_we_way;
+    wire [2*WAYS-1:0] st_val_way;
+    wire [WAYS-1:0]   pf_we_way;
+    l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
+                     .READ_ONEHOT(1), .WRITE_ONEHOT(0)) u_meta (
+        .clk                    (clk),
+        .rst                    (rst),
+        .read_set               (s1_set),
+        .read_way_states_flat   (m_states),
+        .read_way_valid         (m_valid),
+        .read_plru_bits         (m_plru),
+        .read_pf_bits           (m_pf_bits),
+        .state_write_enable     (st_we),
+        .state_write_set        (s1_set),
+        .state_write_way        (st_way),
+        .state_write_value      (st_val),
+        .state_write_way_enable (st_we_way),
+        .state_write_way_value  (st_val_way),
+        .plru_write_enable      (pl_we),
+        .plru_write_set         (s1_set),
+        .plru_write_value       (plru_new),
+        .pf_write_enable        (pf_we),
+        .pf_write_set           (s1_set),
+        .pf_write_way           (s1_way),
+        .pf_write_value         (pf_val),
+        .pf_write_way_enable    (pf_we_way)
     );
     wire [SYND_W-1:0]  data_synd;
     wire [FIX_W-1:0]   data_fix;
@@ -219,7 +228,7 @@ module l1d_bank_s1 #(
     genvar vw;
     generate
         for (vw = 0; vw < WAYS; vw = vw + 1) begin : g_way_valid
-            assign way_valid[vw] = (m_states[2*vw +: 2] != ST_I);
+            assign way_valid[vw] = m_valid[vw];
             assign tag_ce[vw]    = tag_fix[vw] & way_valid[vw];
             assign tag_ue[vw]    = tag_ue_raw[vw] & way_valid[vw];
         end
@@ -230,13 +239,14 @@ module l1d_bank_s1 #(
     wire [WAY_W-1:0] acc_way;
     assign acc_way = (s1_kind == K_LSU) ? hit_way : vict_way;
     wire [WAYS-2:0]  plru_next_lookup;
+    wire             hit_lookup;
     l1d_s1_lookup #(.WAYS(WAYS), .TAG_W(TAG_W), .WAY_W(WAY_W)) u_lookup (
         .way_tags_flat   (tag_q),
         .way_states_flat (m_states),
         .plru_bits       (m_plru),
         .lookup_tag      (s1_tag),
         .accessed_way    (acc_way),
-        .hit             (hit),
+        .hit             (hit_lookup),
         .hit_way         (hit_way),
         .victim_way      (victim_way),
         .plru_bits_next  (plru_next_lookup)
@@ -246,6 +256,15 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   vict_onehot;
     wire [WAYS-1:0]   acc_onehot;
     wire [WAYS*(WAYS-1)-1:0] plru_cand;
+    wire [WAYS-1:0]   hit_first;
+    wire [WAYS*WAY_W-1:0] plru_vict_way;
+    wire [WAYS-1:0]   inv_first;
+    wire              any_invalid;
+    wire [WAYS-1:0]   plru_vict_hot;
+    wire [WAYS-1:0]   victim_onehot;
+    wire [WAYS-1:0]   lock_way;
+    wire [WAYS-1:0]   partner_valid;
+    assign any_invalid = !(&way_valid);
     genvar hw;
     generate
         for (hw = 0; hw < WAYS; hw = hw + 1) begin : g_hit_onehot
@@ -254,19 +273,23 @@ module l1d_bank_s1 #(
             assign way_tag_match[hw]  = way_valid[hw] && (tag_q[hw*TAG_W +: TAG_W] == s1_tag);
             if (hw == 0) begin : g_first
                 assign hit_onehot[hw] = way_tag_match[hw] || !(|way_tag_match);
+                assign hit_first[hw]  = way_tag_match[hw];
+                assign inv_first[hw]  = !way_valid[hw];
             end else begin : g_rest
                 assign hit_onehot[hw] = way_tag_match[hw] && !(|way_tag_match[hw-1:0]);
+                assign hit_first[hw]  = hit_onehot[hw];
+                assign inv_first[hw]  = !way_valid[hw] && (&way_valid[hw-1:0]);
             end
-            assign vict_onehot[hw]    = (vict_way == cand_way);
             assign acc_onehot[hw]     = (s1_kind == K_LSU) ? hit_onehot[hw] : vict_onehot[hw];
             l1d_plru #(.WAYS(WAYS), .WAY_W(WAY_W), .NB(WAYS-1)) u_plru_way (
                 .plru_bits      (m_plru),
                 .accessed_way   (cand_way),
-                .victim_way     (),
+                .victim_way     (plru_vict_way[hw*WAY_W +: WAY_W]),
                 .plru_bits_next (plru_cand[hw*(WAYS-1) +: WAYS-1])
             );
         end
     endgenerate
+    assign hit = |way_tag_match;
     reg  [WAYS-2:0] plru_pick;
     reg  [1:0]      hit_st_pick;
     integer         pk;
@@ -292,7 +315,9 @@ module l1d_bank_s1 #(
     assign s1_scfail = s1_live && s1_cache && s1_is_sc && !sc_ok;
     assign s1_lsu_th = s1_live && s1_cache && hit && !s1_scfail;
     wire s1_lsu_th_early;
-    assign s1_lsu_th_early = s1_lsu && !s1_kill && !s1_pf && s1_cache && hit && !(s1_is_sc && !sc_ok);
+    wire s1_lsu_go;
+    assign s1_lsu_go       = s1_lsu && !s1_kill && !s1_pf && s1_cache && !(s1_is_sc && !sc_ok);
+    assign s1_lsu_th_early = s1_lsu_go && hit;
     wire [LINE_ADDR_W-1:0] v0_line;
     wire                   v_locked;
     wire [1:0]             v_st;
@@ -305,6 +330,18 @@ module l1d_bank_s1 #(
     generate
         for (lw = 0; lw < WAYS; lw = lw + 1) begin : g_lock_match
             assign lock_match[lw] = ({tag_q[lw*TAG_W +: TAG_W], s1_set, BANK_C} == lock_line);
+        end
+    endgenerate
+    genvar vh;
+    generate
+        for (vh = 0; vh < WAYS; vh = vh + 1) begin : g_vict_onehot
+            wire [WAY_W-1:0] vict_cand;
+            assign vict_cand          = vh;
+            assign plru_vict_hot[vh]  = (plru_vict_way[WAY_W-1:0] == vict_cand);
+            assign victim_onehot[vh]  = any_invalid ? inv_first[vh] : plru_vict_hot[vh];
+            assign lock_way[vh]       = lock_valid && lock_match[vh];
+            assign partner_valid[vh]  = way_valid[vh ^ 1];
+            assign vict_onehot[vh]    = (vict_way == vict_cand);
         end
     endgenerate
     assign v_locked = lock_valid && lock_match[victim_way];
@@ -419,6 +456,26 @@ module l1d_bank_s1 #(
     assign pf_we  = pf_demand_hit || (s1_refill && !r_held) || (s1_snp && hit && s1_sinv) ||
                     (s1_maint && !m_held && (s1_mop == MAINT_FLUSH));
     assign pf_val = s1_refill && q1_is_prefetch;
+    wire       refill_ok;
+    wire [WAYS-1:0] inst_way;
+    wire [WAYS-1:0] mway_hot;
+    assign refill_ok = q1_swap || vc_al_ok;
+    genvar pw;
+    generate
+        for (pw = 0; pw < WAYS; pw = pw + 1) begin : g_write_way
+            wire [WAY_W-1:0] write_cand;
+            assign write_cand    = pw;
+            assign mway_hot[pw]  = (s1_mway == write_cand);
+            assign inst_way[pw]  = s1_refill && vict_onehot[pw] && (!way_valid[pw] || refill_ok);
+            assign st_we_way[pw] = (((s1_lsu_go && !tag_err_any) || s1_snp) && hit_first[pw] && way_we[pw]) ||
+                                   inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
+            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :
+                                           (s1_kind == K_MAINT)  ? mt_nxt : way_nxt[2*pw +: 2];
+            assign pf_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw] && m_pf_bits[pw]) ||
+                                   inst_way[pw] || (s1_snp && s1_sinv && hit_first[pw]) ||
+                                   (case_walk && (s1_mop == MAINT_FLUSH) && mway_hot[pw]);
+        end
+    endgenerate
     reg  [LINE_BYTES-1:0] st_be;
     wire [LINE_W-1:0]     st_wext;
     wire [LINE_W-1:0]     st_din;

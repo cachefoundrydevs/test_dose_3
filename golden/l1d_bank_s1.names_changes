@@ -1,10 +1,23 @@
-# approved name changes (user requests 2026-11-19: 'update the s1 with these modifications', 'optimise the s1 top, for parallel access')
+# approved name changes (user requests 2026-11-19: 'update the s1 with these modifications', 'optimise the s1 top, for parallel access', 'do 10 iterations and try to parallelise the logics and module to module connections')
++ DECL wire[WAYS-1:0]m_valid
++ DECL wire[WAYS-1:0]st_we_way
++ DECL wire[2*WAYS-1:0]st_val_way
++ DECL wire[WAYS-1:0]pf_we_way
 + DECL wire[WAYS-2:0]plru_next_lookup
++ DECL wire hit_lookup
 + DECL wire[WAYS-1:0]way_tag_match
 + DECL wire[WAYS-1:0]hit_onehot
 + DECL wire[WAYS-1:0]vict_onehot
 + DECL wire[WAYS-1:0]acc_onehot
 + DECL wire[WAYS*(WAYS-1)-1:0]plru_cand
++ DECL wire[WAYS-1:0]hit_first
++ DECL wire[WAYS*WAY_W-1:0]plru_vict_way
++ DECL wire[WAYS-1:0]inv_first
++ DECL wire any_invalid
++ DECL wire[WAYS-1:0]plru_vict_hot
++ DECL wire[WAYS-1:0]victim_onehot
++ DECL wire[WAYS-1:0]lock_way
++ DECL wire[WAYS-1:0]partner_valid
 + DECL genvar hw
 + FOR for(hw=0;hw<WAYS;hw=hw+1)
 + LABEL g_hit_onehot
@@ -17,10 +30,15 @@
 + ALWAYS always @*
 + FOR for(pk=0;pk<WAYS;pk=pk+1)
 + DECL wire s1_lsu_th_early
++ DECL wire s1_lsu_go
 + DECL wire[WAYS-1:0]lock_match
 + DECL genvar lw
 + FOR for(lw=0;lw<WAYS;lw=lw+1)
 + LABEL g_lock_match
++ DECL genvar vh
++ FOR for(vh=0;vh<WAYS;vh=vh+1)
++ LABEL g_vict_onehot
++ DECL wire[WAY_W-1:0]vict_cand
 + DECL reg[3:0]hit_ev
 + ALWAYS always @*
 + DECL wire[2*WAYS-1:0]way_nxt
@@ -38,3 +56,10 @@
 + DECL wire[1:0]mt_nxt
 + DECL wire mt_we,mt_upg_unused,mt_hand_unused
 + DECL wire case_cpu,case_inst,case_walk,case_snp
++ DECL wire refill_ok
++ DECL wire[WAYS-1:0]inst_way
++ DECL wire[WAYS-1:0]mway_hot
++ DECL genvar pw
++ FOR for(pw=0;pw<WAYS;pw=pw+1)
++ LABEL g_write_way
++ DECL wire[WAY_W-1:0]write_cand

@@ -229,6 +229,7 @@ module l1d_bank_s1 #(
     wire [WAY_W-1:0] hit_way, victim_way, vict_way;
     wire [WAY_W-1:0] acc_way;
     assign acc_way = (s1_kind == K_LSU) ? hit_way : vict_way;
+    wire [WAYS-2:0]  plru_next_lookup;
     l1d_s1_lookup #(.WAYS(WAYS), .TAG_W(TAG_W), .WAY_W(WAY_W)) u_lookup (
         .way_tags_flat   (tag_q),
         .way_states_flat (m_states),
@@ -238,10 +239,48 @@ module l1d_bank_s1 #(
         .hit             (hit),
         .hit_way         (hit_way),
         .victim_way      (victim_way),
-        .plru_bits_next  (plru_new)
+        .plru_bits_next  (plru_next_lookup)
     );
+    wire [WAYS-1:0]   way_tag_match;
+    wire [WAYS-1:0]   hit_onehot;
+    wire [WAYS-1:0]   vict_onehot;
+    wire [WAYS-1:0]   acc_onehot;
+    wire [WAYS*(WAYS-1)-1:0] plru_cand;
+    genvar hw;
+    generate
+        for (hw = 0; hw < WAYS; hw = hw + 1) begin : g_hit_onehot
+            wire [WAY_W-1:0] cand_way;
+            assign cand_way           = hw;
+            assign way_tag_match[hw]  = way_valid[hw] && (tag_q[hw*TAG_W +: TAG_W] == s1_tag);
+            if (hw == 0) begin : g_first
+                assign hit_onehot[hw] = way_tag_match[hw] || !(|way_tag_match);
+            end else begin : g_rest
+                assign hit_onehot[hw] = way_tag_match[hw] && !(|way_tag_match[hw-1:0]);
+            end
+            assign vict_onehot[hw]    = (vict_way == cand_way);
+            assign acc_onehot[hw]     = (s1_kind == K_LSU) ? hit_onehot[hw] : vict_onehot[hw];
+            l1d_plru #(.WAYS(WAYS), .WAY_W(WAY_W), .NB(WAYS-1)) u_plru_way (
+                .plru_bits      (m_plru),
+                .accessed_way   (cand_way),
+                .victim_way     (),
+                .plru_bits_next (plru_cand[hw*(WAYS-1) +: WAYS-1])
+            );
+        end
+    endgenerate
+    reg  [WAYS-2:0] plru_pick;
+    reg  [1:0]      hit_st_pick;
+    integer         pk;
+    always @* begin
+        plru_pick   = {(WAYS-1){1'b0}};
+        hit_st_pick = 2'b00;
+        for (pk = 0; pk < WAYS; pk = pk + 1) begin
+            plru_pick   = plru_pick   | ({(WAYS-1){acc_onehot[pk]}} & plru_cand[pk*(WAYS-1) +: WAYS-1]);
+            hit_st_pick = hit_st_pick | ({2{hit_onehot[pk]}} & m_states[2*pk +: 2]);
+        end
+    end
+    assign plru_new = plru_pick;
     wire [1:0] hit_st;
-    assign hit_st = m_states[2*hit_way +: 2];
+    assign hit_st = hit_st_pick;
     wire s2_lrsc;
     wire sc_ok;
     wire s1_live;
@@ -326,10 +365,25 @@ module l1d_bank_s1 #(
     endgenerate
     wire [1:0] hit_nxt;
     wire       hit_we, hit_upg, hit_hand;
-    assign hit_nxt  = way_nxt[2*hit_way +: 2];
-    assign hit_we   = way_we[hit_way];
-    assign hit_upg  = way_upg[hit_way];
-    assign hit_hand = way_hand[hit_way];
+    reg  [1:0] hit_nxt_pick;
+    reg        hit_we_pick, hit_upg_pick, hit_hand_pick;
+    integer    hp;
+    always @* begin
+        hit_nxt_pick  = 2'b00;
+        hit_we_pick   = 1'b0;
+        hit_upg_pick  = 1'b0;
+        hit_hand_pick = 1'b0;
+        for (hp = 0; hp < WAYS; hp = hp + 1) begin
+            hit_nxt_pick  = hit_nxt_pick  | ({2{hit_onehot[hp]}} & way_nxt[2*hp +: 2]);
+            hit_we_pick   = hit_we_pick   | (hit_onehot[hp] & way_we[hp]);
+            hit_upg_pick  = hit_upg_pick  | (hit_onehot[hp] & way_upg[hp]);
+            hit_hand_pick = hit_hand_pick | (hit_onehot[hp] & way_hand[hp]);
+        end
+    end
+    assign hit_nxt  = hit_nxt_pick;
+    assign hit_we   = hit_we_pick;
+    assign hit_upg  = hit_upg_pick;
+    assign hit_hand = hit_hand_pick;
     wire [1:0] mt_nxt;
     wire       mt_we, mt_upg_unused, mt_hand_unused;
     l1d_mesi_next u_mesi (
@@ -361,7 +415,7 @@ module l1d_bank_s1 #(
     assign st_val = m_nxt;
     assign pl_we  = s1_hit || (s1_refill && !r_held);
     wire pf_demand_hit;
-    assign pf_demand_hit = s1_hit && m_pf_bits[hit_way];
+    assign pf_demand_hit = s1_hit && |(hit_onehot & m_pf_bits);
     assign pf_we  = pf_demand_hit || (s1_refill && !r_held) || (s1_snp && hit && s1_sinv) ||
                     (s1_maint && !m_held && (s1_mop == MAINT_FLUSH));
     assign pf_val = s1_refill && q1_is_prefetch;

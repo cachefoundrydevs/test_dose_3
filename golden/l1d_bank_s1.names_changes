@@ -1,4 +1,21 @@
-# approved name changes (user request 2026-11-19: 'update the s1 with these modifications')
+# approved name changes (user requests 2026-11-19: 'update the s1 with these modifications', 'optimise the s1 top, for parallel access')
++ DECL wire[WAYS-2:0]plru_next_lookup
++ DECL wire[WAYS-1:0]way_tag_match
++ DECL wire[WAYS-1:0]hit_onehot
++ DECL wire[WAYS-1:0]vict_onehot
++ DECL wire[WAYS-1:0]acc_onehot
++ DECL wire[WAYS*(WAYS-1)-1:0]plru_cand
++ DECL genvar hw
++ FOR for(hw=0;hw<WAYS;hw=hw+1)
++ LABEL g_hit_onehot
++ DECL wire[WAY_W-1:0]cand_way
++ LABEL g_first
++ LABEL g_rest
++ DECL reg[WAYS-2:0]plru_pick
++ DECL reg[1:0]hit_st_pick
++ DECL integer pk
++ ALWAYS always @*
++ FOR for(pk=0;pk<WAYS;pk=pk+1)
 + DECL wire s1_lsu_th_early
 + DECL wire[WAYS-1:0]lock_match
 + DECL genvar lw
@@ -13,6 +30,11 @@
 + LABEL g_mesi_way
 + DECL wire[1:0]hit_nxt
 + DECL wire hit_we,hit_upg,hit_hand
++ DECL reg[1:0]hit_nxt_pick
++ DECL reg hit_we_pick,hit_upg_pick,hit_hand_pick
++ DECL integer hp
++ ALWAYS always @*
++ FOR for(hp=0;hp<WAYS;hp=hp+1)
 + DECL wire[1:0]mt_nxt
 + DECL wire mt_we,mt_upg_unused,mt_hand_unused
 + DECL wire case_cpu,case_inst,case_walk,case_snp

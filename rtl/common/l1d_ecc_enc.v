@@ -44,7 +44,22 @@ module l1d_ecc_enc #(
             assign ham[hb] = ^(data & MASK);
         end
     endgenerate
-    assign check = {(^data) ^ (^ham), ham};
+    function [DATA_W-1:0] parity_mask;
+        input integer dummy;
+        integer d;
+        integer k;
+        reg     odd;
+        begin
+            for (d = 0; d < DATA_W; d = d + 1) begin
+                odd = 1'b1;
+                for (k = 0; k < HAM_W; k = k + 1)
+                    odd = odd ^ (((data_pos(d) >> k) & 1) ? 1'b1 : 1'b0);
+                parity_mask[d] = odd;
+            end
+        end
+    endfunction
+    localparam [DATA_W-1:0] PARITY_MASK = parity_mask(0);
+    assign check = {^(data & PARITY_MASK), ham};
 endmodule
 `default_nettype wire
 `endif

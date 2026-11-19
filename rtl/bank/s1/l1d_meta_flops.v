@@ -1,3 +1,5 @@
+`ifndef L1D_META_FLOPS_V
+`define L1D_META_FLOPS_V
 `default_nettype none
 `include "l1d_defines.vh"
 module l1d_meta_flops #(
@@ -5,36 +7,67 @@ module l1d_meta_flops #(
     parameter WAYS    = 4,
     parameter INDEX_W = $clog2(SETS),
     parameter WAY_W   = $clog2(WAYS),
-    parameter NB      = WAYS - 1
+    parameter NB      = WAYS - 1,
+    parameter READ_ONEHOT  = 0,
+    parameter WRITE_ONEHOT = 0
 ) (
     input  wire               clk,
     input  wire               rst,
     input  wire [INDEX_W-1:0] read_set,
     output wire [2*WAYS-1:0]  read_way_states_flat,
+    output wire [WAYS-1:0]    read_way_valid,
     output wire [NB-1:0]      read_plru_bits,
     output wire [WAYS-1:0]    read_pf_bits,
     input  wire               state_write_enable,
     input  wire [INDEX_W-1:0] state_write_set,
     input  wire [WAY_W-1:0]   state_write_way,
     input  wire [1:0]         state_write_value,
+    input  wire [WAYS-1:0]    state_write_way_enable,
+    input  wire [2*WAYS-1:0]  state_write_way_value,
     input  wire               plru_write_enable,
     input  wire [INDEX_W-1:0] plru_write_set,
     input  wire [NB-1:0]      plru_write_value,
     input  wire               pf_write_enable,
     input  wire [INDEX_W-1:0] pf_write_set,
     input  wire [WAY_W-1:0]   pf_write_way,
-    input  wire               pf_write_value
+    input  wire               pf_write_value,
+    input  wire [WAYS-1:0]    pf_write_way_enable
 );
     reg [2*WAYS-1:0] states [0:SETS-1];
     reg [NB-1:0]     plru   [0:SETS-1];
     reg [WAYS-1:0]   pf_bit [0:SETS-1];
     integer s;
+    integer ww;
+    wire [SETS-1:0] read_hot;
+    wire [SETS-1:0] state_write_hot;
+    wire [SETS-1:0] plru_write_hot;
+    wire [SETS-1:0] pf_write_hot;
+    genvar hs;
+    generate
+        for (hs = 0; hs < SETS; hs = hs + 1) begin : g_set_hot
+            assign read_hot[hs]        = (read_set == hs);
+            assign state_write_hot[hs] = (state_write_set == hs);
+            assign plru_write_hot[hs]  = (plru_write_set == hs);
+            assign pf_write_hot[hs]    = (pf_write_set == hs);
+        end
+    endgenerate
     always @(posedge clk) begin : meta_proc
         if (rst) begin
             for (s = 0; s < SETS; s = s + 1) begin
                 states[s] <= {2*WAYS{1'b0}};
                 plru[s]   <= {NB{1'b0}};
                 pf_bit[s] <= {WAYS{1'b0}};
+            end
+        end else if (WRITE_ONEHOT != 0) begin
+            for (s = 0; s < SETS; s = s + 1) begin
+                for (ww = 0; ww < WAYS; ww = ww + 1) begin
+                    if (state_write_hot[s] && state_write_way_enable[ww])
+                        states[s][2*ww +: 2] <= state_write_way_value[2*ww +: 2];
+                    if (pf_write_hot[s] && pf_write_way_enable[ww])
+                        pf_bit[s][ww] <= pf_write_value;
+                end
+                if (plru_write_enable && plru_write_hot[s])
+                    plru[s] <= plru_write_value;
             end
         end else begin
             if (state_write_enable)
@@ -45,9 +78,41 @@ module l1d_meta_flops #(
                 pf_bit[pf_write_set][pf_write_way] <= pf_write_value;
         end
     end
-    assign read_way_states_flat = states[read_set];
-    assign read_plru_bits       = plru[read_set];
-    assign read_pf_bits         = pf_bit[read_set];
+    generate
+        if (READ_ONEHOT != 0) begin : g_read_onehot
+            reg [2*WAYS-1:0] read_states_or;
+            reg [WAYS-1:0]   read_valid_or;
+            reg [NB-1:0]     read_plru_or;
+            reg [WAYS-1:0]   read_pf_or;
+            integer rs;
+            integer rw;
+            always @* begin
+                read_states_or = {2*WAYS{1'b0}};
+                read_valid_or  = {WAYS{1'b0}};
+                read_plru_or   = {NB{1'b0}};
+                read_pf_or     = {WAYS{1'b0}};
+                for (rs = 0; rs < SETS; rs = rs + 1) begin
+                    read_states_or = read_states_or | ({2*WAYS{read_hot[rs]}} & states[rs]);
+                    read_plru_or   = read_plru_or   | ({NB{read_hot[rs]}}     & plru[rs]);
+                    read_pf_or     = read_pf_or     | ({WAYS{read_hot[rs]}}   & pf_bit[rs]);
+                    for (rw = 0; rw < WAYS; rw = rw + 1)
+                        read_valid_or[rw] = read_valid_or[rw] | (read_hot[rs] & (|states[rs][2*rw +: 2]));
+                end
+            end
+            assign read_way_states_flat = read_states_or;
+            assign read_way_valid       = read_valid_or;
+            assign read_plru_bits       = read_plru_or;
+            assign read_pf_bits         = read_pf_or;
+        end else begin : g_read_binary
+            genvar vw;
+            assign read_way_states_flat = states[read_set];
+            assign read_plru_bits       = plru[read_set];
+            assign read_pf_bits         = pf_bit[read_set];
+            for (vw = 0; vw < WAYS; vw = vw + 1) begin : g_valid
+                assign read_way_valid[vw] = |read_way_states_flat[2*vw +: 2];
+            end
+        end
+    endgenerate
 `ifdef L1D_DEBUG
     always @(posedge clk) begin
         if (!rst && state_write_enable && states[state_write_set][2*state_write_way +: 2] != state_write_value)
@@ -59,3 +124,4 @@ module l1d_meta_flops #(
 `endif
 endmodule
 `default_nettype wire
+`endif

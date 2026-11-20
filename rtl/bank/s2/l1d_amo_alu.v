@@ -26,14 +26,10 @@ module l1d_amo_alu #(
             AMO_XOR:  new_value = old_value ^ operand;
             AMO_AND:  new_value = old_value & operand;
             AMO_OR:   new_value = old_value | operand;
-            AMO_MIN:  new_value = (((amo_op == AMO_MIN)  &  lt_s) | ((amo_op == AMO_MAX)  & ~lt_s) |
-                                   ((amo_op == AMO_MINU) &  lt_u) | ((amo_op == AMO_MAXU) & ~lt_u)) ? old_value : operand;
-            AMO_MAX:  new_value = (((amo_op == AMO_MIN)  &  lt_s) | ((amo_op == AMO_MAX)  & ~lt_s) |
-                                   ((amo_op == AMO_MINU) &  lt_u) | ((amo_op == AMO_MAXU) & ~lt_u)) ? old_value : operand;
-            AMO_MINU: new_value = (((amo_op == AMO_MIN)  &  lt_s) | ((amo_op == AMO_MAX)  & ~lt_s) |
-                                   ((amo_op == AMO_MINU) &  lt_u) | ((amo_op == AMO_MAXU) & ~lt_u)) ? old_value : operand;
-            AMO_MAXU: new_value = (((amo_op == AMO_MIN)  &  lt_s) | ((amo_op == AMO_MAX)  & ~lt_s) |
-                                   ((amo_op == AMO_MINU) &  lt_u) | ((amo_op == AMO_MAXU) & ~lt_u)) ? old_value : operand;
+            AMO_MIN:  new_value = lt_s ? old_value : operand;
+            AMO_MAX:  new_value = lt_s ? operand : old_value;
+            AMO_MINU: new_value = lt_u ? old_value : operand;
+            AMO_MAXU: new_value = lt_u ? operand : old_value;
             default:  new_value = operand;
         endcase
     end

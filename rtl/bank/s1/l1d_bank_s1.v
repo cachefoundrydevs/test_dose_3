@@ -151,8 +151,11 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   st_we_way;
     wire [2*WAYS-1:0] st_val_way;
     wire [WAYS-1:0]   pf_we_way;
+    wire [WAYS-1:0]   pl_we_way;
+    wire [WAYS-1:0]   m_inv_first;
+    wire              m_any_invalid;
     l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
-                     .READ_ONEHOT(1), .WRITE_ONEHOT(1)) u_meta (
+                     .READ_ONEHOT(1), .WRITE_ONEHOT(1), .PLRU_ONEHOT(1)) u_meta (
         .clk                    (clk),
         .rst                    (rst),
         .read_set               (s1_set),
@@ -160,6 +163,8 @@ module l1d_bank_s1 #(
         .read_way_valid         (m_valid),
         .read_plru_bits         (m_plru),
         .read_pf_bits           (m_pf_bits),
+        .read_inv_first         (m_inv_first),
+        .read_any_invalid       (m_any_invalid),
         .state_write_enable     (st_we),
         .state_write_set        (s1_set),
         .state_write_way        (st_way),
@@ -169,6 +174,8 @@ module l1d_bank_s1 #(
         .plru_write_enable      (pl_we),
         .plru_write_set         (s1_set),
         .plru_write_value       (plru_new),
+        .plru_write_way_enable  (pl_we_way),
+        .plru_write_way_value   (plru_cand),
         .pf_write_enable        (pf_we),
         .pf_write_set           (s1_set),
         .pf_write_way           (s1_way),
@@ -233,13 +240,21 @@ module l1d_bank_s1 #(
             assign tag_ue[vw]    = tag_ue_raw[vw] & way_valid[vw];
         end
     endgenerate
-    assign tag_err_any = |(tag_ce | tag_ue);
+    wire [WAYS-1:0] tag_err_way;
+    genvar tw;
+    generate
+        for (tw = 0; tw < WAYS; tw = tw + 1) begin : g_tag_err
+            assign tag_err_way[tw] = tag_fix[tw] || (|tag_synd[tw*TAG_HAM_W +: TAG_HAM_W]);
+        end
+    endgenerate
+    assign tag_err_any = |(tag_err_way & way_valid);
     wire             hit;
     wire [WAY_W-1:0] hit_way, victim_way, vict_way;
     wire [WAY_W-1:0] acc_way;
     assign acc_way = (s1_kind == K_LSU) ? hit_way : vict_way;
     wire [WAYS-2:0]  plru_next_lookup;
     wire             hit_lookup;
+    wire [WAY_W-1:0] hit_way_lookup;
     l1d_s1_lookup #(.WAYS(WAYS), .TAG_W(TAG_W), .WAY_W(WAY_W)) u_lookup (
         .way_tags_flat   (tag_q),
         .way_states_flat (m_states),
@@ -247,7 +262,7 @@ module l1d_bank_s1 #(
         .lookup_tag      (s1_tag),
         .accessed_way    (acc_way),
         .hit             (hit_lookup),
-        .hit_way         (hit_way),
+        .hit_way         (hit_way_lookup),
         .victim_way      (victim_way),
         .plru_bits_next  (plru_next_lookup)
     );
@@ -264,7 +279,7 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   victim_onehot;
     wire [WAYS-1:0]   lock_way;
     wire [WAYS-1:0]   partner_valid;
-    assign any_invalid = !(&way_valid);
+    assign any_invalid = m_any_invalid;
     genvar hw;
     generate
         for (hw = 0; hw < WAYS; hw = hw + 1) begin : g_hit_onehot
@@ -274,11 +289,11 @@ module l1d_bank_s1 #(
             if (hw == 0) begin : g_first
                 assign hit_onehot[hw] = way_tag_match[hw] || !(|way_tag_match);
                 assign hit_first[hw]  = way_tag_match[hw];
-                assign inv_first[hw]  = !way_valid[hw];
+                assign inv_first[hw]  = m_inv_first[hw];
             end else begin : g_rest
                 assign hit_onehot[hw] = way_tag_match[hw] && !(|way_tag_match[hw-1:0]);
                 assign hit_first[hw]  = hit_onehot[hw];
-                assign inv_first[hw]  = !way_valid[hw] && (&way_valid[hw-1:0]);
+                assign inv_first[hw]  = m_inv_first[hw];
             end
             assign acc_onehot[hw]     = (s1_kind == K_LSU) ? hit_onehot[hw] : vict_onehot[hw];
             l1d_plru #(.WAYS(WAYS), .WAY_W(WAY_W), .NB(WAYS-1)) u_plru_way (
@@ -292,11 +307,14 @@ module l1d_bank_s1 #(
     assign hit = |way_tag_match;
     reg  [WAYS-2:0] plru_pick;
     reg  [1:0]      hit_st_pick;
+    reg  [WAY_W-1:0] hit_way_pick;
     integer         pk;
     always @* begin
         plru_pick   = {(WAYS-1){1'b0}};
         hit_st_pick = 2'b00;
+        hit_way_pick = {WAY_W{1'b0}};
         for (pk = 0; pk < WAYS; pk = pk + 1) begin
+            hit_way_pick = hit_way_pick | ({WAY_W{hit_onehot[pk]}} & pk[WAY_W-1:0]);
             plru_pick   = plru_pick   | ({(WAYS-1){acc_onehot[pk]}} & plru_cand[pk*(WAYS-1) +: WAYS-1]);
             hit_st_pick = hit_st_pick | ({2{hit_onehot[pk]}} & m_states[2*pk +: 2]);
         end
@@ -304,6 +322,7 @@ module l1d_bank_s1 #(
     assign plru_new = plru_pick;
     wire [1:0] hit_st;
     assign hit_st = hit_st_pick;
+    assign hit_way = hit_way_pick;
     wire s2_lrsc;
     wire sc_ok;
     wire s1_live;
@@ -395,6 +414,8 @@ module l1d_bank_s1 #(
     always @* begin
         if (s1_snp)
             hit_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
+        else if (s1_maint)
+            hit_ev = (s1_mop == MAINT_FLUSH) ? EV_FLUSH : EV_CLEAN;
         else
             hit_ev = s1_store ? EV_WRITE_HIT : (s1_amo ? EV_UNIQ_HIT : EV_LOAD_HIT);
     end
@@ -473,6 +494,7 @@ module l1d_bank_s1 #(
     wire       refill_ok;
     wire [WAYS-1:0] inst_way;
     wire [WAYS-1:0] mway_hot;
+    wire [WAYS-1:0] walk_way;
     assign refill_ok = q1_swap || vc_al_ok;
     genvar pw;
     generate
@@ -480,14 +502,15 @@ module l1d_bank_s1 #(
             wire [WAY_W-1:0] write_cand;
             assign write_cand    = pw;
             assign mway_hot[pw]  = (s1_mway == write_cand);
+            assign walk_way[pw]  = s1_maint && mway_hot[pw] && !((m_states[2*pw +: 2] == ST_M) && !vc_al_ok);
             assign inst_way[pw]  = s1_refill && vict_onehot[pw] && (!way_valid[pw] || refill_ok);
             assign st_we_way[pw] = (((s1_lsu_go && !tag_err_any) || s1_snp) && hit_first[pw] && way_we[pw]) ||
-                                   inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
-            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :
-                                           (s1_kind == K_MAINT)  ? mt_nxt : way_nxt[2*pw +: 2];
+                                   inst_way[pw] || (walk_way[pw] && way_we[pw]);
+            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state : way_nxt[2*pw +: 2];
+            assign pl_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw]) || inst_way[pw];
             assign pf_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw] && m_pf_bits[pw]) ||
                                    inst_way[pw] || (s1_snp && s1_sinv && hit_first[pw]) ||
-                                   (case_walk && (s1_mop == MAINT_FLUSH) && mway_hot[pw]);
+                                   (walk_way[pw] && (s1_mop == MAINT_FLUSH));
         end
     endgenerate
     reg  [LINE_BYTES-1:0] st_be;

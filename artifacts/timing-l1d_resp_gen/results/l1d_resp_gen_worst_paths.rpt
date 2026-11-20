@@ -1,0 +1,366 @@
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[3] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.027    0.000    0.000    0.000 ^ byte_offset[0] (in)
+    10    9.120   12.459   13.040   13.040 ^ _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    6.865   10.320   15.633   28.672 ^ _4295_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.404   18.614   19.573   48.245 ^ _4486_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.430   18.093   21.545   69.789 ^ _4772_/Y (BUFx3_ASAP7_75t_R)
+     2    0.861    8.356    7.786   77.576 v _5336_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.634    9.219   25.025  102.600 v _5337_/Y (OA211x2_ASAP7_75t_R)
+     2    1.660   11.812   18.690  121.290 v _5338_/Y (AO21x1_ASAP7_75t_R)
+     1    0.562    9.034   22.413  143.702 v _7345_/Y (OA211x2_ASAP7_75t_R)
+     1    1.379   14.982   35.082  178.784 v _7346_/Y (OR5x1_ASAP7_75t_R)
+     1    0.000    7.602    5.095  183.879 ^ _7347_/Y (OAI21x1_ASAP7_75t_R)
+                   7.602    0.000  183.879 ^ load_data[3] (out)
+                                   183.879   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -183.879   data arrival time
+---------------------------------------------------------------------------------
+                                     6.121   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[20] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+     5    3.398   12.588    9.531   22.717 ^ _4271_/Y (INVx2_ASAP7_75t_R)
+    10    7.457   14.336   18.066   40.783 ^ _4293_/Y (BUFx4f_ASAP7_75t_R)
+    10   11.703   26.368   24.300   65.083 ^ _5122_/Y (BUFx3_ASAP7_75t_R)
+    10    8.280   19.931   23.877   88.961 ^ _5176_/Y (BUFx3_ASAP7_75t_R)
+     2    2.180   17.115   13.437  102.398 v _5178_/Y (AOI21x1_ASAP7_75t_R)
+     2    2.060   18.604   13.843  116.241 ^ _6563_/Y (AOI21x1_ASAP7_75t_R)
+     1    0.618   17.586   15.093  131.334 v _6567_/Y (AOI211x1_ASAP7_75t_R)
+     1    0.614    6.190   18.304  149.637 v _6573_/Y (OA21x2_ASAP7_75t_R)
+     1    1.045   11.676   25.265  174.903 v _6586_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    6.760    7.802  182.704 ^ _6623_/Y (NAND2x1_ASAP7_75t_R)
+                   6.760    0.000  182.704 ^ load_data[20] (out)
+                                   182.704   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -182.704   data arrival time
+---------------------------------------------------------------------------------
+                                     7.296   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[30] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    8.036   10.275   16.416   29.602 v _4278_/Y (BUFx6f_ASAP7_75t_R)
+    10    9.106   14.607   18.970   48.572 v _4591_/Y (BUFx4f_ASAP7_75t_R)
+    10    5.715   12.811   19.490   68.062 v _5095_/Y (BUFx3_ASAP7_75t_R)
+     8    5.031   29.008   33.231  101.293 v _5758_/Y (OR3x1_ASAP7_75t_R)
+     1    0.439    6.223   21.669  122.961 v _5759_/Y (OA21x2_ASAP7_75t_R)
+     1    0.614    9.164   25.849  148.810 v _5760_/Y (OA211x2_ASAP7_75t_R)
+     1    1.045   11.676   25.827  174.637 v _5790_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    6.760    7.802  182.439 ^ _5858_/Y (NAND2x1_ASAP7_75t_R)
+                   6.760    0.000  182.439 ^ load_data[30] (out)
+                                   182.439   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -182.439   data arrival time
+---------------------------------------------------------------------------------
+                                     7.561   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[25] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    6.703   11.691   17.649   30.835 v _4274_/Y (BUFx4f_ASAP7_75t_R)
+    10    8.020   16.406   20.516   51.351 v _4393_/Y (BUFx3_ASAP7_75t_R)
+    10    5.725   17.297   22.995   74.346 v _4688_/Y (BUFx2_ASAP7_75t_R)
+     1    0.634    9.219   23.396   97.742 v _6346_/Y (OA211x2_ASAP7_75t_R)
+     1    0.486    6.289   15.216  112.959 v _6347_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    8.458   20.477  133.436 v _6348_/Y (AO32x1_ASAP7_75t_R)
+     1    0.614    6.927   15.434  148.870 v _6349_/Y (AO21x1_ASAP7_75t_R)
+     1    1.045   11.650   25.404  174.275 v _6365_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    6.753    7.795  182.070 ^ _6391_/Y (NAND2x1_ASAP7_75t_R)
+                   6.753    0.000  182.070 ^ load_data[25] (out)
+                                   182.070   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -182.070   data arrival time
+---------------------------------------------------------------------------------
+                                     7.930   slack (MET)
+
+
+Startpoint: byte_offset[1] (input port clocked by vclk)
+Endpoint: load_data[22] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    2.992    0.000    0.000    0.000 ^ byte_offset[1] (in)
+     6    3.460   17.724    9.446    9.446 v _4285_/Y (INVx1_ASAP7_75t_R)
+    10    5.823   17.551   23.530   32.976 v _4286_/Y (BUFx2_ASAP7_75t_R)
+    10    4.942   15.478   22.324   55.300 v _4516_/Y (BUFx2_ASAP7_75t_R)
+    10    5.761   17.366   22.750   78.050 v _5024_/Y (BUFx2_ASAP7_75t_R)
+    10    6.315   18.727   24.007  102.057 v _5025_/Y (BUFx2_ASAP7_75t_R)
+    10    5.397   16.566   23.291  125.348 v _5559_/Y (BUFx2_ASAP7_75t_R)
+     1    0.612    9.163   23.196  148.544 v _6496_/Y (OA211x2_ASAP7_75t_R)
+     1    1.379   13.430   28.382  176.926 v _6504_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    9.150    4.898  181.825 ^ _6505_/Y (OAI21x1_ASAP7_75t_R)
+                   9.150    0.000  181.825 ^ load_data[22] (out)
+                                   181.825   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.825   data arrival time
+---------------------------------------------------------------------------------
+                                     8.175   slack (MET)
+
+
+Startpoint: byte_offset[1] (input port clocked by vclk)
+Endpoint: load_data[24] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     5    2.992    0.000    0.000    0.000 ^ byte_offset[1] (in)
+     6    3.460   17.724    9.446    9.446 v _4285_/Y (INVx1_ASAP7_75t_R)
+    10    5.823   17.551   23.530   32.976 v _4286_/Y (BUFx2_ASAP7_75t_R)
+    10    4.942   15.478   22.324   55.300 v _4516_/Y (BUFx2_ASAP7_75t_R)
+    10    5.761   17.366   22.750   78.050 v _5024_/Y (BUFx2_ASAP7_75t_R)
+    10    6.315   18.727   24.007  102.057 v _5025_/Y (BUFx2_ASAP7_75t_R)
+    10    5.397   16.566   23.291  125.348 v _5559_/Y (BUFx2_ASAP7_75t_R)
+     1    0.612    9.163   23.196  148.544 v _6446_/Y (OA211x2_ASAP7_75t_R)
+     1    1.379   13.430   28.382  176.926 v _6453_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    8.041    4.898  181.825 ^ _6454_/Y (OAI21x1_ASAP7_75t_R)
+                   8.041    0.000  181.825 ^ load_data[24] (out)
+                                   181.825   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.825   data arrival time
+---------------------------------------------------------------------------------
+                                     8.175   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[11] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    6.236   13.552   18.849   32.035 v _4282_/Y (BUFx3_ASAP7_75t_R)
+    10    8.007   22.738   24.847   56.882 v _4975_/Y (BUFx2_ASAP7_75t_R)
+     1    0.646    9.249   24.561   81.443 v _7056_/Y (OA211x2_ASAP7_75t_R)
+     1    0.430    7.220   19.467  100.910 v _7057_/Y (OR3x1_ASAP7_75t_R)
+     1    0.618    9.178   24.632  125.542 v _7058_/Y (OA211x2_ASAP7_75t_R)
+     1    0.562    5.944   16.367  141.909 v _7062_/Y (OA21x2_ASAP7_75t_R)
+     1    1.379   15.137   34.570  176.479 v _7063_/Y (OR5x1_ASAP7_75t_R)
+     1    0.000    7.579    5.115  181.594 ^ _7064_/Y (OAI21x1_ASAP7_75t_R)
+                   7.579    0.000  181.594 ^ load_data[11] (out)
+                                   181.594   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.594   data arrival time
+---------------------------------------------------------------------------------
+                                     8.406   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[40] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.027    0.000    0.000    0.000 ^ byte_offset[0] (in)
+    10    9.120   12.459   13.040   13.040 ^ _4270_/Y (BUFx6f_ASAP7_75t_R)
+     5    3.396   11.088    8.885   21.924 v _4271_/Y (INVx2_ASAP7_75t_R)
+    10    5.450   16.562   20.966   42.890 v _4272_/Y (BUFx2_ASAP7_75t_R)
+    10   10.704   29.257   29.023   71.913 v _4683_/Y (BUFx2_ASAP7_75t_R)
+     1    0.613    9.269   33.556  105.469 v _4684_/Y (OA211x2_ASAP7_75t_R)
+     1    0.430    7.218   19.090  124.559 v _4690_/Y (OR3x1_ASAP7_75t_R)
+     1    0.614    9.166   24.622  149.182 v _4691_/Y (OA211x2_ASAP7_75t_R)
+     1    1.081   11.900   25.968  175.150 v _4763_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    6.749    5.988  181.138 ^ _4764_/Y (NAND2x1_ASAP7_75t_R)
+                   6.749    0.000  181.138 ^ load_data[40] (out)
+                                   181.138   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.138   data arrival time
+---------------------------------------------------------------------------------
+                                     8.862   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[58] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    8.036   10.275   16.416   29.602 v _4278_/Y (BUFx6f_ASAP7_75t_R)
+    10    8.007   22.694   23.825   53.427 v _4279_/Y (BUFx2_ASAP7_75t_R)
+    10    5.858   17.767   24.961   78.388 v _4280_/Y (BUFx2_ASAP7_75t_R)
+     1    1.239   10.755   24.668  103.055 v _6252_/Y (OA211x2_ASAP7_75t_R)
+     2    2.158   19.010   13.054  116.110 ^ _6253_/Y (AOI21x1_ASAP7_75t_R)
+     1    0.430    7.984    6.442  122.551 v _7741_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.630    9.209   24.899  147.450 v _7742_/Y (OA211x2_ASAP7_75t_R)
+     1    1.379   13.477   28.778  176.228 v _7743_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000    7.578    4.904  181.133 ^ _7744_/Y (OAI21x1_ASAP7_75t_R)
+                   7.578    0.000  181.133 ^ load_data[58] (out)
+                                   181.133   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.133   data arrival time
+---------------------------------------------------------------------------------
+                                     8.867   slack (MET)
+
+
+Startpoint: byte_offset[0] (input port clocked by vclk)
+Endpoint: load_data[48] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    2.023    0.000    0.000    0.000 v byte_offset[0] (in)
+    10    9.113   11.108   13.186   13.186 v _4270_/Y (BUFx6f_ASAP7_75t_R)
+    10    8.036   10.275   16.416   29.602 v _4278_/Y (BUFx6f_ASAP7_75t_R)
+    10    7.994   16.336   20.057   49.659 v _4504_/Y (BUFx3_ASAP7_75t_R)
+    10    5.502   16.772   22.679   72.338 v _4505_/Y (BUFx2_ASAP7_75t_R)
+     1    1.239   10.755   24.453   96.791 v _6828_/Y (OA211x2_ASAP7_75t_R)
+     2    2.158   19.334   13.055  109.846 ^ _6829_/Y (AOI21x1_ASAP7_75t_R)
+     1    0.430    8.044    6.477  116.322 v _7602_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.630    9.206   24.918  141.240 v _7605_/Y (OA211x2_ASAP7_75t_R)
+     1    1.284   12.889   28.398  169.638 v _7606_/Y (OR4x1_ASAP7_75t_R)
+     1    0.000   11.188   11.410  181.048 ^ _7607_/Y (NAND3x1_ASAP7_75t_R)
+                  11.188    0.000  181.048 ^ load_data[48] (out)
+                                   181.048   data arrival time
+
+                   0.000  200.000  200.000   clock vclk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -181.048   data arrival time
+---------------------------------------------------------------------------------
+                                     8.952   slack (MET)
+
+

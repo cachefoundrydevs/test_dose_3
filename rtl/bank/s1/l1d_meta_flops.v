@@ -69,6 +69,17 @@ module l1d_meta_flops #(
             end
         end
     endfunction
+    reg [NB-1:0] plru_write_way_pick;
+    reg          plru_write_any_way;
+    integer      pw;
+    always @* begin
+        plru_write_way_pick = {NB{1'b0}};
+        plru_write_any_way  = 1'b0;
+        for (pw = 0; pw < WAYS; pw = pw + 1) begin
+            plru_write_way_pick = plru_write_way_pick | ({NB{plru_write_way_enable[pw]}} & plru_write_way_value[pw*NB +: NB]);
+            plru_write_any_way  = plru_write_any_way  | plru_write_way_enable[pw];
+        end
+    end
     always @(posedge clk) begin : meta_proc
         if (rst) begin
             for (s = 0; s < SETS; s = s + 1) begin
@@ -84,7 +95,10 @@ module l1d_meta_flops #(
                     if (pf_write_hot[s] && pf_write_way_enable[ww])
                         pf_bit[s][ww] <= pf_write_value;
                 end
-                if (PLRU_ONEHOT != 0) begin
+                if (PLRU_ONEHOT == 2) begin
+                    if (plru_write_hot[s] && plru_write_any_way)
+                        plru[s] <= plru_write_way_pick;
+                end else if (PLRU_ONEHOT != 0) begin
                     for (ww = 0; ww < WAYS; ww = ww + 1)
                         if (plru_write_hot[s] && plru_write_way_enable[ww])
                             plru[s] <= plru_write_way_value[ww*NB +: NB];

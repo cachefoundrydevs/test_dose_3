@@ -1,0 +1,1757 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gate.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/common/l1d_ecc_syn.v
+Parsing Verilog input from `rtl/common/l1d_ecc_syn.v' to AST representation.
+Generating RTLIL representation for module `\l1d_ecc_syn'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/bank/s1/l1d_plru.v
+Parsing Verilog input from `rtl/bank/s1/l1d_plru.v' to AST representation.
+Generating RTLIL representation for module `\l1d_plru'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/bank/s1/l1d_meta_flops.v
+Parsing Verilog input from `rtl/bank/s1/l1d_meta_flops.v' to AST representation.
+Generating RTLIL representation for module `\l1d_meta_flops'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/bank/s1/l1d_s1_lookup.v
+Parsing Verilog input from `rtl/bank/s1/l1d_s1_lookup.v' to AST representation.
+Generating RTLIL representation for module `\l1d_s1_lookup'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/bank/s1/l1d_mesi_next.v
+Parsing Verilog input from `rtl/bank/s1/l1d_mesi_next.v' to AST representation.
+Generating RTLIL representation for module `\l1d_mesi_next'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/bank/s2/l1d_resp_gen.v
+Parsing Verilog input from `rtl/bank/s2/l1d_resp_gen.v' to AST representation.
+Generating RTLIL representation for module `\l1d_resp_gen'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/common/l1d_ecc_enc.v
+Parsing Verilog input from `rtl/common/l1d_ecc_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_ecc_enc'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: rtl/common/l1d_pri_enc.v
+Parsing Verilog input from `rtl/common/l1d_pri_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_pri_enc'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/bank/s1/l1d_bank_s1.v
+Parsing Verilog input from `rtl/bank/s1/l1d_bank_s1.v' to AST representation.
+Generating RTLIL representation for module `\l1d_bank_s1'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \l1d_bank_s1
+Used module:     \l1d_resp_gen
+Used module:     \l1d_mesi_next
+Used module:     \l1d_plru
+Used module:     \l1d_ecc_syn
+Used module:         \l1d_ecc_enc
+Used module:     \l1d_s1_lookup
+Used module:         \l1d_pri_enc
+Used module:     \l1d_meta_flops
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+
+10.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_enc'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Generating RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+
+10.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_plru'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Generating RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+
+10.4. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Generating RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Found cached RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+
+10.5. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_resp_gen'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+Generating RTLIL representation for module `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+Found cached RTLIL representation for module `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+Found cached RTLIL representation for module `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+Found cached RTLIL representation for module `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Found cached RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Found cached RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Found cached RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Found cached RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+
+10.6. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_syn'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Generating RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+
+10.7. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Generating RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Found cached RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Found cached RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Found cached RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn'.
+Parameter \WAYS = 4
+Parameter \TAG_W = 50
+Parameter \WAY_W = 2
+
+10.8. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_s1_lookup'.
+Parameter \WAYS = 4
+Parameter \TAG_W = 50
+Parameter \WAY_W = 2
+Generating RTLIL representation for module `$paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup'.
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \INDEX_W = 6
+Parameter \WAY_W = 2
+Parameter \READ_ONEHOT = 1
+Parameter \WRITE_ONEHOT = 1
+Parameter \PLRU_ONEHOT = 1
+
+10.9. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_meta_flops'.
+Parameter \SETS = 64
+Parameter \WAYS = 4
+Parameter \INDEX_W = 6
+Parameter \WAY_W = 2
+Parameter \READ_ONEHOT = 1
+Parameter \WRITE_ONEHOT = 1
+Parameter \PLRU_ONEHOT = 1
+Generating RTLIL representation for module `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops'.
+
+10.10. Analyzing design hierarchy..
+Top module:  \l1d_bank_s1
+Used module:     $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen
+Used module:     \l1d_mesi_next
+Used module:     $paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru
+Used module:     $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn
+Used module:         \l1d_ecc_enc
+Used module:     $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn
+Used module:     $paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup
+Used module:         \l1d_plru
+Used module:         \l1d_pri_enc
+Used module:     $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+
+10.11. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_enc'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Generating RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_enc'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc'.
+Parameter \WAYS = 4
+Parameter \WAY_W = 2
+Parameter \NB = 3
+Found cached RTLIL representation for module `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Found cached RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Found cached RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc'.
+
+10.12. Analyzing design hierarchy..
+Top module:  \l1d_bank_s1
+Used module:     $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen
+Used module:     \l1d_mesi_next
+Used module:     $paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru
+Used module:     $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn
+Used module:         $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_enc
+Used module:     $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn
+Used module:         $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc
+Used module:     $paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup
+Used module:         $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc
+Used module:     $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops
+
+10.13. Analyzing design hierarchy..
+Top module:  \l1d_bank_s1
+Used module:     $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen
+Used module:     \l1d_mesi_next
+Used module:     $paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru
+Used module:     $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn
+Used module:         $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_enc
+Used module:     $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn
+Used module:         $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc
+Used module:     $paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup
+Used module:         $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc
+Used module:     $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops
+Removing unused module `\l1d_pri_enc'.
+Removing unused module `\l1d_ecc_enc'.
+Removing unused module `\l1d_resp_gen'.
+Removing unused module `\l1d_s1_lookup'.
+Removing unused module `\l1d_meta_flops'.
+Removing unused module `\l1d_plru'.
+Removing unused module `\l1d_ecc_syn'.
+Removed 7 unused modules.
+
+11. Executing PROC pass (convert processes to netlists).
+
+11.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 65 empty switches in `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+Cleaned up 65 empty switches.
+
+11.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/bank/s1/l1d_bank_s1.v:533$4502 in module l1d_bank_s1.
+Marked 1 switch rules as full_case in process $proc$rtl/bank/s1/l1d_bank_s1.v:403$4083 in module l1d_bank_s1.
+Marked 4 switch rules as full_case in process $proc$rtl/bank/s1/l1d_bank_s1.v:389$4072 in module l1d_bank_s1.
+Marked 65 switch rules as full_case in process $proc$rtl/bank/s1/l1d_meta_flops.v:83$5894 in module $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.
+Marked 8 switch rules as full_case in process $proc$rtl/bank/s1/l1d_mesi_next.v:13$2981 in module l1d_mesi_next.
+Marked 4 switch rules as full_case in process $proc$rtl/common/l1d_pri_enc.v:11$5767 in module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.
+Removed a total of 0 dead cases.
+
+11.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 576 assignments to connections.
+
+11.4. Executing PROC_INIT pass (extract init attributes).
+
+11.5. Executing PROC_ARST pass (detect async resets in processes).
+
+11.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~852 debug messages>
+
+11.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+Creating decoders for process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+     1/38: $0\s2_valid[0:0]
+     2/38: $0\s2_tags[199:0]
+     3/38: $0\s2_tag_blocked[0:0]
+     4/38: $0\s2_tag_ue[3:0]
+     5/38: $0\s2_tag_ce[3:0]
+     6/38: $0\s2_tag_fix[3:0]
+     7/38: $0\s2_tag_synd[23:0]
+     8/38: $0\s2_data_ue[3:0]
+     9/38: $0\s2_data_ce[3:0]
+    10/38: $0\s2_data_fix[31:0]
+    11/38: $0\s2_data_synd[223:0]
+    12/38: $0\s2_pf_hit[0:0]
+    13/38: $0\s2_raw_hit[0:0]
+    14/38: $0\s2_slot[2:0]
+    15/38: $0\s2_vline[57:0]
+    16/38: $0\s2_vshared[0:0]
+    17/38: $0\s2_vdirty[0:0]
+    18/38: $0\s2_vvalid[0:0]
+    19/38: $0\s2_wbpend[0:0]
+    20/38: $0\s2_st_din[511:0]
+    21/38: $0\s2_st_be[63:0]
+    22/38: $0\s2_lines[2047:0]
+    23/38: $0\s2_words[255:0]
+    24/38: $0\s2_kill[0:0]
+    25/38: $0\s2_swap[0:0]
+    26/38: $0\s2_held[0:0]
+    27/38: $0\s2_way[1:0]
+    28/38: $0\s2_hand[0:0]
+    29/38: $0\s2_snp_hit[0:0]
+    30/38: $0\s2_scfail[0:0]
+    31/38: $0\s2_hit[0:0]
+    32/38: $0\s2_sid[0:0]
+    33/38: $0\s2_sinv[0:0]
+    34/38: $0\s2_line[57:0]
+    35/38: $0\s2_mid[2:0]
+    36/38: $0\s2_req[147:0]
+    37/38: $0\s2_seat[2:0]
+    38/38: $0\s2_kind[1:0]
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:513$4174'.
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:403$4083'.
+     1/1: $1\hit_ev[3:0]
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:389$4072'.
+     1/7: $4\m_ev[3:0]
+     2/7: $3\m_cur[1:0]
+     3/7: $3\m_ev[3:0]
+     4/7: $2\m_ev[3:0]
+     5/7: $2\m_cur[1:0]
+     6/7: $1\m_ev[3:0]
+     7/7: $1\m_cur[1:0]
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+Creating decoders for process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+Creating decoders for process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+Creating decoders for process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+     1/708: $130\ww[31:0]
+     2/708: $129\ww[31:0]
+     3/708: $0\pf_bit[63][3:0] [3]
+     4/708: $0\pf_bit[63][3:0] [2]
+     5/708: $0\states[63][7:0] [5:4]
+     6/708: $0\pf_bit[63][3:0] [1]
+     7/708: $0\states[63][7:0] [3:2]
+     8/708: $0\pf_bit[63][3:0] [0]
+     9/708: $0\states[63][7:0] [1:0]
+    10/708: $127\ww[31:0]
+    11/708: $0\pf_bit[62][3:0] [3]
+    12/708: $0\pf_bit[62][3:0] [2]
+    13/708: $0\states[62][7:0] [5:4]
+    14/708: $0\pf_bit[62][3:0] [1]
+    15/708: $0\states[62][7:0] [3:2]
+    16/708: $0\pf_bit[62][3:0] [0]
+    17/708: $0\states[62][7:0] [1:0]
+    18/708: $125\ww[31:0]
+    19/708: $0\pf_bit[61][3:0] [3]
+    20/708: $0\pf_bit[61][3:0] [2]
+    21/708: $0\states[61][7:0] [5:4]
+    22/708: $0\pf_bit[61][3:0] [1]
+    23/708: $0\states[61][7:0] [3:2]
+    24/708: $0\pf_bit[61][3:0] [0]
+    25/708: $0\states[61][7:0] [1:0]
+    26/708: $123\ww[31:0]
+    27/708: $0\pf_bit[60][3:0] [3]
+    28/708: $0\pf_bit[60][3:0] [2]
+    29/708: $0\states[60][7:0] [5:4]
+    30/708: $0\pf_bit[60][3:0] [1]
+    31/708: $0\states[60][7:0] [3:2]
+    32/708: $0\pf_bit[60][3:0] [0]
+    33/708: $0\states[60][7:0] [1:0]
+    34/708: $121\ww[31:0]
+    35/708: $0\pf_bit[59][3:0] [3]
+    36/708: $0\pf_bit[59][3:0] [2]
+    37/708: $0\states[59][7:0] [5:4]
+    38/708: $0\pf_bit[59][3:0] [1]
+    39/708: $0\states[59][7:0] [3:2]
+    40/708: $0\pf_bit[59][3:0] [0]
+    41/708: $0\states[59][7:0] [1:0]
+    42/708: $119\ww[31:0]
+    43/708: $0\pf_bit[58][3:0] [3]
+    44/708: $0\pf_bit[58][3:0] [2]
+    45/708: $0\states[58][7:0] [5:4]
+    46/708: $0\pf_bit[58][3:0] [1]
+    47/708: $0\states[58][7:0] [3:2]
+    48/708: $0\pf_bit[58][3:0] [0]
+    49/708: $0\states[58][7:0] [1:0]
+    50/708: $117\ww[31:0]
+    51/708: $0\pf_bit[57][3:0] [3]
+    52/708: $0\pf_bit[57][3:0] [2]
+    53/708: $0\states[57][7:0] [5:4]
+    54/708: $0\pf_bit[57][3:0] [1]
+    55/708: $0\states[57][7:0] [3:2]
+    56/708: $0\pf_bit[57][3:0] [0]
+    57/708: $0\states[57][7:0] [1:0]
+    58/708: $115\ww[31:0]
+    59/708: $0\pf_bit[56][3:0] [3]
+    60/708: $0\pf_bit[56][3:0] [2]
+    61/708: $0\states[56][7:0] [5:4]
+    62/708: $0\pf_bit[56][3:0] [1]
+    63/708: $0\states[56][7:0] [3:2]
+    64/708: $0\pf_bit[56][3:0] [0]
+    65/708: $0\states[56][7:0] [1:0]
+    66/708: $113\ww[31:0]
+    67/708: $0\pf_bit[55][3:0] [3]
+    68/708: $0\pf_bit[55][3:0] [2]
+    69/708: $0\states[55][7:0] [5:4]
+    70/708: $0\pf_bit[55][3:0] [1]
+    71/708: $0\states[55][7:0] [3:2]
+    72/708: $0\pf_bit[55][3:0] [0]
+    73/708: $0\states[55][7:0] [1:0]
+    74/708: $111\ww[31:0]
+    75/708: $0\pf_bit[54][3:0] [3]
+    76/708: $0\pf_bit[54][3:0] [2]
+    77/708: $0\states[54][7:0] [5:4]
+    78/708: $0\pf_bit[54][3:0] [1]
+    79/708: $0\states[54][7:0] [3:2]
+    80/708: $0\pf_bit[54][3:0] [0]
+    81/708: $0\states[54][7:0] [1:0]
+    82/708: $109\ww[31:0]
+    83/708: $0\pf_bit[53][3:0] [3]
+    84/708: $0\pf_bit[53][3:0] [2]
+    85/708: $0\states[53][7:0] [5:4]
+    86/708: $0\pf_bit[53][3:0] [1]
+    87/708: $0\states[53][7:0] [3:2]
+    88/708: $0\pf_bit[53][3:0] [0]
+    89/708: $0\states[53][7:0] [1:0]
+    90/708: $107\ww[31:0]
+    91/708: $0\pf_bit[52][3:0] [3]
+    92/708: $0\pf_bit[52][3:0] [2]
+    93/708: $0\states[52][7:0] [5:4]
+    94/708: $0\pf_bit[52][3:0] [1]
+    95/708: $0\states[52][7:0] [3:2]
+    96/708: $0\pf_bit[52][3:0] [0]
+    97/708: $0\states[52][7:0] [1:0]
+    98/708: $105\ww[31:0]
+    99/708: $0\pf_bit[51][3:0] [3]
+   100/708: $0\pf_bit[51][3:0] [2]
+   101/708: $0\states[51][7:0] [5:4]
+   102/708: $0\pf_bit[51][3:0] [1]
+   103/708: $0\states[51][7:0] [3:2]
+   104/708: $0\pf_bit[51][3:0] [0]
+   105/708: $0\states[51][7:0] [1:0]
+   106/708: $103\ww[31:0]
+   107/708: $0\pf_bit[50][3:0] [3]
+   108/708: $0\pf_bit[50][3:0] [2]
+   109/708: $0\states[50][7:0] [5:4]
+   110/708: $0\pf_bit[50][3:0] [1]
+   111/708: $0\states[50][7:0] [3:2]
+   112/708: $0\pf_bit[50][3:0] [0]
+   113/708: $0\states[50][7:0] [1:0]
+   114/708: $101\ww[31:0]
+   115/708: $0\pf_bit[49][3:0] [3]
+   116/708: $0\pf_bit[49][3:0] [2]
+   117/708: $0\states[49][7:0] [5:4]
+   118/708: $0\pf_bit[49][3:0] [1]
+   119/708: $0\states[49][7:0] [3:2]
+   120/708: $0\pf_bit[49][3:0] [0]
+   121/708: $0\states[49][7:0] [1:0]
+   122/708: $99\ww[31:0]
+   123/708: $0\pf_bit[48][3:0] [3]
+   124/708: $0\pf_bit[48][3:0] [2]
+   125/708: $0\states[48][7:0] [5:4]
+   126/708: $0\pf_bit[48][3:0] [1]
+   127/708: $0\states[48][7:0] [3:2]
+   128/708: $0\pf_bit[48][3:0] [0]
+   129/708: $0\states[48][7:0] [1:0]
+   130/708: $97\ww[31:0]
+   131/708: $0\pf_bit[47][3:0] [3]
+   132/708: $0\pf_bit[47][3:0] [2]
+   133/708: $0\states[47][7:0] [5:4]
+   134/708: $0\pf_bit[47][3:0] [1]
+   135/708: $0\states[47][7:0] [3:2]
+   136/708: $0\pf_bit[47][3:0] [0]
+   137/708: $0\states[47][7:0] [1:0]
+   138/708: $95\ww[31:0]
+   139/708: $0\pf_bit[46][3:0] [3]
+   140/708: $0\pf_bit[46][3:0] [2]
+   141/708: $0\states[46][7:0] [5:4]
+   142/708: $0\pf_bit[46][3:0] [1]
+   143/708: $0\states[46][7:0] [3:2]
+   144/708: $0\pf_bit[46][3:0] [0]
+   145/708: $0\states[46][7:0] [1:0]
+   146/708: $93\ww[31:0]
+   147/708: $0\pf_bit[45][3:0] [3]
+   148/708: $0\pf_bit[45][3:0] [2]
+   149/708: $0\states[45][7:0] [5:4]
+   150/708: $0\pf_bit[45][3:0] [1]
+   151/708: $0\states[45][7:0] [3:2]
+   152/708: $0\pf_bit[45][3:0] [0]
+   153/708: $0\states[45][7:0] [1:0]
+   154/708: $91\ww[31:0]
+   155/708: $0\pf_bit[44][3:0] [3]
+   156/708: $0\pf_bit[44][3:0] [2]
+   157/708: $0\states[44][7:0] [5:4]
+   158/708: $0\pf_bit[44][3:0] [1]
+   159/708: $0\states[44][7:0] [3:2]
+   160/708: $0\pf_bit[44][3:0] [0]
+   161/708: $0\states[44][7:0] [1:0]
+   162/708: $89\ww[31:0]
+   163/708: $0\pf_bit[43][3:0] [3]
+   164/708: $0\pf_bit[43][3:0] [2]
+   165/708: $0\states[43][7:0] [5:4]
+   166/708: $0\pf_bit[43][3:0] [1]
+   167/708: $0\states[43][7:0] [3:2]
+   168/708: $0\pf_bit[43][3:0] [0]
+   169/708: $0\states[43][7:0] [1:0]
+   170/708: $87\ww[31:0]
+   171/708: $0\pf_bit[42][3:0] [3]
+   172/708: $0\pf_bit[42][3:0] [2]
+   173/708: $0\states[42][7:0] [5:4]
+   174/708: $0\pf_bit[42][3:0] [1]
+   175/708: $0\states[42][7:0] [3:2]
+   176/708: $0\pf_bit[42][3:0] [0]
+   177/708: $0\states[42][7:0] [1:0]
+   178/708: $85\ww[31:0]
+   179/708: $0\pf_bit[41][3:0] [3]
+   180/708: $0\pf_bit[41][3:0] [2]
+   181/708: $0\states[41][7:0] [5:4]
+   182/708: $0\pf_bit[41][3:0] [1]
+   183/708: $0\states[41][7:0] [3:2]
+   184/708: $0\pf_bit[41][3:0] [0]
+   185/708: $0\states[41][7:0] [1:0]
+   186/708: $83\ww[31:0]
+   187/708: $0\pf_bit[40][3:0] [3]
+   188/708: $0\pf_bit[40][3:0] [2]
+   189/708: $0\states[40][7:0] [5:4]
+   190/708: $0\pf_bit[40][3:0] [1]
+   191/708: $0\states[40][7:0] [3:2]
+   192/708: $0\pf_bit[40][3:0] [0]
+   193/708: $0\states[40][7:0] [1:0]
+   194/708: $81\ww[31:0]
+   195/708: $0\pf_bit[39][3:0] [3]
+   196/708: $0\pf_bit[39][3:0] [2]
+   197/708: $0\states[39][7:0] [5:4]
+   198/708: $0\pf_bit[39][3:0] [1]
+   199/708: $0\states[39][7:0] [3:2]
+   200/708: $0\pf_bit[39][3:0] [0]
+   201/708: $0\states[39][7:0] [1:0]
+   202/708: $79\ww[31:0]
+   203/708: $0\pf_bit[38][3:0] [3]
+   204/708: $0\pf_bit[38][3:0] [2]
+   205/708: $0\states[38][7:0] [5:4]
+   206/708: $0\pf_bit[38][3:0] [1]
+   207/708: $0\states[38][7:0] [3:2]
+   208/708: $0\pf_bit[38][3:0] [0]
+   209/708: $0\states[38][7:0] [1:0]
+   210/708: $77\ww[31:0]
+   211/708: $0\pf_bit[37][3:0] [3]
+   212/708: $0\pf_bit[37][3:0] [2]
+   213/708: $0\states[37][7:0] [5:4]
+   214/708: $0\pf_bit[37][3:0] [1]
+   215/708: $0\states[37][7:0] [3:2]
+   216/708: $0\pf_bit[37][3:0] [0]
+   217/708: $0\states[37][7:0] [1:0]
+   218/708: $75\ww[31:0]
+   219/708: $0\pf_bit[36][3:0] [3]
+   220/708: $0\pf_bit[36][3:0] [2]
+   221/708: $0\states[36][7:0] [5:4]
+   222/708: $0\pf_bit[36][3:0] [1]
+   223/708: $0\states[36][7:0] [3:2]
+   224/708: $0\pf_bit[36][3:0] [0]
+   225/708: $0\states[36][7:0] [1:0]
+   226/708: $73\ww[31:0]
+   227/708: $0\pf_bit[35][3:0] [3]
+   228/708: $0\pf_bit[35][3:0] [2]
+   229/708: $0\states[35][7:0] [5:4]
+   230/708: $0\pf_bit[35][3:0] [1]
+   231/708: $0\states[35][7:0] [3:2]
+   232/708: $0\pf_bit[35][3:0] [0]
+   233/708: $0\states[35][7:0] [1:0]
+   234/708: $71\ww[31:0]
+   235/708: $0\pf_bit[34][3:0] [3]
+   236/708: $0\pf_bit[34][3:0] [2]
+   237/708: $0\states[34][7:0] [5:4]
+   238/708: $0\pf_bit[34][3:0] [1]
+   239/708: $0\states[34][7:0] [3:2]
+   240/708: $0\pf_bit[34][3:0] [0]
+   241/708: $0\states[34][7:0] [1:0]
+   242/708: $69\ww[31:0]
+   243/708: $0\pf_bit[33][3:0] [3]
+   244/708: $0\pf_bit[33][3:0] [2]
+   245/708: $0\states[33][7:0] [5:4]
+   246/708: $0\pf_bit[33][3:0] [1]
+   247/708: $0\states[33][7:0] [3:2]
+   248/708: $0\pf_bit[33][3:0] [0]
+   249/708: $0\states[33][7:0] [1:0]
+   250/708: $67\ww[31:0]
+   251/708: $0\pf_bit[32][3:0] [3]
+   252/708: $0\pf_bit[32][3:0] [2]
+   253/708: $0\states[32][7:0] [5:4]
+   254/708: $0\pf_bit[32][3:0] [1]
+   255/708: $0\states[32][7:0] [3:2]
+   256/708: $0\pf_bit[32][3:0] [0]
+   257/708: $0\states[32][7:0] [1:0]
+   258/708: $65\ww[31:0]
+   259/708: $0\pf_bit[31][3:0] [3]
+   260/708: $0\pf_bit[31][3:0] [2]
+   261/708: $0\states[31][7:0] [5:4]
+   262/708: $0\pf_bit[31][3:0] [1]
+   263/708: $0\states[31][7:0] [3:2]
+   264/708: $0\pf_bit[31][3:0] [0]
+   265/708: $0\states[31][7:0] [1:0]
+   266/708: $63\ww[31:0]
+   267/708: $0\pf_bit[30][3:0] [3]
+   268/708: $0\pf_bit[30][3:0] [2]
+   269/708: $0\states[30][7:0] [5:4]
+   270/708: $0\pf_bit[30][3:0] [1]
+   271/708: $0\states[30][7:0] [3:2]
+   272/708: $0\pf_bit[30][3:0] [0]
+   273/708: $0\states[30][7:0] [1:0]
+   274/708: $61\ww[31:0]
+   275/708: $0\pf_bit[29][3:0] [3]
+   276/708: $0\pf_bit[29][3:0] [2]
+   277/708: $0\states[29][7:0] [5:4]
+   278/708: $0\pf_bit[29][3:0] [1]
+   279/708: $0\states[29][7:0] [3:2]
+   280/708: $0\pf_bit[29][3:0] [0]
+   281/708: $0\states[29][7:0] [1:0]
+   282/708: $59\ww[31:0]
+   283/708: $0\pf_bit[28][3:0] [3]
+   284/708: $0\pf_bit[28][3:0] [2]
+   285/708: $0\states[28][7:0] [5:4]
+   286/708: $0\pf_bit[28][3:0] [1]
+   287/708: $0\states[28][7:0] [3:2]
+   288/708: $0\pf_bit[28][3:0] [0]
+   289/708: $0\states[28][7:0] [1:0]
+   290/708: $57\ww[31:0]
+   291/708: $0\pf_bit[27][3:0] [3]
+   292/708: $0\pf_bit[27][3:0] [2]
+   293/708: $0\states[27][7:0] [5:4]
+   294/708: $0\pf_bit[27][3:0] [1]
+   295/708: $0\states[27][7:0] [3:2]
+   296/708: $0\pf_bit[27][3:0] [0]
+   297/708: $0\states[27][7:0] [1:0]
+   298/708: $55\ww[31:0]
+   299/708: $0\pf_bit[26][3:0] [3]
+   300/708: $0\pf_bit[26][3:0] [2]
+   301/708: $0\states[26][7:0] [5:4]
+   302/708: $0\pf_bit[26][3:0] [1]
+   303/708: $0\states[26][7:0] [3:2]
+   304/708: $0\pf_bit[26][3:0] [0]
+   305/708: $0\states[26][7:0] [1:0]
+   306/708: $53\ww[31:0]
+   307/708: $0\pf_bit[25][3:0] [3]
+   308/708: $0\pf_bit[25][3:0] [2]
+   309/708: $0\states[25][7:0] [5:4]
+   310/708: $0\pf_bit[25][3:0] [1]
+   311/708: $0\states[25][7:0] [3:2]
+   312/708: $0\pf_bit[25][3:0] [0]
+   313/708: $0\states[25][7:0] [1:0]
+   314/708: $51\ww[31:0]
+   315/708: $0\pf_bit[24][3:0] [3]
+   316/708: $0\pf_bit[24][3:0] [2]
+   317/708: $0\states[24][7:0] [5:4]
+   318/708: $0\pf_bit[24][3:0] [1]
+   319/708: $0\states[24][7:0] [3:2]
+   320/708: $0\pf_bit[24][3:0] [0]
+   321/708: $0\states[24][7:0] [1:0]
+   322/708: $49\ww[31:0]
+   323/708: $0\pf_bit[23][3:0] [3]
+   324/708: $0\pf_bit[23][3:0] [2]
+   325/708: $0\states[23][7:0] [5:4]
+   326/708: $0\pf_bit[23][3:0] [1]
+   327/708: $0\states[23][7:0] [3:2]
+   328/708: $0\pf_bit[23][3:0] [0]
+   329/708: $0\states[23][7:0] [1:0]
+   330/708: $47\ww[31:0]
+   331/708: $0\pf_bit[22][3:0] [3]
+   332/708: $0\pf_bit[22][3:0] [2]
+   333/708: $0\states[22][7:0] [5:4]
+   334/708: $0\pf_bit[22][3:0] [1]
+   335/708: $0\states[22][7:0] [3:2]
+   336/708: $0\pf_bit[22][3:0] [0]
+   337/708: $0\states[22][7:0] [1:0]
+   338/708: $45\ww[31:0]
+   339/708: $0\pf_bit[21][3:0] [3]
+   340/708: $0\pf_bit[21][3:0] [2]
+   341/708: $0\states[21][7:0] [5:4]
+   342/708: $0\pf_bit[21][3:0] [1]
+   343/708: $0\states[21][7:0] [3:2]
+   344/708: $0\pf_bit[21][3:0] [0]
+   345/708: $0\states[21][7:0] [1:0]
+   346/708: $43\ww[31:0]
+   347/708: $0\pf_bit[20][3:0] [3]
+   348/708: $0\pf_bit[20][3:0] [2]
+   349/708: $0\states[20][7:0] [5:4]
+   350/708: $0\pf_bit[20][3:0] [1]
+   351/708: $0\states[20][7:0] [3:2]
+   352/708: $0\pf_bit[20][3:0] [0]
+   353/708: $0\states[20][7:0] [1:0]
+   354/708: $41\ww[31:0]
+   355/708: $0\pf_bit[19][3:0] [3]
+   356/708: $0\pf_bit[19][3:0] [2]
+   357/708: $0\states[19][7:0] [5:4]
+   358/708: $0\pf_bit[19][3:0] [1]
+   359/708: $0\states[19][7:0] [3:2]
+   360/708: $0\pf_bit[19][3:0] [0]
+   361/708: $0\states[19][7:0] [1:0]
+   362/708: $39\ww[31:0]
+   363/708: $0\pf_bit[18][3:0] [3]
+   364/708: $0\pf_bit[18][3:0] [2]
+   365/708: $0\states[18][7:0] [5:4]
+   366/708: $0\pf_bit[18][3:0] [1]
+   367/708: $0\states[18][7:0] [3:2]
+   368/708: $0\pf_bit[18][3:0] [0]
+   369/708: $0\states[18][7:0] [1:0]
+   370/708: $37\ww[31:0]
+   371/708: $0\pf_bit[17][3:0] [3]
+   372/708: $0\pf_bit[17][3:0] [2]
+   373/708: $0\states[17][7:0] [5:4]
+   374/708: $0\pf_bit[17][3:0] [1]
+   375/708: $0\states[17][7:0] [3:2]
+   376/708: $0\pf_bit[17][3:0] [0]
+   377/708: $0\states[17][7:0] [1:0]
+   378/708: $35\ww[31:0]
+   379/708: $0\pf_bit[16][3:0] [3]
+   380/708: $0\pf_bit[16][3:0] [2]
+   381/708: $0\states[16][7:0] [5:4]
+   382/708: $0\pf_bit[16][3:0] [1]
+   383/708: $0\states[16][7:0] [3:2]
+   384/708: $0\pf_bit[16][3:0] [0]
+   385/708: $0\states[16][7:0] [1:0]
+   386/708: $33\ww[31:0]
+   387/708: $0\pf_bit[15][3:0] [3]
+   388/708: $0\pf_bit[15][3:0] [2]
+   389/708: $0\states[15][7:0] [5:4]
+   390/708: $0\pf_bit[15][3:0] [1]
+   391/708: $0\states[15][7:0] [3:2]
+   392/708: $0\pf_bit[15][3:0] [0]
+   393/708: $0\states[15][7:0] [1:0]
+   394/708: $31\ww[31:0]
+   395/708: $0\pf_bit[14][3:0] [3]
+   396/708: $0\pf_bit[14][3:0] [2]
+   397/708: $0\states[14][7:0] [5:4]
+   398/708: $0\pf_bit[14][3:0] [1]
+   399/708: $0\states[14][7:0] [3:2]
+   400/708: $0\pf_bit[14][3:0] [0]
+   401/708: $0\states[14][7:0] [1:0]
+   402/708: $29\ww[31:0]
+   403/708: $0\pf_bit[13][3:0] [3]
+   404/708: $0\pf_bit[13][3:0] [2]
+   405/708: $0\states[13][7:0] [5:4]
+   406/708: $0\pf_bit[13][3:0] [1]
+   407/708: $0\states[13][7:0] [3:2]
+   408/708: $0\pf_bit[13][3:0] [0]
+   409/708: $0\states[13][7:0] [1:0]
+   410/708: $27\ww[31:0]
+   411/708: $0\pf_bit[12][3:0] [3]
+   412/708: $0\pf_bit[12][3:0] [2]
+   413/708: $0\states[12][7:0] [5:4]
+   414/708: $0\pf_bit[12][3:0] [1]
+   415/708: $0\states[12][7:0] [3:2]
+   416/708: $0\pf_bit[12][3:0] [0]
+   417/708: $0\states[12][7:0] [1:0]
+   418/708: $25\ww[31:0]
+   419/708: $0\pf_bit[11][3:0] [3]
+   420/708: $0\pf_bit[11][3:0] [2]
+   421/708: $0\states[11][7:0] [5:4]
+   422/708: $0\pf_bit[11][3:0] [1]
+   423/708: $0\states[11][7:0] [3:2]
+   424/708: $0\pf_bit[11][3:0] [0]
+   425/708: $0\states[11][7:0] [1:0]
+   426/708: $23\ww[31:0]
+   427/708: $0\pf_bit[10][3:0] [3]
+   428/708: $0\pf_bit[10][3:0] [2]
+   429/708: $0\states[10][7:0] [5:4]
+   430/708: $0\pf_bit[10][3:0] [1]
+   431/708: $0\states[10][7:0] [3:2]
+   432/708: $0\pf_bit[10][3:0] [0]
+   433/708: $0\states[10][7:0] [1:0]
+   434/708: $21\ww[31:0]
+   435/708: $0\pf_bit[9][3:0] [3]
+   436/708: $0\pf_bit[9][3:0] [2]
+   437/708: $0\states[9][7:0] [5:4]
+   438/708: $0\pf_bit[9][3:0] [1]
+   439/708: $0\states[9][7:0] [3:2]
+   440/708: $0\pf_bit[9][3:0] [0]
+   441/708: $0\states[9][7:0] [1:0]
+   442/708: $19\ww[31:0]
+   443/708: $0\pf_bit[8][3:0] [3]
+   444/708: $0\pf_bit[8][3:0] [2]
+   445/708: $0\states[8][7:0] [5:4]
+   446/708: $0\pf_bit[8][3:0] [1]
+   447/708: $0\states[8][7:0] [3:2]
+   448/708: $0\pf_bit[8][3:0] [0]
+   449/708: $0\states[8][7:0] [1:0]
+   450/708: $17\ww[31:0]
+   451/708: $0\pf_bit[7][3:0] [3]
+   452/708: $0\pf_bit[7][3:0] [2]
+   453/708: $0\states[7][7:0] [5:4]
+   454/708: $0\pf_bit[7][3:0] [1]
+   455/708: $0\states[7][7:0] [3:2]
+   456/708: $0\pf_bit[7][3:0] [0]
+   457/708: $0\states[7][7:0] [1:0]
+   458/708: $15\ww[31:0]
+   459/708: $0\pf_bit[6][3:0] [3]
+   460/708: $0\pf_bit[6][3:0] [2]
+   461/708: $0\states[6][7:0] [5:4]
+   462/708: $0\pf_bit[6][3:0] [1]
+   463/708: $0\states[6][7:0] [3:2]
+   464/708: $0\pf_bit[6][3:0] [0]
+   465/708: $0\states[6][7:0] [1:0]
+   466/708: $13\ww[31:0]
+   467/708: $0\pf_bit[5][3:0] [3]
+   468/708: $0\pf_bit[5][3:0] [2]
+   469/708: $0\states[5][7:0] [5:4]
+   470/708: $0\pf_bit[5][3:0] [1]
+   471/708: $0\states[5][7:0] [3:2]
+   472/708: $0\pf_bit[5][3:0] [0]
+   473/708: $0\states[5][7:0] [1:0]
+   474/708: $11\ww[31:0]
+   475/708: $0\pf_bit[4][3:0] [3]
+   476/708: $0\pf_bit[4][3:0] [2]
+   477/708: $0\states[4][7:0] [5:4]
+   478/708: $0\pf_bit[4][3:0] [1]
+   479/708: $0\states[4][7:0] [3:2]
+   480/708: $0\pf_bit[4][3:0] [0]
+   481/708: $0\states[4][7:0] [1:0]
+   482/708: $9\ww[31:0]
+   483/708: $0\pf_bit[3][3:0] [3]
+   484/708: $0\pf_bit[3][3:0] [2]
+   485/708: $0\states[3][7:0] [5:4]
+   486/708: $0\pf_bit[3][3:0] [1]
+   487/708: $0\states[3][7:0] [3:2]
+   488/708: $0\pf_bit[3][3:0] [0]
+   489/708: $0\states[3][7:0] [1:0]
+   490/708: $7\ww[31:0]
+   491/708: $0\pf_bit[2][3:0] [3]
+   492/708: $0\pf_bit[2][3:0] [2]
+   493/708: $0\states[2][7:0] [5:4]
+   494/708: $0\pf_bit[2][3:0] [1]
+   495/708: $0\states[2][7:0] [3:2]
+   496/708: $0\pf_bit[2][3:0] [0]
+   497/708: $0\states[2][7:0] [1:0]
+   498/708: $5\ww[31:0]
+   499/708: $0\pf_bit[1][3:0] [3]
+   500/708: $0\pf_bit[1][3:0] [2]
+   501/708: $0\states[1][7:0] [5:4]
+   502/708: $0\pf_bit[1][3:0] [1]
+   503/708: $0\states[1][7:0] [3:2]
+   504/708: $0\pf_bit[1][3:0] [0]
+   505/708: $0\states[1][7:0] [1:0]
+   506/708: $3\ww[31:0]
+   507/708: $0\pf_bit[0][3:0] [3]
+   508/708: $0\pf_bit[0][3:0] [2]
+   509/708: $0\states[0][7:0] [5:4]
+   510/708: $0\pf_bit[0][3:0] [1]
+   511/708: $0\states[0][7:0] [3:2]
+   512/708: $0\pf_bit[0][3:0] [0]
+   513/708: $0\states[0][7:0] [1:0]
+   514/708: $2\ww[31:0]
+   515/708: $1\s[31:0]
+   516/708: $1\ww[31:0]
+   517/708: $0\states[63][7:0] [7:6]
+   518/708: $0\states[62][7:0] [7:6]
+   519/708: $0\states[61][7:0] [7:6]
+   520/708: $0\states[60][7:0] [7:6]
+   521/708: $0\states[59][7:0] [7:6]
+   522/708: $0\states[58][7:0] [7:6]
+   523/708: $0\states[57][7:0] [7:6]
+   524/708: $0\states[56][7:0] [7:6]
+   525/708: $0\states[55][7:0] [7:6]
+   526/708: $0\states[54][7:0] [7:6]
+   527/708: $0\states[53][7:0] [7:6]
+   528/708: $0\states[52][7:0] [7:6]
+   529/708: $0\states[51][7:0] [7:6]
+   530/708: $0\states[50][7:0] [7:6]
+   531/708: $0\states[49][7:0] [7:6]
+   532/708: $0\states[48][7:0] [7:6]
+   533/708: $0\states[47][7:0] [7:6]
+   534/708: $0\states[46][7:0] [7:6]
+   535/708: $0\states[45][7:0] [7:6]
+   536/708: $0\states[44][7:0] [7:6]
+   537/708: $0\states[43][7:0] [7:6]
+   538/708: $0\states[42][7:0] [7:6]
+   539/708: $0\states[41][7:0] [7:6]
+   540/708: $0\states[40][7:0] [7:6]
+   541/708: $0\states[39][7:0] [7:6]
+   542/708: $0\states[38][7:0] [7:6]
+   543/708: $0\states[37][7:0] [7:6]
+   544/708: $0\states[36][7:0] [7:6]
+   545/708: $0\states[35][7:0] [7:6]
+   546/708: $0\states[34][7:0] [7:6]
+   547/708: $0\states[33][7:0] [7:6]
+   548/708: $0\states[32][7:0] [7:6]
+   549/708: $0\states[31][7:0] [7:6]
+   550/708: $0\states[30][7:0] [7:6]
+   551/708: $0\states[29][7:0] [7:6]
+   552/708: $0\states[28][7:0] [7:6]
+   553/708: $0\states[27][7:0] [7:6]
+   554/708: $0\states[26][7:0] [7:6]
+   555/708: $0\states[25][7:0] [7:6]
+   556/708: $0\states[24][7:0] [7:6]
+   557/708: $0\states[23][7:0] [7:6]
+   558/708: $0\states[22][7:0] [7:6]
+   559/708: $0\states[21][7:0] [7:6]
+   560/708: $0\states[20][7:0] [7:6]
+   561/708: $0\states[19][7:0] [7:6]
+   562/708: $0\states[18][7:0] [7:6]
+   563/708: $0\states[17][7:0] [7:6]
+   564/708: $0\states[16][7:0] [7:6]
+   565/708: $0\states[15][7:0] [7:6]
+   566/708: $0\states[14][7:0] [7:6]
+   567/708: $0\states[13][7:0] [7:6]
+   568/708: $0\states[12][7:0] [7:6]
+   569/708: $0\states[11][7:0] [7:6]
+   570/708: $0\states[10][7:0] [7:6]
+   571/708: $0\states[9][7:0] [7:6]
+   572/708: $0\states[8][7:0] [7:6]
+   573/708: $0\states[7][7:0] [7:6]
+   574/708: $0\states[6][7:0] [7:6]
+   575/708: $0\states[5][7:0] [7:6]
+   576/708: $0\states[4][7:0] [7:6]
+   577/708: $0\states[3][7:0] [7:6]
+   578/708: $0\states[2][7:0] [7:6]
+   579/708: $0\states[1][7:0] [7:6]
+   580/708: $0\states[0][7:0] [7:6]
+   581/708: $0\plru[63][2:0]
+   582/708: $0\plru[62][2:0]
+   583/708: $0\plru[61][2:0]
+   584/708: $0\plru[60][2:0]
+   585/708: $0\plru[59][2:0]
+   586/708: $0\plru[58][2:0]
+   587/708: $0\plru[57][2:0]
+   588/708: $0\plru[56][2:0]
+   589/708: $0\plru[55][2:0]
+   590/708: $0\plru[54][2:0]
+   591/708: $0\plru[53][2:0]
+   592/708: $0\plru[52][2:0]
+   593/708: $0\plru[51][2:0]
+   594/708: $0\plru[50][2:0]
+   595/708: $0\plru[49][2:0]
+   596/708: $0\plru[48][2:0]
+   597/708: $0\plru[47][2:0]
+   598/708: $0\plru[46][2:0]
+   599/708: $0\plru[45][2:0]
+   600/708: $0\plru[44][2:0]
+   601/708: $0\plru[43][2:0]
+   602/708: $0\plru[42][2:0]
+   603/708: $0\plru[41][2:0]
+   604/708: $0\plru[40][2:0]
+   605/708: $0\plru[39][2:0]
+   606/708: $0\plru[38][2:0]
+   607/708: $0\plru[37][2:0]
+   608/708: $0\plru[36][2:0]
+   609/708: $0\plru[35][2:0]
+   610/708: $0\plru[34][2:0]
+   611/708: $0\plru[33][2:0]
+   612/708: $0\plru[32][2:0]
+   613/708: $0\plru[31][2:0]
+   614/708: $0\plru[30][2:0]
+   615/708: $0\plru[29][2:0]
+   616/708: $0\plru[28][2:0]
+   617/708: $0\plru[27][2:0]
+   618/708: $0\plru[26][2:0]
+   619/708: $0\plru[25][2:0]
+   620/708: $0\plru[24][2:0]
+   621/708: $0\plru[23][2:0]
+   622/708: $0\plru[22][2:0]
+   623/708: $0\plru[21][2:0]
+   624/708: $0\plru[20][2:0]
+   625/708: $0\plru[19][2:0]
+   626/708: $0\plru[18][2:0]
+   627/708: $0\plru[17][2:0]
+   628/708: $0\plru[16][2:0]
+   629/708: $0\plru[15][2:0]
+   630/708: $0\plru[14][2:0]
+   631/708: $0\plru[13][2:0]
+   632/708: $0\plru[12][2:0]
+   633/708: $0\plru[11][2:0]
+   634/708: $0\plru[10][2:0]
+   635/708: $0\plru[9][2:0]
+   636/708: $0\plru[8][2:0]
+   637/708: $0\plru[7][2:0]
+   638/708: $0\plru[6][2:0]
+   639/708: $0\plru[5][2:0]
+   640/708: $0\plru[4][2:0]
+   641/708: $0\plru[3][2:0]
+   642/708: $0\plru[2][2:0]
+   643/708: $0\plru[1][2:0]
+   644/708: $0\plru[0][2:0]
+   645/708: $128\ww[31:0]
+   646/708: $126\ww[31:0]
+   647/708: $124\ww[31:0]
+   648/708: $122\ww[31:0]
+   649/708: $120\ww[31:0]
+   650/708: $118\ww[31:0]
+   651/708: $116\ww[31:0]
+   652/708: $114\ww[31:0]
+   653/708: $112\ww[31:0]
+   654/708: $110\ww[31:0]
+   655/708: $108\ww[31:0]
+   656/708: $106\ww[31:0]
+   657/708: $104\ww[31:0]
+   658/708: $102\ww[31:0]
+   659/708: $100\ww[31:0]
+   660/708: $98\ww[31:0]
+   661/708: $96\ww[31:0]
+   662/708: $94\ww[31:0]
+   663/708: $92\ww[31:0]
+   664/708: $90\ww[31:0]
+   665/708: $88\ww[31:0]
+   666/708: $86\ww[31:0]
+   667/708: $84\ww[31:0]
+   668/708: $82\ww[31:0]
+   669/708: $80\ww[31:0]
+   670/708: $78\ww[31:0]
+   671/708: $76\ww[31:0]
+   672/708: $74\ww[31:0]
+   673/708: $72\ww[31:0]
+   674/708: $70\ww[31:0]
+   675/708: $68\ww[31:0]
+   676/708: $66\ww[31:0]
+   677/708: $64\ww[31:0]
+   678/708: $62\ww[31:0]
+   679/708: $60\ww[31:0]
+   680/708: $58\ww[31:0]
+   681/708: $56\ww[31:0]
+   682/708: $54\ww[31:0]
+   683/708: $52\ww[31:0]
+   684/708: $50\ww[31:0]
+   685/708: $48\ww[31:0]
+   686/708: $46\ww[31:0]
+   687/708: $44\ww[31:0]
+   688/708: $42\ww[31:0]
+   689/708: $40\ww[31:0]
+   690/708: $38\ww[31:0]
+   691/708: $36\ww[31:0]
+   692/708: $34\ww[31:0]
+   693/708: $32\ww[31:0]
+   694/708: $30\ww[31:0]
+   695/708: $28\ww[31:0]
+   696/708: $26\ww[31:0]
+   697/708: $24\ww[31:0]
+   698/708: $22\ww[31:0]
+   699/708: $20\ww[31:0]
+   700/708: $18\ww[31:0]
+   701/708: $16\ww[31:0]
+   702/708: $14\ww[31:0]
+   703/708: $12\ww[31:0]
+   704/708: $10\ww[31:0]
+   705/708: $8\ww[31:0]
+   706/708: $6\ww[31:0]
+   707/708: $4\ww[31:0]
+   708/708: $2\s[31:0]
+Creating decoders for process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:75$5881'.
+Creating decoders for process `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+     1/23: $8\state_write_enable[0:0]
+     2/23: $8\next_state[1:0]
+     3/23: $7\state_write_enable[0:0]
+     4/23: $7\next_state[1:0]
+     5/23: $3\snoop_hands_over_data[0:0]
+     6/23: $6\state_write_enable[0:0]
+     7/23: $6\next_state[1:0]
+     8/23: $2\snoop_hands_over_data[0:0]
+     9/23: $5\state_write_enable[0:0]
+    10/23: $5\next_state[1:0]
+    11/23: $4\upgrade_needed[0:0]
+    12/23: $4\state_write_enable[0:0]
+    13/23: $4\next_state[1:0]
+    14/23: $3\upgrade_needed[0:0]
+    15/23: $3\state_write_enable[0:0]
+    16/23: $3\next_state[1:0]
+    17/23: $2\state_write_enable[0:0]
+    18/23: $2\next_state[1:0]
+    19/23: $2\upgrade_needed[0:0]
+    20/23: $1\upgrade_needed[0:0]
+    21/23: $1\next_state[1:0]
+    22/23: $1\state_write_enable[0:0]
+    23/23: $1\snoop_hands_over_data[0:0]
+Creating decoders for process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$5770'.
+Creating decoders for process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$5767'.
+     1/4: $4\lowest_set_index[1:0]
+     2/4: $3\lowest_set_index[1:0]
+     3/4: $2\lowest_set_index[1:0]
+     4/4: $1\lowest_set_index[1:0]
+
+11.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\plru_bits_next' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\ul' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\unode' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\udir' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\victim_way' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\l' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\node' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+No latch inferred for signal `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.\dir' from process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+No latch inferred for signal `\l1d_bank_s1.\st_be' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:513$4174'.
+No latch inferred for signal `\l1d_bank_s1.\bi' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:513$4174'.
+No latch inferred for signal `\l1d_bank_s1.\nby' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:513$4174'.
+No latch inferred for signal `\l1d_bank_s1.\hit_nxt_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+No latch inferred for signal `\l1d_bank_s1.\hit_we_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+No latch inferred for signal `\l1d_bank_s1.\hit_upg_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+No latch inferred for signal `\l1d_bank_s1.\hit_hand_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+No latch inferred for signal `\l1d_bank_s1.\hp' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+No latch inferred for signal `\l1d_bank_s1.\hit_ev' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:403$4083'.
+No latch inferred for signal `\l1d_bank_s1.\m_ev' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:389$4072'.
+No latch inferred for signal `\l1d_bank_s1.\m_cur' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:389$4072'.
+No latch inferred for signal `\l1d_bank_s1.\vict_way_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+No latch inferred for signal `\l1d_bank_s1.\vict_st_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+No latch inferred for signal `\l1d_bank_s1.\vict_tag_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+No latch inferred for signal `\l1d_bank_s1.\vp' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+No latch inferred for signal `\l1d_bank_s1.\plru_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+No latch inferred for signal `\l1d_bank_s1.\hit_st_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+No latch inferred for signal `\l1d_bank_s1.\hit_way_pick' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+No latch inferred for signal `\l1d_bank_s1.\pk' from process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_states_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_valid_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_plru_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_pf_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_inv_first_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.read_any_invalid_or' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.set_valid_bits' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.rs' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\g_read_onehot.rw' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru_write_way_pick' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:75$5881'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru_write_any_way' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:75$5881'.
+No latch inferred for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pw' from process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:75$5881'.
+No latch inferred for signal `\l1d_mesi_next.\state_write_enable' from process `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+No latch inferred for signal `\l1d_mesi_next.\next_state' from process `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+No latch inferred for signal `\l1d_mesi_next.\upgrade_needed' from process `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+No latch inferred for signal `\l1d_mesi_next.\snoop_hands_over_data' from process `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\i' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$5770'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\load_data' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$5770'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\nbytes' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$5770'.
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.\i' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$5767'.
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.\lowest_set_index' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$5767'.
+
+11.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_bank_s1.\s2_valid' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15137' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_kind' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15138' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_seat' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15139' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_req' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15140' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_mid' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15141' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_line' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15142' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_sinv' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15143' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_sid' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15144' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_hit' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15145' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_scfail' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15146' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_snp_hit' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15147' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_hand' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15148' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_way' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15149' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_held' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15150' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_swap' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15151' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_kill' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15152' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_words' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15153' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_lines' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15154' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_st_be' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15155' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_st_din' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15156' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_wbpend' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15157' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_vvalid' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15158' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_vdirty' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15159' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_vshared' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15160' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_vline' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15161' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_slot' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15162' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_raw_hit' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15163' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_pf_hit' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15164' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_data_synd' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15165' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_data_fix' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15166' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_data_ce' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15167' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_data_ue' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15168' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tag_synd' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15169' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tag_fix' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15170' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tag_ce' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15171' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tag_ue' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15172' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tag_blocked' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15173' with positive edge clock.
+Creating register for signal `\l1d_bank_s1.\s2_tags' using process `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+  created $dff cell `$procdff$15174' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\s' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15175' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\ww' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15176' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[0]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15177' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[1]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15178' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[2]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15179' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[3]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15180' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[4]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15181' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[5]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15182' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[6]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15183' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[7]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15184' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[8]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15185' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[9]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15186' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[10]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15187' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[11]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15188' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[12]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15189' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[13]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15190' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[14]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15191' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[15]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15192' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[16]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15193' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[17]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15194' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[18]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15195' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[19]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15196' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[20]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15197' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[21]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15198' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[22]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15199' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[23]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15200' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[24]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15201' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[25]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15202' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[26]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15203' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[27]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15204' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[28]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15205' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[29]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15206' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[30]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15207' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[31]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15208' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[32]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15209' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[33]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15210' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[34]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15211' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[35]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15212' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[36]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15213' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[37]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15214' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[38]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15215' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[39]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15216' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[40]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15217' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[41]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15218' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[42]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15219' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[43]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15220' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[44]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15221' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[45]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15222' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[46]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15223' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[47]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15224' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[48]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15225' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[49]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15226' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[50]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15227' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[51]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15228' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[52]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15229' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[53]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15230' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[54]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15231' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[55]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15232' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[56]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15233' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[57]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15234' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[58]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15235' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[59]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15236' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[60]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15237' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[61]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15238' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[62]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15239' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\states[63]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15240' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[0]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15241' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[1]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15242' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[2]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15243' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[3]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15244' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[4]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15245' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[5]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15246' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[6]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15247' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[7]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15248' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[8]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15249' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[9]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15250' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[10]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15251' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[11]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15252' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[12]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15253' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[13]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15254' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[14]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15255' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[15]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15256' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[16]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15257' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[17]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15258' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[18]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15259' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[19]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15260' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[20]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15261' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[21]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15262' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[22]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15263' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[23]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15264' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[24]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15265' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[25]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15266' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[26]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15267' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[27]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15268' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[28]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15269' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[29]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15270' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[30]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15271' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[31]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15272' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[32]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15273' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[33]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15274' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[34]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15275' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[35]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15276' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[36]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15277' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[37]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15278' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[38]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15279' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[39]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15280' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[40]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15281' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[41]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15282' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[42]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15283' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[43]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15284' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[44]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15285' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[45]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15286' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[46]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15287' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[47]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15288' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[48]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15289' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[49]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15290' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[50]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15291' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[51]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15292' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[52]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15293' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[53]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15294' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[54]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15295' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[55]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15296' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[56]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15297' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[57]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15298' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[58]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15299' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[59]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15300' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[60]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15301' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[61]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15302' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[62]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15303' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\plru[63]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15304' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[0]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15305' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[1]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15306' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[2]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15307' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[3]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15308' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[4]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15309' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[5]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15310' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[6]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15311' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[7]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15312' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[8]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15313' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[9]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15314' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[10]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15315' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[11]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15316' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[12]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15317' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[13]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15318' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[14]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15319' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[15]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15320' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[16]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15321' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[17]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15322' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[18]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15323' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[19]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15324' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[20]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15325' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[21]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15326' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[22]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15327' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[23]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15328' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[24]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15329' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[25]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15330' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[26]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15331' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[27]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15332' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[28]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15333' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[29]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15334' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[30]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15335' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[31]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15336' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[32]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15337' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[33]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15338' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[34]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15339' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[35]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15340' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[36]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15341' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[37]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15342' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[38]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15343' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[39]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15344' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[40]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15345' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[41]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15346' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[42]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15347' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[43]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15348' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[44]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15349' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[45]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15350' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[46]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15351' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[47]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15352' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[48]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15353' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[49]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15354' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[50]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15355' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[51]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15356' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[52]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15357' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[53]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15358' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[54]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15359' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[55]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15360' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[56]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15361' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[57]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15362' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[58]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15363' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[59]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15364' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[60]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15365' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[61]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15366' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[62]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15367' with positive edge clock.
+Creating register for signal `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.\pf_bit[63]' using process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+  created $dff cell `$procdff$15368' with positive edge clock.
+
+11.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+11.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:27$5740'.
+Removing empty process `$paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.$proc$rtl/bank/s1/l1d_plru.v:15$5725'.
+Found and cleaned up 2 empty switches in `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:533$4502'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:513$4174'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:430$4087'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:403$4083'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:403$4083'.
+Found and cleaned up 4 empty switches in `\l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:389$4072'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:389$4072'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:360$4025'.
+Removing empty process `l1d_bank_s1.$proc$rtl/bank/s1/l1d_bank_s1.v:301$3966'.
+Removing empty process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:128$6919'.
+Found and cleaned up 833 empty switches in `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+Removing empty process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:83$5894'.
+Removing empty process `$paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.$proc$rtl/bank/s1/l1d_meta_flops.v:75$5881'.
+Found and cleaned up 8 empty switches in `\l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+Removing empty process `l1d_mesi_next.$proc$rtl/bank/s1/l1d_mesi_next.v:13$2981'.
+Removing empty process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$5770'.
+Found and cleaned up 4 empty switches in `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$5767'.
+Removing empty process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$5767'.
+Cleaned up 852 empty switches.
+
+11.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.
+<suppressed ~16 debug messages>
+Optimizing module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc.
+<suppressed ~8 debug messages>
+Optimizing module l1d_bank_s1.
+<suppressed ~53 debug messages>
+Optimizing module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_enc.
+<suppressed ~7 debug messages>
+Optimizing module $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.
+<suppressed ~271 debug messages>
+Optimizing module $paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup.
+<suppressed ~4 debug messages>
+Optimizing module l1d_mesi_next.
+<suppressed ~3 debug messages>
+Optimizing module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn.
+Optimizing module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn.
+Optimizing module $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.
+Optimizing module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.
+
+12. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$143cd049a19791751d876fd29769de6d5a0bf693\l1d_plru.
+Deleting now unused module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_enc.
+Deleting now unused module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_enc.
+Deleting now unused module $paramod$9f2fb25d93a8e04a62da046dcad48a0ace61fda2\l1d_meta_flops.
+Deleting now unused module $paramod$142702318a96a0368eb83bbe3870f96a0fa860ad\l1d_s1_lookup.
+Deleting now unused module l1d_mesi_next.
+Deleting now unused module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_syn.
+Deleting now unused module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_syn.
+Deleting now unused module $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.
+Deleting now unused module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_pri_enc.
+<suppressed ~56 debug messages>
+
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_bank_s1..
+Removed 2829 unused cells and 7452 unused wires.
+<suppressed ~2919 debug messages>
+Renaming module \l1d_bank_s1 to \gate.
+
+14. Executing RTLIL backend.
+Output filename: proof/gate.il
+
+End of script. Logfile hash: 04a04aea69, time: 44.16s, user: 44.14s, system: 0.05s, MEM: 78.39 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 59% 1x hierarchy (26 sec), 39% 10x read_verilog (17 sec), ...

@@ -1,10 +1,11 @@
-# approved name changes (user requests 2026-11-19: 'update the s1 with these modifications', 'optimise the s1 top, for parallel access', 'do 10 iterations and try to parallelise the logics and module to module connections')
+# approved name changes (user requests 2026-11-19/20: 'update the s1 with these modifications', 'optimise the s1 top, for parallel access', 'do 10 iterations and try to parallelise the logics and module to module connections', 'do 5 more')
 + DECL wire[WAYS-1:0]m_valid
 + DECL wire[WAYS-1:0]st_we_way
 + DECL wire[2*WAYS-1:0]st_val_way
 + DECL wire[WAYS-1:0]pf_we_way
 + DECL wire[WAYS-2:0]plru_next_lookup
 + DECL wire hit_lookup
++ DECL wire[WAY_W-1:0]hit_way_lookup
 + DECL wire[WAYS-1:0]way_tag_match
 + DECL wire[WAYS-1:0]hit_onehot
 + DECL wire[WAYS-1:0]vict_onehot
@@ -26,6 +27,7 @@
 + LABEL g_rest
 + DECL reg[WAYS-2:0]plru_pick
 + DECL reg[1:0]hit_st_pick
++ DECL reg[WAY_W-1:0]hit_way_pick
 + DECL integer pk
 + ALWAYS always @*
 + FOR for(pk=0;pk<WAYS;pk=pk+1)

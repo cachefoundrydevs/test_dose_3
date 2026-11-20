@@ -1,0 +1,734 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: lt_u_gold (\lt_u_gold), lt_u_gate (\lt_u_gate) -> lt_u
+Presumably equivalent wires: lt_s_gold (\lt_s_gold), lt_s_gate (\lt_s_gate) -> lt_s
+Presumably equivalent wires: b_u_gold (\b_u_gold), b_u_gate (\b_u_gate) -> b_u
+Presumably equivalent wires: a_u_gold (\a_u_gold), a_u_gate (\a_u_gate) -> a_u
+Presumably equivalent wires: b_s_gold (\b_s_gold), b_s_gate (\b_s_gate) -> b_s
+Presumably equivalent wires: a_s_gold (\a_s_gold), a_s_gate (\a_s_gate) -> a_s
+Presumably equivalent wires: is64_gold (\is64_gold), is64_gate (\is64_gate) -> is64
+Presumably equivalent wires: new_value_gold (\new_value_gold), new_value_gate (\new_value_gate) -> new_value
+Presumably equivalent wires: operand_gold (\operand_gold), operand_gate (\operand_gate) -> operand
+Presumably equivalent wires: old_value_gold (\old_value_gold), old_value_gate (\old_value_gate) -> old_value
+Presumably equivalent wires: access_size_gold (\access_size_gold), access_size_gate (\access_size_gate) -> access_size
+Presumably equivalent wires: amo_op_gold (\amo_op_gold), amo_op_gate (\amo_op_gate) -> amo_op
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:30$16_gate ($mux): \lt_u_gate -> \lt_u
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:29$15_gate ($mux): \lt_u_gate -> \lt_u
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:28$14_gate ($mux): \lt_s_gate -> \lt_s
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:27$13_gate ($mux): \lt_s_gate -> \lt_s
+Changing input B of cell $lt$rtl/bank/s2/l1d_amo_alu.v:20$7_gate ($lt): \b_u_gate -> \b_u
+Changing input A of cell $lt$rtl/bank/s2/l1d_amo_alu.v:20$7_gate ($lt): \a_u_gate -> \a_u
+Changing input B of cell $lt$rtl/bank/s2/l1d_amo_alu.v:19$6_gate ($lt): \b_s_gate -> \b_s
+Changing input A of cell $lt$rtl/bank/s2/l1d_amo_alu.v:19$6_gate ($lt): \a_s_gate -> \a_s
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:18$5_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:17$4_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:16$3_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:15$2_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:30$16_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:29$15_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:28$14_gold ($mux): \lt_s_gold -> \lt_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:27$13_gold ($mux): \lt_s_gold -> \lt_s
+Changing input B of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \b_u_gold -> \b_u
+Changing input A of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \a_u_gold -> \a_u
+Changing input B of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \b_s_gold -> \b_s
+Changing input A of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \a_s_gold -> \a_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:18$5_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:17$4_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:16$3_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:15$2_gold ($mux): \is64_gold -> \is64
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 323 unproven $equiv cells (8 groups) in equiv:
+ Grouping SAT models for \new_value:
+  Trying to prove $equiv for \new_value [0]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [1]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [2]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [3]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [4]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [5]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [6]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [7]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [8]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [9]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [10]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [11]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [12]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [13]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [14]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [15]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [16]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [17]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [18]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [19]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [20]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [21]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [22]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [23]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [24]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [25]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [26]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [27]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [28]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [29]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [30]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [31]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [32]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [33]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [34]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [35]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [36]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [37]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [38]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [39]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [40]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [41]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [42]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [43]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [44]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [45]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [46]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [47]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [48]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [49]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [50]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [51]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [52]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [53]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [54]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [55]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [56]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [57]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [58]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [59]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [60]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [61]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [62]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [63]:ezsat
+ success!
+  Trying to prove $equiv for \is64:ezsat
+ success!
+ Grouping SAT models for \a_s:
+  Trying to prove $equiv for \a_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [63]:ezsat
+ success!
+ Grouping SAT models for \b_s:
+  Trying to prove $equiv for \b_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [63]:ezsat
+ success!
+ Grouping SAT models for \a_u:
+  Trying to prove $equiv for \a_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [63]:ezsat
+ success!
+ Grouping SAT models for \b_u:
+  Trying to prove $equiv for \b_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [63]:ezsat
+ success!
+  Trying to prove $equiv for \lt_s:ezsat
+ success!
+  Trying to prove $equiv for \lt_u:ezsat
+ success!
+Proved 323 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 323 $equiv cells in equiv:
+  Of those cells 323 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: a33bd50d6f, time: 0.10s, user: 0.10s, system: 0.01s, MEM: 33.25 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 98% 1x equiv_simple (0 sec), 0% 1x equiv_make (0 sec), ...

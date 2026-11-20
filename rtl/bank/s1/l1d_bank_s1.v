@@ -153,7 +153,7 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   pf_we_way;
     wire [WAYS-1:0]   pl_we_way;
     l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
-                     .READ_ONEHOT(1), .WRITE_ONEHOT(1), .PLRU_ONEHOT(1)) u_meta (
+                     .READ_ONEHOT(1), .WRITE_ONEHOT(1), .PLRU_ONEHOT(1), .WRITE_BEHIND(1)) u_meta (
         .clk                    (clk),
         .rst                    (rst),
         .read_set               (s1_set),

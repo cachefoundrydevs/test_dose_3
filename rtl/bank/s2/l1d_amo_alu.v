@@ -16,8 +16,10 @@ module l1d_amo_alu #(
     wire [W-1:0] b_s = is64 ? operand   : {{HW{operand[HW-1]}},   operand[HW-1:0]};
     wire [W-1:0] a_u = is64 ? old_value : {{HW{1'b0}}, old_value[HW-1:0]};
     wire [W-1:0] b_u = is64 ? operand   : {{HW{1'b0}}, operand[HW-1:0]};
-    wire         lt_s = $signed(a_s) < $signed(b_s);
-    wire         lt_u = a_u < b_u;
+    wire         lt_s = is64 ? ($signed(old_value) < $signed(operand))
+                             : ($signed(a_s[HW-1:0]) < $signed(b_s[HW-1:0]));
+    wire         lt_u = is64 ? (old_value < operand)
+                             : (a_u[HW-1:0] < b_u[HW-1:0]);
     always @* begin
         case (amo_op)
             AMO_ADD:  new_value = old_value + operand;

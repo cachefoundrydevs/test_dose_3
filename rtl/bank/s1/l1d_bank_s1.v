@@ -151,8 +151,9 @@ module l1d_bank_s1 #(
     wire [WAYS-1:0]   st_we_way;
     wire [2*WAYS-1:0] st_val_way;
     wire [WAYS-1:0]   pf_we_way;
+    wire [WAYS-1:0]   pl_we_way;
     l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
-                     .READ_ONEHOT(1), .WRITE_ONEHOT(1)) u_meta (
+                     .READ_ONEHOT(1), .WRITE_ONEHOT(1), .PLRU_ONEHOT(1)) u_meta (
         .clk                    (clk),
         .rst                    (rst),
         .read_set               (s1_set),
@@ -169,6 +170,8 @@ module l1d_bank_s1 #(
         .plru_write_enable      (pl_we),
         .plru_write_set         (s1_set),
         .plru_write_value       (plru_new),
+        .plru_write_way_enable  (pl_we_way),
+        .plru_write_way_value   (plru_cand),
         .pf_write_enable        (pf_we),
         .pf_write_set           (s1_set),
         .pf_write_way           (s1_way),
@@ -240,6 +243,7 @@ module l1d_bank_s1 #(
     assign acc_way = (s1_kind == K_LSU) ? hit_way : vict_way;
     wire [WAYS-2:0]  plru_next_lookup;
     wire             hit_lookup;
+    wire [WAY_W-1:0] hit_way_lookup;
     l1d_s1_lookup #(.WAYS(WAYS), .TAG_W(TAG_W), .WAY_W(WAY_W)) u_lookup (
         .way_tags_flat   (tag_q),
         .way_states_flat (m_states),
@@ -247,7 +251,7 @@ module l1d_bank_s1 #(
         .lookup_tag      (s1_tag),
         .accessed_way    (acc_way),
         .hit             (hit_lookup),
-        .hit_way         (hit_way),
+        .hit_way         (hit_way_lookup),
         .victim_way      (victim_way),
         .plru_bits_next  (plru_next_lookup)
     );
@@ -292,11 +296,14 @@ module l1d_bank_s1 #(
     assign hit = |way_tag_match;
     reg  [WAYS-2:0] plru_pick;
     reg  [1:0]      hit_st_pick;
+    reg  [WAY_W-1:0] hit_way_pick;
     integer         pk;
     always @* begin
         plru_pick   = {(WAYS-1){1'b0}};
         hit_st_pick = 2'b00;
+        hit_way_pick = {WAY_W{1'b0}};
         for (pk = 0; pk < WAYS; pk = pk + 1) begin
+            hit_way_pick = hit_way_pick | ({WAY_W{hit_onehot[pk]}} & pk[WAY_W-1:0]);
             plru_pick   = plru_pick   | ({(WAYS-1){acc_onehot[pk]}} & plru_cand[pk*(WAYS-1) +: WAYS-1]);
             hit_st_pick = hit_st_pick | ({2{hit_onehot[pk]}} & m_states[2*pk +: 2]);
         end
@@ -304,6 +311,7 @@ module l1d_bank_s1 #(
     assign plru_new = plru_pick;
     wire [1:0] hit_st;
     assign hit_st = hit_st_pick;
+    assign hit_way = hit_way_pick;
     wire s2_lrsc;
     wire sc_ok;
     wire s1_live;
@@ -485,6 +493,7 @@ module l1d_bank_s1 #(
                                    inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
             assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :
                                            (s1_kind == K_MAINT)  ? mt_nxt : way_nxt[2*pw +: 2];
+            assign pl_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw]) || inst_way[pw];
             assign pf_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw] && m_pf_bits[pw]) ||
                                    inst_way[pw] || (s1_snp && s1_sinv && hit_first[pw]) ||
                                    (case_walk && (s1_mop == MAINT_FLUSH) && mway_hot[pw]);

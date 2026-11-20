@@ -488,7 +488,11 @@ module l1d_bank_s1 #(
             wire [WAY_W-1:0] write_cand;
             assign write_cand    = pw;
             assign mway_hot[pw]  = (s1_mway == write_cand);
-            assign inst_way[pw]  = s1_refill && vict_onehot[pw] && (!way_valid[pw] || refill_ok);
+            assign inst_way[pw]  = s1_refill && (
+                                   (inv_first[pw] && !lock_way[pw]) ||
+                                   (inv_first[pw ^ 1] && lock_way[pw ^ 1] && (!way_valid[pw] || refill_ok)) ||
+                                   (!any_invalid && refill_ok &&
+                                    ((plru_vict_hot[pw] && !lock_way[pw]) || (plru_vict_hot[pw ^ 1] && lock_way[pw ^ 1]))));
             assign st_we_way[pw] = (((s1_lsu_go && !tag_err_any) || s1_snp) && hit_first[pw] && way_we[pw]) ||
                                    inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
             assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :

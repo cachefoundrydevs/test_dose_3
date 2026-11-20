@@ -231,7 +231,7 @@ module l1d_bank_s1 #(
     genvar vw;
     generate
         for (vw = 0; vw < WAYS; vw = vw + 1) begin : g_way_valid
-            assign way_valid[vw] = m_valid[vw];
+            assign way_valid[vw] = (m_states[2*vw +: 2] != ST_I);
             assign tag_ce[vw]    = tag_fix[vw] & way_valid[vw];
             assign tag_ue[vw]    = tag_ue_raw[vw] & way_valid[vw];
         end

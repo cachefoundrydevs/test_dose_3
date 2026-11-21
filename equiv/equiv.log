@@ -1,0 +1,1018 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: lt_u_gold (\lt_u_gold), lt_u_gate (\lt_u_gate) -> lt_u
+Presumably equivalent wires: lt_s_gold (\lt_s_gold), lt_s_gate (\lt_s_gate) -> lt_s
+Presumably equivalent wires: b_u_gold (\b_u_gold), b_u_gate (\b_u_gate) -> b_u
+Presumably equivalent wires: a_u_gold (\a_u_gold), a_u_gate (\a_u_gate) -> a_u
+Presumably equivalent wires: b_s_gold (\b_s_gold), b_s_gate (\b_s_gate) -> b_s
+Presumably equivalent wires: a_s_gold (\a_s_gold), a_s_gate (\a_s_gate) -> a_s
+Presumably equivalent wires: is64_gold (\is64_gold), is64_gate (\is64_gate) -> is64
+Presumably equivalent wires: new_value_gold (\new_value_gold), new_value_gate (\new_value_gate) -> new_value
+Presumably equivalent wires: operand_gold (\operand_gold), operand_gate (\operand_gate) -> operand
+Presumably equivalent wires: old_value_gold (\old_value_gold), old_value_gate (\old_value_gate) -> old_value
+Presumably equivalent wires: access_size_gold (\access_size_gold), access_size_gate (\access_size_gate) -> access_size
+Presumably equivalent wires: amo_op_gold (\amo_op_gold), amo_op_gate (\amo_op_gate) -> amo_op
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:34$1639_gate ($and): { \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate } -> { \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s }
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:35$1641_gate ($not): \lt_s_gate -> \lt_s
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:36$1654_gate ($and): { \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate } -> { \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u }
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:37$1656_gate ($not): \lt_u_gate -> \lt_u
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$882_gate ($and): \b_u_gate [0] -> \b_u [0]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$881_gate ($not): \a_u_gate [0] -> \a_u [0]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$880_gate ($or): \b_u_gate [1] -> \b_u [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$879_gate ($not): \a_u_gate [1] -> \a_u [1]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$878_gate ($and): \b_u_gate [1] -> \b_u [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$877_gate ($not): \a_u_gate [1] -> \a_u [1]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$875_gate ($or): \b_u_gate [3:2] -> \b_u [3:2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$874_gate ($not): \a_u_gate [3:2] -> \a_u [3:2]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$871_gate ($and): \b_u_gate [2] -> \b_u [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$870_gate ($not): \a_u_gate [2] -> \a_u [2]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$869_gate ($or): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$868_gate ($not): \a_u_gate [3] -> \a_u [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$867_gate ($and): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$866_gate ($not): \a_u_gate [3] -> \a_u [3]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$864_gate ($or): \b_u_gate [7:4] -> \b_u [7:4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$863_gate ($not): \a_u_gate [7:4] -> \a_u [7:4]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$858_gate ($and): \b_u_gate [4] -> \b_u [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$857_gate ($not): \a_u_gate [4] -> \a_u [4]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$856_gate ($or): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$855_gate ($not): \a_u_gate [5] -> \a_u [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$854_gate ($and): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$853_gate ($not): \a_u_gate [5] -> \a_u [5]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$851_gate ($or): \b_u_gate [7:6] -> \b_u [7:6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$850_gate ($not): \a_u_gate [7:6] -> \a_u [7:6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$847_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$846_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$845_gate ($or): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$844_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$843_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$842_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$840_gate ($or): \b_u_gate [15:8] -> \b_u [15:8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$839_gate ($not): \a_u_gate [15:8] -> \a_u [15:8]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$832_gate ($and): \b_u_gate [8] -> \b_u [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$831_gate ($not): \a_u_gate [8] -> \a_u [8]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$830_gate ($or): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$829_gate ($not): \a_u_gate [9] -> \a_u [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$828_gate ($and): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$827_gate ($not): \a_u_gate [9] -> \a_u [9]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$825_gate ($or): \b_u_gate [11:10] -> \b_u [11:10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$824_gate ($not): \a_u_gate [11:10] -> \a_u [11:10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$821_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$820_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$819_gate ($or): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$818_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$817_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$816_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$814_gate ($or): \b_u_gate [15:12] -> \b_u [15:12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$813_gate ($not): \a_u_gate [15:12] -> \a_u [15:12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$808_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$807_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$806_gate ($or): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$805_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$804_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$803_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$801_gate ($or): \b_u_gate [15:14] -> \b_u [15:14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$800_gate ($not): \a_u_gate [15:14] -> \a_u [15:14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$797_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$796_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$795_gate ($or): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$794_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$793_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$792_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$790_gate ($or): \b_u_gate [31:16] -> \b_u [31:16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$789_gate ($not): \a_u_gate [31:16] -> \a_u [31:16]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$780_gate ($and): \b_u_gate [16] -> \b_u [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$779_gate ($not): \a_u_gate [16] -> \a_u [16]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$778_gate ($or): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$777_gate ($not): \a_u_gate [17] -> \a_u [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$776_gate ($and): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$775_gate ($not): \a_u_gate [17] -> \a_u [17]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$773_gate ($or): \b_u_gate [19:18] -> \b_u [19:18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$772_gate ($not): \a_u_gate [19:18] -> \a_u [19:18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$769_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$768_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$767_gate ($or): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$766_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$765_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$764_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$762_gate ($or): \b_u_gate [23:20] -> \b_u [23:20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$761_gate ($not): \a_u_gate [23:20] -> \a_u [23:20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$756_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$755_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$754_gate ($or): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$753_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$752_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$751_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$749_gate ($or): \b_u_gate [23:22] -> \b_u [23:22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$748_gate ($not): \a_u_gate [23:22] -> \a_u [23:22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$745_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$744_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$743_gate ($or): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$742_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$741_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$740_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$738_gate ($or): \b_u_gate [31:24] -> \b_u [31:24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$737_gate ($not): \a_u_gate [31:24] -> \a_u [31:24]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$730_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$729_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$728_gate ($or): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$727_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$726_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$725_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$723_gate ($or): \b_u_gate [27:26] -> \b_u [27:26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$722_gate ($not): \a_u_gate [27:26] -> \a_u [27:26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$719_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$718_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$717_gate ($or): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$716_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$715_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$714_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$712_gate ($or): \b_u_gate [31:28] -> \b_u [31:28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$711_gate ($not): \a_u_gate [31:28] -> \a_u [31:28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$706_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$705_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$704_gate ($or): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$703_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$702_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$701_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$699_gate ($or): \b_u_gate [31:30] -> \b_u [31:30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$698_gate ($not): \a_u_gate [31:30] -> \a_u [31:30]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$695_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$694_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$693_gate ($or): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$692_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$691_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$690_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:25$685_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:24$684_gate ($and): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$468_gate ($and): \b_s_gate [0] -> \b_s [0]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$467_gate ($not): \a_s_gate [0] -> \a_s [0]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$466_gate ($or): \b_s_gate [1] -> \b_s [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$465_gate ($not): \a_s_gate [1] -> \a_s [1]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$464_gate ($and): \b_s_gate [1] -> \b_s [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$463_gate ($not): \a_s_gate [1] -> \a_s [1]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$461_gate ($or): \b_s_gate [3:2] -> \b_s [3:2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$460_gate ($not): \a_s_gate [3:2] -> \a_s [3:2]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$457_gate ($and): \b_s_gate [2] -> \b_s [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$456_gate ($not): \a_s_gate [2] -> \a_s [2]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$455_gate ($or): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$454_gate ($not): \a_s_gate [3] -> \a_s [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$453_gate ($and): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$452_gate ($not): \a_s_gate [3] -> \a_s [3]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$450_gate ($or): \b_s_gate [7:4] -> \b_s [7:4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$449_gate ($not): \a_s_gate [7:4] -> \a_s [7:4]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$444_gate ($and): \b_s_gate [4] -> \b_s [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$443_gate ($not): \a_s_gate [4] -> \a_s [4]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$442_gate ($or): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$441_gate ($not): \a_s_gate [5] -> \a_s [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$440_gate ($and): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$439_gate ($not): \a_s_gate [5] -> \a_s [5]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$437_gate ($or): \b_s_gate [7:6] -> \b_s [7:6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$436_gate ($not): \a_s_gate [7:6] -> \a_s [7:6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$433_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$432_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$431_gate ($or): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$430_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$429_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$428_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$426_gate ($or): \b_s_gate [15:8] -> \b_s [15:8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$425_gate ($not): \a_s_gate [15:8] -> \a_s [15:8]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$418_gate ($and): \b_s_gate [8] -> \b_s [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$417_gate ($not): \a_s_gate [8] -> \a_s [8]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$416_gate ($or): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$415_gate ($not): \a_s_gate [9] -> \a_s [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$414_gate ($and): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$413_gate ($not): \a_s_gate [9] -> \a_s [9]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$411_gate ($or): \b_s_gate [11:10] -> \b_s [11:10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$410_gate ($not): \a_s_gate [11:10] -> \a_s [11:10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$407_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$406_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$405_gate ($or): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$404_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$403_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$402_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$400_gate ($or): \b_s_gate [15:12] -> \b_s [15:12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$399_gate ($not): \a_s_gate [15:12] -> \a_s [15:12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$394_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$393_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$392_gate ($or): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$391_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$390_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$389_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$387_gate ($or): \b_s_gate [15:14] -> \b_s [15:14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$386_gate ($not): \a_s_gate [15:14] -> \a_s [15:14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$383_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$382_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$381_gate ($or): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$380_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$379_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$378_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$375_gate ($or): \b_s_gate [30:16] -> \b_s [30:16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$374_gate ($not): \a_s_gate [30:16] -> \a_s [30:16]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$371_gate ($or): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$370_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$369_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$368_gate ($and): \is64_gate -> \is64
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$367_gate ($or): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$366_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$357_gate ($and): \b_s_gate [16] -> \b_s [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$356_gate ($not): \a_s_gate [16] -> \a_s [16]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$355_gate ($or): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$354_gate ($not): \a_s_gate [17] -> \a_s [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$353_gate ($and): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$352_gate ($not): \a_s_gate [17] -> \a_s [17]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$350_gate ($or): \b_s_gate [19:18] -> \b_s [19:18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$349_gate ($not): \a_s_gate [19:18] -> \a_s [19:18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$346_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$345_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$344_gate ($or): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$343_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$342_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$341_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$339_gate ($or): \b_s_gate [23:20] -> \b_s [23:20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$338_gate ($not): \a_s_gate [23:20] -> \a_s [23:20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$333_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$332_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$331_gate ($or): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$330_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$329_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$328_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$326_gate ($or): \b_s_gate [23:22] -> \b_s [23:22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$325_gate ($not): \a_s_gate [23:22] -> \a_s [23:22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$322_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$321_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$320_gate ($or): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$319_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$318_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$317_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$314_gate ($or): \b_s_gate [30:24] -> \b_s [30:24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$313_gate ($not): \a_s_gate [30:24] -> \a_s [30:24]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$310_gate ($or): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$309_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$308_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$307_gate ($and): \is64_gate -> \is64
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$306_gate ($or): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$305_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$298_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$297_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$296_gate ($or): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$295_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$294_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$293_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$291_gate ($or): \b_s_gate [27:26] -> \b_s [27:26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$290_gate ($not): \a_s_gate [27:26] -> \a_s [27:26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$287_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$286_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$285_gate ($or): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$284_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$283_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$282_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$279_gate ($or): \b_s_gate [30:28] -> \b_s [30:28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$278_gate ($not): \a_s_gate [30:28] -> \a_s [30:28]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$275_gate ($or): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$274_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$273_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$272_gate ($and): \is64_gate -> \is64
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$271_gate ($or): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$270_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$265_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$264_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$263_gate ($or): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$262_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$261_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$260_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$258_gate ($or): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$257_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$254_gate ($or): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$253_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$252_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$251_gate ($and): \is64_gate -> \is64
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$250_gate ($or): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$249_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$246_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$245_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$242_gate ($or): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$241_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$240_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$239_gate ($and): \is64_gate -> \is64
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$238_gate ($or): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$237_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$234_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$233_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$232_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$231_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$230_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$229_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:21$221_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:20$220_gate ($and): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:18$5_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:17$4_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:16$3_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:15$2_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:30$16_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:29$15_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:28$14_gold ($mux): \lt_s_gold -> \lt_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:27$13_gold ($mux): \lt_s_gold -> \lt_s
+Changing input B of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \b_u_gold -> \b_u
+Changing input A of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \a_u_gold -> \a_u
+Changing input B of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \b_s_gold -> \b_s
+Changing input A of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \a_s_gold -> \a_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:18$5_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:17$4_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:16$3_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:15$2_gold ($mux): \is64_gold -> \is64
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 323 unproven $equiv cells (8 groups) in equiv:
+ Grouping SAT models for \new_value:
+  Trying to prove $equiv for \new_value [0]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [1]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [2]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [3]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [4]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [5]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [6]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [7]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [8]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [9]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [10]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [11]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [12]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [13]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [14]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [15]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [16]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [17]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [18]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [19]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [20]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [21]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [22]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [23]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [24]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [25]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [26]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [27]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [28]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [29]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [30]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [31]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [32]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [33]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [34]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [35]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [36]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [37]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [38]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [39]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [40]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [41]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [42]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [43]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [44]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [45]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [46]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [47]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [48]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [49]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [50]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [51]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [52]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [53]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [54]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [55]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [56]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [57]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [58]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [59]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [60]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [61]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [62]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [63]:ezsat
+ success!
+  Trying to prove $equiv for \is64:ezsat
+ success!
+ Grouping SAT models for \a_s:
+  Trying to prove $equiv for \a_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [63]:ezsat
+ success!
+ Grouping SAT models for \b_s:
+  Trying to prove $equiv for \b_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [63]:ezsat
+ success!
+ Grouping SAT models for \a_u:
+  Trying to prove $equiv for \a_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [63]:ezsat
+ success!
+ Grouping SAT models for \b_u:
+  Trying to prove $equiv for \b_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [63]:ezsat
+ success!
+  Trying to prove $equiv for \lt_s:ezsat
+ success!
+  Trying to prove $equiv for \lt_u:ezsat
+ success!
+Proved 323 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 323 $equiv cells in equiv:
+  Of those cells 323 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 3ae536af0d, time: 1.65s, user: 1.60s, system: 0.05s, MEM: 164.79 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 99% 1x equiv_simple (1 sec), 0% 1x equiv_make (0 sec), ...

@@ -1,0 +1,1550 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: lt_u_gold (\lt_u_gold), lt_u_gate (\lt_u_gate) -> lt_u
+Presumably equivalent wires: lt_s_gold (\lt_s_gold), lt_s_gate (\lt_s_gate) -> lt_s
+Presumably equivalent wires: b_u_gold (\b_u_gold), b_u_gate (\b_u_gate) -> b_u
+Presumably equivalent wires: a_u_gold (\a_u_gold), a_u_gate (\a_u_gate) -> a_u
+Presumably equivalent wires: b_s_gold (\b_s_gold), b_s_gate (\b_s_gate) -> b_s
+Presumably equivalent wires: a_s_gold (\a_s_gold), a_s_gate (\a_s_gate) -> a_s
+Presumably equivalent wires: is64_gold (\is64_gold), is64_gate (\is64_gate) -> is64
+Presumably equivalent wires: new_value_gold (\new_value_gold), new_value_gate (\new_value_gate) -> new_value
+Presumably equivalent wires: operand_gold (\operand_gold), operand_gate (\operand_gate) -> operand
+Presumably equivalent wires: old_value_gold (\old_value_gold), old_value_gate (\old_value_gate) -> old_value
+Presumably equivalent wires: access_size_gold (\access_size_gold), access_size_gate (\access_size_gate) -> access_size
+Presumably equivalent wires: amo_op_gold (\amo_op_gold), amo_op_gate (\amo_op_gate) -> amo_op
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:34$3453_gate ($and): { \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate \lt_s_gate } -> { \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s \lt_s }
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:35$3455_gate ($not): \lt_s_gate -> \lt_s
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:36$3468_gate ($and): { \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate \lt_u_gate } -> { \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u \lt_u }
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:37$3470_gate ($not): \lt_u_gate -> \lt_u
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2697_gate ($and): \b_u_gate [0] -> \b_u [0]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2696_gate ($and): \b_u_gate [1] -> \b_u [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2695_gate ($not): \a_u_gate [0] -> \a_u [0]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2693_gate ($or): \b_u_gate [0] -> \b_u [0]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2693_gate ($or): \b_u_gate [1] -> \b_u [1]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2691_gate ($or): \b_u_gate [1] -> \b_u [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2690_gate ($not): \a_u_gate [0] -> \a_u [0]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2689_gate ($not): \a_u_gate [1] -> \a_u [1]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2686_gate ($and): \b_u_gate [2] -> \b_u [2]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2686_gate ($and): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2685_gate ($and): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2684_gate ($not): \a_u_gate [2] -> \a_u [2]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2682_gate ($and): \b_u_gate [2] -> \b_u [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2681_gate ($not): \a_u_gate [3] -> \a_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2679_gate ($not): \a_u_gate [2] -> \a_u [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2678_gate ($not): \a_u_gate [3] -> \a_u [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2676_gate ($and): \b_u_gate [2] -> \b_u [2]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2675_gate ($and): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2674_gate ($not): \a_u_gate [2] -> \a_u [2]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2672_gate ($or): \b_u_gate [2] -> \b_u [2]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2672_gate ($or): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2670_gate ($or): \b_u_gate [3] -> \b_u [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2669_gate ($not): \a_u_gate [2] -> \a_u [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2668_gate ($not): \a_u_gate [3] -> \a_u [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2664_gate ($and): \b_u_gate [4] -> \b_u [4]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2664_gate ($and): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2663_gate ($and): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2662_gate ($not): \a_u_gate [4] -> \a_u [4]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2660_gate ($and): \b_u_gate [4] -> \b_u [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2659_gate ($not): \a_u_gate [5] -> \a_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2657_gate ($not): \a_u_gate [4] -> \a_u [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2656_gate ($not): \a_u_gate [5] -> \a_u [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2653_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2653_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2652_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2651_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2649_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2648_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2646_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2645_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2641_gate ($and): \b_u_gate [4] -> \b_u [4]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2640_gate ($and): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2639_gate ($not): \a_u_gate [4] -> \a_u [4]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2637_gate ($or): \b_u_gate [4] -> \b_u [4]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2637_gate ($or): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2635_gate ($or): \b_u_gate [5] -> \b_u [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2634_gate ($not): \a_u_gate [4] -> \a_u [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2633_gate ($not): \a_u_gate [5] -> \a_u [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2630_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2630_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2629_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2628_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2626_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2625_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2623_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2622_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2620_gate ($and): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2619_gate ($and): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2618_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2616_gate ($or): \b_u_gate [6] -> \b_u [6]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2616_gate ($or): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2614_gate ($or): \b_u_gate [7] -> \b_u [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2613_gate ($not): \a_u_gate [6] -> \a_u [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2612_gate ($not): \a_u_gate [7] -> \a_u [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2607_gate ($and): \b_u_gate [8] -> \b_u [8]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2607_gate ($and): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2606_gate ($and): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2605_gate ($not): \a_u_gate [8] -> \a_u [8]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2603_gate ($and): \b_u_gate [8] -> \b_u [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2602_gate ($not): \a_u_gate [9] -> \a_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2600_gate ($not): \a_u_gate [8] -> \a_u [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2599_gate ($not): \a_u_gate [9] -> \a_u [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2596_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2596_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2595_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2594_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2592_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2591_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2589_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2588_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2584_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2584_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2583_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2582_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2580_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2579_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2577_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2576_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2573_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2573_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2572_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2571_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2569_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2568_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2566_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2565_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2559_gate ($and): \b_u_gate [8] -> \b_u [8]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2558_gate ($and): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2557_gate ($not): \a_u_gate [8] -> \a_u [8]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2555_gate ($or): \b_u_gate [8] -> \b_u [8]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2555_gate ($or): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2553_gate ($or): \b_u_gate [9] -> \b_u [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2552_gate ($not): \a_u_gate [8] -> \a_u [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2551_gate ($not): \a_u_gate [9] -> \a_u [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2548_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2548_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2547_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2546_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2544_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2543_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2541_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2540_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2538_gate ($and): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2537_gate ($and): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2536_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2534_gate ($or): \b_u_gate [10] -> \b_u [10]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2534_gate ($or): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2532_gate ($or): \b_u_gate [11] -> \b_u [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2531_gate ($not): \a_u_gate [10] -> \a_u [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2530_gate ($not): \a_u_gate [11] -> \a_u [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2526_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2526_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2525_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2524_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2522_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2521_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2519_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2518_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2515_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2515_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2514_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2513_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2511_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2510_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2508_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2507_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2503_gate ($and): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2502_gate ($and): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2501_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2499_gate ($or): \b_u_gate [12] -> \b_u [12]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2499_gate ($or): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2497_gate ($or): \b_u_gate [13] -> \b_u [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2496_gate ($not): \a_u_gate [12] -> \a_u [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2495_gate ($not): \a_u_gate [13] -> \a_u [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2492_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2492_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2491_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2490_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2488_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2487_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2485_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2484_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2482_gate ($and): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2481_gate ($and): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2480_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2478_gate ($or): \b_u_gate [14] -> \b_u [14]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2478_gate ($or): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2476_gate ($or): \b_u_gate [15] -> \b_u [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2475_gate ($not): \a_u_gate [14] -> \a_u [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2474_gate ($not): \a_u_gate [15] -> \a_u [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2468_gate ($and): \b_u_gate [16] -> \b_u [16]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2468_gate ($and): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2467_gate ($and): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2466_gate ($not): \a_u_gate [16] -> \a_u [16]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2464_gate ($and): \b_u_gate [16] -> \b_u [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2463_gate ($not): \a_u_gate [17] -> \a_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2461_gate ($not): \a_u_gate [16] -> \a_u [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2460_gate ($not): \a_u_gate [17] -> \a_u [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2457_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2457_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2456_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2455_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2453_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2452_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2450_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2449_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2445_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2445_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2444_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2443_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2441_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2440_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2438_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2437_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2434_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2434_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2433_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2432_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2430_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2429_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2427_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2426_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2421_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2421_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2420_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2419_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2417_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2416_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2414_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2413_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2410_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2410_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2409_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2408_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2406_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2405_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2403_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2402_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2398_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2398_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2397_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2396_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2394_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2393_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2391_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2390_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2387_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2387_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2386_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2385_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2383_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2382_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2380_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2379_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2371_gate ($and): \b_u_gate [16] -> \b_u [16]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2370_gate ($and): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2369_gate ($not): \a_u_gate [16] -> \a_u [16]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2367_gate ($or): \b_u_gate [16] -> \b_u [16]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2367_gate ($or): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2365_gate ($or): \b_u_gate [17] -> \b_u [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2364_gate ($not): \a_u_gate [16] -> \a_u [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2363_gate ($not): \a_u_gate [17] -> \a_u [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2360_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2360_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2359_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2358_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2356_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2355_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2353_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2352_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2350_gate ($and): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2349_gate ($and): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2348_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2346_gate ($or): \b_u_gate [18] -> \b_u [18]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2346_gate ($or): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2344_gate ($or): \b_u_gate [19] -> \b_u [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2343_gate ($not): \a_u_gate [18] -> \a_u [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2342_gate ($not): \a_u_gate [19] -> \a_u [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2338_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2338_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2337_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2336_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2334_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2333_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2331_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2330_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2327_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2327_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2326_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2325_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2323_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2322_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2320_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2319_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2315_gate ($and): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2314_gate ($and): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2313_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2311_gate ($or): \b_u_gate [20] -> \b_u [20]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2311_gate ($or): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2309_gate ($or): \b_u_gate [21] -> \b_u [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2308_gate ($not): \a_u_gate [20] -> \a_u [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2307_gate ($not): \a_u_gate [21] -> \a_u [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2304_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2304_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2303_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2302_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2300_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2299_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2297_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2296_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2294_gate ($and): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2293_gate ($and): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2292_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2290_gate ($or): \b_u_gate [22] -> \b_u [22]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2290_gate ($or): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2288_gate ($or): \b_u_gate [23] -> \b_u [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2287_gate ($not): \a_u_gate [22] -> \a_u [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2286_gate ($not): \a_u_gate [23] -> \a_u [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2281_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2281_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2280_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2279_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2277_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2276_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2274_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2273_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2270_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2270_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2269_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2268_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2266_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2265_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2263_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2262_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2258_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2258_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2257_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2256_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2254_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2253_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2251_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2250_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2247_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2247_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2246_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2245_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2243_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2242_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2240_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2239_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2233_gate ($and): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2232_gate ($and): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2231_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2229_gate ($or): \b_u_gate [24] -> \b_u [24]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2229_gate ($or): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2227_gate ($or): \b_u_gate [25] -> \b_u [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2226_gate ($not): \a_u_gate [24] -> \a_u [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2225_gate ($not): \a_u_gate [25] -> \a_u [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2222_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2222_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2221_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2220_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2218_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2217_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2215_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2214_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2212_gate ($and): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2211_gate ($and): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2210_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2208_gate ($or): \b_u_gate [26] -> \b_u [26]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2208_gate ($or): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2206_gate ($or): \b_u_gate [27] -> \b_u [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2205_gate ($not): \a_u_gate [26] -> \a_u [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2204_gate ($not): \a_u_gate [27] -> \a_u [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2200_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2200_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2199_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2198_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2196_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2195_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2193_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2192_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2189_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2189_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2188_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2187_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2185_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2184_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2182_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2181_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2177_gate ($and): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2176_gate ($and): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2175_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2173_gate ($or): \b_u_gate [28] -> \b_u [28]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2173_gate ($or): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2171_gate ($or): \b_u_gate [29] -> \b_u [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2170_gate ($not): \a_u_gate [28] -> \a_u [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2169_gate ($not): \a_u_gate [29] -> \a_u [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2166_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2166_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2165_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2164_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2162_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2161_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2159_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2158_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2156_gate ($and): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:26$2155_gate ($and): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2154_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2152_gate ($or): \b_u_gate [30] -> \b_u [30]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2152_gate ($or): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:26$2150_gate ($or): \b_u_gate [31] -> \b_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2149_gate ($not): \a_u_gate [30] -> \a_u [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:26$2148_gate ($not): \a_u_gate [31] -> \a_u [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:25$1955_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:24$1954_gate ($and): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1383_gate ($and): \b_s_gate [0] -> \b_s [0]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1382_gate ($and): \b_s_gate [1] -> \b_s [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1381_gate ($not): \a_s_gate [0] -> \a_s [0]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1379_gate ($or): \b_s_gate [0] -> \b_s [0]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1379_gate ($or): \b_s_gate [1] -> \b_s [1]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1377_gate ($or): \b_s_gate [1] -> \b_s [1]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1376_gate ($not): \a_s_gate [0] -> \a_s [0]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1375_gate ($not): \a_s_gate [1] -> \a_s [1]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1372_gate ($and): \b_s_gate [2] -> \b_s [2]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1372_gate ($and): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1371_gate ($and): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1370_gate ($not): \a_s_gate [2] -> \a_s [2]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1368_gate ($and): \b_s_gate [2] -> \b_s [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1367_gate ($not): \a_s_gate [3] -> \a_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1365_gate ($not): \a_s_gate [2] -> \a_s [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1364_gate ($not): \a_s_gate [3] -> \a_s [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1362_gate ($and): \b_s_gate [2] -> \b_s [2]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1361_gate ($and): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1360_gate ($not): \a_s_gate [2] -> \a_s [2]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1358_gate ($or): \b_s_gate [2] -> \b_s [2]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1358_gate ($or): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1356_gate ($or): \b_s_gate [3] -> \b_s [3]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1355_gate ($not): \a_s_gate [2] -> \a_s [2]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1354_gate ($not): \a_s_gate [3] -> \a_s [3]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1350_gate ($and): \b_s_gate [4] -> \b_s [4]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1350_gate ($and): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1349_gate ($and): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1348_gate ($not): \a_s_gate [4] -> \a_s [4]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1346_gate ($and): \b_s_gate [4] -> \b_s [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1345_gate ($not): \a_s_gate [5] -> \a_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1343_gate ($not): \a_s_gate [4] -> \a_s [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1342_gate ($not): \a_s_gate [5] -> \a_s [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1339_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1339_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1338_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1337_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1335_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1334_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1332_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1331_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1327_gate ($and): \b_s_gate [4] -> \b_s [4]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1326_gate ($and): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1325_gate ($not): \a_s_gate [4] -> \a_s [4]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1323_gate ($or): \b_s_gate [4] -> \b_s [4]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1323_gate ($or): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1321_gate ($or): \b_s_gate [5] -> \b_s [5]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1320_gate ($not): \a_s_gate [4] -> \a_s [4]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1319_gate ($not): \a_s_gate [5] -> \a_s [5]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1316_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1316_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1315_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1314_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1312_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1311_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1309_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1308_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1306_gate ($and): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1305_gate ($and): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1304_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1302_gate ($or): \b_s_gate [6] -> \b_s [6]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1302_gate ($or): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1300_gate ($or): \b_s_gate [7] -> \b_s [7]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1299_gate ($not): \a_s_gate [6] -> \a_s [6]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1298_gate ($not): \a_s_gate [7] -> \a_s [7]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1293_gate ($and): \b_s_gate [8] -> \b_s [8]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1293_gate ($and): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1292_gate ($and): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1291_gate ($not): \a_s_gate [8] -> \a_s [8]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1289_gate ($and): \b_s_gate [8] -> \b_s [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1288_gate ($not): \a_s_gate [9] -> \a_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1286_gate ($not): \a_s_gate [8] -> \a_s [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1285_gate ($not): \a_s_gate [9] -> \a_s [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1282_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1282_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1281_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1280_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1278_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1277_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1275_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1274_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1270_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1270_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1269_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1268_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1266_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1265_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1263_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1262_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1259_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1259_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1258_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1257_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1255_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1254_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1252_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1251_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1245_gate ($and): \b_s_gate [8] -> \b_s [8]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1244_gate ($and): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1243_gate ($not): \a_s_gate [8] -> \a_s [8]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1241_gate ($or): \b_s_gate [8] -> \b_s [8]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1241_gate ($or): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1239_gate ($or): \b_s_gate [9] -> \b_s [9]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1238_gate ($not): \a_s_gate [8] -> \a_s [8]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1237_gate ($not): \a_s_gate [9] -> \a_s [9]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1234_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1234_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1233_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1232_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1230_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1229_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1227_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1226_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1224_gate ($and): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1223_gate ($and): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1222_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1220_gate ($or): \b_s_gate [10] -> \b_s [10]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1220_gate ($or): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1218_gate ($or): \b_s_gate [11] -> \b_s [11]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1217_gate ($not): \a_s_gate [10] -> \a_s [10]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1216_gate ($not): \a_s_gate [11] -> \a_s [11]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1212_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1212_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1211_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1210_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1208_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1207_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1205_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1204_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1201_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1201_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1200_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1199_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1197_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1196_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1194_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1193_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1189_gate ($and): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1188_gate ($and): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1187_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1185_gate ($or): \b_s_gate [12] -> \b_s [12]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1185_gate ($or): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1183_gate ($or): \b_s_gate [13] -> \b_s [13]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1182_gate ($not): \a_s_gate [12] -> \a_s [12]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1181_gate ($not): \a_s_gate [13] -> \a_s [13]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1178_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1178_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1177_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1176_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1174_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1173_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1171_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1170_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1168_gate ($and): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1167_gate ($and): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1166_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1164_gate ($or): \b_s_gate [14] -> \b_s [14]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1164_gate ($or): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1162_gate ($or): \b_s_gate [15] -> \b_s [15]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1161_gate ($not): \a_s_gate [14] -> \a_s [14]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1160_gate ($not): \a_s_gate [15] -> \a_s [15]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1154_gate ($and): \b_s_gate [16] -> \b_s [16]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1154_gate ($and): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1153_gate ($and): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1152_gate ($not): \a_s_gate [16] -> \a_s [16]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1150_gate ($and): \b_s_gate [16] -> \b_s [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1149_gate ($not): \a_s_gate [17] -> \a_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1147_gate ($not): \a_s_gate [16] -> \a_s [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1146_gate ($not): \a_s_gate [17] -> \a_s [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1143_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1143_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1142_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1141_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1139_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1138_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1136_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1135_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1131_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1131_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1130_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1129_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1127_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1126_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1124_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1123_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1120_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1120_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1119_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1118_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1116_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1115_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1113_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1112_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1107_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1107_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1106_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1105_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1103_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1102_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1100_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1099_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1096_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1096_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1095_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1094_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1092_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1091_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1089_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1088_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1084_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1084_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1083_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1082_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1080_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1079_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1077_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1076_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1074_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1071_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1070_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1068_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1067_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1065_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1065_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1064_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1063_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1061_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1058_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1057_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1055_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1054_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1052_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1052_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1051_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1050_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1042_gate ($and): \b_s_gate [16] -> \b_s [16]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1041_gate ($and): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1040_gate ($not): \a_s_gate [16] -> \a_s [16]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1038_gate ($or): \b_s_gate [16] -> \b_s [16]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1038_gate ($or): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1036_gate ($or): \b_s_gate [17] -> \b_s [17]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1035_gate ($not): \a_s_gate [16] -> \a_s [16]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1034_gate ($not): \a_s_gate [17] -> \a_s [17]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1031_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1031_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1030_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1029_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1027_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1026_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1024_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1023_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1021_gate ($and): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1020_gate ($and): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1019_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1017_gate ($or): \b_s_gate [18] -> \b_s [18]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1017_gate ($or): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$1015_gate ($or): \b_s_gate [19] -> \b_s [19]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1014_gate ($not): \a_s_gate [18] -> \a_s [18]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1013_gate ($not): \a_s_gate [19] -> \a_s [19]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1009_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1009_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1008_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1007_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$1005_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1004_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1002_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$1001_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$998_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$998_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$997_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$996_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$994_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$993_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$991_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$990_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$986_gate ($and): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$985_gate ($and): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$984_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$982_gate ($or): \b_s_gate [20] -> \b_s [20]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$982_gate ($or): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$980_gate ($or): \b_s_gate [21] -> \b_s [21]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$979_gate ($not): \a_s_gate [20] -> \a_s [20]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$978_gate ($not): \a_s_gate [21] -> \a_s [21]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$975_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$975_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$974_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$973_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$971_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$970_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$968_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$967_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$965_gate ($and): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$964_gate ($and): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$963_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$961_gate ($or): \b_s_gate [22] -> \b_s [22]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$961_gate ($or): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$959_gate ($or): \b_s_gate [23] -> \b_s [23]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$958_gate ($not): \a_s_gate [22] -> \a_s [22]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$957_gate ($not): \a_s_gate [23] -> \a_s [23]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$952_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$952_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$951_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$950_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$948_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$947_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$945_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$944_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$941_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$941_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$940_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$939_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$937_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$936_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$934_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$933_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$929_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$929_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$928_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$927_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$925_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$924_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$922_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$921_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$919_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$916_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$915_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$913_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$912_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$910_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$910_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$909_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$908_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$906_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$903_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$902_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$900_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$899_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$897_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$897_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$896_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$895_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$889_gate ($and): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$888_gate ($and): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$887_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$885_gate ($or): \b_s_gate [24] -> \b_s [24]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$885_gate ($or): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$883_gate ($or): \b_s_gate [25] -> \b_s [25]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$882_gate ($not): \a_s_gate [24] -> \a_s [24]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$881_gate ($not): \a_s_gate [25] -> \a_s [25]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$878_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$878_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$877_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$876_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$874_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$873_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$871_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$870_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$868_gate ($and): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$867_gate ($and): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$866_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$864_gate ($or): \b_s_gate [26] -> \b_s [26]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$864_gate ($or): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$862_gate ($or): \b_s_gate [27] -> \b_s [27]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$861_gate ($not): \a_s_gate [26] -> \a_s [26]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$860_gate ($not): \a_s_gate [27] -> \a_s [27]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$856_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$856_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$855_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$854_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$852_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$851_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$849_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$848_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$846_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$843_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$842_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$840_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$839_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$837_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$837_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$836_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$835_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$833_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$830_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$829_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$827_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$826_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$824_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$824_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$823_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$822_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$818_gate ($and): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$817_gate ($and): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$816_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input B of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$814_gate ($or): \b_s_gate [28] -> \b_s [28]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$814_gate ($or): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $or$rtl/bank/s2/l1d_amo_alu.v:22$812_gate ($or): \b_s_gate [29] -> \b_s [29]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$811_gate ($not): \a_s_gate [28] -> \a_s [28]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$810_gate ($not): \a_s_gate [29] -> \a_s [29]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$808_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$805_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$804_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$802_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$801_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$799_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$799_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$798_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$797_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$795_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$792_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$791_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$789_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$788_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$786_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$786_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$785_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$784_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$782_gate ($and): \b_s_gate [30] -> \b_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$780_gate ($not): \a_s_gate [30] -> \a_s [30]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$777_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$776_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$774_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$773_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$771_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$771_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$770_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$769_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$766_gate ($not): \b_s_gate [31] -> \b_s [31]
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$765_gate ($and): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$764_gate ($not): \is64_gate -> \is64
+Changing input B of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$763_gate ($and): \b_s_gate [31] -> \b_s [31]
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:22$762_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:22$761_gate ($not): \a_s_gate [31] -> \a_s [31]
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:21$568_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:20$567_gate ($and): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:18$5_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:17$4_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:16$3_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$rtl/bank/s2/l1d_amo_alu.v:15$2_gate ($mux): \is64_gate -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:30$16_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:29$15_gold ($mux): \lt_u_gold -> \lt_u
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:28$14_gold ($mux): \lt_s_gold -> \lt_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:27$13_gold ($mux): \lt_s_gold -> \lt_s
+Changing input B of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \b_u_gold -> \b_u
+Changing input A of cell $lt$golden/l1d_amo_alu.v:20$7_gold ($lt): \a_u_gold -> \a_u
+Changing input B of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \b_s_gold -> \b_s
+Changing input A of cell $lt$golden/l1d_amo_alu.v:19$6_gold ($lt): \a_s_gold -> \a_s
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:18$5_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:17$4_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:16$3_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:15$2_gold ($mux): \is64_gold -> \is64
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 323 unproven $equiv cells (8 groups) in equiv:
+ Grouping SAT models for \new_value:
+  Trying to prove $equiv for \new_value [0]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [1]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [2]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [3]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [4]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [5]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [6]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [7]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [8]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [9]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [10]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [11]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [12]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [13]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [14]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [15]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [16]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [17]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [18]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [19]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [20]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [21]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [22]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [23]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [24]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [25]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [26]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [27]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [28]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [29]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [30]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [31]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [32]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [33]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [34]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [35]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [36]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [37]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [38]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [39]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [40]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [41]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [42]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [43]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [44]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [45]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [46]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [47]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [48]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [49]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [50]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [51]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [52]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [53]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [54]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [55]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [56]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [57]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [58]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [59]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [60]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [61]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [62]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [63]:ezsat
+ success!
+  Trying to prove $equiv for \is64:ezsat
+ success!
+ Grouping SAT models for \a_s:
+  Trying to prove $equiv for \a_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_s [63]:ezsat
+ success!
+ Grouping SAT models for \b_s:
+  Trying to prove $equiv for \b_s [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_s [63]:ezsat
+ success!
+ Grouping SAT models for \a_u:
+  Trying to prove $equiv for \a_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \a_u [63]:ezsat
+ success!
+ Grouping SAT models for \b_u:
+  Trying to prove $equiv for \b_u [0]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [1]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [2]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [3]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [4]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [5]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [6]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [7]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [8]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [9]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [10]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [11]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [12]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [13]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [14]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [15]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [16]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [17]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [18]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [19]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [20]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [21]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [22]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [23]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [24]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [25]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [26]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [27]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [28]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [29]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [30]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [31]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [32]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [33]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [34]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [35]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [36]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [37]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [38]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [39]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [40]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [41]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [42]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [43]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [44]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [45]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [46]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [47]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [48]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [49]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [50]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [51]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [52]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [53]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [54]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [55]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [56]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [57]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [58]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [59]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [60]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [61]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [62]:ezsat
+ success!
+  Trying to prove $equiv for \b_u [63]:ezsat
+ success!
+  Trying to prove $equiv for \lt_s:ezsat
+ success!
+  Trying to prove $equiv for \lt_u:ezsat
+ success!
+Proved 323 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 323 $equiv cells in equiv:
+  Of those cells 323 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 5127aa5704, time: 2.52s, user: 2.45s, system: 0.09s, MEM: 173.92 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 98% 1x equiv_simple (2 sec), 0% 1x equiv_make (0 sec), ...

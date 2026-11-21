@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/bank/s2/l1d_amo_alu.v
+hierarchy -top l1d_amo_alu
+proc
+flatten
+opt_clean
+rename l1d_amo_alu gate
+write_rtlil proof/gate.il

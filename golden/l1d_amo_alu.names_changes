@@ -1,0 +1,15 @@
+# Approved name changes of l1d_amo_alu against golden/l1d_amo_alu.v (format: flow/check_names.pl)
+# iteration S2-I2 (2026-11-21, user decision: the AMO unit may be changed): one compare with the sign flip on the leaf and
+# XOR-propagate terms (replaces lt_s / lt_u and the sign- / zero-extended copies a_s, b_s, a_u, b_u); the ADD carry as a named
+# wire so the sum is picked by the carry in the output AND-OR
+- DECL wire[W-1:0]a_s
+- DECL wire[W-1:0]b_s
+- DECL wire[W-1:0]a_u
+- DECL wire[W-1:0]b_u
+- DECL wire lt_s
+- DECL wire lt_u
++ DECL wire compare_signed
++ DECL wire[W-1:0]compare_generate
++ DECL wire[W-1:0]compare_propagate
++ DECL wire old_less_than_operand
++ DECL wire[W-1:0]add_carry_in

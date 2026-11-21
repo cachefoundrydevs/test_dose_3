@@ -44,13 +44,6 @@
 + DECL wire cmp_prop_top
 + DECL wire cmp_gen_half
 + DECL wire cmp_prop_half
-+ DECL wire cmp_upper_gen
-+ DECL wire cmp_upper_prop
-+ DECL wire cmp_lower_gen
-+ DECL wire cmp_early_gen
-+ DECL wire cmp_early_upper
-+ DECL wire cmp_early_lower
-+ DECL wire old_less
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_gen
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_prop
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_span2_gen
@@ -75,3 +68,20 @@
 + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_way
 + DECL wire[WRITE_DATA_WIDTH-1:0]old_xor_operand
 + DECL reg[WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_hit_way
+# iteration S2-I5 (2026-11-21): one late compare signal for all ways (one-hot and early factors folded into the last
+# compare level, 8 flat radix-4 groups of Ling pairs), MIN / MAX one mux on it, ADD qualifier folded into the per-way
+# carry, old side of old ^ operand qualified per way. Dropped S2-I3 / S2-I4 items (lines removed above): old_less,
+# cmp_upper_gen, cmp_upper_prop, cmp_lower_gen, cmp_early_gen, cmp_early_upper, cmp_early_lower.
++ DECL localparam AMO_CMP_GROUPS = WRITE_DATA_WIDTH / 8
++ DECL localparam AMO_LESS_TERMS = AMO_CMP_GROUPS + 1
++ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_old_if_less_way
++ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_old_if_not_less_way
++ DECL wire[WAYS*AMO_LESS_TERMS-1:0]amo_less_term_way
++ DECL wire way_logic
++ DECL wire way_add
++ DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_gen
++ DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_factor
++ DECL wire cmp_hit_early
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_old_if_less_hit
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_old_if_not_less_hit
++ DECL wire amo_less_hit

@@ -1,0 +1,78 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gold.ys' --
+
+1. Executing Verilog-2005 frontend: golden/l1d_amo_alu.v
+Parsing Verilog input from `golden/l1d_amo_alu.v' to AST representation.
+Generating RTLIL representation for module `\l1d_amo_alu'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \l1d_amo_alu
+
+2.2. Analyzing design hierarchy..
+Top module:  \l1d_amo_alu
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$golden/l1d_amo_alu.v:21$8 in module l1d_amo_alu.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 1 assignment to connection.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_amo_alu.$proc$golden/l1d_amo_alu.v:21$8'.
+     1/1: $1\new_value[63:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_amo_alu.\new_value' from process `\l1d_amo_alu.$proc$golden/l1d_amo_alu.v:21$8'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\l1d_amo_alu.$proc$golden/l1d_amo_alu.v:21$8'.
+Removing empty process `l1d_amo_alu.$proc$golden/l1d_amo_alu.v:21$8'.
+Cleaned up 1 empty switch.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module l1d_amo_alu.
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_amo_alu..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+Renaming module \l1d_amo_alu to \gold.
+
+6. Executing RTLIL backend.
+Output filename: proof/gold.il
+
+End of script. Logfile hash: 5ffe6d8de2, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 23.29 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 49% 2x read_verilog (0 sec), 23% 1x opt_clean (0 sec), ...

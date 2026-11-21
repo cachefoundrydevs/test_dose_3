@@ -1,0 +1,21 @@
+approved + DECL wire[WAYS-1:0]hit_way_onehot
+approved + DECL genvar hit_way_idx
+approved + FOR for(hit_way_idx=0;hit_way_idx<WAYS;hit_way_idx=hit_way_idx+1)
+approved + LABEL g_hit_way_onehot
+approved + DECL wire live_cacheable_hit
+approved + DECL wire[WAYS-1:0]way_data_fix_flag
+approved + DECL wire[WAYS-1:0]way_data_ue_flag
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_new_way
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]amo_new_no_way
+approved + DECL wire hit_way_none
+approved + DECL genvar amo_way_idx
+approved + FOR for(amo_way_idx=0;amo_way_idx<WAYS;amo_way_idx=amo_way_idx+1)
+approved + LABEL g_amo_way
+approved + LABEL g_amo_no_way
+approved + LABEL g_amo_all_ways
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_new_hit_way
+approved + DECL integer amo_sel_way
+approved + ALWAYS always @*
+approved + FOR for(amo_sel_way=0;amo_sel_way<WAYS;amo_sel_way=amo_sel_way+1)
+names: 209 items golden, 209 items current, 0 differences
+NAMES: PASS

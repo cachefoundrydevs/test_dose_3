@@ -470,6 +470,10 @@ module l1d_bank_s2 #(
     wire               amo_op_max_any;
     wire               amo_op_signed;
     wire               amo_op_swap_other;
+    wire               amo_op_logic;
+    wire [WRITE_DATA_WIDTH-1:0] amo_logic_operand;
+    wire [WRITE_DATA_WIDTH-1:0] amo_min_operand;
+    wire [WRITE_DATA_WIDTH-1:0] amo_max_operand;
     assign amo_op_code       = s2_req[REQ_AMOOP_LSB +: AMOOP_W];
     assign amo_size_is64     = (s2_size == 2'd3);
     assign amo_op_add        = (amo_op_code == AMO_ADD);
@@ -480,25 +484,25 @@ module l1d_bank_s2 #(
     assign amo_op_max_any    = (amo_op_code == AMO_MAX) | (amo_op_code == AMO_MAXU);
     assign amo_op_signed     = (amo_op_code == AMO_MIN) | (amo_op_code == AMO_MAX);
     assign amo_op_swap_other = ~(amo_op_add | amo_op_xor | amo_op_and | amo_op_or | amo_op_min_any | amo_op_max_any);
+    assign amo_op_logic      = amo_op_add | amo_op_xor;
+    assign amo_logic_operand = {WRITE_DATA_WIDTH{amo_op_logic}}   & s2_wdata;
+    assign amo_min_operand   = {WRITE_DATA_WIDTH{amo_op_min_any}} & s2_wdata;
+    assign amo_max_operand   = {WRITE_DATA_WIDTH{amo_op_max_any}} & s2_wdata;
     wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_new_way;
     wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_xor_way;
+    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_sum_if_carry_way;
     wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_carry_way;
-    wire [WAYS-1:0]                  amo_add_way;
     wire [WRITE_DATA_WIDTH-1:0]      amo_new_no_way;
     wire                             hit_way_none;
     generate
         genvar amo_way_idx;
         for (amo_way_idx = 0; amo_way_idx < WAYS; amo_way_idx = amo_way_idx + 1) begin : g_amo_way
             wire [WRITE_DATA_WIDTH-1:0] old_word;
-            wire way_add;
-            wire way_logic;
             wire way_and;
             wire way_or;
             wire way_min;
             wire way_max;
             assign old_word  = s2_words[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            assign way_add   = hit_way_onehot[amo_way_idx] & amo_op_add;
-            assign way_logic = hit_way_onehot[amo_way_idx] & (amo_op_add | amo_op_xor);
             assign way_and   = hit_way_onehot[amo_way_idx] & amo_op_and;
             assign way_or    = hit_way_onehot[amo_way_idx] & amo_op_or;
             assign way_min   = hit_way_onehot[amo_way_idx] & amo_op_min_any;
@@ -522,13 +526,13 @@ module l1d_bank_s2 #(
             assign cmp_prop_top    = (amo_op_signed & (old_word[63] | ~s2_wdata[63])) | (~amo_op_signed & cmp_prop[63]);
             assign cmp_gen_half    = (amo_op_signed & old_word[31] & ~s2_wdata[31]) | (~amo_op_signed & cmp_gen[31]);
             assign cmp_prop_half   = (amo_op_signed & (old_word[31] | ~s2_wdata[31])) | (~amo_op_signed & cmp_prop[31]);
-            assign cmp_upper_gen   = ((((cmp_gen[62] | cmp_prop[62] & (cmp_gen[61] | cmp_prop[61] & cmp_gen[60])) | &cmp_prop[62:60] & ((cmp_gen[59] | cmp_prop[59] & cmp_gen[58]) | &cmp_prop[59:58] & (cmp_gen[57] | cmp_prop[57] & cmp_gen[56]))) | &cmp_prop[62:56] & (((cmp_gen[55] | cmp_prop[55] & cmp_gen[54]) | &cmp_prop[55:54] & (cmp_gen[53] | cmp_prop[53] & cmp_gen[52])) | &cmp_prop[55:52] & ((cmp_gen[51] | cmp_prop[51] & cmp_gen[50]) | &cmp_prop[51:50] & (cmp_gen[49] | cmp_prop[49] & cmp_gen[48])))) | &cmp_prop[62:48] & ((((cmp_gen[47] | cmp_prop[47] & cmp_gen[46]) | &cmp_prop[47:46] & (cmp_gen[45] | cmp_prop[45] & cmp_gen[44])) | &cmp_prop[47:44] & ((cmp_gen[43] | cmp_prop[43] & cmp_gen[42]) | &cmp_prop[43:42] & (cmp_gen[41] | cmp_prop[41] & cmp_gen[40]))) | &cmp_prop[47:40] & (((cmp_gen[39] | cmp_prop[39] & cmp_gen[38]) | &cmp_prop[39:38] & (cmp_gen[37] | cmp_prop[37] & cmp_gen[36])) | &cmp_prop[39:36] & ((cmp_gen[35] | cmp_prop[35] & cmp_gen[34]) | &cmp_prop[35:34] & (cmp_gen[33] | cmp_prop[33] & cmp_gen[32])))));
+            assign cmp_upper_gen   = ((((cmp_gen[62] | cmp_prop[61] & (cmp_gen[61] | cmp_gen[60])) | &cmp_prop[61:59] & ((cmp_gen[59] | cmp_gen[58]) | &cmp_prop[58:57] & (cmp_gen[57] | cmp_gen[56]))) | &cmp_prop[61:55] & (((cmp_gen[55] | cmp_gen[54]) | &cmp_prop[54:53] & (cmp_gen[53] | cmp_gen[52])) | &cmp_prop[54:51] & ((cmp_gen[51] | cmp_gen[50]) | &cmp_prop[50:49] & (cmp_gen[49] | cmp_gen[48])))) | &cmp_prop[61:47] & ((((cmp_gen[47] | cmp_gen[46]) | &cmp_prop[46:45] & (cmp_gen[45] | cmp_gen[44])) | &cmp_prop[46:43] & ((cmp_gen[43] | cmp_gen[42]) | &cmp_prop[42:41] & (cmp_gen[41] | cmp_gen[40]))) | &cmp_prop[46:39] & (((cmp_gen[39] | cmp_gen[38]) | &cmp_prop[38:37] & (cmp_gen[37] | cmp_gen[36])) | &cmp_prop[38:35] & ((cmp_gen[35] | cmp_gen[34]) | &cmp_prop[34:33] & (cmp_gen[33] | cmp_gen[32])))));
             assign cmp_upper_prop  = &cmp_prop[62:32];
-            assign cmp_lower_gen   = ((((cmp_gen[30] | cmp_prop[30] & (cmp_gen[29] | cmp_prop[29] & cmp_gen[28])) | &cmp_prop[30:28] & ((cmp_gen[27] | cmp_prop[27] & cmp_gen[26]) | &cmp_prop[27:26] & (cmp_gen[25] | cmp_prop[25] & cmp_gen[24]))) | &cmp_prop[30:24] & (((cmp_gen[23] | cmp_prop[23] & cmp_gen[22]) | &cmp_prop[23:22] & (cmp_gen[21] | cmp_prop[21] & cmp_gen[20])) | &cmp_prop[23:20] & ((cmp_gen[19] | cmp_prop[19] & cmp_gen[18]) | &cmp_prop[19:18] & (cmp_gen[17] | cmp_prop[17] & cmp_gen[16])))) | &cmp_prop[30:16] & ((((cmp_gen[15] | cmp_prop[15] & cmp_gen[14]) | &cmp_prop[15:14] & (cmp_gen[13] | cmp_prop[13] & cmp_gen[12])) | &cmp_prop[15:12] & ((cmp_gen[11] | cmp_prop[11] & cmp_gen[10]) | &cmp_prop[11:10] & (cmp_gen[9] | cmp_prop[9] & cmp_gen[8]))) | &cmp_prop[15:8] & (((cmp_gen[7] | cmp_prop[7] & cmp_gen[6]) | &cmp_prop[7:6] & (cmp_gen[5] | cmp_prop[5] & cmp_gen[4])) | &cmp_prop[7:4] & ((cmp_gen[3] | cmp_prop[3] & cmp_gen[2]) | &cmp_prop[3:2] & (cmp_gen[1] | cmp_prop[1] & cmp_gen[0])))));
+            assign cmp_lower_gen   = ((((cmp_gen[30] | cmp_prop[29] & (cmp_gen[29] | cmp_gen[28])) | &cmp_prop[29:27] & ((cmp_gen[27] | cmp_gen[26]) | &cmp_prop[26:25] & (cmp_gen[25] | cmp_gen[24]))) | &cmp_prop[29:23] & (((cmp_gen[23] | cmp_gen[22]) | &cmp_prop[22:21] & (cmp_gen[21] | cmp_gen[20])) | &cmp_prop[22:19] & ((cmp_gen[19] | cmp_gen[18]) | &cmp_prop[18:17] & (cmp_gen[17] | cmp_gen[16])))) | &cmp_prop[29:15] & ((((cmp_gen[15] | cmp_gen[14]) | &cmp_prop[14:13] & (cmp_gen[13] | cmp_gen[12])) | &cmp_prop[14:11] & ((cmp_gen[11] | cmp_gen[10]) | &cmp_prop[10:9] & (cmp_gen[9] | cmp_gen[8]))) | &cmp_prop[14:7] & (((cmp_gen[7] | cmp_gen[6]) | &cmp_prop[6:5] & (cmp_gen[5] | cmp_gen[4])) | &cmp_prop[6:3] & ((cmp_gen[3] | cmp_gen[2]) | &cmp_prop[2:1] & (cmp_gen[1] | cmp_gen[0])))));
             assign cmp_early_gen   = (amo_size_is64 & cmp_gen_top) | (amo_size_is64 & cmp_prop_top & cmp_upper_prop & cmp_gen[31]) |
                                      (~amo_size_is64 & cmp_gen_half);
-            assign cmp_early_upper = amo_size_is64 & cmp_prop_top;
-            assign cmp_early_lower = (amo_size_is64 & cmp_prop_top & cmp_upper_prop & cmp_prop[31]) | (~amo_size_is64 & cmp_prop_half);
+            assign cmp_early_upper = amo_size_is64 & cmp_prop_top & cmp_prop[62];
+            assign cmp_early_lower = (amo_size_is64 & cmp_prop_top & (&cmp_prop[62:30])) | (~amo_size_is64 & cmp_prop_half & cmp_prop[30]);
             assign old_less        = cmp_early_gen | (cmp_early_upper & cmp_upper_gen) | (cmp_early_lower & cmp_lower_gen);
             wire [WRITE_DATA_WIDTH-1:0] add_bit_gen;
             wire [WRITE_DATA_WIDTH-1:0] add_bit_prop;
@@ -542,11 +546,11 @@ module l1d_bank_s2 #(
             wire [WRITE_DATA_WIDTH-1:0] add_span16_prop;
             wire [WRITE_DATA_WIDTH-1:0] add_span32_gen;
             wire [WRITE_DATA_WIDTH-1:0] add_span32_prop;
-            wire [WRITE_DATA_WIDTH-1:0] add_span64_gen;
+            wire [WRITE_DATA_WIDTH-1:0] old_xor_operand;
             assign add_bit_gen     = old_word & s2_wdata;
             assign add_bit_prop    = old_word | s2_wdata;
-            assign add_span2_gen   = add_bit_gen     | (add_bit_prop     & (add_bit_gen     << 1));
-            assign add_span2_prop  = add_bit_prop    & (add_bit_prop     << 1);
+            assign add_span2_gen   = add_bit_gen     | (add_bit_gen      << 1);
+            assign add_span2_prop  = (add_bit_prop   << 1) & (add_bit_prop << 2);
             assign add_span4_gen   = add_span2_gen   | (add_span2_prop   & (add_span2_gen   << 2));
             assign add_span4_prop  = add_span2_prop  & (add_span2_prop   << 2);
             assign add_span8_gen   = add_span4_gen   | (add_span4_prop   & (add_span4_gen   << 4));
@@ -555,16 +559,19 @@ module l1d_bank_s2 #(
             assign add_span16_prop = add_span8_prop  & (add_span8_prop   << 8);
             assign add_span32_gen  = add_span16_gen  | (add_span16_prop  & (add_span16_gen  << 16));
             assign add_span32_prop = add_span16_prop & (add_span16_prop  << 16);
-            assign add_span64_gen  = add_span32_gen  | (add_span32_prop  & (add_span32_gen  << 32));
+            assign old_xor_operand = ({WRITE_DATA_WIDTH{amo_op_logic}} & old_word) ^ amo_logic_operand;
             assign amo_new_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
-                       ({WRITE_DATA_WIDTH{ old_less}} & (({WRITE_DATA_WIDTH{way_min}} & old_word) | ({WRITE_DATA_WIDTH{way_max}} & s2_wdata)))
-                     | ({WRITE_DATA_WIDTH{~old_less}} & (({WRITE_DATA_WIDTH{way_min}} & s2_wdata) | ({WRITE_DATA_WIDTH{way_max}} & old_word)))
-                     | ({WRITE_DATA_WIDTH{way_and}} & (old_word & s2_wdata))
-                     | ({WRITE_DATA_WIDTH{way_or}}  & (old_word | s2_wdata));
+                       ({WRITE_DATA_WIDTH{ old_less}} & (({WRITE_DATA_WIDTH{way_min}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_max_operand)))
+                     | ({WRITE_DATA_WIDTH{~old_less}} & (({WRITE_DATA_WIDTH{way_max}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_min_operand)))
+                     | ({WRITE_DATA_WIDTH{way_and}} & add_bit_gen)
+                     | ({WRITE_DATA_WIDTH{way_or}}  & add_bit_prop);
             assign amo_xor_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
-                       ({WRITE_DATA_WIDTH{way_logic}} & old_word) ^ ({WRITE_DATA_WIDTH{way_logic}} & s2_wdata);
-            assign amo_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] = add_span64_gen << 1;
-            assign amo_add_way[amo_way_idx] = way_add;
+                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & old_xor_operand;
+            assign amo_sum_if_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
+                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (old_xor_operand ^ (add_bit_prop << 1));
+            assign amo_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
+                       ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_gen << 1))
+                     | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_prop << 1) & (add_span32_gen << 33));
         end
         if (WAYS < (1 << WAY_W)) begin : g_amo_no_way
             l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo_zero (
@@ -582,27 +589,25 @@ module l1d_bank_s2 #(
     endgenerate
     reg  [WRITE_DATA_WIDTH-1:0] amo_new_hit_way;
     reg  [WRITE_DATA_WIDTH-1:0] amo_xor_hit_way;
+    reg  [WRITE_DATA_WIDTH-1:0] amo_sum_if_carry_hit_way;
     reg  [WRITE_DATA_WIDTH-1:0] amo_carry_hit_way;
-    reg                         amo_add_hit_way;
     integer amo_sel_way;
     always @* begin
-        amo_new_hit_way   = {WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way;
-        amo_xor_hit_way   = {WRITE_DATA_WIDTH{1'b0}};
-        amo_carry_hit_way = {WRITE_DATA_WIDTH{1'b0}};
-        amo_add_hit_way   = 1'b0;
+        amo_new_hit_way          = {WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way;
+        amo_xor_hit_way          = {WRITE_DATA_WIDTH{1'b0}};
+        amo_sum_if_carry_hit_way = {WRITE_DATA_WIDTH{1'b0}};
+        amo_carry_hit_way        = {WRITE_DATA_WIDTH{1'b0}};
         for (amo_sel_way = 0; amo_sel_way < WAYS; amo_sel_way = amo_sel_way + 1) begin
-            amo_new_hit_way   = amo_new_hit_way   | amo_new_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            amo_xor_hit_way   = amo_xor_hit_way   | amo_xor_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            amo_carry_hit_way = amo_carry_hit_way |
-                                ({WRITE_DATA_WIDTH{hit_way_onehot[amo_sel_way]}} &
-                                 amo_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]);
-            amo_add_hit_way   = amo_add_hit_way   | amo_add_way[amo_sel_way];
+            amo_new_hit_way          = amo_new_hit_way          | amo_new_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            amo_xor_hit_way          = amo_xor_hit_way          | amo_xor_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            amo_sum_if_carry_hit_way = amo_sum_if_carry_hit_way | amo_sum_if_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            amo_carry_hit_way        = amo_carry_hit_way        | amo_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
         end
     end
     assign amo_new = ({WRITE_DATA_WIDTH{amo_op_xor}}        & amo_xor_hit_way)
                    | ({WRITE_DATA_WIDTH{amo_op_swap_other}} & s2_wdata)
-                   | (~amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_op_add}}      & amo_xor_hit_way))
-                   | ( amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_add_hit_way}} & ~amo_xor_hit_way))
+                   | (~amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_op_add}} & amo_xor_hit_way))
+                   | ( amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_op_add}} & amo_sum_if_carry_hit_way))
                    | amo_new_hit_way;
     always @(posedge clk) begin : s2_to_s3_proc
         if (rst) s3_amo_v <= 1'b0;

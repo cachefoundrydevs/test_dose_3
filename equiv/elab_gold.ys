@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/common/l1d_ecc_fix.v rtl/bank/s2/l1d_resp_gen.v rtl/bank/s2/l1d_amo_alu.v golden/l1d_bank_s2.v
+hierarchy -top l1d_bank_s2
+proc
+flatten
+opt_clean
+rename l1d_bank_s2 gold
+write_rtlil proof/gold.il

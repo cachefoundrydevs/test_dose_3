@@ -1,0 +1,78 @@
+approved + DECL wire[WAYS-1:0]hit_way_onehot
+approved + DECL genvar hit_way_idx
+approved + FOR for(hit_way_idx=0;hit_way_idx<WAYS;hit_way_idx=hit_way_idx+1)
+approved + LABEL g_hit_way_onehot
+approved + DECL wire live_cacheable_hit
+approved + DECL wire[WAYS-1:0]way_data_fix_flag
+approved + DECL wire[WAYS-1:0]way_data_ue_flag
+approved + DECL localparam AMO_CMP_GROUPS = WRITE_DATA_WIDTH / 8
+approved + DECL localparam AMO_LESS_TERMS = AMO_CMP_GROUPS + 1
+approved + DECL wire[AMOOP_W-1:0]amo_op_code
+approved + DECL wire amo_size_is64
+approved + DECL wire amo_op_add
+approved + DECL wire amo_op_xor
+approved + DECL wire amo_op_and
+approved + DECL wire amo_op_or
+approved + DECL wire amo_op_min_any
+approved + DECL wire amo_op_max_any
+approved + DECL wire amo_op_signed
+approved + DECL wire amo_op_swap_other
+approved + DECL wire amo_op_logic
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]amo_logic_operand
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]amo_min_operand
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]amo_max_operand
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_new_way
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_old_if_less_way
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_old_if_not_less_way
+approved + DECL wire[WAYS*AMO_LESS_TERMS-1:0]amo_less_term_way
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_xor_way
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_way
+approved + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_carry_way
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]amo_new_no_way
+approved + DECL wire hit_way_none
+approved + DECL genvar amo_way_idx
+approved + FOR for(amo_way_idx=0;amo_way_idx<WAYS;amo_way_idx=amo_way_idx+1)
+approved + LABEL g_amo_way
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]old_word
+approved + DECL wire way_and
+approved + DECL wire way_or
+approved + DECL wire way_min
+approved + DECL wire way_max
+approved + DECL wire way_logic
+approved + DECL wire way_add
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]cmp_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]cmp_prop
+approved + DECL wire cmp_gen_top
+approved + DECL wire cmp_prop_top
+approved + DECL wire cmp_gen_half
+approved + DECL wire cmp_prop_half
+approved + DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_gen
+approved + DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_factor
+approved + DECL wire cmp_hit_early
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span2_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span2_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span4_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span4_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span8_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span8_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span16_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span16_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_gen
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_prop
+approved + DECL wire[WRITE_DATA_WIDTH-1:0]old_xor_operand
+approved + LABEL g_amo_no_way
+approved + LABEL g_amo_all_ways
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_new_hit_way
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_old_if_less_hit
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_old_if_not_less_hit
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_xor_hit_way
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_hit_way
+approved + DECL reg[WRITE_DATA_WIDTH-1:0]amo_carry_hit_way
+approved + DECL integer amo_sel_way
+approved + ALWAYS always @*
+approved + FOR for(amo_sel_way=0;amo_sel_way<WAYS;amo_sel_way=amo_sel_way+1)
+approved + DECL wire amo_less_hit
+names: 209 items golden, 209 items current, 0 differences
+NAMES: PASS

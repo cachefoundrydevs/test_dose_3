@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  golden/l1d_amo_alu.v
+hierarchy -top l1d_amo_alu
+proc
+flatten
+opt_clean
+rename l1d_amo_alu gold
+write_rtlil proof/gold.il

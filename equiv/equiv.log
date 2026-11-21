@@ -1,0 +1,200 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: is64_gold (\is64_gold), is64_gate (\is64_gate) -> is64
+Presumably equivalent wires: new_value_gold (\new_value_gold), new_value_gate (\new_value_gate) -> new_value
+Presumably equivalent wires: operand_gold (\operand_gold), operand_gate (\operand_gate) -> operand
+Presumably equivalent wires: old_value_gold (\old_value_gold), old_value_gate (\old_value_gate) -> old_value
+Presumably equivalent wires: access_size_gold (\access_size_gold), access_size_gate (\access_size_gate) -> access_size
+Presumably equivalent wires: amo_op_gold (\amo_op_gold), amo_op_gate (\amo_op_gate) -> amo_op
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:39$2094_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:39$2086_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:39$2063_gate ($not): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:34$1648_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:35$1663_gate ($and): \is64_gate -> \is64
+Changing input A of cell $and$rtl/bank/s2/l1d_amo_alu.v:36$1776_gate ($and): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:37$1886_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:37$1909_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:37$1917_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:38$1926_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:38$1949_gate ($not): \is64_gate -> \is64
+Changing input A of cell $not$rtl/bank/s2/l1d_amo_alu.v:38$1957_gate ($not): \is64_gate -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:18$5_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:17$4_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:16$3_gold ($mux): \is64_gold -> \is64
+Changing input S of cell $ternary$golden/l1d_amo_alu.v:15$2_gold ($mux): \is64_gold -> \is64
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 65 unproven $equiv cells (2 groups) in equiv:
+ Grouping SAT models for \new_value:
+  Trying to prove $equiv for \new_value [0]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [1]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [2]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [3]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [4]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [5]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [6]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [7]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [8]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [9]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [10]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [11]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [12]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [13]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [14]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [15]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [16]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [17]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [18]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [19]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [20]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [21]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [22]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [23]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [24]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [25]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [26]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [27]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [28]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [29]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [30]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [31]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [32]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [33]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [34]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [35]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [36]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [37]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [38]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [39]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [40]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [41]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [42]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [43]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [44]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [45]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [46]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [47]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [48]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [49]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [50]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [51]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [52]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [53]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [54]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [55]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [56]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [57]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [58]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [59]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [60]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [61]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [62]:ezsat
+ success!
+  Trying to prove $equiv for \new_value [63]:ezsat
+ success!
+  Trying to prove $equiv for \is64:ezsat
+ success!
+Proved 65 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 65 $equiv cells in equiv:
+  Of those cells 65 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: bfc4631b71, time: 1.80s, user: 1.76s, system: 0.04s, MEM: 158.89 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 99% 1x equiv_simple (1 sec), 0% 1x equiv_make (0 sec), ...

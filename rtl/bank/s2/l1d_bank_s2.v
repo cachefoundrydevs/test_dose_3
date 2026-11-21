@@ -220,6 +220,13 @@ module l1d_bank_s2 #(
         for (mb = 0; mb < LINE_BYTES; mb = mb + 1)
             st_merged[mb*8 +: 8] = s2_st_be[mb] ? s2_st_din[mb*8 +: 8] : line_q[mb*8 +: 8];
     end
+    wire [WAYS-1:0] hit_way_onehot;
+    generate
+        genvar hit_way_idx;
+        for (hit_way_idx = 0; hit_way_idx < WAYS; hit_way_idx = hit_way_idx + 1) begin : g_hit_way_onehot
+            assign hit_way_onehot[hit_way_idx] = (s2_way == hit_way_idx);
+        end
+    endgenerate
     reg  [HSYND_W-1:0] hit_synd;
     reg  [GRANULES-1:0] hit_fix;
     reg                hit_data_ce;
@@ -265,8 +272,14 @@ module l1d_bank_s2 #(
     wire ecc_tag_blk;
     wire ecc_tag_fix_wr;
     wire ecc_tag_ue;
-    assign ecc_data_ue    = s2_live && s2_cache && s2_hit && hit_data_ue;
-    assign ecc_data_fix   = s2_live && s2_cache && s2_hit && hit_data_ce && !hit_data_ue;
+    wire            live_cacheable_hit;
+    wire [WAYS-1:0] way_data_fix_flag;
+    wire [WAYS-1:0] way_data_ue_flag;
+    assign live_cacheable_hit = s2_live && s2_cache && s2_hit;
+    assign way_data_fix_flag  = {WAYS{live_cacheable_hit}} & s2_data_ce & ~s2_data_ue;
+    assign way_data_ue_flag   = {WAYS{live_cacheable_hit}} & s2_data_ue;
+    assign ecc_data_ue    = |(hit_way_onehot & way_data_ue_flag);
+    assign ecc_data_fix   = |(hit_way_onehot & way_data_fix_flag);
     assign ecc_tag_blk    = s2_live && s2_tag_blocked;
     assign ecc_tag_fix_wr = ecc_tag_blk && tag_fix_valid;
     assign ecc_tag_ue     = ecc_tag_blk && !tag_fix_valid && tag_ue_any;
@@ -447,13 +460,44 @@ module l1d_bank_s2 #(
     assign ev_amor = 1'b0;
     assign ev_amow = 1'b0;
     wire [WRITE_DATA_WIDTH-1:0] amo_new;
-    l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo (
-        .amo_op      (s2_req[REQ_AMOOP_LSB +: AMOOP_W]),
-        .access_size (s2_size),
-        .old_value   (hit_data),
-        .operand     (s2_wdata),
-        .new_value   (amo_new)
-    );
+    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_new_way;
+    wire [WRITE_DATA_WIDTH-1:0]      amo_new_no_way;
+    wire                             hit_way_none;
+    generate
+        genvar amo_way_idx;
+        for (amo_way_idx = 0; amo_way_idx < WAYS; amo_way_idx = amo_way_idx + 1) begin : g_amo_way
+            l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo (
+                .amo_op      (s2_req[REQ_AMOOP_LSB +: AMOOP_W]),
+                .access_size (s2_size),
+                .old_value   (s2_words[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]),
+                .operand     (s2_wdata),
+                .new_value   (amo_new_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH])
+            );
+        end
+        if (WAYS < (1 << WAY_W)) begin : g_amo_no_way
+            l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo_zero (
+                .amo_op      (s2_req[REQ_AMOOP_LSB +: AMOOP_W]),
+                .access_size (s2_size),
+                .old_value   ({WRITE_DATA_WIDTH{1'b0}}),
+                .operand     (s2_wdata),
+                .new_value   (amo_new_no_way)
+            );
+            assign hit_way_none = ~|hit_way_onehot;
+        end else begin : g_amo_all_ways
+            assign amo_new_no_way = {WRITE_DATA_WIDTH{1'b0}};
+            assign hit_way_none   = 1'b0;
+        end
+    endgenerate
+    reg  [WRITE_DATA_WIDTH-1:0] amo_new_hit_way;
+    integer amo_sel_way;
+    always @* begin
+        amo_new_hit_way = {WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way;
+        for (amo_sel_way = 0; amo_sel_way < WAYS; amo_sel_way = amo_sel_way + 1)
+            amo_new_hit_way = amo_new_hit_way |
+                              ({WRITE_DATA_WIDTH{hit_way_onehot[amo_sel_way]}} &
+                               amo_new_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]);
+    end
+    assign amo_new = amo_new_hit_way;
     always @(posedge clk) begin : s2_to_s3_proc
         if (rst) s3_amo_v <= 1'b0;
         else     s3_amo_v <= s2_live && s2_hit && s2_amo1 && !ecc_data_fix;

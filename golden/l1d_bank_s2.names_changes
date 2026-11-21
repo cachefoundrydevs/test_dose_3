@@ -1,0 +1,21 @@
+# Approved name changes of l1d_bank_s2 against golden/l1d_bank_s2.v (format: flow/check_names.pl)
+# iteration S2-I1 (2026-11-21): one-hot hit way, per-way ECC flags, one AMO unit per way with the way select behind it
++ DECL wire[WAYS-1:0]hit_way_onehot
++ DECL genvar hit_way_idx
++ FOR for(hit_way_idx=0;hit_way_idx<WAYS;hit_way_idx=hit_way_idx+1)
++ LABEL g_hit_way_onehot
++ DECL wire live_cacheable_hit
++ DECL wire[WAYS-1:0]way_data_fix_flag
++ DECL wire[WAYS-1:0]way_data_ue_flag
++ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_new_way
++ DECL wire[WRITE_DATA_WIDTH-1:0]amo_new_no_way
++ DECL wire hit_way_none
++ DECL genvar amo_way_idx
++ FOR for(amo_way_idx=0;amo_way_idx<WAYS;amo_way_idx=amo_way_idx+1)
++ LABEL g_amo_way
++ LABEL g_amo_no_way
++ LABEL g_amo_all_ways
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_new_hit_way
++ DECL integer amo_sel_way
++ ALWAYS always @*
++ FOR for(amo_sel_way=0;amo_sel_way<WAYS;amo_sel_way=amo_sel_way+1)

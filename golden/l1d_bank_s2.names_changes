@@ -19,3 +19,54 @@
 + DECL integer amo_sel_way
 + ALWAYS always @*
 + FOR for(amo_sel_way=0;amo_sel_way<WAYS;amo_sel_way=amo_sel_way+1)
+# iteration S2-I3 (2026-11-21): AMO arithmetic inline per way (no l1d_amo_alu instance at WAYS = 4), merged compare,
+# Kogge-Stone carry, arms pre-qualified by way and op, carry and old ^ operand of the hit way picked in the OR loop
++ DECL wire[AMOOP_W-1:0]amo_op_code
++ DECL wire amo_size_is64
++ DECL wire amo_op_add
++ DECL wire amo_op_xor
++ DECL wire amo_op_and
++ DECL wire amo_op_or
++ DECL wire amo_op_min_any
++ DECL wire amo_op_max_any
++ DECL wire amo_op_signed
++ DECL wire amo_op_swap_other
++ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_xor_way
++ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_carry_way
++ DECL wire[WAYS-1:0]amo_add_way
++ DECL wire[WRITE_DATA_WIDTH-1:0]old_word
++ DECL wire way_add
++ DECL wire way_logic
++ DECL wire way_and
++ DECL wire way_or
++ DECL wire way_min
++ DECL wire way_max
++ DECL wire[WRITE_DATA_WIDTH-1:0]cmp_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]cmp_prop
++ DECL wire cmp_gen_top
++ DECL wire cmp_prop_top
++ DECL wire cmp_gen_half
++ DECL wire cmp_prop_half
++ DECL wire cmp_upper_gen
++ DECL wire cmp_upper_prop
++ DECL wire cmp_lower_gen
++ DECL wire cmp_early_gen
++ DECL wire cmp_early_upper
++ DECL wire cmp_early_lower
++ DECL wire old_less
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span2_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span2_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span4_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span4_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span8_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span8_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span16_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span16_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_gen
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_prop
++ DECL wire[WRITE_DATA_WIDTH-1:0]add_span64_gen
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_xor_hit_way
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_carry_hit_way
++ DECL reg amo_add_hit_way

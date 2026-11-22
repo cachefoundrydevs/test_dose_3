@@ -489,18 +489,24 @@ module l1d_bank_s2 #(
     assign amo_min_operand   = {WRITE_DATA_WIDTH{amo_op_min_any}} & s2_wdata;
     assign amo_max_operand   = {WRITE_DATA_WIDTH{amo_op_max_any}} & s2_wdata;
     wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_new_way;
-    wire [WRITE_DATA_WIDTH-1:0]      amo_pick_if_less;
-    wire [WRITE_DATA_WIDTH-1:0]      amo_pick_if_not_less;
+    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_xor_way;
+    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_sum_if_carry_way;
     wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_carry_way;
     wire [WRITE_DATA_WIDTH-1:0]      amo_new_no_way;
     wire                             hit_way_none;
-    assign amo_pick_if_less     = ({WRITE_DATA_WIDTH{amo_op_min_any & ~hit_way_none}} & hit_data) | amo_max_operand;
-    assign amo_pick_if_not_less = ({WRITE_DATA_WIDTH{amo_op_max_any & ~hit_way_none}} & hit_data) | amo_min_operand;
     generate
         genvar amo_way_idx;
         for (amo_way_idx = 0; amo_way_idx < WAYS; amo_way_idx = amo_way_idx + 1) begin : g_amo_way
             wire [WRITE_DATA_WIDTH-1:0] old_word;
+            wire way_and;
+            wire way_or;
+            wire way_min;
+            wire way_max;
             assign old_word  = s2_words[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            assign way_and   = hit_way_onehot[amo_way_idx] & amo_op_and;
+            assign way_or    = hit_way_onehot[amo_way_idx] & amo_op_or;
+            assign way_min   = hit_way_onehot[amo_way_idx] & amo_op_min_any;
+            assign way_max   = hit_way_onehot[amo_way_idx] & amo_op_max_any;
             wire [WRITE_DATA_WIDTH-1:0] cmp_gen;
             wire [WRITE_DATA_WIDTH-1:0] cmp_prop;
             wire cmp_gen_top;
@@ -540,6 +546,7 @@ module l1d_bank_s2 #(
             wire [WRITE_DATA_WIDTH-1:0] add_span16_prop;
             wire [WRITE_DATA_WIDTH-1:0] add_span32_gen;
             wire [WRITE_DATA_WIDTH-1:0] add_span32_prop;
+            wire [WRITE_DATA_WIDTH-1:0] old_xor_operand;
             assign add_bit_gen     = old_word & s2_wdata;
             assign add_bit_prop    = old_word | s2_wdata;
             assign add_span2_gen   = add_bit_gen     | (add_bit_gen      << 1);
@@ -552,9 +559,16 @@ module l1d_bank_s2 #(
             assign add_span16_prop = add_span8_prop  & (add_span8_prop   << 8);
             assign add_span32_gen  = add_span16_gen  | (add_span16_prop  & (add_span16_gen  << 16));
             assign add_span32_prop = add_span16_prop & (add_span16_prop  << 16);
+            assign old_xor_operand = ({WRITE_DATA_WIDTH{amo_op_logic}} & old_word) ^ amo_logic_operand;
             assign amo_new_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
-                       ({WRITE_DATA_WIDTH{ old_less}} & ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_pick_if_less))
-                     | ({WRITE_DATA_WIDTH{~old_less}} & ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_pick_if_not_less));
+                       ({WRITE_DATA_WIDTH{ old_less}} & (({WRITE_DATA_WIDTH{way_min}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_max_operand)))
+                     | ({WRITE_DATA_WIDTH{~old_less}} & (({WRITE_DATA_WIDTH{way_max}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_min_operand)))
+                     | ({WRITE_DATA_WIDTH{way_and}} & add_bit_gen)
+                     | ({WRITE_DATA_WIDTH{way_or}}  & add_bit_prop);
+            assign amo_xor_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
+                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & old_xor_operand;
+            assign amo_sum_if_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
+                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (old_xor_operand ^ (add_bit_prop << 1));
             assign amo_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =
                        ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_gen << 1))
                      | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_prop << 1) & (add_span32_gen << 33));
@@ -579,15 +593,14 @@ module l1d_bank_s2 #(
     reg  [WRITE_DATA_WIDTH-1:0] amo_carry_hit_way;
     integer amo_sel_way;
     always @* begin
-        amo_new_hit_way          = ({WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way)
-                                 | (({WRITE_DATA_WIDTH{amo_op_and & ~hit_way_none}} & hit_data) & s2_wdata)
-                                 | ({WRITE_DATA_WIDTH{amo_op_or & ~hit_way_none}} & (hit_data | s2_wdata));
-        amo_xor_hit_way          = ({WRITE_DATA_WIDTH{amo_op_logic & ~hit_way_none}} & hit_data) ^
-                                   ({WRITE_DATA_WIDTH{~hit_way_none}} & amo_logic_operand);
-        amo_sum_if_carry_hit_way = amo_xor_hit_way ^ ({WRITE_DATA_WIDTH{~hit_way_none}} & ((hit_data | s2_wdata) << 1));
+        amo_new_hit_way          = {WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way;
+        amo_xor_hit_way          = {WRITE_DATA_WIDTH{1'b0}};
+        amo_sum_if_carry_hit_way = {WRITE_DATA_WIDTH{1'b0}};
         amo_carry_hit_way        = {WRITE_DATA_WIDTH{1'b0}};
         for (amo_sel_way = 0; amo_sel_way < WAYS; amo_sel_way = amo_sel_way + 1) begin
             amo_new_hit_way          = amo_new_hit_way          | amo_new_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            amo_xor_hit_way          = amo_xor_hit_way          | amo_xor_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
+            amo_sum_if_carry_hit_way = amo_sum_if_carry_hit_way | amo_sum_if_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
             amo_carry_hit_way        = amo_carry_hit_way        | amo_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
         end
     end

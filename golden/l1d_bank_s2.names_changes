@@ -44,7 +44,12 @@
 + DECL wire cmp_prop_top
 + DECL wire cmp_gen_half
 + DECL wire cmp_prop_half
++ DECL wire cmp_upper_gen
++ DECL wire cmp_upper_prop
++ DECL wire cmp_lower_gen
 + DECL wire cmp_early_gen
++ DECL wire cmp_early_upper
++ DECL wire cmp_early_lower
 + DECL wire old_less
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_gen
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_bit_prop
@@ -58,6 +63,8 @@
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_span16_prop
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_gen
 + DECL wire[WRITE_DATA_WIDTH-1:0]add_span32_prop
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_xor_hit_way
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_carry_hit_way
 # iteration S2-I4 (2026-11-21): Ling pseudo carries for the ADD and the compare, hit way folded into the last ADD stage,
 # ADD sum chosen by the pseudo carry between two early arms, shared op-qualified operand nets (fewer operand pin loads).
 # Dropped S2-I3 items (lines removed above): way_add, way_logic, add_span64_gen, amo_add_way, amo_add_hit_way.
@@ -67,19 +74,4 @@
 + DECL wire[WRITE_DATA_WIDTH-1:0]amo_max_operand
 + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_way
 + DECL wire[WRITE_DATA_WIDTH-1:0]old_xor_operand
-# iteration S2-I10 (2026-11-22): (* keep *) compare with 4-input cones (16 Ling groups, 4 super groups, kept factors,
-# old_less and old_not_less), one-gate tail per way (kept early words), one OR over the ways, ADD qualifier in the carry.
-# Dropped S2-I3 / S2-I4 items (lines removed above): cmp_upper_gen, cmp_upper_prop, cmp_lower_gen, cmp_early_upper,
-# cmp_early_lower, amo_xor_hit_way, amo_carry_hit_way, amo_sum_if_carry_hit_way.
-+ DECL localparam AMO_CMP_GROUPS = WRITE_DATA_WIDTH / 4
-+ DECL localparam AMO_CMP_SUPERS = AMO_CMP_GROUPS / 4
-+ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_pick_if_less_way
-+ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_pick_if_not_less_way
-+ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_early_way
-+ DECL wire way_add
-+ DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_gen
-+ DECL wire[AMO_CMP_GROUPS-1:0]cmp_group_prop
-+ DECL wire[AMO_CMP_SUPERS-1:0]cmp_super_gen
-+ DECL wire[AMO_CMP_SUPERS-1:0]cmp_super_prop
-+ DECL wire[AMO_CMP_SUPERS-1:0]cmp_super_factor
-+ DECL wire old_not_less
++ DECL reg[WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_hit_way

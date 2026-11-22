@@ -460,6 +460,7 @@ module l1d_bank_s2 #(
     assign ev_amor = 1'b0;
     assign ev_amow = 1'b0;
     wire [WRITE_DATA_WIDTH-1:0] amo_new;
+    localparam AMO_CMP_GROUPS = WRITE_DATA_WIDTH / 4;
     wire [AMOOP_W-1:0] amo_op_code;
     wire               amo_size_is64;
     wire               amo_op_add;
@@ -513,12 +514,9 @@ module l1d_bank_s2 #(
             wire cmp_prop_top;
             wire cmp_gen_half;
             wire cmp_prop_half;
-            wire cmp_upper_gen;
-            wire cmp_upper_prop;
-            wire cmp_lower_gen;
+            wire [AMO_CMP_GROUPS-1:0] cmp_group_gen;
+            wire [AMO_CMP_GROUPS-1:0] cmp_group_factor;
             wire cmp_early_gen;
-            wire cmp_early_upper;
-            wire cmp_early_lower;
             wire old_less;
             assign cmp_gen         = ~old_word & s2_wdata;
             assign cmp_prop        = ~old_word | s2_wdata;
@@ -526,14 +524,45 @@ module l1d_bank_s2 #(
             assign cmp_prop_top    = (amo_op_signed & (old_word[63] | ~s2_wdata[63])) | (~amo_op_signed & cmp_prop[63]);
             assign cmp_gen_half    = (amo_op_signed & old_word[31] & ~s2_wdata[31]) | (~amo_op_signed & cmp_gen[31]);
             assign cmp_prop_half   = (amo_op_signed & (old_word[31] | ~s2_wdata[31])) | (~amo_op_signed & cmp_prop[31]);
-            assign cmp_upper_gen   = ((((cmp_gen[62] | cmp_prop[61] & (cmp_gen[61] | cmp_gen[60])) | &cmp_prop[61:59] & ((cmp_gen[59] | cmp_gen[58]) | &cmp_prop[58:57] & (cmp_gen[57] | cmp_gen[56]))) | &cmp_prop[61:55] & (((cmp_gen[55] | cmp_gen[54]) | &cmp_prop[54:53] & (cmp_gen[53] | cmp_gen[52])) | &cmp_prop[54:51] & ((cmp_gen[51] | cmp_gen[50]) | &cmp_prop[50:49] & (cmp_gen[49] | cmp_gen[48])))) | &cmp_prop[61:47] & ((((cmp_gen[47] | cmp_gen[46]) | &cmp_prop[46:45] & (cmp_gen[45] | cmp_gen[44])) | &cmp_prop[46:43] & ((cmp_gen[43] | cmp_gen[42]) | &cmp_prop[42:41] & (cmp_gen[41] | cmp_gen[40]))) | &cmp_prop[46:39] & (((cmp_gen[39] | cmp_gen[38]) | &cmp_prop[38:37] & (cmp_gen[37] | cmp_gen[36])) | &cmp_prop[38:35] & ((cmp_gen[35] | cmp_gen[34]) | &cmp_prop[34:33] & (cmp_gen[33] | cmp_gen[32])))));
-            assign cmp_upper_prop  = &cmp_prop[62:32];
-            assign cmp_lower_gen   = ((((cmp_gen[30] | cmp_prop[29] & (cmp_gen[29] | cmp_gen[28])) | &cmp_prop[29:27] & ((cmp_gen[27] | cmp_gen[26]) | &cmp_prop[26:25] & (cmp_gen[25] | cmp_gen[24]))) | &cmp_prop[29:23] & (((cmp_gen[23] | cmp_gen[22]) | &cmp_prop[22:21] & (cmp_gen[21] | cmp_gen[20])) | &cmp_prop[22:19] & ((cmp_gen[19] | cmp_gen[18]) | &cmp_prop[18:17] & (cmp_gen[17] | cmp_gen[16])))) | &cmp_prop[29:15] & ((((cmp_gen[15] | cmp_gen[14]) | &cmp_prop[14:13] & (cmp_gen[13] | cmp_gen[12])) | &cmp_prop[14:11] & ((cmp_gen[11] | cmp_gen[10]) | &cmp_prop[10:9] & (cmp_gen[9] | cmp_gen[8]))) | &cmp_prop[14:7] & (((cmp_gen[7] | cmp_gen[6]) | &cmp_prop[6:5] & (cmp_gen[5] | cmp_gen[4])) | &cmp_prop[6:3] & ((cmp_gen[3] | cmp_gen[2]) | &cmp_prop[2:1] & (cmp_gen[1] | cmp_gen[0])))));
-            assign cmp_early_gen   = (amo_size_is64 & cmp_gen_top) | (amo_size_is64 & cmp_prop_top & cmp_upper_prop & cmp_gen[31]) |
+            assign cmp_group_gen    = {
+                (cmp_gen[62] | (cmp_prop[62] & cmp_gen[61]) | (&cmp_prop[62:61] & cmp_gen[60])),
+                ((cmp_gen[59] | cmp_gen[58]) | (cmp_prop[58] & cmp_gen[57]) | (&cmp_prop[58:57] & cmp_gen[56])),
+                ((cmp_gen[55] | cmp_gen[54]) | (cmp_prop[54] & cmp_gen[53]) | (&cmp_prop[54:53] & cmp_gen[52])),
+                ((cmp_gen[51] | cmp_gen[50]) | (cmp_prop[50] & cmp_gen[49]) | (&cmp_prop[50:49] & cmp_gen[48])),
+                ((cmp_gen[47] | cmp_gen[46]) | (cmp_prop[46] & cmp_gen[45]) | (&cmp_prop[46:45] & cmp_gen[44])),
+                ((cmp_gen[43] | cmp_gen[42]) | (cmp_prop[42] & cmp_gen[41]) | (&cmp_prop[42:41] & cmp_gen[40])),
+                ((cmp_gen[39] | cmp_gen[38]) | (cmp_prop[38] & cmp_gen[37]) | (&cmp_prop[38:37] & cmp_gen[36])),
+                ((cmp_gen[35] | cmp_gen[34]) | (cmp_prop[34] & cmp_gen[33]) | (&cmp_prop[34:33] & cmp_gen[32])),
+                (cmp_gen[30] | (cmp_prop[30] & cmp_gen[29]) | (&cmp_prop[30:29] & cmp_gen[28])),
+                ((cmp_gen[27] | cmp_gen[26]) | (cmp_prop[26] & cmp_gen[25]) | (&cmp_prop[26:25] & cmp_gen[24])),
+                ((cmp_gen[23] | cmp_gen[22]) | (cmp_prop[22] & cmp_gen[21]) | (&cmp_prop[22:21] & cmp_gen[20])),
+                ((cmp_gen[19] | cmp_gen[18]) | (cmp_prop[18] & cmp_gen[17]) | (&cmp_prop[18:17] & cmp_gen[16])),
+                ((cmp_gen[15] | cmp_gen[14]) | (cmp_prop[14] & cmp_gen[13]) | (&cmp_prop[14:13] & cmp_gen[12])),
+                ((cmp_gen[11] | cmp_gen[10]) | (cmp_prop[10] & cmp_gen[9]) | (&cmp_prop[10:9] & cmp_gen[8])),
+                ((cmp_gen[7] | cmp_gen[6]) | (cmp_prop[6] & cmp_gen[5]) | (&cmp_prop[6:5] & cmp_gen[4])),
+                ((cmp_gen[3] | cmp_gen[2]) | (cmp_prop[2] & cmp_gen[1]) | (&cmp_prop[2:1] & cmp_gen[0]))
+            };
+            assign cmp_group_factor = {
+                ((amo_size_is64 & cmp_prop_top)),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:59]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:55]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:51]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:47]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:43]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:39]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:35]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:31])) | (~amo_size_is64 & cmp_prop_half)),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:27])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:27]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:23])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:23]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:19])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:19]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:15])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:15]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:11])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:11]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:7])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:7]))),
+                ((amo_size_is64 & cmp_prop_top & (&cmp_prop[62:3])) | (~amo_size_is64 & cmp_prop_half & (&cmp_prop[30:3])))
+            };
+            assign cmp_early_gen   = (amo_size_is64 & cmp_gen_top) | (amo_size_is64 & cmp_prop_top & (&cmp_prop[62:32]) & cmp_gen[31]) |
                                      (~amo_size_is64 & cmp_gen_half);
-            assign cmp_early_upper = amo_size_is64 & cmp_prop_top & cmp_prop[62];
-            assign cmp_early_lower = (amo_size_is64 & cmp_prop_top & (&cmp_prop[62:30])) | (~amo_size_is64 & cmp_prop_half & cmp_prop[30]);
-            assign old_less        = cmp_early_gen | (cmp_early_upper & cmp_upper_gen) | (cmp_early_lower & cmp_lower_gen);
+            assign old_less        = cmp_early_gen | (|(cmp_group_factor & cmp_group_gen));
             wire [WRITE_DATA_WIDTH-1:0] add_bit_gen;
             wire [WRITE_DATA_WIDTH-1:0] add_bit_prop;
             wire [WRITE_DATA_WIDTH-1:0] add_span2_gen;

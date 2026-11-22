@@ -31,13 +31,8 @@
 + DECL wire amo_op_max_any
 + DECL wire amo_op_signed
 + DECL wire amo_op_swap_other
-+ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_xor_way
 + DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_carry_way
 + DECL wire[WRITE_DATA_WIDTH-1:0]old_word
-+ DECL wire way_and
-+ DECL wire way_or
-+ DECL wire way_min
-+ DECL wire way_max
 + DECL wire[WRITE_DATA_WIDTH-1:0]cmp_gen
 + DECL wire[WRITE_DATA_WIDTH-1:0]cmp_prop
 + DECL wire cmp_gen_top
@@ -72,6 +67,9 @@
 + DECL wire[WRITE_DATA_WIDTH-1:0]amo_logic_operand
 + DECL wire[WRITE_DATA_WIDTH-1:0]amo_min_operand
 + DECL wire[WRITE_DATA_WIDTH-1:0]amo_max_operand
-+ DECL wire[WAYS*WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_way
-+ DECL wire[WRITE_DATA_WIDTH-1:0]old_xor_operand
 + DECL reg[WRITE_DATA_WIDTH-1:0]amo_sum_if_carry_hit_way
+# iteration S2-I8 (2026-11-22): the non-critical arms (XOR / AND / OR / ADD sum / MIN-MAX data) built once from the hit
+# word hit_data; per way only the compare and the ADD carry. Dropped S2-I3 / S2-I4 items (lines removed above): way_and,
+# way_or, way_min, way_max, amo_xor_way, amo_sum_if_carry_way, old_xor_operand.
++ DECL wire[WRITE_DATA_WIDTH-1:0]amo_pick_if_less
++ DECL wire[WRITE_DATA_WIDTH-1:0]amo_pick_if_not_less

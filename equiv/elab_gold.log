@@ -1,0 +1,481 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gold.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/common/l1d_ecc_fix.v
+Parsing Verilog input from `rtl/common/l1d_ecc_fix.v' to AST representation.
+Generating RTLIL representation for module `\l1d_ecc_fix'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/bank/s2/l1d_resp_gen.v
+Parsing Verilog input from `rtl/bank/s2/l1d_resp_gen.v' to AST representation.
+Generating RTLIL representation for module `\l1d_resp_gen'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/bank/s2/l1d_amo_alu.v
+Parsing Verilog input from `rtl/bank/s2/l1d_amo_alu.v' to AST representation.
+Generating RTLIL representation for module `\l1d_amo_alu'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: golden/l1d_bank_s2.v
+Parsing Verilog input from `golden/l1d_bank_s2.v' to AST representation.
+Generating RTLIL representation for module `\l1d_bank_s2'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \l1d_bank_s2
+Used module:     \l1d_ecc_fix
+Used module:     \l1d_amo_alu
+Used module:     \l1d_resp_gen
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_fix'.
+Parameter \DATA_W = 50
+Parameter \HAM_W = 6
+Generating RTLIL representation for module `$paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+
+5.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Generating RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \DATA_W = 64
+Parameter \HAM_W = 7
+Found cached RTLIL representation for module `$paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix'.
+Parameter \W = 64
+Parameter \MEM_SIZE_BITS = 2
+
+5.4. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_amo_alu'.
+Parameter \W = 64
+Parameter \MEM_SIZE_BITS = 2
+Generating RTLIL representation for module `$paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+
+5.5. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_resp_gen'.
+Parameter \IN_BYTES = 64
+Parameter \WRITE_DATA_WIDTH = 64
+Parameter \MEM_SIZE_BITS = 2
+Parameter \OFF_W = 6
+Generating RTLIL representation for module `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen'.
+
+5.6. Analyzing design hierarchy..
+Top module:  \l1d_bank_s2
+Used module:     $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_fix
+Used module:     $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix
+Used module:     $paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu
+Used module:     $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen
+
+5.7. Analyzing design hierarchy..
+Top module:  \l1d_bank_s2
+Used module:     $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_fix
+Used module:     $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix
+Used module:     $paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu
+Used module:     $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen
+Removing unused module `\l1d_amo_alu'.
+Removing unused module `\l1d_resp_gen'.
+Removing unused module `\l1d_ecc_fix'.
+Removed 3 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 7 switch rules as full_case in process $proc$golden/l1d_bank_s2.v:503$2213 in module l1d_bank_s2.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s2.v:474$2205 in module l1d_bank_s2.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_bank_s2.v:457$2187 in module l1d_bank_s2.
+Marked 24 switch rules as full_case in process $proc$golden/l1d_bank_s2.v:315$2136 in module l1d_bank_s2.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 6 redundant assignments.
+Promoted 130 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~33 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+     1/38: $7\snp_act_id[2:0]
+     2/38: $7\snp_act_code[1:0]
+     3/38: $7\snp_push[0:0]
+     4/38: $6\snp_act_id[2:0]
+     5/38: $6\snp_act_code[1:0]
+     6/38: $6\snp_push[0:0]
+     7/38: $4\vc_snp[0:0]
+     8/38: $4\snp_from_vc[0:0]
+     9/38: $4\snp_dirty[0:0]
+    10/38: $4\snp_present[0:0]
+    11/38: $5\snp_push[0:0]
+    12/38: $5\snp_act_id[2:0]
+    13/38: $5\snp_act_code[1:0]
+    14/38: $4\snp_act_id[2:0]
+    15/38: $4\snp_act_code[1:0]
+    16/38: $4\snp_push[0:0]
+    17/38: $3\snp_push[0:0]
+    18/38: $3\snp_act_id[2:0]
+    19/38: $3\snp_act_code[1:0]
+    20/38: $3\snp_from_vc[0:0]
+    21/38: $3\snp_dirty[0:0]
+    22/38: $3\snp_present[0:0]
+    23/38: $3\vc_snp[0:0]
+    24/38: $2\snp_dirty[0:0]
+    25/38: $2\snp_present[0:0]
+    26/38: $2\snp_push[0:0]
+    27/38: $2\snp_from_vc[0:0]
+    28/38: $2\vc_snp[0:0]
+    29/38: $2\snp_act_id[2:0]
+    30/38: $2\snp_act_code[1:0]
+    31/38: $1\snp_from_vc[0:0]
+    32/38: $1\snp_dirty[0:0]
+    33/38: $1\snp_present[0:0]
+    34/38: $1\snp_push[0:0]
+    35/38: $1\vc_snp[0:0]
+    36/38: $1\snp_act_id[2:0]
+    37/38: $1\snp_act_code[1:0]
+    38/38: $1\snp_act_valid[0:0]
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+     1/5: $0\ecc_uncorrectable[0:0]
+     2/5: $0\ecc_correctable[0:0]
+     3/5: $0\pf_fb_valid[0:0]
+     4/5: $0\evict_valid[0:0]
+     5/5: $0\train_valid[0:0]
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+     1/1: $0\s3_amo_v[0:0]
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+     1/152: $17\act_id[2:0]
+     2/152: $20\act_code[2:0]
+     3/152: $16\act_id[2:0]
+     4/152: $19\act_code[2:0]
+     5/152: $19\m_alloc[0:0]
+     6/152: $18\act_code[2:0]
+     7/152: $16\act_valid[0:0]
+     8/152: $18\m_alloc[0:0]
+     9/152: $15\act_id[2:0]
+    10/152: $13\s3_from_vc[0:0]
+    11/152: $15\s3_load[0:0]
+    12/152: $14\act_id[2:0]
+    13/152: $17\act_code[2:0]
+    14/152: $15\act_valid[0:0]
+    15/152: $12\s3_from_vc[0:0]
+    16/152: $14\s3_load[0:0]
+    17/152: $13\act_id[2:0]
+    18/152: $16\act_code[2:0]
+    19/152: $14\act_valid[0:0]
+    20/152: $17\m_alloc[0:0]
+    21/152: $12\act_id[2:0]
+    22/152: $15\act_code[2:0]
+    23/152: $13\vc_swap[0:0]
+    24/152: $13\m_swap[0:0]
+    25/152: $16\m_alloc[0:0]
+    26/152: $12\vc_swap[0:0]
+    27/152: $12\m_swap[0:0]
+    28/152: $15\m_alloc[0:0]
+    29/152: $11\vc_swap[0:0]
+    30/152: $11\m_swap[0:0]
+    31/152: $14\m_alloc[0:0]
+    32/152: $11\s3_from_vc[0:0]
+    33/152: $13\s3_load[0:0]
+    34/152: $11\act_id[2:0]
+    35/152: $14\act_code[2:0]
+    36/152: $13\act_valid[0:0]
+    37/152: $10\s3_from_vc[0:0]
+    38/152: $10\vc_swap[0:0]
+    39/152: $10\m_swap[0:0]
+    40/152: $13\m_alloc[0:0]
+    41/152: $12\s3_load[0:0]
+    42/152: $10\act_id[2:0]
+    43/152: $13\act_code[2:0]
+    44/152: $12\act_valid[0:0]
+    45/152: $9\act_id[2:0]
+    46/152: $12\act_code[2:0]
+    47/152: $11\act_valid[0:0]
+    48/152: $9\s3_from_vc[0:0]
+    49/152: $9\vc_swap[0:0]
+    50/152: $9\m_swap[0:0]
+    51/152: $12\m_alloc[0:0]
+    52/152: $11\s3_load[0:0]
+    53/152: $10\s3_load[0:0]
+    54/152: $8\s3_from_vc[0:0]
+    55/152: $8\vc_swap[0:0]
+    56/152: $8\m_swap[0:0]
+    57/152: $11\m_alloc[0:0]
+    58/152: $8\act_id[2:0]
+    59/152: $11\act_code[2:0]
+    60/152: $10\act_valid[0:0]
+    61/152: $10\act_code[2:0]
+    62/152: $9\act_valid[0:0]
+    63/152: $7\s3_from_vc[0:0]
+    64/152: $7\vc_swap[0:0]
+    65/152: $7\m_swap[0:0]
+    66/152: $10\m_alloc[0:0]
+    67/152: $9\s3_load[0:0]
+    68/152: $7\act_id[2:0]
+    69/152: $7\s3_scfail[0:0]
+    70/152: $8\s3_load[0:0]
+    71/152: $6\s3_from_vc[0:0]
+    72/152: $6\vc_swap[0:0]
+    73/152: $6\m_swap[0:0]
+    74/152: $9\m_alloc[0:0]
+    75/152: $6\act_id[2:0]
+    76/152: $9\act_code[2:0]
+    77/152: $8\act_valid[0:0]
+    78/152: $8\act_code[2:0]
+    79/152: $8\n_alloc[0:0]
+    80/152: $7\s3_zero[0:0]
+    81/152: $7\s3_load[0:0]
+    82/152: $7\n_alloc[0:0]
+    83/152: $7\act_code[2:0]
+    84/152: $7\act_valid[0:0]
+    85/152: $6\s3_scfail[0:0]
+    86/152: $6\s3_load[0:0]
+    87/152: $6\s3_zero[0:0]
+    88/152: $6\n_alloc[0:0]
+    89/152: $6\act_code[2:0]
+    90/152: $6\act_valid[0:0]
+    91/152: $5\s3_zero[0:0]
+    92/152: $5\s3_scfail[0:0]
+    93/152: $5\n_alloc[0:0]
+    94/152: $5\s3_load[0:0]
+    95/152: $5\act_code[2:0]
+    96/152: $5\act_valid[0:0]
+    97/152: $5\s3_from_vc[0:0]
+    98/152: $5\vc_swap[0:0]
+    99/152: $5\m_swap[0:0]
+   100/152: $8\m_alloc[0:0]
+   101/152: $5\act_id[2:0]
+   102/152: $4\act_code[2:0]
+   103/152: $4\act_valid[0:0]
+   104/152: $4\s3_zero[0:0]
+   105/152: $4\s3_scfail[0:0]
+   106/152: $4\s3_from_vc[0:0]
+   107/152: $4\n_alloc[0:0]
+   108/152: $4\vc_swap[0:0]
+   109/152: $4\m_swap[0:0]
+   110/152: $7\m_alloc[0:0]
+   111/152: $4\s3_load[0:0]
+   112/152: $4\act_id[2:0]
+   113/152: $3\s3_zero[0:0]
+   114/152: $3\s3_scfail[0:0]
+   115/152: $3\s3_from_vc[0:0]
+   116/152: $3\n_alloc[0:0]
+   117/152: $3\vc_swap[0:0]
+   118/152: $3\m_swap[0:0]
+   119/152: $6\m_alloc[0:0]
+   120/152: $3\s3_load[0:0]
+   121/152: $3\act_id[2:0]
+   122/152: $3\act_code[2:0]
+   123/152: $3\act_valid[0:0]
+   124/152: $2\act_code[2:0]
+   125/152: $2\act_valid[0:0]
+   126/152: $2\s3_zero[0:0]
+   127/152: $2\s3_scfail[0:0]
+   128/152: $2\s3_from_vc[0:0]
+   129/152: $2\n_alloc[0:0]
+   130/152: $2\vc_swap[0:0]
+   131/152: $2\m_swap[0:0]
+   132/152: $5\m_alloc[0:0]
+   133/152: $2\s3_load[0:0]
+   134/152: $2\act_id[2:0]
+   135/152: $4\pf_result[1:0]
+   136/152: $4\m_alloc[0:0]
+   137/152: $3\pf_result[1:0]
+   138/152: $3\m_alloc[0:0]
+   139/152: $2\pf_result[1:0]
+   140/152: $2\m_alloc[0:0]
+   141/152: $1\pf_result[1:0]
+   142/152: $1\m_alloc[0:0]
+   143/152: $1\s3_zero[0:0]
+   144/152: $1\s3_scfail[0:0]
+   145/152: $1\s3_from_vc[0:0]
+   146/152: $1\n_alloc[0:0]
+   147/152: $1\vc_swap[0:0]
+   148/152: $1\m_swap[0:0]
+   149/152: $1\s3_load[0:0]
+   150/152: $1\act_id[2:0]
+   151/152: $1\act_code[2:0]
+   152/152: $1\act_valid[0:0]
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:300$2119'.
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:219$1953'.
+Creating decoders for process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:213$1940'.
+Creating decoders for process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$4275'.
+Creating decoders for process `$paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.$proc$rtl/bank/s2/l1d_amo_alu.v:27$3505'.
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_bank_s2.\snp_act_valid' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_act_code' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_act_id' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\vc_snp' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_push' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_present' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_dirty' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\snp_from_vc' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+No latch inferred for signal `\l1d_bank_s2.\act_valid' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\act_code' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\act_id' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\s3_load' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\m_alloc' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\m_swap' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\vc_swap' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\n_alloc' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\s3_from_vc' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\s3_scfail' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\s3_zero' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\pf_result' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+No latch inferred for signal `\l1d_bank_s2.\hit_data' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:300$2119'.
+No latch inferred for signal `\l1d_bank_s2.\hw' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:300$2119'.
+No latch inferred for signal `\l1d_bank_s2.\tag_fix_onehot' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\tag_fix_seen' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\tag_fix_way' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\tag_err_tag' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\tag_err_synd' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\tw' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+No latch inferred for signal `\l1d_bank_s2.\hit_synd' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+No latch inferred for signal `\l1d_bank_s2.\hit_fix' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+No latch inferred for signal `\l1d_bank_s2.\hit_data_ce' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+No latch inferred for signal `\l1d_bank_s2.\hit_data_ue' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+No latch inferred for signal `\l1d_bank_s2.\ew' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+No latch inferred for signal `\l1d_bank_s2.\st_merged' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:219$1953'.
+No latch inferred for signal `\l1d_bank_s2.\mb' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:219$1953'.
+No latch inferred for signal `\l1d_bank_s2.\line_q' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:213$1940'.
+No latch inferred for signal `\l1d_bank_s2.\lw' from process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:213$1940'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\i' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$4275'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\load_data' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$4275'.
+No latch inferred for signal `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.\nbytes' from process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$4275'.
+No latch inferred for signal `$paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.\new_value' from process `$paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.$proc$rtl/bank/s2/l1d_amo_alu.v:27$3505'.
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_bank_s2.\train_valid' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7724' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_port' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7725' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_pc' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7726' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_addr' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7727' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_is_store' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7728' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_miss' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7729' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_pf_hit' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7730' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\train_no_train' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7731' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\evict_valid' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7732' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\evict_line_addr' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7733' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\pf_fb_valid' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7734' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\pf_fb_line_addr' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7735' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\pf_fb_result' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7736' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\ecc_correctable' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7737' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\ecc_uncorrectable' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+  created $dff cell `$procdff$7738' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_amo_v' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7739' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_line' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7740' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_way' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7741' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_old' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7742' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_be' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7743' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_off' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7744' with positive edge clock.
+Creating register for signal `\l1d_bank_s2.\s3_new' using process `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+  created $dff cell `$procdff$7745' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 7 empty switches in `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:503$2213'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:474$2205'.
+Found and cleaned up 1 empty switch in `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:457$2187'.
+Found and cleaned up 24 empty switches in `\l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:315$2136'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:300$2119'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:248$2067'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:228$2018'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:219$1953'.
+Removing empty process `l1d_bank_s2.$proc$golden/l1d_bank_s2.v:213$1940'.
+Removing empty process `$paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.$proc$rtl/bank/s2/l1d_resp_gen.v:17$4275'.
+Removing empty process `$paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.$proc$rtl/bank/s2/l1d_amo_alu.v:27$3505'.
+Cleaned up 33 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_fix.
+<suppressed ~2 debug messages>
+Optimizing module l1d_bank_s2.
+<suppressed ~148 debug messages>
+Optimizing module $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.
+Optimizing module $paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.
+<suppressed ~193 debug messages>
+Optimizing module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix.
+<suppressed ~2 debug messages>
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$3b7adcc908e52e1934b9ab6169cd494bf48df8c0\l1d_ecc_fix.
+Deleting now unused module $paramod$862e2aadd06fc4759615bbfec756a05f4a46841d\l1d_resp_gen.
+Deleting now unused module $paramod$3bbac9876d48911eddfc20e30f7a57fd37db5fcb\l1d_amo_alu.
+Deleting now unused module $paramod$3ba43dc9e13b33ca3bd0448baa9124b9f5c2e5b1\l1d_ecc_fix.
+<suppressed ~11 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_bank_s2..
+Removed 60 unused cells and 2546 unused wires.
+<suppressed ~62 debug messages>
+Renaming module \l1d_bank_s2 to \gold.
+
+9. Executing RTLIL backend.
+Output filename: proof/gold.il
+
+End of script. Logfile hash: e472a86ac1, time: 5.83s, user: 5.81s, system: 0.03s, MEM: 61.50 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 57% 1x hierarchy (3 sec), 39% 5x read_verilog (2 sec), ...

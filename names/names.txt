@@ -1,0 +1,30 @@
+approved + DECL reg[LSU_PORTS:0]join_cnt_onehot
+approved + DECL reg[LSU_PORTS:0]rank_before_onehot[0:LSU_PORTS-1]
+approved + DECL reg[LSU_PORTS:0]join_run
+approved + DECL reg[ORDER_CNT_W-1:0]count_next_sel
+approved + DECL reg ring_empty_next
+approved + DECL reg[ORDER_CNT_W-1:0]count_candidate
+approved + DECL integer join_port_idx
+approved + DECL integer join_count_idx
+approved + DECL integer pop_value_idx
+approved + DECL reg candidate_selected
+approved + DECL localparam COUNT_VALUES = 1 << ORDER_CNT_W
+approved + DECL reg[COUNT_VALUES-1:0]count_hit_onehot
+approved + DECL reg[ORDER_CNT_W*COUNT_VALUES-1:0]count_bit_select
+approved + DECL reg[COUNT_VALUES-1:0]empty_select
+approved + DECL integer count_value_idx
+approved + DECL integer count_bit_idx
+approved + DECL input[ORDER_DEPTH-1:0]pointer_onehot
+approved + DECL input[LSU_PORTS:0]step_onehot
+approved + DECL integer step_idx
+approved + FOR for(step_idx=0;step_idx<=LSU_PORTS;step_idx=step_idx+1)
+approved + FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
+approved + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
+approved + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+approved + FOR for(pop_value_idx=0;pop_value_idx<=1;pop_value_idx=pop_value_idx+1)
+approved + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
+approved + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
+approved + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
+approved + ALWAYS always @*
+names: 50 items golden, 50 items current, 0 differences
+NAMES: PASS

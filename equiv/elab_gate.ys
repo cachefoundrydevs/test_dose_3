@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/front/l1d_bank_order.v
+hierarchy -top l1d_bank_order
+proc
+flatten
+opt_clean
+rename l1d_bank_order gate
+write_rtlil proof/gate.il

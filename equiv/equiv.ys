@@ -1,0 +1,8 @@
+read_rtlil proof/gold.il
+read_rtlil proof/gate.il
+async2sync
+equiv_make -blacklist proof/blacklist.txt gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

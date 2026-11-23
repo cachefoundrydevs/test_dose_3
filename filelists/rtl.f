@@ -27,6 +27,7 @@ rtl/bank/fifo/l1d_vec_store_buf.v
 rtl/bank/s0/l1d_req_tracker.v
 rtl/bank/s0/l1d_book_select.v
 rtl/bank/s0/l1d_bank_s0.v
+rtl/front/l1d_front_s0.v
 rtl/bank/s1/l1d_plru.v
 rtl/bank/s1/l1d_meta_flops.v
 rtl/bank/s1/l1d_s1_lookup.v

@@ -1,0 +1,271 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gate.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/front/l1d_bank_order.v
+Parsing Verilog input from `rtl/front/l1d_bank_order.v' to AST representation.
+Generating RTLIL representation for module `\l1d_bank_order'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \l1d_bank_order
+
+2.2. Analyzing design hierarchy..
+Top module:  \l1d_bank_order
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 313 empty switches in `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+Cleaned up 313 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$rtl/front/l1d_bank_order.v:215$9253 in module l1d_bank_order.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 504 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+     1/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [7]
+     2/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.bit_idx[31:0]$9310
+     3/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [6]
+     4/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [5]
+     5/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [4]
+     6/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [3]
+     7/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [2]
+     8/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [1]
+     9/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9308 [0]
+    10/78: $2\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.pointer_onehot[7:0]$9309
+    11/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [3]
+    12/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [2]
+    13/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [1]
+    14/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [0]
+    15/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [6]
+    16/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [5]
+    17/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [4]
+    18/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result[7:0]$9292 [7]
+    19/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [1]
+    20/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [0]
+    21/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [6]
+    22/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [5]
+    23/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [4]
+    24/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [3]
+    25/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [7]
+    26/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [0]
+    27/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [6]
+    28/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [5]
+    29/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [4]
+    30/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [3]
+    31/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [2]
+    32/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [7]
+    33/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [6]
+    34/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [5]
+    35/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [4]
+    36/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [3]
+    37/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [2]
+    38/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [1]
+    39/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [0]
+    40/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [6]
+    41/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [5]
+    42/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [4]
+    43/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [3]
+    44/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [2]
+    45/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [1]
+    46/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [0]
+    47/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.bit_idx[31:0]$9297
+    48/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.pointer_onehot[7:0]$9296
+    49/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result[7:0]$9295
+    50/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.bit_idx[31:0]$9294
+    51/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.pointer_onehot[7:0]$9293
+    52/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result[7:0]$9289 [2]
+    53/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.bit_idx[31:0]$9291
+    54/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.pointer_onehot[7:0]$9290
+    55/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result[7:0]$9286 [1]
+    56/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.bit_idx[31:0]$9288
+    57/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.pointer_onehot[7:0]$9287
+    58/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result[7:0]$9283 [7]
+    59/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.bit_idx[31:0]$9285
+    60/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.pointer_onehot[7:0]$9284
+    61/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result[7:0]$9280 [7]
+    62/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.bit_idx[31:0]$9282
+    63/78: $1\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.pointer_onehot[7:0]$9281
+    64/78: $0\order_write_onehot[7:0]
+    65/78: $1\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.step_idx[31:0]$9279
+    66/78: $1\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.step_onehot[4:0]$9278
+    67/78: $1\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.pointer_onehot[7:0]$9277
+    68/78: $1\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.$result[7:0]$9276
+    69/78: $1\write_place[31:0]
+    70/78: $0\order_port[7][1:0]
+    71/78: $0\order_port[6][1:0]
+    72/78: $0\order_port[5][1:0]
+    73/78: $0\order_port[4][1:0]
+    74/78: $0\order_port[3][1:0]
+    75/78: $0\order_port[2][1:0]
+    76/78: $0\order_port[1][1:0]
+    77/78: $0\order_port[0][1:0]
+    78/78: $0\order_read_onehot[7:0]
+Creating decoders for process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+Creating decoders for process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+Creating decoders for process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:57$715'.
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_bank_order.\rank_1' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\rank_2' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\rank_3' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_0' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_1' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_2' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_3' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_write_en' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_write_port' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\join_cnt' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\place_rank_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+No latch inferred for signal `\l1d_bank_order.\join_cnt_onehot' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_next_sel' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\ring_empty_next' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_candidate' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\join_port_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\join_count_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\pop_value_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\candidate_selected' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_hit_onehot' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_bit_select' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\empty_select' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\low_hit_onehot' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_prefix_hit' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_value_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\count_bit_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\join_pattern_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_idx' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\join_pattern_hit' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_build' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_used' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_port' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_before_onehot[0]' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_before_onehot[1]' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_before_onehot[2]' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\rank_before_onehot[3]' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+No latch inferred for signal `\l1d_bank_order.\oldest_port' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:57$715'.
+No latch inferred for signal `\l1d_bank_order.\read_place' from process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:57$715'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_bank_order.\ring_empty_q' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9606' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_read_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9607' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_write_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9608' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_count' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9609' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\write_place' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9610' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9611' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9612' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.step_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9613' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_onehot$func$rtl/front/l1d_bank_order.v:223$708.step_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9614' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9615' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9616' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$709.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9617' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9618' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9619' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$710.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9620' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9621' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9622' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$711.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9623' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9624' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9625' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$712.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9626' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9627' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9628' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:122$713.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9629' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.$result' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9630' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.pointer_onehot' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9631' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$rtl/front/l1d_bank_order.v:225$714.bit_idx' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9632' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[0]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9633' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[1]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9634' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[2]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9635' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[3]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9636' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[4]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9637' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[5]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9638' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[6]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9639' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[7]' using process `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+  created $dff cell `$procdff$9640' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 10 empty switches in `\l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+Removing empty process `l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:215$9253'.
+Removing empty process `l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:191$9033'.
+Removing empty process `l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:125$732'.
+Removing empty process `l1d_bank_order.$proc$rtl/front/l1d_bank_order.v:57$715'.
+Cleaned up 10 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module l1d_bank_order.
+<suppressed ~4875 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_bank_order..
+Removed 757 unused cells and 6109 unused wires.
+<suppressed ~782 debug messages>
+Renaming module \l1d_bank_order to \gate.
+
+6. Executing RTLIL backend.
+Output filename: proof/gate.il
+
+End of script. Logfile hash: 65988ee856, time: 1.35s, user: 1.35s, system: 0.03s, MEM: 78.40 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 91% 2x read_verilog (1 sec), 2% 2x proc_clean (0 sec), ...

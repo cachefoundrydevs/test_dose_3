@@ -62,10 +62,3 @@
 + FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
-# iteration BO-9 (2026-11-23): order_port ranks from thresholds (rank s used = at least s+1 joins; its port = first p whose
-# prefix join[p:0] holds s+1 joins), no longer from the join_run chain (the chain only feeds rank_before_onehot)
-+ DECL reg[LSU_PORTS-1:0]prefix_at_least
-+ DECL reg rank_first_port
-+ FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
-+ FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
-+ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)

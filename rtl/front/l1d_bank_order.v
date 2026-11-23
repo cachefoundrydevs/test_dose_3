@@ -102,8 +102,6 @@ module l1d_bank_order #(
     localparam JOIN_PATTERNS = 1 << LSU_PORTS;                   // JOIN_PATTERNS = 16 subsets of the join ports
     reg  [LSU_PORTS+1:0]   join_at_least;                        // LSU_PORTS+2 = 6 bits: bit n = at least n joins (top bit 0)
     integer                join_pattern_idx;
-    reg  [LSU_PORTS-1:0]   prefix_at_least;                      // LSU_PORTS = 4 bits: bit p = join[p:0] holds at least s+1 joins
-    reg                    rank_first_port;                      // port p is the joiner of rank s (first p reaching s+1)
     // number of ones in the low pattern_width bits of pattern_value (constant arguments only)
     function integer join_pattern_ones;
         input integer pattern_value;
@@ -127,8 +125,16 @@ module l1d_bank_order #(
     endfunction
     always @* begin
         join_run  = {{LSU_PORTS{1'b0}}, 1'b1};
+        rank_used = {LSU_PORTS{1'b0}};
+        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
         for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
             rank_before_onehot[join_port_idx] = join_run;
+            // port join_port_idx joins with rank s = the one-hot join_run (joiners before it)
+            for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
+                rank_used[rank_idx] = rank_used[rank_idx] | (join_now[join_port_idx] & join_run[rank_idx]);
+                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
+                    ({PORT_W{join_now[join_port_idx] & join_run[rank_idx]}} & join_port_idx);
+            end
             if (join_now[join_port_idx])
                 join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
@@ -139,27 +145,6 @@ module l1d_bank_order #(
                 if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == join_count_idx)
                     join_at_least[join_count_idx] = join_at_least[join_count_idx] |
                                                     ((join_now & join_pattern_idx) == join_pattern_idx);
-        // order_port write ranks from thresholds too (no chain, no XOR of two pins): rank s exists = at least s+1
-        // joins; its port = the first p whose prefix join[p:0] holds at least s+1 joins (prefix thresholds, monotone in p)
-        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
-        for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
-            rank_used[rank_idx] = join_at_least[rank_idx + 1];
-            prefix_at_least = {LSU_PORTS{1'b0}};
-            for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1)
-                for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
-                    if ((join_pattern_idx < (1 << (join_port_idx + 1))) &&
-                        (join_pattern_ones(join_pattern_idx, LSU_PORTS) == rank_idx + 1))
-                        prefix_at_least[join_port_idx] = prefix_at_least[join_port_idx] |
-                                                         ((join_now & join_pattern_idx) == join_pattern_idx);
-            for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
-                if (join_port_idx == 0)
-                    rank_first_port = prefix_at_least[join_port_idx];
-                else
-                    rank_first_port = prefix_at_least[join_port_idx] & !prefix_at_least[join_port_idx - 1];
-                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
-                                                       ({PORT_W{rank_first_port}} & join_port_idx);
-            end
-        end
         // exactly n joins = at least n and not at least n+1 (one gate after the thresholds); same value as join_run
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
             join_cnt_onehot[join_count_idx] = join_at_least[join_count_idx] & !join_at_least[join_count_idx + 1];

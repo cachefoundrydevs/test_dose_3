@@ -1,0 +1,627 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/equiv.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: order_port[7]_gold (\order_port[7]_gold), order_port[7]_gate (\order_port[7]_gate) -> order_port[7]
+Presumably equivalent wires: order_port[6]_gold (\order_port[6]_gold), order_port[6]_gate (\order_port[6]_gate) -> order_port[6]
+Presumably equivalent wires: order_port[5]_gold (\order_port[5]_gold), order_port[5]_gate (\order_port[5]_gate) -> order_port[5]
+Presumably equivalent wires: order_port[4]_gold (\order_port[4]_gold), order_port[4]_gate (\order_port[4]_gate) -> order_port[4]
+Presumably equivalent wires: order_port[3]_gold (\order_port[3]_gold), order_port[3]_gate (\order_port[3]_gate) -> order_port[3]
+Presumably equivalent wires: order_port[2]_gold (\order_port[2]_gold), order_port[2]_gate (\order_port[2]_gate) -> order_port[2]
+Presumably equivalent wires: order_port[1]_gold (\order_port[1]_gold), order_port[1]_gate (\order_port[1]_gate) -> order_port[1]
+Presumably equivalent wires: order_port[0]_gold (\order_port[0]_gold), order_port[0]_gate (\order_port[0]_gate) -> order_port[0]
+Presumably equivalent wires: place_idx_gold (8), place_idx_gate (8) -> place_idx
+Presumably equivalent wires: place_write_port_gold (\place_write_port_gold), place_write_port_gate (\place_write_port_gate) -> place_write_port
+Presumably equivalent wires: place_write_en_gold (\place_write_en_gold), place_write_en_gate (\place_write_en_gate) -> place_write_en
+Presumably equivalent wires: place_0_gold (\order_write_onehot_gold), place_0_gate (\order_write_onehot_gate) -> place_0
+Presumably equivalent wires: rank_1_gold ({ 2'00 \join_0_gold }), rank_1_gate ({ 2'00 \join_0_gate }) -> rank_1
+Presumably equivalent wires: read_place_gold (8), read_place_gate (8) -> read_place
+Presumably equivalent wires: oldest_port_gold (\oldest_port_gold), oldest_port_gate (\oldest_port_gate) -> oldest_port
+Presumably equivalent wires: join_now_gold ({ \join_3_gold \join_2_gold \join_1_gold \join_0_gold }), join_now_gate ({ \join_3_gate \join_2_gate \join_1_gate \join_0_gate }) -> join_now
+Presumably equivalent wires: order_count_gold (\order_count_gold), order_count_gate (\order_count_gate) -> order_count
+Presumably equivalent wires: order_write_onehot_gold (\order_write_onehot_gold), order_write_onehot_gate (\order_write_onehot_gate) -> order_write_onehot
+Presumably equivalent wires: order_read_onehot_gold (\order_read_onehot_gold), order_read_onehot_gate (\order_read_onehot_gate) -> order_read_onehot
+Presumably equivalent wires: ring_empty_q_gold (\ring_empty_q_gold), ring_empty_q_gate (\ring_empty_q_gate) -> ring_empty_q
+Presumably equivalent wires: head_port_onehot_gold (\head_port_onehot_gold), head_port_onehot_gate (\head_port_onehot_gate) -> head_port_onehot
+Presumably equivalent wires: pop_gold (\pop_gold), pop_gate (\pop_gate) -> pop
+Presumably equivalent wires: join_3_gold (\join_3_gold), join_3_gate (\join_3_gate) -> join_3
+Presumably equivalent wires: join_2_gold (\join_2_gold), join_2_gate (\join_2_gate) -> join_2
+Presumably equivalent wires: join_1_gold (\join_1_gold), join_1_gate (\join_1_gate) -> join_1
+Presumably equivalent wires: join_0_gold (\join_0_gold), join_0_gate (\join_0_gate) -> join_0
+Presumably equivalent wires: rst_gold (\rst_gold), rst_gate (\rst_gate) -> rst
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:150$2468_gate ($logic_not): \order_count_gate [1:0] -> \order_count [1:0]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:150$2469_gate ($eq): \order_count_gate [1:0] -> \order_count [1:0]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:150$2470_gate ($eq): \order_count_gate [1:0] -> \order_count [1:0]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:150$2471_gate ($eq): \order_count_gate [1:0] -> \order_count [1:0]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:152$2472_gate ($logic_not): \order_count_gate [3:2] -> \order_count [3:2]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:152$2473_gate ($eq): \order_count_gate [3:2] -> \order_count [3:2]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:152$2474_gate ($eq): \order_count_gate [3:2] -> \order_count [3:2]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:152$2475_gate ($eq): \order_count_gate [3:2] -> \order_count [3:2]
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2478_gate ($logic_not): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2483_gate ($eq): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2490_gate ($logic_not): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2495_gate ($eq): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2502_gate ($logic_not): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2507_gate ($eq): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2514_gate ($logic_not): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:167$2519_gate ($eq): { 31'0000000000000000000000000000000 \order_count_gate [2] } -> { 31'0000000000000000000000000000000 \order_count [2] }
+Changing input S of cell $ternary$rtl/front/l1d_bank_order.v:186$2564_gate ($mux): \order_count_gate [0] -> \order_count [0]
+Changing input S of cell $ternary$rtl/front/l1d_bank_order.v:186$2565_gate ($mux): \order_count_gate [0] -> \order_count [0]
+Changing input S of cell $ternary$rtl/front/l1d_bank_order.v:186$2566_gate ($mux): \order_count_gate [0] -> \order_count [0]
+Changing input S of cell $ternary$rtl/front/l1d_bank_order.v:186$2567_gate ($mux): \order_count_gate [1] -> \order_count [1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2700_gate ($and): \order_write_onehot_gate [0] -> \order_write_onehot [0]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2702_gate ($and): { \order_write_onehot_gate [0] \order_write_onehot_gate [0] } -> { \order_write_onehot [0] \order_write_onehot [0] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2704_gate ($and): \order_write_onehot_gate [7] -> \order_write_onehot [7]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2706_gate ($and): { \order_write_onehot_gate [7] \order_write_onehot_gate [7] } -> { \order_write_onehot [7] \order_write_onehot [7] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2708_gate ($and): \order_write_onehot_gate [6] -> \order_write_onehot [6]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2710_gate ($and): { \order_write_onehot_gate [6] \order_write_onehot_gate [6] } -> { \order_write_onehot [6] \order_write_onehot [6] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2712_gate ($and): \order_write_onehot_gate [5] -> \order_write_onehot [5]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2714_gate ($and): { \order_write_onehot_gate [5] \order_write_onehot_gate [5] } -> { \order_write_onehot [5] \order_write_onehot [5] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2716_gate ($and): \order_write_onehot_gate [1] -> \order_write_onehot [1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2718_gate ($and): { \order_write_onehot_gate [1] \order_write_onehot_gate [1] } -> { \order_write_onehot [1] \order_write_onehot [1] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2720_gate ($and): \order_write_onehot_gate [0] -> \order_write_onehot [0]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2722_gate ($and): { \order_write_onehot_gate [0] \order_write_onehot_gate [0] } -> { \order_write_onehot [0] \order_write_onehot [0] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2724_gate ($and): \order_write_onehot_gate [7] -> \order_write_onehot [7]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2726_gate ($and): { \order_write_onehot_gate [7] \order_write_onehot_gate [7] } -> { \order_write_onehot [7] \order_write_onehot [7] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2728_gate ($and): \order_write_onehot_gate [6] -> \order_write_onehot [6]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2730_gate ($and): { \order_write_onehot_gate [6] \order_write_onehot_gate [6] } -> { \order_write_onehot [6] \order_write_onehot [6] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2732_gate ($and): \order_write_onehot_gate [2] -> \order_write_onehot [2]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2734_gate ($and): { \order_write_onehot_gate [2] \order_write_onehot_gate [2] } -> { \order_write_onehot [2] \order_write_onehot [2] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2736_gate ($and): \order_write_onehot_gate [1] -> \order_write_onehot [1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2738_gate ($and): { \order_write_onehot_gate [1] \order_write_onehot_gate [1] } -> { \order_write_onehot [1] \order_write_onehot [1] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2740_gate ($and): \order_write_onehot_gate [0] -> \order_write_onehot [0]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2742_gate ($and): { \order_write_onehot_gate [0] \order_write_onehot_gate [0] } -> { \order_write_onehot [0] \order_write_onehot [0] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2744_gate ($and): \order_write_onehot_gate [7] -> \order_write_onehot [7]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2746_gate ($and): { \order_write_onehot_gate [7] \order_write_onehot_gate [7] } -> { \order_write_onehot [7] \order_write_onehot [7] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2748_gate ($and): \order_write_onehot_gate [3] -> \order_write_onehot [3]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2750_gate ($and): { \order_write_onehot_gate [3] \order_write_onehot_gate [3] } -> { \order_write_onehot [3] \order_write_onehot [3] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2752_gate ($and): \order_write_onehot_gate [2] -> \order_write_onehot [2]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2754_gate ($and): { \order_write_onehot_gate [2] \order_write_onehot_gate [2] } -> { \order_write_onehot [2] \order_write_onehot [2] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2756_gate ($and): \order_write_onehot_gate [1] -> \order_write_onehot [1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2758_gate ($and): { \order_write_onehot_gate [1] \order_write_onehot_gate [1] } -> { \order_write_onehot [1] \order_write_onehot [1] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2760_gate ($and): \order_write_onehot_gate [0] -> \order_write_onehot [0]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2762_gate ($and): { \order_write_onehot_gate [0] \order_write_onehot_gate [0] } -> { \order_write_onehot [0] \order_write_onehot [0] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2764_gate ($and): \order_write_onehot_gate [4] -> \order_write_onehot [4]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2766_gate ($and): { \order_write_onehot_gate [4] \order_write_onehot_gate [4] } -> { \order_write_onehot [4] \order_write_onehot [4] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2768_gate ($and): \order_write_onehot_gate [3] -> \order_write_onehot [3]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2770_gate ($and): { \order_write_onehot_gate [3] \order_write_onehot_gate [3] } -> { \order_write_onehot [3] \order_write_onehot [3] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2772_gate ($and): \order_write_onehot_gate [2] -> \order_write_onehot [2]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2774_gate ($and): { \order_write_onehot_gate [2] \order_write_onehot_gate [2] } -> { \order_write_onehot [2] \order_write_onehot [2] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2776_gate ($and): \order_write_onehot_gate [1] -> \order_write_onehot [1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2778_gate ($and): { \order_write_onehot_gate [1] \order_write_onehot_gate [1] } -> { \order_write_onehot [1] \order_write_onehot [1] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2780_gate ($and): \order_write_onehot_gate [5] -> \order_write_onehot [5]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2782_gate ($and): { \order_write_onehot_gate [5] \order_write_onehot_gate [5] } -> { \order_write_onehot [5] \order_write_onehot [5] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2784_gate ($and): \order_write_onehot_gate [4] -> \order_write_onehot [4]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2786_gate ($and): { \order_write_onehot_gate [4] \order_write_onehot_gate [4] } -> { \order_write_onehot [4] \order_write_onehot [4] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2788_gate ($and): \order_write_onehot_gate [3] -> \order_write_onehot [3]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2790_gate ($and): { \order_write_onehot_gate [3] \order_write_onehot_gate [3] } -> { \order_write_onehot [3] \order_write_onehot [3] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2792_gate ($and): \order_write_onehot_gate [2] -> \order_write_onehot [2]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2794_gate ($and): { \order_write_onehot_gate [2] \order_write_onehot_gate [2] } -> { \order_write_onehot [2] \order_write_onehot [2] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2796_gate ($and): \order_write_onehot_gate [6] -> \order_write_onehot [6]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2798_gate ($and): { \order_write_onehot_gate [6] \order_write_onehot_gate [6] } -> { \order_write_onehot [6] \order_write_onehot [6] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2800_gate ($and): \order_write_onehot_gate [5] -> \order_write_onehot [5]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2802_gate ($and): { \order_write_onehot_gate [5] \order_write_onehot_gate [5] } -> { \order_write_onehot [5] \order_write_onehot [5] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2804_gate ($and): \order_write_onehot_gate [4] -> \order_write_onehot [4]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2806_gate ($and): { \order_write_onehot_gate [4] \order_write_onehot_gate [4] } -> { \order_write_onehot [4] \order_write_onehot [4] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2808_gate ($and): \order_write_onehot_gate [3] -> \order_write_onehot [3]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2810_gate ($and): { \order_write_onehot_gate [3] \order_write_onehot_gate [3] } -> { \order_write_onehot [3] \order_write_onehot [3] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2812_gate ($and): \order_write_onehot_gate [7] -> \order_write_onehot [7]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2814_gate ($and): { \order_write_onehot_gate [7] \order_write_onehot_gate [7] } -> { \order_write_onehot [7] \order_write_onehot [7] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2816_gate ($and): \order_write_onehot_gate [6] -> \order_write_onehot [6]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2818_gate ($and): { \order_write_onehot_gate [6] \order_write_onehot_gate [6] } -> { \order_write_onehot [6] \order_write_onehot [6] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2820_gate ($and): \order_write_onehot_gate [5] -> \order_write_onehot [5]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2822_gate ($and): { \order_write_onehot_gate [5] \order_write_onehot_gate [5] } -> { \order_write_onehot [5] \order_write_onehot [5] }
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:214$2824_gate ($and): \order_write_onehot_gate [4] -> \order_write_onehot [4]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:216$2826_gate ($and): { \order_write_onehot_gate [4] \order_write_onehot_gate [4] } -> { \order_write_onehot [4] \order_write_onehot [4] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:112$2873_gate ($and): \order_write_onehot_gate -> \order_write_onehot
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:112$2875_gate ($and): { \order_write_onehot_gate [6:0] \order_write_onehot_gate [7] } -> { \order_write_onehot [6:0] \order_write_onehot [7] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:112$2877_gate ($and): { \order_write_onehot_gate [5:0] \order_write_onehot_gate [7:6] } -> { \order_write_onehot [5:0] \order_write_onehot [7:6] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:112$2879_gate ($and): { \order_write_onehot_gate [4:0] \order_write_onehot_gate [7:5] } -> { \order_write_onehot [4:0] \order_write_onehot [7:5] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:112$2881_gate ($and): { \order_write_onehot_gate [3:0] \order_write_onehot_gate [7:4] } -> { \order_write_onehot [3:0] \order_write_onehot [7:4] }
+Changing input A of cell $logic_not$rtl/front/l1d_bank_order.v:65$2886_gate ($logic_not): \ring_empty_q_gate -> \ring_empty_q
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:65$2887_gate ($logic_not): \oldest_port_gate -> \oldest_port
+Changing input A of cell $logic_not$rtl/front/l1d_bank_order.v:65$2889_gate ($logic_not): \ring_empty_q_gate -> \ring_empty_q
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:65$2890_gate ($eq): \oldest_port_gate -> \oldest_port
+Changing input A of cell $logic_not$rtl/front/l1d_bank_order.v:65$2892_gate ($logic_not): \ring_empty_q_gate -> \ring_empty_q
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:65$2893_gate ($eq): \oldest_port_gate -> \oldest_port
+Changing input A of cell $logic_not$rtl/front/l1d_bank_order.v:65$2895_gate ($logic_not): \ring_empty_q_gate -> \ring_empty_q
+Changing input A of cell $eq$rtl/front/l1d_bank_order.v:65$2896_gate ($eq): \oldest_port_gate -> \oldest_port
+Changing input S of cell $procmux$3135_gate ($mux): \place_write_en_gate [7] -> \place_write_en [7]
+Changing input B of cell $procmux$3135_gate ($mux): \place_write_port_gate [15:14] -> \place_write_port [15:14]
+Changing input A of cell $procmux$3135_gate ($mux): \order_port[7]_gate -> \order_port[7]
+Changing input B of cell $procmux$3138_gate ($mux): \order_port[7]_gate -> \order_port[7]
+Changing input S of cell $procmux$3140_gate ($mux): \place_write_en_gate [6] -> \place_write_en [6]
+Changing input B of cell $procmux$3140_gate ($mux): \place_write_port_gate [13:12] -> \place_write_port [13:12]
+Changing input A of cell $procmux$3140_gate ($mux): \order_port[6]_gate -> \order_port[6]
+Changing input B of cell $procmux$3143_gate ($mux): \order_port[6]_gate -> \order_port[6]
+Changing input S of cell $procmux$3145_gate ($mux): \place_write_en_gate [5] -> \place_write_en [5]
+Changing input B of cell $procmux$3145_gate ($mux): \place_write_port_gate [11:10] -> \place_write_port [11:10]
+Changing input A of cell $procmux$3145_gate ($mux): \order_port[5]_gate -> \order_port[5]
+Changing input B of cell $procmux$3148_gate ($mux): \order_port[5]_gate -> \order_port[5]
+Changing input S of cell $procmux$3150_gate ($mux): \place_write_en_gate [4] -> \place_write_en [4]
+Changing input B of cell $procmux$3150_gate ($mux): \place_write_port_gate [9:8] -> \place_write_port [9:8]
+Changing input A of cell $procmux$3150_gate ($mux): \order_port[4]_gate -> \order_port[4]
+Changing input B of cell $procmux$3153_gate ($mux): \order_port[4]_gate -> \order_port[4]
+Changing input S of cell $procmux$3155_gate ($mux): \place_write_en_gate [3] -> \place_write_en [3]
+Changing input B of cell $procmux$3155_gate ($mux): \place_write_port_gate [7:6] -> \place_write_port [7:6]
+Changing input A of cell $procmux$3155_gate ($mux): \order_port[3]_gate -> \order_port[3]
+Changing input B of cell $procmux$3158_gate ($mux): \order_port[3]_gate -> \order_port[3]
+Changing input S of cell $procmux$3160_gate ($mux): \place_write_en_gate [2] -> \place_write_en [2]
+Changing input B of cell $procmux$3160_gate ($mux): \place_write_port_gate [5:4] -> \place_write_port [5:4]
+Changing input A of cell $procmux$3160_gate ($mux): \order_port[2]_gate -> \order_port[2]
+Changing input B of cell $procmux$3163_gate ($mux): \order_port[2]_gate -> \order_port[2]
+Changing input S of cell $procmux$3165_gate ($mux): \place_write_en_gate [1] -> \place_write_en [1]
+Changing input B of cell $procmux$3165_gate ($mux): \place_write_port_gate [3:2] -> \place_write_port [3:2]
+Changing input A of cell $procmux$3165_gate ($mux): \order_port[1]_gate -> \order_port[1]
+Changing input B of cell $procmux$3168_gate ($mux): \order_port[1]_gate -> \order_port[1]
+Changing input S of cell $procmux$3170_gate ($mux): \place_write_en_gate [0] -> \place_write_en [0]
+Changing input B of cell $procmux$3170_gate ($mux): \place_write_port_gate [1:0] -> \place_write_port [1:0]
+Changing input A of cell $procmux$3170_gate ($mux): \order_port[0]_gate -> \order_port[0]
+Changing input B of cell $procmux$3173_gate ($mux): \order_port[0]_gate -> \order_port[0]
+Changing input B of cell $procmux$3176_gate ($mux): { \order_read_onehot_gate [6:0] \order_read_onehot_gate [7] } -> { \order_read_onehot [6:0] \order_read_onehot [7] }
+Changing input A of cell $procmux$3176_gate ($mux): \order_read_onehot_gate -> \order_read_onehot
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$65_gate ($and): \order_port[7]_gate -> \order_port[7]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$65_gate ($and): { \order_read_onehot_gate [7] \order_read_onehot_gate [7] } -> { \order_read_onehot [7] \order_read_onehot [7] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$63_gate ($and): \order_port[6]_gate -> \order_port[6]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$63_gate ($and): { \order_read_onehot_gate [6] \order_read_onehot_gate [6] } -> { \order_read_onehot [6] \order_read_onehot [6] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$61_gate ($and): \order_port[5]_gate -> \order_port[5]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$61_gate ($and): { \order_read_onehot_gate [5] \order_read_onehot_gate [5] } -> { \order_read_onehot [5] \order_read_onehot [5] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$59_gate ($and): \order_port[4]_gate -> \order_port[4]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$59_gate ($and): { \order_read_onehot_gate [4] \order_read_onehot_gate [4] } -> { \order_read_onehot [4] \order_read_onehot [4] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$57_gate ($and): \order_port[3]_gate -> \order_port[3]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$57_gate ($and): { \order_read_onehot_gate [3] \order_read_onehot_gate [3] } -> { \order_read_onehot [3] \order_read_onehot [3] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$55_gate ($and): \order_port[2]_gate -> \order_port[2]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$55_gate ($and): { \order_read_onehot_gate [2] \order_read_onehot_gate [2] } -> { \order_read_onehot [2] \order_read_onehot [2] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$53_gate ($and): \order_port[1]_gate -> \order_port[1]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$53_gate ($and): { \order_read_onehot_gate [1] \order_read_onehot_gate [1] } -> { \order_read_onehot [1] \order_read_onehot [1] }
+Changing input B of cell $and$rtl/front/l1d_bank_order.v:60$51_gate ($and): \order_port[0]_gate -> \order_port[0]
+Changing input A of cell $and$rtl/front/l1d_bank_order.v:60$51_gate ($and): { \order_read_onehot_gate [0] \order_read_onehot_gate [0] } -> { \order_read_onehot [0] \order_read_onehot [0] }
+Changing input B of cell $procmux$892_gold ($mux): { \order_write_onehot_gold [3:0] \order_write_onehot_gold [7:4] } -> { \order_write_onehot [3:0] \order_write_onehot [7:4] }
+Changing input B of cell $procmux$820_gold ($mux): { \order_write_onehot_gold [5:0] \order_write_onehot_gold [7:6] } -> { \order_write_onehot [5:0] \order_write_onehot [7:6] }
+Changing input S of cell $procmux$718_gold ($mux): \place_write_en_gold [3] -> \place_write_en [3]
+Changing input B of cell $procmux$718_gold ($mux): \place_write_port_gold [7:6] -> \place_write_port [7:6]
+Changing input A of cell $procmux$718_gold ($mux): \order_port[3]_gold -> \order_port[3]
+Changing input B of cell $procmux$716_gold ($mux): \order_port[4]_gold -> \order_port[4]
+Changing input S of cell $procmux$713_gold ($mux): \place_write_en_gold [4] -> \place_write_en [4]
+Changing input B of cell $procmux$713_gold ($mux): \place_write_port_gold [9:8] -> \place_write_port [9:8]
+Changing input A of cell $procmux$713_gold ($mux): \order_port[4]_gold -> \order_port[4]
+Changing input B of cell $procmux$922_gold ($mux): { \order_write_onehot_gold [4:0] \order_write_onehot_gold [7:5] } -> { \order_write_onehot [4:0] \order_write_onehot [7:5] }
+Changing input B of cell $procmux$711_gold ($mux): \order_port[5]_gold -> \order_port[5]
+Changing input B of cell $procmux$760_gold ($mux): { \order_write_onehot_gold [3:0] \order_write_onehot_gold [7:4] } -> { \order_write_onehot [3:0] \order_write_onehot [7:4] }
+Changing input S of cell $procmux$708_gold ($mux): \place_write_en_gold [5] -> \place_write_en [5]
+Changing input B of cell $procmux$708_gold ($mux): \place_write_port_gold [11:10] -> \place_write_port [11:10]
+Changing input A of cell $procmux$708_gold ($mux): \order_port[5]_gold -> \order_port[5]
+Changing input B of cell $procmux$706_gold ($mux): \order_port[6]_gold -> \order_port[6]
+Changing input B of cell $procmux$1114_gold ($mux): { \order_write_onehot_gold [6:0] \order_write_onehot_gold [7] } -> { \order_write_onehot [6:0] \order_write_onehot [7] }
+Changing input A of cell $procmux$1114_gold ($mux): \order_write_onehot_gold -> \order_write_onehot
+Changing input S of cell $procmux$703_gold ($mux): \place_write_en_gold [6] -> \place_write_en [6]
+Changing input B of cell $procmux$703_gold ($mux): \place_write_port_gold [13:12] -> \place_write_port [13:12]
+Changing input A of cell $procmux$703_gold ($mux): \order_port[6]_gold -> \order_port[6]
+Changing input B of cell $procmux$456_gold ($mux): { \order_write_onehot_gold [4:0] \order_write_onehot_gold [7:5] } -> { \order_write_onehot [4:0] \order_write_onehot [7:5] }
+Changing input A of cell $eq$golden/l1d_bank_order.v:65$303_gold ($eq): \oldest_port_gold -> \oldest_port
+Changing input A of cell $logic_not$golden/l1d_bank_order.v:65$302_gold ($logic_not): \ring_empty_q_gold -> \ring_empty_q
+Changing input A of cell $eq$golden/l1d_bank_order.v:65$300_gold ($eq): \oldest_port_gold -> \oldest_port
+Changing input A of cell $logic_not$golden/l1d_bank_order.v:65$299_gold ($logic_not): \ring_empty_q_gold -> \ring_empty_q
+Changing input A of cell $eq$golden/l1d_bank_order.v:65$297_gold ($eq): \oldest_port_gold -> \oldest_port
+Changing input A of cell $logic_not$golden/l1d_bank_order.v:65$296_gold ($logic_not): \ring_empty_q_gold -> \ring_empty_q
+Changing input A of cell $eq$golden/l1d_bank_order.v:65$294_gold ($logic_not): \oldest_port_gold -> \oldest_port
+Changing input A of cell $logic_not$golden/l1d_bank_order.v:65$293_gold ($logic_not): \ring_empty_q_gold -> \ring_empty_q
+Changing input A of cell $add$golden/l1d_bank_order.v:91$228_gold ($add): \order_count_gold -> \order_count
+Changing input B of cell $procmux$721_gold ($mux): \order_port[3]_gold -> \order_port[3]
+Changing input B of cell $procmux$850_gold ($mux): { \order_write_onehot_gold [6:0] \order_write_onehot_gold [7] } -> { \order_write_onehot [6:0] \order_write_onehot [7] }
+Changing input A of cell $procmux$850_gold ($mux): \order_write_onehot_gold -> \order_write_onehot
+Changing input B of cell $procmux$516_gold ($mux): { \order_write_onehot_gold [5:0] \order_write_onehot_gold [7:6] } -> { \order_write_onehot [5:0] \order_write_onehot [7:6] }
+Changing input S of cell $procmux$723_gold ($mux): \place_write_en_gold [2] -> \place_write_en [2]
+Changing input B of cell $procmux$723_gold ($mux): \place_write_port_gold [5:4] -> \place_write_port [5:4]
+Changing input A of cell $procmux$723_gold ($mux): \order_port[2]_gold -> \order_port[2]
+Changing input B of cell $procmux$726_gold ($mux): \order_port[2]_gold -> \order_port[2]
+Changing input B of cell $procmux$952_gold ($mux): { \order_write_onehot_gold [5:0] \order_write_onehot_gold [7:6] } -> { \order_write_onehot [5:0] \order_write_onehot [7:6] }
+Changing input S of cell $procmux$728_gold ($mux): \place_write_en_gold [1] -> \place_write_en [1]
+Changing input B of cell $procmux$728_gold ($mux): \place_write_port_gold [3:2] -> \place_write_port [3:2]
+Changing input A of cell $procmux$728_gold ($mux): \order_port[1]_gold -> \order_port[1]
+Changing input B of cell $procmux$731_gold ($mux): \order_port[1]_gold -> \order_port[1]
+Changing input B of cell $procmux$396_gold ($mux): { \order_write_onehot_gold [3:0] \order_write_onehot_gold [7:4] } -> { \order_write_onehot [3:0] \order_write_onehot [7:4] }
+Changing input B of cell $procmux$790_gold ($mux): { \order_write_onehot_gold [4:0] \order_write_onehot_gold [7:5] } -> { \order_write_onehot [4:0] \order_write_onehot [7:5] }
+Changing input S of cell $procmux$733_gold ($mux): \place_write_en_gold [0] -> \place_write_en [0]
+Changing input B of cell $procmux$733_gold ($mux): \place_write_port_gold [1:0] -> \place_write_port [1:0]
+Changing input A of cell $procmux$733_gold ($mux): \order_port[0]_gold -> \order_port[0]
+Changing input B of cell $procmux$736_gold ($mux): \order_port[0]_gold -> \order_port[0]
+Changing input B of cell $procmux$576_gold ($mux): { \order_write_onehot_gold [6:0] \order_write_onehot_gold [7] } -> { \order_write_onehot [6:0] \order_write_onehot [7] }
+Changing input A of cell $procmux$576_gold ($mux): \order_write_onehot_gold -> \order_write_onehot
+Changing input B of cell $procmux$739_gold ($mux): { \order_read_onehot_gold [6:0] \order_read_onehot_gold [7] } -> { \order_read_onehot [6:0] \order_read_onehot [7] }
+Changing input A of cell $procmux$739_gold ($mux): \order_read_onehot_gold -> \order_read_onehot
+Changing input B of cell $procmux$982_gold ($mux): { \order_write_onehot_gold [6:0] \order_write_onehot_gold [7] } -> { \order_write_onehot [6:0] \order_write_onehot [7] }
+Changing input A of cell $procmux$982_gold ($mux): \order_write_onehot_gold -> \order_write_onehot
+Changing input S of cell $procmux$698_gold ($mux): \place_write_en_gold [7] -> \place_write_en [7]
+Changing input B of cell $procmux$698_gold ($mux): \place_write_port_gold [15:14] -> \place_write_port [15:14]
+Changing input A of cell $procmux$698_gold ($mux): \order_port[7]_gold -> \order_port[7]
+Changing input B of cell $and$golden/l1d_bank_order.v:83$157_gold ($and): \order_write_onehot_gold -> \order_write_onehot
+Changing input B of cell $and$golden/l1d_bank_order.v:60$42_gold ($and): \order_port[7]_gold -> \order_port[7]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$42_gold ($and): { \order_read_onehot_gold [7] \order_read_onehot_gold [7] } -> { \order_read_onehot [7] \order_read_onehot [7] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$40_gold ($and): \order_port[6]_gold -> \order_port[6]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$40_gold ($and): { \order_read_onehot_gold [6] \order_read_onehot_gold [6] } -> { \order_read_onehot [6] \order_read_onehot [6] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$38_gold ($and): \order_port[5]_gold -> \order_port[5]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$38_gold ($and): { \order_read_onehot_gold [5] \order_read_onehot_gold [5] } -> { \order_read_onehot [5] \order_read_onehot [5] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$36_gold ($and): \order_port[4]_gold -> \order_port[4]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$36_gold ($and): { \order_read_onehot_gold [4] \order_read_onehot_gold [4] } -> { \order_read_onehot [4] \order_read_onehot [4] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$34_gold ($and): \order_port[3]_gold -> \order_port[3]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$34_gold ($and): { \order_read_onehot_gold [3] \order_read_onehot_gold [3] } -> { \order_read_onehot [3] \order_read_onehot [3] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$32_gold ($and): \order_port[2]_gold -> \order_port[2]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$32_gold ($and): { \order_read_onehot_gold [2] \order_read_onehot_gold [2] } -> { \order_read_onehot [2] \order_read_onehot [2] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$30_gold ($and): \order_port[1]_gold -> \order_port[1]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$30_gold ($and): { \order_read_onehot_gold [1] \order_read_onehot_gold [1] } -> { \order_read_onehot [1] \order_read_onehot [1] }
+Changing input B of cell $and$golden/l1d_bank_order.v:60$28_gold ($and): \order_port[0]_gold -> \order_port[0]
+Changing input A of cell $and$golden/l1d_bank_order.v:60$28_gold ($and): { \order_read_onehot_gold [0] \order_read_onehot_gold [0] } -> { \order_read_onehot [0] \order_read_onehot [0] }
+Changing input B of cell $procmux$701_gold ($mux): \order_port[7]_gold -> \order_port[7]
+Setting undriven nets to undef: \count_bit_select_gate [15:2]
+Setting undriven nets to undef: \count_bit_select_gate [31:20]
+Setting undriven nets to undef: \count_bit_select_gate [47:40]
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+5.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+6. Executing EQUIV_SIMPLE pass.
+Found 146 unproven $equiv cells (21 groups) in equiv:
+ Grouping SAT models for \head_port_onehot:
+  Trying to prove $equiv for \head_port_onehot [0]:ezsat
+ success!
+  Trying to prove $equiv for \head_port_onehot [1]:ezsat
+ success!
+  Trying to prove $equiv for \head_port_onehot [2]:ezsat
+ success!
+  Trying to prove $equiv for \head_port_onehot [3]:ezsat
+ success!
+  Trying to prove $equiv for \ring_empty_q:ezsat
+ezsat
+ success!
+ Grouping SAT models for \order_read_onehot:
+  Trying to prove $equiv for \order_read_onehot [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [1]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [2]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [3]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [4]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [5]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [6]:ezsat
+ success!
+  Trying to prove $equiv for \order_read_onehot [7]:ezsat
+ success!
+ Grouping SAT models for \order_write_onehot:
+  Trying to prove $equiv for \order_write_onehot [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [1]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [2]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [3]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [4]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [5]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [6]:ezsat
+ success!
+  Trying to prove $equiv for \order_write_onehot [7]:ezsat
+ success!
+ Grouping SAT models for \order_count:
+  Trying to prove $equiv for \order_count [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_count [1]:ezsat
+ success!
+  Trying to prove $equiv for \order_count [2]:ezsat
+ success!
+  Trying to prove $equiv for \order_count [3]:ezsat
+ success!
+ Grouping SAT models for \join_now:
+  Trying to prove $equiv for \join_now [0]:ezsat
+ success!
+  Trying to prove $equiv for \join_now [1]:ezsat
+ success!
+  Trying to prove $equiv for \join_now [2]:ezsat
+ success!
+  Trying to prove $equiv for \join_now [3]:ezsat
+ success!
+ Grouping SAT models for \oldest_port:
+  Trying to prove $equiv for \oldest_port [0]:ezsat
+ success!
+  Trying to prove $equiv for \oldest_port [1]:ezsat
+ success!
+ Grouping SAT models for \read_place:
+  Trying to prove $equiv for \read_place [0]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [1]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [2]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [3]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [4]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [5]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [6]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [7]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [8]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [9]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [10]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [11]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [12]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [13]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [14]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [15]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [16]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [17]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [18]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [19]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [20]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [21]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [22]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [23]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [24]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [25]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [26]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [27]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [28]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [29]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [30]:ezsat
+ success!
+  Trying to prove $equiv for \read_place [31]:ezsat
+ success!
+ Grouping SAT models for \rank_1:
+  Trying to prove $equiv for \rank_1 [0]:ezsat
+ success!
+  Trying to prove $equiv for \rank_1 [1]:ezsat
+ success!
+  Trying to prove $equiv for \rank_1 [2]:ezsat
+ success!
+ Grouping SAT models for \place_0:
+  Trying to prove $equiv for \place_0 [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \place_0 [1]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [2]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [3]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [4]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [5]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [6]:ezsat
+ success!
+  Trying to prove $equiv for \place_0 [7]:ezsat
+ success!
+ Grouping SAT models for \place_write_en:
+  Trying to prove $equiv for \place_write_en [0]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [1]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [2]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [3]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [4]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [5]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [6]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_en [7]:ezsat
+ success!
+ Grouping SAT models for \place_write_port:
+  Trying to prove $equiv for \place_write_port [0]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [1]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [2]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [3]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [4]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [5]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [6]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [7]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [8]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [9]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [10]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [11]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [12]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [13]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [14]:ezsat
+ success!
+  Trying to prove $equiv for \place_write_port [15]:ezsat
+ success!
+ Grouping SAT models for \place_idx:
+  Trying to prove $equiv for \place_idx [0]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [1]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [2]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [3]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [4]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [5]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [6]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [7]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [8]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [9]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [10]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [11]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [12]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [13]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [14]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [15]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [16]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [17]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [18]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [19]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [20]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [21]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [22]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [23]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [24]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [25]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [26]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [27]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [28]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [29]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [30]:ezsat
+ success!
+  Trying to prove $equiv for \place_idx [31]:ezsat
+ success!
+ Grouping SAT models for \order_port[0]:
+  Trying to prove $equiv for \order_port[0] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[0] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[1]:
+  Trying to prove $equiv for \order_port[1] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[1] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[2]:
+  Trying to prove $equiv for \order_port[2] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[2] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[3]:
+  Trying to prove $equiv for \order_port[3] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[3] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[4]:
+  Trying to prove $equiv for \order_port[4] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[4] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[5]:
+  Trying to prove $equiv for \order_port[5] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[5] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[6]:
+  Trying to prove $equiv for \order_port[6] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[6] [1]:ezsat
+ success!
+ Grouping SAT models for \order_port[7]:
+  Trying to prove $equiv for \order_port[7] [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \order_port[7] [1]:ezsat
+ success!
+Proved 146 previously unproven $equiv cells.
+
+7. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+8. Executing EQUIV_STATUS pass.
+Found 146 $equiv cells in equiv:
+  Of those cells 146 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 1e63e55063, time: 0.10s, user: 0.10s, system: 0.01s, MEM: 27.91 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 87% 1x equiv_simple (0 sec), 6% 1x equiv_make (0 sec), ...

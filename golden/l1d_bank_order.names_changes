@@ -20,12 +20,10 @@
 + FOR for(pop_value_idx=0;pop_value_idx<=1;pop_value_idx=pop_value_idx+1)
 # iteration BO-1 (2026-11-23): fill count and empty flag as early select words AND-ORed with the decoded count (no adder)
 + DECL localparam COUNT_VALUES = 1 << ORDER_CNT_W
-+ DECL reg[COUNT_VALUES-1:0]count_hit_onehot
 + DECL reg[ORDER_CNT_W*COUNT_VALUES-1:0]count_bit_select
 + DECL reg[COUNT_VALUES-1:0]empty_select
 + DECL integer count_value_idx
 + DECL integer count_bit_idx
-+ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
@@ -35,4 +33,14 @@
 + DECL reg[COUNT_LOW_VALUES-1:0]low_hit_onehot
 + DECL reg count_prefix_hit
 + FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
-+ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
+# iteration BO-4 (2026-11-23): high count pair predecoded too; next count bits and the empty flag as
+# low one-hot AND (high one-hot AND early select); count_hit_onehot removed (its "+ DECL" line and two count loops dropped)
++ DECL localparam COUNT_HIGH_VALUES = COUNT_VALUES / COUNT_LOW_VALUES
++ DECL reg[COUNT_HIGH_VALUES-1:0]high_hit_onehot
++ DECL reg high_part_select
++ DECL integer high_value_idx
++ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
++ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
++ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)

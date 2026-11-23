@@ -125,11 +125,13 @@ module l1d_bank_order #(
     endfunction
     always @* begin
         join_run  = {{LSU_PORTS{1'b0}}, 1'b1};
+        rank_used = {LSU_PORTS{1'b0}};
         rank_port = {(LSU_PORTS*PORT_W){1'b0}};
         for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
             rank_before_onehot[join_port_idx] = join_run;
             // port join_port_idx joins with rank s = the one-hot join_run (joiners before it)
             for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
+                rank_used[rank_idx] = rank_used[rank_idx] | (join_now[join_port_idx] & join_run[rank_idx]);
                 rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
                     ({PORT_W{join_now[join_port_idx] & join_run[rank_idx]}} & join_port_idx);
             end
@@ -143,10 +145,6 @@ module l1d_bank_order #(
                 if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == join_count_idx)
                     join_at_least[join_count_idx] = join_at_least[join_count_idx] |
                                                     ((join_now & join_pattern_idx) == join_pattern_idx);
-        // a joiner with rank s exists = at least s+1 joins: the threshold itself, no chain (the port of rank s keeps
-        // coming from the join_run chain above)
-        for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1)
-            rank_used[rank_idx] = join_at_least[rank_idx + 1];
         // exactly n joins = at least n and not at least n+1 (one gate after the thresholds); same value as join_run
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
             join_cnt_onehot[join_count_idx] = join_at_least[join_count_idx] & !join_at_least[join_count_idx + 1];

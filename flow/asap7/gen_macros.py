@@ -3,8 +3,8 @@
 
 ASAP7 has no memory compiler. Every l1d_sram_tdp instance is replaced in the synthesis input (l1d_sram_tdp_asap7.v)
 by one of two hard macros:
-    l1d_macro_data_tdp : 64 x 512 bits, whole-line write (no byte enables), ports A and B   (data array, one per way)
-    l1d_macro_tag_tdp  : 64 x  50 bits, ports A and B                                     (tag array, one per way)
+    l1d_macro_data_tdp : 64 x 576 bits (512 + 64 ECC), whole-line write (no byte enables), ports A and B   (data array, one per way)
+    l1d_macro_tag_tdp  : 64 x  57 bits (50 + 7 ECC), ports A and B                                     (tag array, one per way)
 Port A is used for reads (Stage G), port B for writes (Stage S2 / S3). Each port: clk, X_en, X_we, X_addr[5:0],
 X_wdata, X_rdata.
 
@@ -27,8 +27,8 @@ def env_ps(name, default):
 
 # name, depth, bits, clk->rdata (ps), setup (ps), width, height (um)
 MACROS = [
-    ("l1d_macro_data_tdp", 64, 512, env_ps("DATA_CLKQ_PS", 180), env_ps("DATA_SETUP_PS", 50), 60.0, 40.0),
-    ("l1d_macro_tag_tdp",  64,  50, env_ps("TAG_CLKQ_PS", 150),  env_ps("TAG_SETUP_PS", 40),  20.0, 12.0),
+    ("l1d_macro_data_tdp", 64, 576, env_ps("DATA_CLKQ_PS", 180), env_ps("DATA_SETUP_PS", 50), 60.0, 40.0),
+    ("l1d_macro_tag_tdp",  64,  57, env_ps("TAG_CLKQ_PS", 150),  env_ps("TAG_SETUP_PS", 40),  20.0, 12.0),
 ]
 HOLD_PS = 15.0
 IN_CAP_FF = 1.0

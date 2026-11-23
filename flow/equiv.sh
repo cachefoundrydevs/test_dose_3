@@ -54,7 +54,7 @@ if [[ -f golden/$M.equiv_blacklist ]]; then
         b=${b%%#*}; b=$(echo "$b" | tr -d ' \r'); [[ -z "$b" ]] && continue
         # last word of every 'wire' line (an escaped name: first character is the escape mark), kept when its last
         # dotted part is the base name, with or without an index
-        awk '$1 == "wire" {print $NF}' "$OUT/gold.il" | cut -c2- | grep -E "^([A-Za-z0-9_.]*[.])?$b([[][0-9]+[]])?$" >> "$OUT/blacklist.txt" || true
+        awk '$1 == "wire" {print $NF}' "$OUT/gold.il" | cut -c2- | grep -E "^([][A-Za-z0-9_.]*[.])?$b([[][0-9]+[]])?$" >> "$OUT/blacklist.txt" || true
     done < "golden/$M.equiv_blacklist"
     sort -u -o "$OUT/blacklist.txt" "$OUT/blacklist.txt"
     echo "blacklisted internal signals: $(tr '\n' ' ' < "$OUT/blacklist.txt")"

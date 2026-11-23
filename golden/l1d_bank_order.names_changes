@@ -29,3 +29,10 @@
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
+# iteration BO-2 (2026-11-23): low count pair predecoded, next bit k from order_count[k:0] only, reset folded into the selects
++ DECL localparam COUNT_LOW_W = ORDER_CNT_W / 2
++ DECL localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W
++ DECL reg[COUNT_LOW_VALUES-1:0]low_hit_onehot
++ DECL reg count_prefix_hit
++ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)

@@ -86,6 +86,10 @@ module l1d_bank_order #(
     reg  [COUNT_VALUES-1:0]             count_hit_onehot;        // COUNT_VALUES = 16 bits: order_count decoded
     reg  [ORDER_CNT_W*COUNT_VALUES-1:0] count_bit_select;        // ORDER_CNT_W*COUNT_VALUES = 64 bits: next-count bit k if count = c
     reg  [COUNT_VALUES-1:0]             empty_select;            // COUNT_VALUES = 16 bits: next count is 0 if count = c
+    localparam COUNT_LOW_W      = ORDER_CNT_W / 2;               // COUNT_LOW_W = 2 low count bits, predecoded as a group
+    localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W;              // COUNT_LOW_VALUES = 4 values of the low group
+    reg  [COUNT_LOW_VALUES-1:0]         low_hit_onehot;          // COUNT_LOW_VALUES = 4 bits: order_count[1:0] decoded
+    reg                    count_prefix_hit;                     // order_count[k:0] equals the value of this term
     integer                count_value_idx;
     integer                count_bit_idx;
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
@@ -112,7 +116,8 @@ module l1d_bank_order #(
         for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
             for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
                 for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
-                    candidate_selected = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop);
+                    // reset folded in here (early input), so the flop D needs no reset gate after the AND-OR
+                    candidate_selected = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop) & !rst;
                     count_candidate    = count_value_idx + join_count_idx - pop_value_idx; // constant, wraps like the flop
                     for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
                         count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] =
@@ -121,12 +126,28 @@ module l1d_bank_order #(
                     empty_select[count_value_idx] = empty_select[count_value_idx] |
                                                     (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
                 end
-        // the flop value (late) only picks: one-hot decode, then a flat AND-OR
+        // under reset every select is 0, so the next count is 0 (also while order_count is still X in simulation)
+        // the flop value (late) only picks: low pair predecoded once (small fan-out per flop bit), then flat AND-OR
+        for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
+            low_hit_onehot[count_value_idx] = (order_count[COUNT_LOW_W-1:0] == count_value_idx);
         for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
-            count_hit_onehot[count_value_idx] = (order_count == count_value_idx);
+            count_hit_onehot[count_value_idx] = low_hit_onehot[count_value_idx % COUNT_LOW_VALUES] &
+                                                (order_count[ORDER_CNT_W-1:COUNT_LOW_W] == (count_value_idx >> COUNT_LOW_W));
+        // next bit k depends only on order_count[k:0] (addition mod 2^ORDER_CNT_W), so it uses only those bits
+        count_next_sel = {ORDER_CNT_W{1'b0}};
         for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
-            count_next_sel[count_bit_idx] = |(count_hit_onehot & count_bit_select[count_bit_idx*COUNT_VALUES +: COUNT_VALUES]);
-        ring_empty_next = |(count_hit_onehot & empty_select);
+            for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
+                if (count_value_idx < (1 << (count_bit_idx + 1))) begin
+                    if (count_bit_idx < COUNT_LOW_W)
+                        count_prefix_hit = ((order_count & ((1 << (count_bit_idx + 1)) - 1)) == count_value_idx);
+                    else
+                        count_prefix_hit = low_hit_onehot[count_value_idx % COUNT_LOW_VALUES] &
+                                           (((order_count >> COUNT_LOW_W) & (((1 << (count_bit_idx + 1)) - 1) >> COUNT_LOW_W)) ==
+                                            (count_value_idx >> COUNT_LOW_W));
+                    count_next_sel[count_bit_idx] = count_next_sel[count_bit_idx] |
+                        (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx]);
+                end
+        ring_empty_next = rst | (|(count_hit_onehot & empty_select)); // reset value 1, even before order_count is known
     end
     always @* begin
         rank_1   = {2'b00, join_now[0]};
@@ -151,8 +172,6 @@ module l1d_bank_order #(
         if (rst) begin
             order_read_onehot  <= {{(ORDER_DEPTH-1){1'b0}}, 1'b1};
             order_write_onehot <= {{(ORDER_DEPTH-1){1'b0}}, 1'b1};
-            order_count        <= {ORDER_CNT_W{1'b0}};
-            ring_empty_q       <= 1'b1;
         end else begin
             for (write_place = 0; write_place < ORDER_DEPTH; write_place = write_place + 1)
                 if (place_write_en[write_place])
@@ -160,9 +179,10 @@ module l1d_bank_order #(
             order_write_onehot <= rotate_by_onehot(order_write_onehot, join_cnt_onehot);
             if (pop)
                 order_read_onehot <= rotate_left(order_read_onehot, 1);
-            order_count  <= order_count_next;
-            ring_empty_q <= ring_empty_next;
         end
+        // count and empty flag load every cycle; their next values already hold the reset values (0, 1) under rst
+        order_count  <= order_count_next;
+        ring_empty_q <= ring_empty_next;
     end
 `ifndef SYNTHESIS
     initial if (LSU_PORTS != 4)

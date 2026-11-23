@@ -1,0 +1,54 @@
+approved + DECL reg[LSU_PORTS:0]join_cnt_onehot
+approved + DECL reg[LSU_PORTS:0]rank_before_onehot[0:LSU_PORTS-1]
+approved + DECL reg[LSU_PORTS:0]join_run
+approved + DECL reg[ORDER_CNT_W-1:0]count_next_sel
+approved + DECL reg ring_empty_next
+approved + DECL reg[ORDER_CNT_W-1:0]count_candidate
+approved + DECL integer join_port_idx
+approved + DECL integer join_count_idx
+approved + DECL integer pop_value_idx
+approved + DECL reg candidate_selected
+approved + DECL localparam COUNT_VALUES = 1 << ORDER_CNT_W
+approved + DECL reg[ORDER_CNT_W*COUNT_VALUES-1:0]count_bit_select
+approved + DECL reg[COUNT_VALUES-1:0]empty_select
+approved + DECL localparam COUNT_LOW_W = ORDER_CNT_W / 2
+approved + DECL localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W
+approved + DECL reg[COUNT_LOW_VALUES-1:0]mid_hit_onehot
+approved + DECL reg count_prefix_hit
+approved + DECL reg next_if_bit0_clear
+approved + DECL reg next_if_bit0_set
+approved + DECL integer count_value_idx
+approved + DECL integer count_bit_idx
+approved + DECL reg[LSU_PORTS-1:0]rank_used
+approved + DECL reg[LSU_PORTS*PORT_W-1:0]rank_port
+approved + DECL integer rank_idx
+approved + DECL integer place_rank_idx
+approved + DECL localparam JOIN_PATTERNS = 1 << LSU_PORTS
+approved + DECL reg[LSU_PORTS+1:0]join_at_least
+approved + DECL integer join_pattern_idx
+approved + DECL integer join_pattern_ones
+approved + DECL integer pattern_value
+approved + DECL integer pattern_width
+approved + DECL integer pattern_bit
+approved + FOR for(pattern_bit=0;pattern_bit<pattern_width;pattern_bit=pattern_bit+1)
+approved + DECL input[ORDER_DEPTH-1:0]pointer_onehot
+approved + DECL input[LSU_PORTS:0]step_onehot
+approved + DECL integer step_idx
+approved + FOR for(step_idx=0;step_idx<=LSU_PORTS;step_idx=step_idx+1)
+approved + FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
+approved + FOR for(rank_idx=0;rank_idx<LSU_PORTS;rank_idx=rank_idx+1)
+approved + FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
+approved + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+approved + FOR for(rank_idx=0;rank_idx<LSU_PORTS;rank_idx=rank_idx+1)
+approved + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+approved + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
+approved + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+approved + FOR for(pop_value_idx=0;pop_value_idx<=1;pop_value_idx=pop_value_idx+1)
+approved + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
+approved + FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
+approved + FOR for(count_bit_idx=0;count_bit_idx<=ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
+approved + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES/2;count_value_idx=count_value_idx+1)
+approved + ALWAYS always @*
+approved + FOR for(place_rank_idx=0;place_rank_idx<LSU_PORTS;place_rank_idx=place_rank_idx+1)
+names: 50 items golden, 50 items current, 0 differences
+NAMES: PASS

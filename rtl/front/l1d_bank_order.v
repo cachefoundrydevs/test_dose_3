@@ -95,6 +95,13 @@ module l1d_bank_order #(
     integer                high_value_idx;
     integer                count_value_idx;
     integer                count_bit_idx;
+    reg  [COUNT_LOW_VALUES-1:0]         low_tree;                // COUNT_LOW_VALUES = 4 bits: mux tree of the low next-count bits
+    integer                tree_level_idx;
+    // order_port write: per rank s (inputs only) a joiner exists / its port; the write pointer bit is the last literal
+    reg  [LSU_PORTS-1:0]          rank_used;                     // LSU_PORTS = 4 bits: a joiner with this rank exists
+    reg  [LSU_PORTS*PORT_W-1:0]   rank_port;                     // LSU_PORTS*PORT_W = 8 bits: port of the joiner with this rank
+    integer                rank_idx;
+    integer                place_rank_idx;                       // rank loop of the place write logic (own always block)
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
         input [ORDER_DEPTH-1:0] pointer_onehot;
         input [LSU_PORTS:0]     step_onehot;
@@ -106,9 +113,17 @@ module l1d_bank_order #(
         end
     endfunction
     always @* begin
-        join_run = {{LSU_PORTS{1'b0}}, 1'b1};
+        join_run  = {{LSU_PORTS{1'b0}}, 1'b1};
+        rank_used = {LSU_PORTS{1'b0}};
+        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
         for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
             rank_before_onehot[join_port_idx] = join_run;
+            // port join_port_idx joins with rank s = the one-hot join_run (joiners before it)
+            for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
+                rank_used[rank_idx] = rank_used[rank_idx] | (join_now[join_port_idx] & join_run[rank_idx]);
+                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
+                    ({PORT_W{join_now[join_port_idx] & join_run[rank_idx]}} & join_port_idx);
+            end
             if (join_now[join_port_idx])
                 join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
@@ -142,16 +157,7 @@ module l1d_bank_order #(
         ring_empty_next = rst;                                   // reset value 1, even before order_count is known
         for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
             for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
-                if (count_bit_idx < COUNT_LOW_W) begin
-                    if (count_value_idx < (1 << (count_bit_idx + 1))) begin
-                        if (count_bit_idx == COUNT_LOW_W - 1)
-                            count_prefix_hit = low_hit_onehot[count_value_idx];
-                        else
-                            count_prefix_hit = ((order_count & ((1 << (count_bit_idx + 1)) - 1)) == count_value_idx);
-                        count_next_sel[count_bit_idx] = count_next_sel[count_bit_idx] |
-                            (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx]);
-                    end
-                end else begin
+                if (count_bit_idx >= COUNT_LOW_W) begin
                     high_part_select = 1'b0;
                     for (high_value_idx = 0; high_value_idx < COUNT_HIGH_VALUES; high_value_idx = high_value_idx + 1)
                         if (high_value_idx < ((1 << (count_bit_idx + 1)) >> COUNT_LOW_W)) begin
@@ -166,6 +172,21 @@ module l1d_bank_order #(
                     count_next_sel[count_bit_idx] = count_next_sel[count_bit_idx] |
                                                     (low_hit_onehot[count_value_idx] & high_part_select);
                 end
+        // low bits k < COUNT_LOW_W: mux tree on order_count[0], then [1], ..., with the early select words as data
+        // (Shannon form, no decode and no wide OR after the flop)
+        for (count_bit_idx = 0; count_bit_idx < COUNT_LOW_W; count_bit_idx = count_bit_idx + 1) begin
+            low_tree = {COUNT_LOW_VALUES{1'b0}};
+            for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
+                if (count_value_idx < (1 << (count_bit_idx + 1)))
+                    low_tree[count_value_idx] = count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx];
+            for (tree_level_idx = 0; tree_level_idx < COUNT_LOW_W; tree_level_idx = tree_level_idx + 1)
+                if (tree_level_idx <= count_bit_idx)
+                    for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES / 2; count_value_idx = count_value_idx + 1)
+                        if ((count_value_idx << tree_level_idx) < (1 << count_bit_idx))
+                            low_tree[count_value_idx] = order_count[tree_level_idx] ? low_tree[2*count_value_idx + 1]
+                                                                                    : low_tree[2*count_value_idx];
+            count_next_sel[count_bit_idx] = low_tree[0];
+        end
         // empty flag: same two-level form over the whole count
         for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1) begin
             high_part_select = 1'b0;
@@ -184,12 +205,17 @@ module l1d_bank_order #(
         place_1  = rotate_by_onehot(order_write_onehot, rank_before_onehot[1]);
         place_2  = rotate_by_onehot(order_write_onehot, rank_before_onehot[2]);
         place_3  = rotate_by_onehot(order_write_onehot, rank_before_onehot[3]);
-        place_write_en = ({ORDER_DEPTH{join_now[0]}} & place_0) | ({ORDER_DEPTH{join_now[1]}} & place_1) |
-                         ({ORDER_DEPTH{join_now[2]}} & place_2) | ({ORDER_DEPTH{join_now[3]}} & place_3);
+        // place p takes the joiner of rank s when the write pointer is at p - s: the flop pointer only picks (last)
+        place_write_en   = {ORDER_DEPTH{1'b0}};
+        place_write_port = {(ORDER_DEPTH*PORT_W){1'b0}};
         for (place_idx = 0; place_idx < ORDER_DEPTH; place_idx = place_idx + 1)
-            place_write_port[place_idx*PORT_W +: PORT_W] = ({PORT_W{join_now[1] && place_1[place_idx]}} & 2'd1) |
-                                                           ({PORT_W{join_now[2] && place_2[place_idx]}} & 2'd2) |
-                                                           ({PORT_W{join_now[3] && place_3[place_idx]}} & 2'd3);
+            for (place_rank_idx = 0; place_rank_idx < LSU_PORTS; place_rank_idx = place_rank_idx + 1) begin
+                place_write_en[place_idx] = place_write_en[place_idx] |
+                    (order_write_onehot[(place_idx + ORDER_DEPTH - place_rank_idx) % ORDER_DEPTH] & rank_used[place_rank_idx]);
+                place_write_port[place_idx*PORT_W +: PORT_W] = place_write_port[place_idx*PORT_W +: PORT_W] |
+                    ({PORT_W{order_write_onehot[(place_idx + ORDER_DEPTH - place_rank_idx) % ORDER_DEPTH]}} &
+                     rank_port[place_rank_idx*PORT_W +: PORT_W]);
+            end
     end
     wire [ORDER_CNT_W-1:0] order_count_next;
     assign order_count_next = count_next_sel;

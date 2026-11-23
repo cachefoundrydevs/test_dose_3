@@ -1,0 +1,11 @@
+# Approved name changes of l1d_port_front against golden/l1d_port_front.v (format: flow/check_names.pl)
+# iteration PF-I1 (2026-11-23): rank adders and compare replaced by a one-hot lower-port count and 'at least k free' flags
+- DECL reg[RANK_W-1:0]rank[0:NP-1]
++ DECL reg[NP-1:0]rank_onehot[0:NP-1]
++ DECL reg[NP:1]free_at_least
+- DECL integer rk_l
++ DECL integer rk_k
++ DECL reg[NP-1:0]rank_run
++ FOR for(rk_k=1;rk_k<=NP;rk_k=rk_k+1)
+- FOR for(rk_l=0;rk_l<rk_p;rk_l=rk_l+1)
++ FOR for(rk_k=0;rk_k<NP;rk_k=rk_k+1)

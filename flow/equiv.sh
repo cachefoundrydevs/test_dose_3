@@ -28,9 +28,12 @@ if [[ -f golden/$M.assume_age_onehot && " $KIDS " == *" rtl/common/l1d_age_matri
     A1=1
     echo "ASSUMPTION A1: age matrix pick is one-hot or zero (proof is equal for all states given A1)"
 fi
-elab() {   # $1 = source file of MODULE, $2 = new name, $3 = output .il
+# the gold side uses golden/<child>.v for every child that has a golden copy, so an edit of a child is really compared (after the A1 patch of KIDS)
+GKIDS=""
+for g in $KIDS; do gb=golden/$(basename "$g"); if [[ -f "$gb" ]]; then GKIDS="$GKIDS $gb"; else GKIDS="$GKIDS $g"; fi; done
+elab() {   # $1 = source file of MODULE, $2 = new name, $3 = output .il, $4 = child files
     cat > "$OUT/elab_$2.ys" <<YS
-read_verilog -DSYNTHESIS -mem2reg -Irtl/include $KIDS $1
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include $4 $1
 hierarchy -top $M
 proc
 flatten
@@ -40,8 +43,8 @@ write_rtlil $3
 YS
     yosys -q -l "$OUT/elab_$2.log" -s "$OUT/elab_$2.ys"
 }
-elab "$GOLD" gold "$OUT/gold.il" || { echo "EQUIV: FAIL (golden does not elaborate)"; exit 1; }
-elab "$CUR"  gate "$OUT/gate.il" || { echo "EQUIV: FAIL (current does not elaborate)"; exit 1; }
+elab "$GOLD" gold "$OUT/gold.il" "$GKIDS" || { echo "EQUIV: FAIL (golden does not elaborate)"; exit 1; }
+elab "$CUR"  gate "$OUT/gate.il" "$KIDS" || { echo "EQUIV: FAIL (current does not elaborate)"; exit 1; }
 # optional golden/<M>.equiv_blacklist: base names of INTERNAL combinational signals whose encoding was changed on
 # purpose (outputs and flops are never listed); they are not paired, everything after them is still proven
 BL=""

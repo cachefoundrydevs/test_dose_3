@@ -121,7 +121,8 @@ module l1d_port_front #(
             wire [TRK_CNT_W-1:0] free_count;
             wire                 vec_ok;
             wire [NP-1:0]        eligible;
-            reg  [RANK_W-1:0]    rank [0:NP-1];
+            reg  [NP-1:0]        rank_onehot [0:NP-1];
+            reg  [NP:1]          free_at_least;
             reg  [NP-1:0]        alloc_here;
             wire [NP-1:0]        join_here;
             wire [NP-1:0]        head_port_onehot_b;
@@ -137,13 +138,21 @@ module l1d_port_front #(
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
             end
             integer rk_p;
-            integer rk_l;
+            integer rk_k;
+            reg  [NP-1:0] rank_run;
             always @* begin
+                for (rk_k = 1; rk_k <= NP; rk_k = rk_k + 1)
+                    free_at_least[rk_k] = (free_count >= rk_k);
+                rank_run = {{(NP-1){1'b0}}, 1'b1};
                 for (rk_p = 0; rk_p < NP; rk_p = rk_p + 1) begin
-                    rank[rk_p] = {RANK_W{1'b0}};
-                    for (rk_l = 0; rk_l < rk_p; rk_l = rk_l + 1)
-                        rank[rk_p] = rank[rk_p] + {{(RANK_W-1){1'b0}}, eligible[rk_l]};
-                    alloc_here[rk_p] = eligible[rk_p] && ({{(TRK_CNT_W-RANK_W){1'b0}}, rank[rk_p]} < free_count) && (rank[rk_p] < NA);
+                    rank_onehot[rk_p] = rank_run;
+                    alloc_here[rk_p]  = 1'b0;
+                    for (rk_k = 0; rk_k < NP; rk_k = rk_k + 1)
+                        if (rk_k < NA)
+                            alloc_here[rk_p] = alloc_here[rk_p] | (rank_run[rk_k] & free_at_least[rk_k + 1]);
+                    alloc_here[rk_p] = alloc_here[rk_p] & eligible[rk_p];
+                    if (eligible[rk_p])
+                        rank_run = {rank_run[NP-2:0], 1'b0};
                 end
             end
             l1d_bank_order #(`L1D_PARAMS_PASS, .BANK_ID(b), .PORT_QUEUE_DEPTH(PORT_QUEUE_DEPTH)) u_order (

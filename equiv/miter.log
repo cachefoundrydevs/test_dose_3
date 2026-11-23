@@ -1,0 +1,2090 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/miter.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: proof/gold.il
+
+2. Executing RTLIL frontend.
+Input filename: proof/gate.il
+
+3. Executing ASYNC2SYNC pass.
+
+4. Executing MITER pass (creating miter circuit).
+Creating miter cell "miter" with gold cell "gold" and gate cell "gate".
+
+4.1. Executing FLATTEN pass (flatten design).
+<suppressed ~2 debug messages>
+
+4.2. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~26 debug messages>
+Removed 0 unused cells and 5 unused wires.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \miter
+
+5.2. Analyzing design hierarchy..
+Top module:  \miter
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+Module miter directly or indirectly contains formal properties -> setting "keep" attribute.
+
+6. Executing FLATTEN pass (flatten design).
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 1081 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 755 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 605 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 536 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 519 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 504 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 494 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 485 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 478 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 472 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 469 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 467 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 465 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~1848 debug messages>
+Removed a total of 616 cells.
+
+7.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\gold.$procdff$1164 ($dff) from module miter (D = \gold.place_write_port [1:0], Q = \gold.order_port[0]).
+Adding EN signal on $flatten\gold.$procdff$1166 ($dff) from module miter (D = \gold.place_write_port [5:4], Q = \gold.order_port[2]).
+Adding EN signal on $flatten\gold.$procdff$1165 ($dff) from module miter (D = \gold.place_write_port [3:2], Q = \gold.order_port[1]).
+Adding SRST signal on $flatten\gold.$procdff$1140 ($dff) from module miter (D = $flatten\gold.$eq$golden/l1d_bank_order.v:107$292_Y, Q = \gold.ring_empty_q, rval = 1'1).
+Adding SRST signal on $flatten\gold.$procdff$1141 ($dff) from module miter (D = $flatten\gold.$procmux$739_Y, Q = \gold.order_read_onehot, rval = 8'00000001).
+Adding EN signal on $auto$ff.cc:337:slice$3280 ($sdff) from module miter (D = { \gold.order_read_onehot [6:0] \gold.order_read_onehot [7] }, Q = \gold.order_read_onehot).
+Adding SRST signal on $flatten\gold.$procdff$1142 ($dff) from module miter (D = $flatten\gold.$5\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$285, Q = \gold.order_write_onehot, rval = 8'00000001).
+Adding EN signal on $auto$ff.cc:337:slice$3282 ($sdff) from module miter (D = $flatten\gold.$5\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$285, Q = \gold.order_write_onehot).
+Adding SRST signal on $flatten\gold.$procdff$1143 ($dff) from module miter (D = \gold.order_count_next, Q = \gold.order_count, rval = 4'0000).
+Adding EN signal on $flatten\gold.$procdff$1167 ($dff) from module miter (D = \gold.place_write_port [7:6], Q = \gold.order_port[3]).
+Adding EN signal on $flatten\gold.$procdff$1168 ($dff) from module miter (D = \gold.place_write_port [9:8], Q = \gold.order_port[4]).
+Adding EN signal on $flatten\gold.$procdff$1169 ($dff) from module miter (D = \gold.place_write_port [11:10], Q = \gold.order_port[5]).
+Adding EN signal on $flatten\gold.$procdff$1170 ($dff) from module miter (D = \gold.place_write_port [13:12], Q = \gold.order_port[6]).
+Adding EN signal on $flatten\gold.$procdff$1171 ($dff) from module miter (D = \gold.place_write_port [15:14], Q = \gold.order_port[7]).
+Adding EN signal on $flatten\gate.$procdff$3236 ($dff) from module miter (D = \gate.place_write_port [11:10], Q = \gate.order_port[5]).
+Adding EN signal on $flatten\gate.$procdff$3238 ($dff) from module miter (D = \gate.place_write_port [15:14], Q = \gate.order_port[7]).
+Adding EN signal on $flatten\gate.$procdff$3237 ($dff) from module miter (D = \gate.place_write_port [13:12], Q = \gate.order_port[6]).
+Adding EN signal on $flatten\gate.$procdff$3234 ($dff) from module miter (D = \gate.place_write_port [7:6], Q = \gate.order_port[3]).
+Adding SRST signal on $flatten\gate.$procdff$3206 ($dff) from module miter (D = $flatten\gate.$or$rtl/front/l1d_bank_order.v:102$2803_Y, Q = \gate.order_write_onehot, rval = 8'00000001).
+Adding EN signal on $flatten\gate.$procdff$3233 ($dff) from module miter (D = \gate.place_write_port [5:4], Q = \gate.order_port[2]).
+Adding EN signal on $flatten\gate.$procdff$3235 ($dff) from module miter (D = \gate.place_write_port [9:8], Q = \gate.order_port[4]).
+Adding EN signal on $flatten\gate.$procdff$3231 ($dff) from module miter (D = \gate.place_write_port [1:0], Q = \gate.order_port[0]).
+Adding EN signal on $flatten\gate.$procdff$3232 ($dff) from module miter (D = \gate.place_write_port [3:2], Q = \gate.order_port[1]).
+Adding SRST signal on $flatten\gate.$procdff$3205 ($dff) from module miter (D = $flatten\gate.$procmux$3097_Y, Q = \gate.order_read_onehot, rval = 8'00000001).
+Adding EN signal on $auto$ff.cc:337:slice$3353 ($sdff) from module miter (D = { \gate.order_read_onehot [6:0] \gate.order_read_onehot [7] }, Q = \gate.order_read_onehot).
+
+7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 40 unused cells and 645 unused wires.
+<suppressed ~41 debug messages>
+
+7.5. Rerunning OPT passes. (Removed registers in this run.)
+
+7.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~1 debug messages>
+
+7.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 458 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 443 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~45 debug messages>
+Removed a total of 15 cells.
+
+7.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 15 unused wires.
+<suppressed ~1 debug messages>
+
+7.10. Finished fast OPT passes.
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \in_rst = 1'1
+Final constraint equation: \in_rst = 1'1
+Imported 443 cells to SAT database.
+Final init constraint equation: { \gate.ring_empty_q \gold.order_port[0] \gold.order_port[2] \gold.order_port[1] \gold.ring_empty_q \gold.order_read_onehot \gold.order_write_onehot \gold.order_count \gate.order_port[1] \gold.order_port[3] \gold.order_port[4] \gold.order_port[5] \gold.order_port[6] \gold.order_port[7] \gate.order_count \gate.order_port[5] \gate.order_port[7] \gate.order_port[6] \gate.order_port[3] \gate.order_write_onehot \gate.order_read_onehot \gate.order_port[2] \gate.order_port[4] \gate.order_port[0] } = 74'00000000000000000000000000000000000000000000000000000000000000000000000000
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 1] Solving problem with 11360 variables and 29822 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 1] Solving problem with 11220 variables and 29329 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                      13         d          1101
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     0         0            00
+  init \gate.order_port[2]                     0         0            00
+  init \gate.order_port[3]                     0         0            00
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     0         0            00
+  init \gate.order_read_onehot                 1         1      00000001
+  init \gate.order_write_onehot                0         0      00000000
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       3         3          0011
+  init \gold.order_port[0]                     0         0            00
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     0         0            00
+  init \gold.order_port[4]                     0         0            00
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     2         2            10
+  init \gold.order_port[7]                     3         3            11
+  init \gold.order_read_onehot                 1         1      00000001
+  init \gold.order_write_onehot                0         0      00000000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 1         1             1
+     2 \trigger                                1         1             1
+
+** Trying induction with length 2 **
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 2] Solving problem with 17424 variables and 45961 clauses..
+Base case for induction length 2 proven.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 2] Solving problem with 17507 variables and 46210 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                      13         d          1101
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     0         0            00
+  init \gate.order_port[3]                     1         1            01
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     3         3            11
+  init \gate.order_port[7]                     2         2            10
+  init \gate.order_read_onehot                32        20      00100000
+  init \gate.order_write_onehot               72        48      01001000
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                      13         d          1101
+  init \gold.order_port[0]                     0         0            00
+  init \gold.order_port[1]                     3         3            11
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     2         2            10
+  init \gold.order_port[5]                     1         1            01
+  init \gold.order_port[6]                     2         2            10
+  init \gold.order_port[7]                     1         1            01
+  init \gold.order_read_onehot                32        20      00100000
+  init \gold.order_write_onehot               69        45      01000101
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              1         1             1
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              0         0             0
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 1         1             1
+     3 \trigger                                1         1             1
+
+** Trying induction with length 3 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 3] Solving problem with 23711 variables and 62842 clauses..
+Base case for induction length 3 proven.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 3] Solving problem with 24017 variables and 63833 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       9         9          1001
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     0         0            00
+  init \gate.order_port[2]                     0         0            00
+  init \gate.order_port[3]                     0         0            00
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     2         2            10
+  init \gate.order_port[6]                     1         1            01
+  init \gate.order_port[7]                     1         1            01
+  init \gate.order_read_onehot                36        24      00100100
+  init \gate.order_write_onehot               54        36      00110110
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       1         1          0001
+  init \gold.order_port[0]                     0         0            00
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     2         2            10
+  init \gold.order_port[5]                     2         2            10
+  init \gold.order_port[6]                     3         3            11
+  init \gold.order_port[7]                     1         1            01
+  init \gold.order_read_onehot                96        60      01100000
+  init \gold.order_write_onehot               71        47      01000111
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              1         1             1
+     4 \in_join_3                              1         1             1
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 1         1             1
+     4 \trigger                                1         1             1
+
+** Trying induction with length 4 **
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 4] Solving problem with 30221 variables and 80465 clauses..
+Base case for induction length 4 proven.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 4] Solving problem with 30750 variables and 82198 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       1         1          0001
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     0         0            00
+  init \gate.order_port[4]                     1         1            01
+  init \gate.order_port[5]                     2         2            10
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     1         1            01
+  init \gate.order_read_onehot                36        24      00100100
+  init \gate.order_write_onehot               54        36      00110110
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       1         1          0001
+  init \gold.order_port[0]                     1         1            01
+  init \gold.order_port[1]                     2         2            10
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     0         0            00
+  init \gold.order_port[4]                     1         1            01
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     3         3            11
+  init \gold.order_port[7]                     2         2            10
+  init \gold.order_read_onehot                98        62      01100010
+  init \gold.order_write_onehot               71        47      01000111
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              1         1             1
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              1         1             1
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 1         1             1
+     5 \trigger                                1         1             1
+
+** Trying induction with length 5 **
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 5] Solving problem with 36954 variables and 98830 clauses..
+Base case for induction length 5 proven.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 5] Solving problem with 37706 variables and 101305 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       1         1          0001
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     0         0            00
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     0         0            00
+  init \gate.order_port[4]                     1         1            01
+  init \gate.order_port[5]                     2         2            10
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     1         1            01
+  init \gate.order_read_onehot                36        24      00100100
+  init \gate.order_write_onehot               54        36      00110110
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       5         5          0101
+  init \gold.order_port[0]                     1         1            01
+  init \gold.order_port[1]                     2         2            10
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     0         0            00
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     0         0            00
+  init \gold.order_port[7]                     2         2            10
+  init \gold.order_read_onehot                98        62      01100010
+  init \gold.order_write_onehot               69        45      01000101
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              1         1             1
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              1         1             1
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 1         1             1
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              1         1             1
+     6 \in_join_1                              1         1             1
+     6 \in_join_2                              0         0             0
+     6 \in_join_3                              0         0             0
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 1         1             1
+     6 \trigger                                1         1             1
+
+** Trying induction with length 6 **
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 6] Solving problem with 43910 variables and 117937 clauses..
+Base case for induction length 6 proven.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 6] Solving problem with 44885 variables and 121154 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       2         2          0010
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     0         0            00
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     2         2            10
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     3         3            11
+  init \gate.order_read_onehot                73        49      01001001
+  init \gate.order_write_onehot               80        50      01010000
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       3         3          0011
+  init \gold.order_port[0]                     3         3            11
+  init \gold.order_port[1]                     2         2            10
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     3         3            11
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     2         2            10
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot               198        c6      11000110
+  init \gold.order_write_onehot               24        18      00011000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              1         1             1
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              1         1             1
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              1         1             1
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              1         1             1
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              1         1             1
+     5 \in_join_1                              1         1             1
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              0         0             0
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              0         0             0
+     6 \in_join_2                              1         1             1
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 1         1             1
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              0         0             0
+     7 \in_join_1                              0         0             0
+     7 \in_join_2                              1         1             1
+     7 \in_join_3                              1         1             1
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 1         1             1
+     7 \trigger                                1         1             1
+
+** Trying induction with length 7 **
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 7] Solving problem with 51089 variables and 137786 clauses..
+Base case for induction length 7 proven.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 7] Solving problem with 52287 variables and 141745 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       4         4          0100
+  init \gate.order_port[0]                     1         1            01
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     3         3            11
+  init \gate.order_port[3]                     3         3            11
+  init \gate.order_port[4]                     2         2            10
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     3         3            11
+  init \gate.order_port[7]                     3         3            11
+  init \gate.order_read_onehot                 0         0      00000000
+  init \gate.order_write_onehot               78        4e      01001110
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       1         1          0001
+  init \gold.order_port[0]                     3         3            11
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     3         3            11
+  init \gold.order_port[4]                     3         3            11
+  init \gold.order_port[5]                     2         2            10
+  init \gold.order_port[6]                     2         2            10
+  init \gold.order_port[7]                     1         1            01
+  init \gold.order_read_onehot                 0         0      00000000
+  init \gold.order_write_onehot               24        18      00011000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              0         0             0
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              1         1             1
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              1         1             1
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              1         1             1
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              1         1             1
+     6 \in_join_2                              0         0             0
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              1         1             1
+     7 \in_join_1                              0         0             0
+     7 \in_join_2                              1         1             1
+     7 \in_join_3                              1         1             1
+     7 \in_pop                                 0         0             0
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              0         0             0
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 1         1             1
+     8 \in_rst                                 0         0             0
+     8 \trigger                                1         1             1
+
+** Trying induction with length 8 **
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 8] Solving problem with 58491 variables and 158377 clauses..
+Base case for induction length 8 proven.
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 8] Solving problem with 59912 variables and 163078 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       7         7          0111
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     0         0            00
+  init \gate.order_port[4]                     2         2            10
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     2         2            10
+  init \gate.order_read_onehot               132        84      10000100
+  init \gate.order_write_onehot               37        25      00100101
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       3         3          0011
+  init \gold.order_port[0]                     2         2            10
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     3         3            11
+  init \gold.order_port[4]                     2         2            10
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     0         0            00
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot                65        41      01000001
+  init \gold.order_write_onehot              114        72      01110010
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              0         0             0
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              1         1             1
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              1         1             1
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              0         0             0
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              0         0             0
+     6 \in_join_2                              1         1             1
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              0         0             0
+     7 \in_join_1                              0         0             0
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              1         1             1
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              0         0             0
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 1         1             1
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              0         0             0
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              0         0             0
+     9 \in_join_3                              0         0             0
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 1         1             1
+     9 \trigger                                1         1             1
+
+** Trying induction with length 9 **
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 9] Solving problem with 66116 variables and 179710 clauses..
+Base case for induction length 9 proven.
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 9] Solving problem with 67760 variables and 185153 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                      11         b          1011
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     1         1            01
+  init \gate.order_port[4]                     2         2            10
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     1         1            01
+  init \gate.order_port[7]                     2         2            10
+  init \gate.order_read_onehot               132        84      10000100
+  init \gate.order_write_onehot               37        25      00100101
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                      11         b          1011
+  init \gold.order_port[0]                     2         2            10
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     2         2            10
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     0         0            00
+  init \gold.order_port[7]                     1         1            01
+  init \gold.order_read_onehot                65        41      01000001
+  init \gold.order_write_onehot              114        72      01110010
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              0         0             0
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              1         1             1
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              1         1             1
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              0         0             0
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              0         0             0
+     6 \in_join_2                              1         1             1
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              0         0             0
+     7 \in_join_1                              0         0             0
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              1         1             1
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              0         0             0
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 1         1             1
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              0         0             0
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              1         1             1
+     9 \in_join_3                              1         1             1
+     9 \in_pop                                 0         0             0
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              1         1             1
+    10 \in_join_1                              0         0             0
+    10 \in_join_2                              0         0             0
+    10 \in_join_3                              0         0             0
+    10 \in_pop                                 0         0             0
+    10 \in_rst                                 1         1             1
+    10 \trigger                                1         1             1
+
+** Trying induction with length 10 **
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 10] Solving problem with 73964 variables and 201785 clauses..
+Base case for induction length 10 proven.
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 10] Solving problem with 75831 variables and 207970 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                      11         b          1011
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     3         3            11
+  init \gate.order_port[2]                     2         2            10
+  init \gate.order_port[3]                     3         3            11
+  init \gate.order_port[4]                     2         2            10
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     1         1            01
+  init \gate.order_port[7]                     2         2            10
+  init \gate.order_read_onehot               132        84      10000100
+  init \gate.order_write_onehot               37        25      00100101
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                      11         b          1011
+  init \gold.order_port[0]                     2         2            10
+  init \gold.order_port[1]                     1         1            01
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     2         2            10
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     0         0            00
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot               193        c1      11000001
+  init \gold.order_write_onehot              114        72      01110010
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              0         0             0
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              1         1             1
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 0         0             0
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              1         1             1
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              0         0             0
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              0         0             0
+     6 \in_join_2                              1         1             1
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              0         0             0
+     7 \in_join_1                              0         0             0
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              1         1             1
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              0         0             0
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 1         1             1
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              0         0             0
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              1         1             1
+     9 \in_join_3                              1         1             1
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              1         1             1
+    10 \in_join_1                              0         0             0
+    10 \in_join_2                              0         0             0
+    10 \in_join_3                              1         1             1
+    10 \in_pop                                 1         1             1
+    10 \in_rst                                 0         0             0
+    10 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    11 \in_clk                                 0         0             0
+    11 \in_join_0                              1         1             1
+    11 \in_join_1                              0         0             0
+    11 \in_join_2                              1         1             1
+    11 \in_join_3                              0         0             0
+    11 \in_pop                                 0         0             0
+    11 \in_rst                                 1         1             1
+    11 \trigger                                1         1             1
+
+** Trying induction with length 11 **
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 11] Solving problem with 82035 variables and 224602 clauses..
+Base case for induction length 11 proven.
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 11] Solving problem with 84125 variables and 231529 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       3         3          0011
+  init \gate.order_port[0]                     3         3            11
+  init \gate.order_port[1]                     2         2            10
+  init \gate.order_port[2]                     1         1            01
+  init \gate.order_port[3]                     3         3            11
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     1         1            01
+  init \gate.order_port[6]                     3         3            11
+  init \gate.order_port[7]                     2         2            10
+  init \gate.order_read_onehot                 0         0      00000000
+  init \gate.order_write_onehot               77        4d      01001101
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       1         1          0001
+  init \gold.order_port[0]                     0         0            00
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     0         0            00
+  init \gold.order_port[3]                     0         0            00
+  init \gold.order_port[4]                     0         0            00
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     0         0            00
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot               255        ff      11111111
+  init \gold.order_write_onehot                0         0      00000000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              1         1             1
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 1         1             1
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              0         0             0
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              0         0             0
+     4 \in_join_1                              1         1             1
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              1         1             1
+     6 \in_join_1                              1         1             1
+     6 \in_join_2                              0         0             0
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 0         0             0
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              0         0             0
+     7 \in_join_1                              1         1             1
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              0         0             0
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              1         1             1
+     8 \in_join_1                              1         1             1
+     8 \in_join_2                              1         1             1
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 0         0             0
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              1         1             1
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              1         1             1
+     9 \in_join_3                              1         1             1
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              0         0             0
+    10 \in_join_1                              0         0             0
+    10 \in_join_2                              0         0             0
+    10 \in_join_3                              0         0             0
+    10 \in_pop                                 1         1             1
+    10 \in_rst                                 0         0             0
+    10 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    11 \in_clk                                 0         0             0
+    11 \in_join_0                              1         1             1
+    11 \in_join_1                              1         1             1
+    11 \in_join_2                              1         1             1
+    11 \in_join_3                              1         1             1
+    11 \in_pop                                 0         0             0
+    11 \in_rst                                 0         0             0
+    11 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    12 \in_clk                                 0         0             0
+    12 \in_join_0                              0         0             0
+    12 \in_join_1                              1         1             1
+    12 \in_join_2                              1         1             1
+    12 \in_join_3                              0         0             0
+    12 \in_pop                                 0         0             0
+    12 \in_rst                                 1         1             1
+    12 \trigger                                1         1             1
+
+** Trying induction with length 12 **
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 12] Solving problem with 90329 variables and 248161 clauses..
+Base case for induction length 12 proven.
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 12] Solving problem with 92642 variables and 255830 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       1         1          0001
+  init \gate.order_port[0]                     0         0            00
+  init \gate.order_port[1]                     2         2            10
+  init \gate.order_port[2]                     3         3            11
+  init \gate.order_port[3]                     1         1            01
+  init \gate.order_port[4]                     0         0            00
+  init \gate.order_port[5]                     3         3            11
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     0         0            00
+  init \gate.order_read_onehot               180        b4      10110100
+  init \gate.order_write_onehot               65        41      01000001
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                       1         1          0001
+  init \gold.order_port[0]                     3         3            11
+  init \gold.order_port[1]                     2         2            10
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     0         0            00
+  init \gold.order_port[4]                     3         3            11
+  init \gold.order_port[5]                     2         2            10
+  init \gold.order_port[6]                     3         3            11
+  init \gold.order_port[7]                     2         2            10
+  init \gold.order_read_onehot               171        ab      10101011
+  init \gold.order_write_onehot                0         0      00000000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              0         0             0
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              0         0             0
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 1         1             1
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 1         1             1
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              0         0             0
+     3 \in_join_3                              0         0             0
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              0         0             0
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              1         1             1
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              1         1             1
+     6 \in_join_2                              0         0             0
+     6 \in_join_3                              0         0             0
+     6 \in_pop                                 1         1             1
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              1         1             1
+     7 \in_join_1                              1         1             1
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              0         0             0
+     7 \in_pop                                 0         0             0
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              1         1             1
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 0         0             0
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              0         0             0
+     9 \in_join_1                              1         1             1
+     9 \in_join_2                              0         0             0
+     9 \in_join_3                              0         0             0
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              1         1             1
+    10 \in_join_1                              1         1             1
+    10 \in_join_2                              1         1             1
+    10 \in_join_3                              1         1             1
+    10 \in_pop                                 0         0             0
+    10 \in_rst                                 0         0             0
+    10 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    11 \in_clk                                 0         0             0
+    11 \in_join_0                              1         1             1
+    11 \in_join_1                              0         0             0
+    11 \in_join_2                              0         0             0
+    11 \in_join_3                              1         1             1
+    11 \in_pop                                 1         1             1
+    11 \in_rst                                 0         0             0
+    11 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    12 \in_clk                                 0         0             0
+    12 \in_join_0                              1         1             1
+    12 \in_join_1                              1         1             1
+    12 \in_join_2                              0         0             0
+    12 \in_join_3                              1         1             1
+    12 \in_pop                                 1         1             1
+    12 \in_rst                                 0         0             0
+    12 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    13 \in_clk                                 0         0             0
+    13 \in_join_0                              0         0             0
+    13 \in_join_1                              0         0             0
+    13 \in_join_2                              0         0             0
+    13 \in_join_3                              0         0             0
+    13 \in_pop                                 0         0             0
+    13 \in_rst                                 1         1             1
+    13 \trigger                                1         1             1
+
+** Trying induction with length 13 **
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 13] Solving problem with 98846 variables and 272462 clauses..
+Base case for induction length 13 proven.
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 13] Solving problem with 101382 variables and 280873 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                      14         e          1110
+  init \gate.order_port[0]                     3         3            11
+  init \gate.order_port[1]                     2         2            10
+  init \gate.order_port[2]                     0         0            00
+  init \gate.order_port[3]                     1         1            01
+  init \gate.order_port[4]                     1         1            01
+  init \gate.order_port[5]                     0         0            00
+  init \gate.order_port[6]                     2         2            10
+  init \gate.order_port[7]                     3         3            11
+  init \gate.order_read_onehot                33        21      00100001
+  init \gate.order_write_onehot               32        20      00100000
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                      14         e          1110
+  init \gold.order_port[0]                     1         1            01
+  init \gold.order_port[1]                     0         0            00
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     1         1            01
+  init \gold.order_port[4]                     0         0            00
+  init \gold.order_port[5]                     0         0            00
+  init \gold.order_port[6]                     3         3            11
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot               176        b0      10110000
+  init \gold.order_write_onehot               23        17      00010111
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              0         0             0
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              0         0             0
+     2 \in_join_1                              0         0             0
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              1         1             1
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              0         0             0
+     3 \in_join_1                              0         0             0
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 1         1             1
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              0         0             0
+     4 \in_join_2                              0         0             0
+     4 \in_join_3                              1         1             1
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              1         1             1
+     5 \in_join_1                              1         1             1
+     5 \in_join_2                              1         1             1
+     5 \in_join_3                              0         0             0
+     5 \in_pop                                 1         1             1
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              0         0             0
+     6 \in_join_2                              0         0             0
+     6 \in_join_3                              1         1             1
+     6 \in_pop                                 1         1             1
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              1         1             1
+     7 \in_join_1                              1         1             1
+     7 \in_join_2                              1         1             1
+     7 \in_join_3                              0         0             0
+     7 \in_pop                                 1         1             1
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              0         0             0
+     8 \in_join_3                              1         1             1
+     8 \in_pop                                 0         0             0
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              0         0             0
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              0         0             0
+     9 \in_join_3                              0         0             0
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              1         1             1
+    10 \in_join_1                              0         0             0
+    10 \in_join_2                              0         0             0
+    10 \in_join_3                              0         0             0
+    10 \in_pop                                 0         0             0
+    10 \in_rst                                 0         0             0
+    10 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    11 \in_clk                                 0         0             0
+    11 \in_join_0                              0         0             0
+    11 \in_join_1                              0         0             0
+    11 \in_join_2                              0         0             0
+    11 \in_join_3                              1         1             1
+    11 \in_pop                                 1         1             1
+    11 \in_rst                                 0         0             0
+    11 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    12 \in_clk                                 0         0             0
+    12 \in_join_0                              0         0             0
+    12 \in_join_1                              0         0             0
+    12 \in_join_2                              0         0             0
+    12 \in_join_3                              0         0             0
+    12 \in_pop                                 0         0             0
+    12 \in_rst                                 1         1             1
+    12 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    13 \in_clk                                 0         0             0
+    13 \in_join_0                              0         0             0
+    13 \in_join_1                              0         0             0
+    13 \in_join_2                              0         0             0
+    13 \in_join_3                              0         0             0
+    13 \in_pop                                 1         1             1
+    13 \in_rst                                 0         0             0
+    13 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    14 \in_clk                                 0         0             0
+    14 \in_join_0                              0         0             0
+    14 \in_join_1                              0         0             0
+    14 \in_join_2                              0         0             0
+    14 \in_join_3                              0         0             0
+    14 \in_pop                                 1         1             1
+    14 \in_rst                                 0         0             0
+    14 \trigger                                1         1             1
+
+** Trying induction with length 14 **
+
+Setting up time step 15:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 14] Solving problem with 107586 variables and 297505 clauses..
+Base case for induction length 14 proven.
+
+Setting up time step 15:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[induction step 14] Solving problem with 110345 variables and 306658 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                           Dec       Hex           Bin
+  ---- ----------------------------- ----------- --------- -------------
+  init \gate.order_count                       3         3          0011
+  init \gate.order_port[0]                     3         3            11
+  init \gate.order_port[1]                     1         1            01
+  init \gate.order_port[2]                     0         0            00
+  init \gate.order_port[3]                     1         1            01
+  init \gate.order_port[4]                     1         1            01
+  init \gate.order_port[5]                     3         3            11
+  init \gate.order_port[6]                     0         0            00
+  init \gate.order_port[7]                     1         1            01
+  init \gate.order_read_onehot               137        89      10001001
+  init \gate.order_write_onehot              129        81      10000001
+  init \gate.ring_empty_q                      1         1             1
+  init \gold.order_count                      12         c          1100
+  init \gold.order_port[0]                     2         2            10
+  init \gold.order_port[1]                     2         2            10
+  init \gold.order_port[2]                     2         2            10
+  init \gold.order_port[3]                     0         0            00
+  init \gold.order_port[4]                     0         0            00
+  init \gold.order_port[5]                     1         1            01
+  init \gold.order_port[6]                     1         1            01
+  init \gold.order_port[7]                     0         0            00
+  init \gold.order_read_onehot               206        ce      11001110
+  init \gold.order_write_onehot                0         0      00000000
+  init \gold.ring_empty_q                      1         1             1
+  ---- ----------------------------- ----------- --------- -------------
+     1 \in_clk                                 0         0             0
+     1 \in_join_0                              1         1             1
+     1 \in_join_1                              0         0             0
+     1 \in_join_2                              1         1             1
+     1 \in_join_3                              1         1             1
+     1 \in_pop                                 0         0             0
+     1 \in_rst                                 0         0             0
+     1 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     2 \in_clk                                 0         0             0
+     2 \in_join_0                              1         1             1
+     2 \in_join_1                              1         1             1
+     2 \in_join_2                              0         0             0
+     2 \in_join_3                              0         0             0
+     2 \in_pop                                 0         0             0
+     2 \in_rst                                 0         0             0
+     2 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     3 \in_clk                                 0         0             0
+     3 \in_join_0                              1         1             1
+     3 \in_join_1                              1         1             1
+     3 \in_join_2                              1         1             1
+     3 \in_join_3                              1         1             1
+     3 \in_pop                                 0         0             0
+     3 \in_rst                                 0         0             0
+     3 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     4 \in_clk                                 0         0             0
+     4 \in_join_0                              1         1             1
+     4 \in_join_1                              0         0             0
+     4 \in_join_2                              1         1             1
+     4 \in_join_3                              0         0             0
+     4 \in_pop                                 1         1             1
+     4 \in_rst                                 0         0             0
+     4 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     5 \in_clk                                 0         0             0
+     5 \in_join_0                              0         0             0
+     5 \in_join_1                              0         0             0
+     5 \in_join_2                              0         0             0
+     5 \in_join_3                              1         1             1
+     5 \in_pop                                 0         0             0
+     5 \in_rst                                 0         0             0
+     5 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     6 \in_clk                                 0         0             0
+     6 \in_join_0                              0         0             0
+     6 \in_join_1                              1         1             1
+     6 \in_join_2                              1         1             1
+     6 \in_join_3                              0         0             0
+     6 \in_pop                                 1         1             1
+     6 \in_rst                                 0         0             0
+     6 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     7 \in_clk                                 0         0             0
+     7 \in_join_0                              1         1             1
+     7 \in_join_1                              1         1             1
+     7 \in_join_2                              0         0             0
+     7 \in_join_3                              0         0             0
+     7 \in_pop                                 0         0             0
+     7 \in_rst                                 0         0             0
+     7 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     8 \in_clk                                 0         0             0
+     8 \in_join_0                              0         0             0
+     8 \in_join_1                              0         0             0
+     8 \in_join_2                              1         1             1
+     8 \in_join_3                              0         0             0
+     8 \in_pop                                 1         1             1
+     8 \in_rst                                 0         0             0
+     8 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+     9 \in_clk                                 0         0             0
+     9 \in_join_0                              1         1             1
+     9 \in_join_1                              0         0             0
+     9 \in_join_2                              1         1             1
+     9 \in_join_3                              1         1             1
+     9 \in_pop                                 1         1             1
+     9 \in_rst                                 0         0             0
+     9 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    10 \in_clk                                 0         0             0
+    10 \in_join_0                              0         0             0
+    10 \in_join_1                              0         0             0
+    10 \in_join_2                              0         0             0
+    10 \in_join_3                              0         0             0
+    10 \in_pop                                 1         1             1
+    10 \in_rst                                 0         0             0
+    10 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    11 \in_clk                                 0         0             0
+    11 \in_join_0                              0         0             0
+    11 \in_join_1                              0         0             0
+    11 \in_join_2                              1         1             1
+    11 \in_join_3                              1         1             1
+    11 \in_pop                                 1         1             1
+    11 \in_rst                                 0         0             0
+    11 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    12 \in_clk                                 0         0             0
+    12 \in_join_0                              1         1             1
+    12 \in_join_1                              1         1             1
+    12 \in_join_2                              1         1             1
+    12 \in_join_3                              1         1             1
+    12 \in_pop                                 1         1             1
+    12 \in_rst                                 0         0             0
+    12 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    13 \in_clk                                 0         0             0
+    13 \in_join_0                              0         0             0
+    13 \in_join_1                              1         1             1
+    13 \in_join_2                              1         1             1
+    13 \in_join_3                              1         1             1
+    13 \in_pop                                 1         1             1
+    13 \in_rst                                 0         0             0
+    13 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    14 \in_clk                                 0         0             0
+    14 \in_join_0                              0         0             0
+    14 \in_join_1                              0         0             0
+    14 \in_join_2                              0         0             0
+    14 \in_join_3                              1         1             1
+    14 \in_pop                                 1         1             1
+    14 \in_rst                                 0         0             0
+    14 \trigger                                0         0             0
+  ---- ----------------------------- ----------- --------- -------------
+    15 \in_clk                                 0         0             0
+    15 \in_join_0                              1         1             1
+    15 \in_join_1                              1         1             1
+    15 \in_join_2                              0         0             0
+    15 \in_join_3                              1         1             1
+    15 \in_pop                                 1         1             1
+    15 \in_rst                                 1         1             1
+    15 \trigger                                1         1             1
+
+** Trying induction with length 15 **
+
+Setting up time step 16:
+Final constraint equation: { } = { }
+Imported 443 cells to SAT database.
+Import proof for assert: $auto$miter.cc:268:create_miter_equiv$3259 when 1'1.
+Import show expression: \in_clk
+Import show expression: \in_rst
+Import show expression: \in_join_0
+Import show expression: \in_join_1
+Import show expression: \in_join_2
+Import show expression: \in_join_3
+Import show expression: \in_pop
+Import show expression: \trigger
+
+[base case 15] Solving problem with 116549 variables and 323290 clauses..

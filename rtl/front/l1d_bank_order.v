@@ -98,6 +98,21 @@ module l1d_bank_order #(
     reg  [LSU_PORTS*PORT_W-1:0]   rank_port;                     // LSU_PORTS*PORT_W = 8 bits: port of the joiner with this rank
     integer                rank_idx;
     integer                place_rank_idx;                       // rank loop of the place write logic (own always block)
+    // join count from thresholds (pure AND/OR of the join pins, no XOR, no serial chain): at least n ports join
+    localparam JOIN_PATTERNS = 1 << LSU_PORTS;                   // JOIN_PATTERNS = 16 subsets of the join ports
+    reg  [LSU_PORTS+1:0]   join_at_least;                        // LSU_PORTS+2 = 6 bits: bit n = at least n joins (top bit 0)
+    integer                join_pattern_idx;
+    // number of ones in the low pattern_width bits of pattern_value (constant arguments only)
+    function integer join_pattern_ones;
+        input integer pattern_value;
+        input integer pattern_width;
+        integer       pattern_bit;
+        begin
+            join_pattern_ones = 0;
+            for (pattern_bit = 0; pattern_bit < pattern_width; pattern_bit = pattern_bit + 1)
+                join_pattern_ones = join_pattern_ones + ((pattern_value >> pattern_bit) & 1);
+        end
+    endfunction
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
         input [ORDER_DEPTH-1:0] pointer_onehot;
         input [LSU_PORTS:0]     step_onehot;
@@ -123,7 +138,16 @@ module l1d_bank_order #(
             if (join_now[join_port_idx])
                 join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
-        join_cnt_onehot = join_run;
+        // at least n joins = OR over the n-port subsets m of (all ports of m join); monotone AND-OR, depth 2-3
+        join_at_least = {(LSU_PORTS+2){1'b0}};
+        for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
+            for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+                if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == join_count_idx)
+                    join_at_least[join_count_idx] = join_at_least[join_count_idx] |
+                                                    ((join_now & join_pattern_idx) == join_pattern_idx);
+        // exactly n joins = at least n and not at least n+1 (one gate after the thresholds); same value as join_run
+        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+            join_cnt_onehot[join_count_idx] = join_at_least[join_count_idx] & !join_at_least[join_count_idx + 1];
         // select words from join/pop only (early): bit k of (c + joins - pop) mod 2^ORDER_CNT_W, constants per (c, joins, pop)
         count_bit_select = {(ORDER_CNT_W*COUNT_VALUES){1'b0}};
         empty_select     = {COUNT_VALUES{1'b0}};

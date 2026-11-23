@@ -49,3 +49,16 @@
 + DECL reg next_if_bit0_set
 + FOR for(count_bit_idx=0;count_bit_idx<=ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES/2;count_value_idx=count_value_idx+1)
+# iteration BO-8 (2026-11-23): join count one-hot from thresholds (at least n joins: OR of n-port ANDs, no XOR, no chain);
+# the join_run chain stays for the ranks of the order_port write
++ DECL localparam JOIN_PATTERNS = 1 << LSU_PORTS
++ DECL reg[LSU_PORTS+1:0]join_at_least
++ DECL integer join_pattern_idx
++ DECL integer join_pattern_ones
++ DECL integer pattern_value
++ DECL integer pattern_width
++ DECL integer pattern_bit
++ FOR for(pattern_bit=0;pattern_bit<pattern_width;pattern_bit=pattern_bit+1)
++ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
++ FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
++ FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)

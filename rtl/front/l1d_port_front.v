@@ -22,6 +22,7 @@ module l1d_port_front #(
     `include "l1d_fields.vh"
     localparam SKID_CNT_W  = $clog2(PORT_QUEUE_DEPTH + 1);
     localparam STOP_MARGIN = 2;
+    localparam SKID_POP_LAST = 1;
     localparam SKID_W      = REQ_W + PC_W;
     localparam NB          = NUM_BANKS;
     localparam NP          = LSU_PORTS;
@@ -79,7 +80,7 @@ module l1d_port_front #(
         for (sk = 0; sk < NP; sk = sk + 1) begin : g_skid
             wire [SKID_W-1:0] skid_in;
             assign skid_in = {port_pc[sk*PC_W +: PC_W], port_packet[sk*REQ_W +: REQ_W]};
-            l1d_fifo #(.WIDTH(SKID_W), .DEPTH(PORT_QUEUE_DEPTH), .CNT_W(SKID_CNT_W)) u_skid (
+            l1d_fifo #(.WIDTH(SKID_W), .DEPTH(PORT_QUEUE_DEPTH), .CNT_W(SKID_CNT_W), .POP_LAST(SKID_POP_LAST)) u_skid (
                 .clk (clk), .rst (rst), .push (skid_push[sk]), .push_data (skid_in), .pop (skid_pop[sk]),
                 .front_data (skid_head[sk*SKID_W +: SKID_W]), .empty (skid_empty[sk]), .full (skid_full[sk]),
                 .used_slots (skid_used[sk*SKID_CNT_W +: SKID_CNT_W]), .free_slots (), .free_slots_next ()

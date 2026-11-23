@@ -1,0 +1,378 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gold.ys' --
+
+1. Executing Verilog-2005 frontend: golden/l1d_bank_order.v
+Parsing Verilog input from `golden/l1d_bank_order.v' to AST representation.
+Generating RTLIL representation for module `\l1d_bank_order'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \l1d_bank_order
+
+2.2. Analyzing design hierarchy..
+Top module:  \l1d_bank_order
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 6 switch rules as full_case in process $proc$golden/l1d_bank_order.v:93$230 in module l1d_bank_order.
+Marked 12 switch rules as full_case in process $proc$golden/l1d_bank_order.v:74$44 in module l1d_bank_order.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 88 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~26 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+     1/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [7]
+     2/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.bit_idx[31:0]$291
+     3/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [6]
+     4/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [5]
+     5/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [4]
+     6/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [3]
+     7/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [2]
+     8/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [1]
+     9/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$289 [0]
+    10/86: $2\rotate_left$func$golden/l1d_bank_order.v:105$26.pointer_onehot[7:0]$290
+    11/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [7]
+    12/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.bit_idx[31:0]$288
+    13/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [2]
+    14/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [1]
+    15/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [0]
+    16/86: $5\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$285
+    17/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [6]
+    18/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [5]
+    19/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [4]
+    20/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$286 [3]
+    21/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$25.pointer_onehot[7:0]$287
+    22/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [7]
+    23/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.bit_idx[31:0]$283
+    24/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [1]
+    25/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [0]
+    26/86: $4\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$280
+    27/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [6]
+    28/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [5]
+    29/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [4]
+    30/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [3]
+    31/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$281 [2]
+    32/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$24.pointer_onehot[7:0]$282
+    33/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [7]
+    34/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.bit_idx[31:0]$278
+    35/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [0]
+    36/86: $3\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$275
+    37/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [6]
+    38/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [5]
+    39/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [4]
+    40/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [3]
+    41/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [2]
+    42/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$276 [1]
+    43/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$23.pointer_onehot[7:0]$277
+    44/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [7]
+    45/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.bit_idx[31:0]$273
+    46/86: $2\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$270
+    47/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [6]
+    48/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [5]
+    49/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [4]
+    50/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [3]
+    51/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [2]
+    52/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [1]
+    53/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$271 [0]
+    54/86: $2\rotate_left$func$golden/l1d_bank_order.v:52$22.pointer_onehot[7:0]$272
+    55/86: $0\ring_empty_q[0:0]
+    56/86: $0\order_count[3:0]
+    57/86: $0\order_write_onehot[7:0]
+    58/86: $1\rotate_left$func$golden/l1d_bank_order.v:105$26.bit_idx[31:0]$268
+    59/86: $1\rotate_left$func$golden/l1d_bank_order.v:105$26.pointer_onehot[7:0]$267
+    60/86: $1\rotate_left$func$golden/l1d_bank_order.v:105$26.$result[7:0]$266
+    61/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$25.bit_idx[31:0]$265
+    62/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$25.pointer_onehot[7:0]$264
+    63/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$25.$result[7:0]$263
+    64/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$24.bit_idx[31:0]$262
+    65/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$24.pointer_onehot[7:0]$261
+    66/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$24.$result[7:0]$260
+    67/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$23.bit_idx[31:0]$259
+    68/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$23.pointer_onehot[7:0]$258
+    69/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$23.$result[7:0]$257
+    70/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$22.bit_idx[31:0]$256
+    71/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$22.pointer_onehot[7:0]$255
+    72/86: $1\rotate_left$func$golden/l1d_bank_order.v:52$22.$result[7:0]$254
+    73/86: $1\rotate_by_count$func$golden/l1d_bank_order.v:103$21.step_idx[31:0]$253
+    74/86: $1\rotate_by_count$func$golden/l1d_bank_order.v:103$21.step_cnt[2:0]$252
+    75/86: $1\rotate_by_count$func$golden/l1d_bank_order.v:103$21.pointer_onehot[7:0]$251
+    76/86: $1\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result[7:0]$250
+    77/86: $1\write_place[31:0]
+    78/86: $0\order_port[7][1:0]
+    79/86: $0\order_port[6][1:0]
+    80/86: $0\order_port[5][1:0]
+    81/86: $0\order_port[4][1:0]
+    82/86: $0\order_port[3][1:0]
+    83/86: $0\order_port[2][1:0]
+    84/86: $0\order_port[1][1:0]
+    85/86: $0\order_port[0][1:0]
+    86/86: $0\order_read_onehot[7:0]
+Creating decoders for process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+     1/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [7]
+     2/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.bit_idx[31:0]$156
+     3/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [2]
+     4/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [1]
+     5/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [0]
+     6/132: $4\rotate_by_count$func$golden/l1d_bank_order.v:82$16.$result[7:0]$153
+     7/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [6]
+     8/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [5]
+     9/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [4]
+    10/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.$result[7:0]$154 [3]
+    11/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$20.pointer_onehot[7:0]$155
+    12/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [7]
+    13/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.bit_idx[31:0]$151
+    14/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [1]
+    15/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [0]
+    16/132: $3\rotate_by_count$func$golden/l1d_bank_order.v:82$16.$result[7:0]$148
+    17/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [6]
+    18/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [5]
+    19/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [4]
+    20/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [3]
+    21/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.$result[7:0]$149 [2]
+    22/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$19.pointer_onehot[7:0]$150
+    23/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [7]
+    24/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.bit_idx[31:0]$146
+    25/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [0]
+    26/132: $2\rotate_by_count$func$golden/l1d_bank_order.v:82$16.$result[7:0]$143
+    27/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [6]
+    28/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [5]
+    29/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [4]
+    30/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [3]
+    31/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [2]
+    32/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.$result[7:0]$144 [1]
+    33/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$18.pointer_onehot[7:0]$145
+    34/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [7]
+    35/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.bit_idx[31:0]$141
+    36/132: $1\rotate_by_count$func$golden/l1d_bank_order.v:82$16.$result[7:0]$138
+    37/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [6]
+    38/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [5]
+    39/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [4]
+    40/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [3]
+    41/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [2]
+    42/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [1]
+    43/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.$result[7:0]$139 [0]
+    44/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$17.pointer_onehot[7:0]$140
+    45/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [7]
+    46/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.bit_idx[31:0]$136
+    47/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [2]
+    48/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [1]
+    49/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [0]
+    50/132: $4\rotate_by_count$func$golden/l1d_bank_order.v:81$11.$result[7:0]$133
+    51/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [6]
+    52/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [5]
+    53/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [4]
+    54/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.$result[7:0]$134 [3]
+    55/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$15.pointer_onehot[7:0]$135
+    56/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [7]
+    57/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.bit_idx[31:0]$131
+    58/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [1]
+    59/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [0]
+    60/132: $3\rotate_by_count$func$golden/l1d_bank_order.v:81$11.$result[7:0]$128
+    61/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [6]
+    62/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [5]
+    63/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [4]
+    64/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [3]
+    65/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.$result[7:0]$129 [2]
+    66/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$14.pointer_onehot[7:0]$130
+    67/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [7]
+    68/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.bit_idx[31:0]$126
+    69/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [0]
+    70/132: $2\rotate_by_count$func$golden/l1d_bank_order.v:81$11.$result[7:0]$123
+    71/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [6]
+    72/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [5]
+    73/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [4]
+    74/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [3]
+    75/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [2]
+    76/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.$result[7:0]$124 [1]
+    77/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$13.pointer_onehot[7:0]$125
+    78/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [7]
+    79/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.bit_idx[31:0]$121
+    80/132: $1\rotate_by_count$func$golden/l1d_bank_order.v:81$11.$result[7:0]$118
+    81/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [6]
+    82/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [5]
+    83/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [4]
+    84/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [3]
+    85/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [2]
+    86/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [1]
+    87/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.$result[7:0]$119 [0]
+    88/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$12.pointer_onehot[7:0]$120
+    89/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [7]
+    90/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.bit_idx[31:0]$116
+    91/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [2]
+    92/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [1]
+    93/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [0]
+    94/132: $4\rotate_by_count$func$golden/l1d_bank_order.v:80$6.$result[7:0]$113
+    95/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [6]
+    96/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [5]
+    97/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [4]
+    98/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.$result[7:0]$114 [3]
+    99/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$10.pointer_onehot[7:0]$115
+   100/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [7]
+   101/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.bit_idx[31:0]$111
+   102/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [1]
+   103/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [0]
+   104/132: $3\rotate_by_count$func$golden/l1d_bank_order.v:80$6.$result[7:0]$108
+   105/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [6]
+   106/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [5]
+   107/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [4]
+   108/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [3]
+   109/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.$result[7:0]$109 [2]
+   110/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$9.pointer_onehot[7:0]$110
+   111/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [7]
+   112/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.bit_idx[31:0]$106
+   113/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [0]
+   114/132: $2\rotate_by_count$func$golden/l1d_bank_order.v:80$6.$result[7:0]$103
+   115/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [6]
+   116/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [5]
+   117/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [4]
+   118/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [3]
+   119/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [2]
+   120/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.$result[7:0]$104 [1]
+   121/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$8.pointer_onehot[7:0]$105
+   122/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [7]
+   123/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.bit_idx[31:0]$101
+   124/132: $1\rotate_by_count$func$golden/l1d_bank_order.v:80$6.$result[7:0]$98
+   125/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [6]
+   126/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [5]
+   127/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [4]
+   128/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [3]
+   129/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [2]
+   130/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [1]
+   131/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.$result[7:0]$99 [0]
+   132/132: $1\rotate_left$func$golden/l1d_bank_order.v:52$7.pointer_onehot[7:0]$100
+Creating decoders for process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:57$27'.
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_bank_order.\rank_1' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\rank_2' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\rank_3' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_0' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_1' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_2' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_3' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_write_en' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_write_port' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\join_cnt' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\place_idx' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+No latch inferred for signal `\l1d_bank_order.\oldest_port' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:57$27'.
+No latch inferred for signal `\l1d_bank_order.\read_place' from process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:57$27'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_bank_order.\ring_empty_q' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1140' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_read_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1141' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_write_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1142' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_count' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1143' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\write_place' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1144' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_count$func$golden/l1d_bank_order.v:103$21.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1145' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_count$func$golden/l1d_bank_order.v:103$21.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1146' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_count$func$golden/l1d_bank_order.v:103$21.step_cnt' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1147' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_by_count$func$golden/l1d_bank_order.v:103$21.step_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1148' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$22.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1149' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$22.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1150' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$22.bit_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1151' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$23.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1152' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$23.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1153' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$23.bit_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1154' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$24.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1155' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$24.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1156' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$24.bit_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1157' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$25.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1158' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$25.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1159' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:52$25.bit_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1160' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:105$26.$result' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1161' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:105$26.pointer_onehot' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1162' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\rotate_left$func$golden/l1d_bank_order.v:105$26.bit_idx' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1163' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[0]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1164' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[1]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1165' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[2]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1166' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[3]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1167' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[4]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1168' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[5]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1169' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[6]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1170' with positive edge clock.
+Creating register for signal `\l1d_bank_order.\order_port[7]' using process `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+  created $dff cell `$procdff$1171' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 14 empty switches in `\l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+Removing empty process `l1d_bank_order.$proc$golden/l1d_bank_order.v:93$230'.
+Found and cleaned up 12 empty switches in `\l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+Removing empty process `l1d_bank_order.$proc$golden/l1d_bank_order.v:74$44'.
+Removing empty process `l1d_bank_order.$proc$golden/l1d_bank_order.v:57$27'.
+Cleaned up 26 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module l1d_bank_order.
+<suppressed ~64 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_bank_order..
+Removed 230 unused cells and 789 unused wires.
+<suppressed ~245 debug messages>
+Renaming module \l1d_bank_order to \gold.
+
+6. Executing RTLIL backend.
+Output filename: proof/gold.il
+
+End of script. Logfile hash: 2078bcb1b6, time: 0.04s, user: 0.04s, system: 0.01s, MEM: 25.64 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 68% 2x read_verilog (0 sec), 9% 1x proc_mux (0 sec), ...

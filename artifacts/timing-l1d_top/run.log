@@ -1,0 +1,57 @@
+Source SHA: 7efd929bb14a266331ffca9dfefd5c2e9676c70a
+Period: 200 ps
+FLOW_HOME: /OpenROAD-flow-scripts/flow
+OPENROAD: /OpenROAD-flow-scripts/flow/../tools/install/OpenROAD/bin/openroad
+unknown 
+Job: timing
+Run: 45115558874
+ASSUMED dual-port SRAM macro timing (not foundry data)
+l1d_macro_data_tdp: 64 x 512, clk->rdata 180.0 ps, setup 50.0 ps, hold 15.0 ps, 60 x 40 um
+l1d_macro_tag_tdp: 64 x 50, clk->rdata 150.0 ps, setup 40.0 ps, hold 15.0 ps, 20 x 12 um
+
+=== l1d_top at 200 ps (rtl/top/l1d_top.v; clock=1; children=l1d_bank l1d_l2_port l1d_port_front l1d_prefetch_unit l1d_resp_merge l1d_snoop_ctrl) ===
+Warning: Replacing memory \deps_load with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:383, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:380
+Warning: Replacing memory \rank_pair with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:376, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:370
+Warning: Replacing memory \rank_deps_old with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:373, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:369
+Warning: Replacing memory \lower_pair with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:345
+Warning: Replacing memory \deps_new with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:354, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:344
+Warning: Replacing memory \deps_old with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:344, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:340
+Warning: Replacing memory \load_pc with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:301, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:297
+Warning: Replacing memory \load_packet with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:300, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:296
+Warning: Replacing memory \data_sel with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:275
+Warning: Replacing memory \src_entry with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:270, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:266
+Warning: Replacing memory \rank_onehot with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:254, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:251
+Warning: Replacing memory \rank with list of registers. See /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:164, /__w/test_dose_3/test_dose_3/rtl/bank/s0/l1d_req_tracker.v:160
+67.85. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_req_tracker'.
+67.86. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_req_tracker'.
+67.87. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_req_tracker'.
+67.88. Analyzing design hierarchy..
+67.89. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pf_sms_fifo'.
+67.90. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pf_sms_fifo'.
+67.91. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ks_add'.
+67.92. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_ks_add'.
+67.93. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+67.94. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_sram_tdp'.
+67.95. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_sram_tdp'.
+67.96. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_age_matrix'.
+67.97. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_age_matrix'.
+67.98. Analyzing design hierarchy..
+ERROR: Module `\l1d_sram_tdp_size_not_supported_by_asap7_flow' referenced in module `$paramod$9810f64bf850fd178e64f1ab69aae56df3fffae0\l1d_sram_tdp' in cell `\genblk1.g_unsupported.u_err' is not part of the design.
+Elapsed time: 0:34.26[h:]min:sec. CPU time: user 34.15 sys 0.12 (100%). Peak memory: 340996KB.
+make[1]: *** [Makefile:334: do-yosys-canonicalize] Error 1
+make: *** [Makefile:337: /__w/test_dose_3/test_dose_3/timing_results/l1d_top/work_l1d_top/results/asap7/l1d_top/base/1_1_yosys_canonicalize.rtlil] Error 2
+ERROR: l1d_top SYNTH_FAIL; see results logs
+# cache — ASAP7 timing (4-cycle-hit pipeline)
+
+Post-synthesis estimates: ideal clock, no wires, zero I/O delays, 5% clock uncertainty. SRAM models assume data clock-to-output 180 ps and tag 150 ps (defaults of the run); these are not foundry measurements.
+
+Parents include their flattened children. Combinational modules use a virtual clock; their equivalent GHz value is not a measured operating clock. Generic blocks use their own default parameters; the parent rows include instance-specific sizes. The SRAM row uses the dual-port data-macro timing model (assumed, see macros/macro_assumptions.txt), not a synthesized flip-flop RAM.
+
+Effective critical period = target period − worst setup slack; equivalent GHz = 1000 / effective critical period. Setup and uncertainty are included. Passing the workflow means measurement completed, not that every target was met. No post-route frequency or functional/latency compliance is established.
+
+| Module | Target ps | Clock | Worst slack ps | Effective critical ps | Equivalent GHz | Area um² | Result |
+|---|---:|---|---:|---:|---:|---:|---|
+| l1d_top | 200 | real | — | — | — | — | SYNTH_FAIL |
+
+Raw CSV, input hashes/revision, constraints, synthesis/STA logs, library selections and detailed worst/hold paths are saved in the job artifacts. Review check_setup reports for unconstrained or other coverage warnings.
+

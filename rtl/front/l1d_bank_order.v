@@ -71,15 +71,53 @@ module l1d_bank_order #(
     reg  [ORDER_DEPTH*PORT_W-1:0] place_write_port;
     reg  [JOIN_CNT_W-1:0]  join_cnt;
     integer                place_idx;
+    reg  [LSU_PORTS:0]     join_cnt_onehot;
+    reg  [LSU_PORTS:0]     rank_before_onehot [0:LSU_PORTS-1];
+    reg  [LSU_PORTS:0]     join_run;
+    reg  [ORDER_CNT_W-1:0] count_next_sel;
+    reg                    ring_empty_next;
+    reg  [ORDER_CNT_W-1:0] count_candidate;
+    integer                join_port_idx;
+    integer                join_count_idx;
+    integer                pop_value_idx;
+    reg                    candidate_selected;
+    function [ORDER_DEPTH-1:0] rotate_by_onehot;
+        input [ORDER_DEPTH-1:0] pointer_onehot;
+        input [LSU_PORTS:0]     step_onehot;
+        integer                 step_idx;
+        begin
+            rotate_by_onehot = {ORDER_DEPTH{1'b0}};
+            for (step_idx = 0; step_idx <= LSU_PORTS; step_idx = step_idx + 1)
+                rotate_by_onehot = rotate_by_onehot | ({ORDER_DEPTH{step_onehot[step_idx]}} & rotate_left(pointer_onehot, step_idx));
+        end
+    endfunction
+    always @* begin
+        join_run = {{LSU_PORTS{1'b0}}, 1'b1};
+        for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
+            rank_before_onehot[join_port_idx] = join_run;
+            if (join_now[join_port_idx])
+                join_run = {join_run[LSU_PORTS-1:0], 1'b0};
+        end
+        join_cnt_onehot = join_run;
+        count_next_sel  = {ORDER_CNT_W{1'b0}};
+        ring_empty_next = 1'b0;
+        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+            for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
+                candidate_selected       = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop);
+                count_candidate = order_count + join_count_idx - pop_value_idx;
+                count_next_sel  = count_next_sel | ({ORDER_CNT_W{candidate_selected}} & count_candidate);
+                ring_empty_next = ring_empty_next | (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
+            end
+    end
     always @* begin
         rank_1   = {2'b00, join_now[0]};
         rank_2   = {2'b00, join_now[0]} + {2'b00, join_now[1]};
         rank_3   = {2'b00, join_now[0]} + {2'b00, join_now[1]} + {2'b00, join_now[2]};
         join_cnt = rank_3 + {2'b00, join_now[3]};
         place_0  = order_write_onehot;
-        place_1  = rotate_by_count(order_write_onehot, rank_1);
-        place_2  = rotate_by_count(order_write_onehot, rank_2);
-        place_3  = rotate_by_count(order_write_onehot, rank_3);
+        place_1  = rotate_by_onehot(order_write_onehot, rank_before_onehot[1]);
+        place_2  = rotate_by_onehot(order_write_onehot, rank_before_onehot[2]);
+        place_3  = rotate_by_onehot(order_write_onehot, rank_before_onehot[3]);
         place_write_en = ({ORDER_DEPTH{join_now[0]}} & place_0) | ({ORDER_DEPTH{join_now[1]}} & place_1) |
                          ({ORDER_DEPTH{join_now[2]}} & place_2) | ({ORDER_DEPTH{join_now[3]}} & place_3);
         for (place_idx = 0; place_idx < ORDER_DEPTH; place_idx = place_idx + 1)
@@ -88,7 +126,7 @@ module l1d_bank_order #(
                                                            ({PORT_W{join_now[3] && place_3[place_idx]}} & 2'd3);
     end
     wire [ORDER_CNT_W-1:0] order_count_next;
-    assign order_count_next = order_count + {{(ORDER_CNT_W-JOIN_CNT_W){1'b0}}, join_cnt} - {{(ORDER_CNT_W-1){1'b0}}, pop};
+    assign order_count_next = count_next_sel;
     integer write_place;
     always @(posedge clk) begin : ring_proc
         if (rst) begin
@@ -100,11 +138,11 @@ module l1d_bank_order #(
             for (write_place = 0; write_place < ORDER_DEPTH; write_place = write_place + 1)
                 if (place_write_en[write_place])
                     order_port[write_place] <= place_write_port[write_place*PORT_W +: PORT_W];
-            order_write_onehot <= rotate_by_count(order_write_onehot, join_cnt);
+            order_write_onehot <= rotate_by_onehot(order_write_onehot, join_cnt_onehot);
             if (pop)
                 order_read_onehot <= rotate_left(order_read_onehot, 1);
             order_count  <= order_count_next;
-            ring_empty_q <= (order_count_next == {ORDER_CNT_W{1'b0}});
+            ring_empty_q <= ring_empty_next;
         end
     end
 `ifndef SYNTHESIS

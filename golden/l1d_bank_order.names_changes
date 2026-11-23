@@ -26,24 +26,13 @@
 + DECL integer count_bit_idx
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
-+ FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
 # iteration BO-2 (2026-11-23): low count pair predecoded, next bit k from order_count[k:0] only, reset folded into the selects
 + DECL localparam COUNT_LOW_W = ORDER_CNT_W / 2
 + DECL localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W
-+ DECL reg[COUNT_LOW_VALUES-1:0]low_hit_onehot
 + DECL reg count_prefix_hit
 + FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
 # iteration BO-4 (2026-11-23): high count pair predecoded too; next count bits and the empty flag as
 # low one-hot AND (high one-hot AND early select); count_hit_onehot removed (its "+ DECL" line and two count loops dropped)
-+ DECL localparam COUNT_HIGH_VALUES = COUNT_VALUES / COUNT_LOW_VALUES
-+ DECL reg[COUNT_HIGH_VALUES-1:0]high_hit_onehot
-+ DECL reg high_part_select
-+ DECL integer high_value_idx
-+ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
-+ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
-+ FOR for(high_value_idx=0;high_value_idx<COUNT_HIGH_VALUES;high_value_idx=high_value_idx+1)
-+ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
-+ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
 # iteration BO-6 (2026-11-23): order_port write as AND-OR with the write pointer bit last (ranks from the join_run chain);
 # low next-count bits from low_hit_onehot only (order_count[1:0] feed only the low decode)
 + DECL reg[LSU_PORTS-1:0]rank_used
@@ -52,3 +41,11 @@
 + DECL integer place_rank_idx
 + FOR for(rank_idx=0;rank_idx<LSU_PORTS;rank_idx=rank_idx+1)
 + FOR for(place_rank_idx=0;place_rank_idx<LSU_PORTS;place_rank_idx=place_rank_idx+1)
+# iteration BO-7 (2026-11-23): order_count[0] only in the last gate (Shannon split) of every next-count bit and of the
+# empty flag; order_count[2:1] predecoded (mid_hit_onehot). Dropped with it: low_hit_onehot, high_hit_onehot,
+# COUNT_HIGH_VALUES, high_part_select, high_value_idx and their loops (lines of BO-2 / BO-4 removed)
++ DECL reg[COUNT_LOW_VALUES-1:0]mid_hit_onehot
++ DECL reg next_if_bit0_clear
++ DECL reg next_if_bit0_set
++ FOR for(count_bit_idx=0;count_bit_idx<=ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES/2;count_value_idx=count_value_idx+1)

@@ -87,12 +87,10 @@ module l1d_bank_order #(
     reg  [COUNT_VALUES-1:0]             empty_select;            // COUNT_VALUES = 16 bits: next count is 0 if count = c
     localparam COUNT_LOW_W      = ORDER_CNT_W / 2;               // COUNT_LOW_W = 2 low count bits, predecoded as a group
     localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W;              // COUNT_LOW_VALUES = 4 values of the low group
-    reg  [COUNT_LOW_VALUES-1:0]         low_hit_onehot;          // COUNT_LOW_VALUES = 4 bits: order_count[1:0] decoded
-    reg                    count_prefix_hit;                     // order_count[k:0] equals the value of this term
-    localparam COUNT_HIGH_VALUES = COUNT_VALUES / COUNT_LOW_VALUES; // COUNT_HIGH_VALUES = 4 values of the high group
-    reg  [COUNT_HIGH_VALUES-1:0]        high_hit_onehot;         // COUNT_HIGH_VALUES = 4 bits: order_count[3:2] decoded
-    reg                    high_part_select;                     // high bits of this term match, with the early select
-    integer                high_value_idx;
+    reg  [COUNT_LOW_VALUES-1:0]         mid_hit_onehot;          // COUNT_LOW_VALUES = 4 bits: order_count[2:1] decoded
+    reg                    count_prefix_hit;                     // order_count[k:1] equals the value of this term
+    reg                    next_if_bit0_clear;                   // next-count bit (or empty flag) if order_count[0] = 0
+    reg                    next_if_bit0_set;                     // next-count bit (or empty flag) if order_count[0] = 1
     integer                count_value_idx;
     integer                count_bit_idx;
     // order_port write: per rank s (inputs only) a joiner exists / its port; the write pointer bit is the last literal
@@ -143,45 +141,41 @@ module l1d_bank_order #(
                                                     (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
                 end
         // under reset every select is 0, so the next count is 0 (also while order_count is still X in simulation)
-        // the flop value (late) only picks: low pair predecoded once (small fan-out per flop bit), then flat AND-OR
+        // the flop value (late) only picks. order_count[0] (the most loaded count bit) is used only in the LAST gate of
+        // every next-count bit and of the empty flag: bit k = order_count[0] ? (value if 1) : (value if 0), where each
+        // value is an AND-OR of order_count[k:1] (order_count[2:1] predecoded once) with the early select words
         for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
-            low_hit_onehot[count_value_idx] = (order_count[COUNT_LOW_W-1:0] == count_value_idx);
-        for (high_value_idx = 0; high_value_idx < COUNT_HIGH_VALUES; high_value_idx = high_value_idx + 1)
-            high_hit_onehot[high_value_idx] = (order_count[ORDER_CNT_W-1:COUNT_LOW_W] == high_value_idx);
-        // next bit k depends only on order_count[k:0] (addition mod 2^ORDER_CNT_W), so it uses only those bits.
-        // high bits first select among the early words (high one-hot x select), the low one-hot term picks last:
-        // bit k = OR over low value u of low_hit[u] & (OR over high value h of high match h & select[u + 4h])
+            mid_hit_onehot[count_value_idx] = (order_count[COUNT_LOW_W:1] == count_value_idx);
+        // next bit k depends only on order_count[k:0] (addition mod 2^ORDER_CNT_W); with w = order_count[k:1] it is
+        // select[k][2w + order_count[0]]
         count_next_sel  = {ORDER_CNT_W{1'b0}};
-        ring_empty_next = rst;                                   // reset value 1, even before order_count is known
-        for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
-            for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
-                if (count_bit_idx < COUNT_LOW_W) begin
-                    // low bits: low_hit_onehot is the only user of order_count[1:0] (small fan-out); the early select
-                    // word for low value u is the one of u mod 2^(k+1), since bit k needs only order_count[k:0]
-                    count_next_sel[count_bit_idx] = count_next_sel[count_bit_idx] | (low_hit_onehot[count_value_idx] &
-                        count_bit_select[count_bit_idx*COUNT_VALUES + (count_value_idx % (1 << (count_bit_idx + 1)))]);
-                end else begin
-                    high_part_select = 1'b0;
-                    for (high_value_idx = 0; high_value_idx < COUNT_HIGH_VALUES; high_value_idx = high_value_idx + 1)
-                        if (high_value_idx < ((1 << (count_bit_idx + 1)) >> COUNT_LOW_W)) begin
-                            if (count_bit_idx == ORDER_CNT_W - 1)
-                                count_prefix_hit = high_hit_onehot[high_value_idx];
-                            else
-                                count_prefix_hit = (((order_count >> COUNT_LOW_W) & (((1 << (count_bit_idx + 1)) - 1) >> COUNT_LOW_W)) ==
-                                                    high_value_idx);
-                            high_part_select = high_part_select | (count_prefix_hit &
-                                count_bit_select[count_bit_idx*COUNT_VALUES + high_value_idx*COUNT_LOW_VALUES + count_value_idx]);
-                        end
-                    count_next_sel[count_bit_idx] = count_next_sel[count_bit_idx] |
-                                                    (low_hit_onehot[count_value_idx] & high_part_select);
+        for (count_bit_idx = 0; count_bit_idx <= ORDER_CNT_W; count_bit_idx = count_bit_idx + 1) begin
+            // count_bit_idx = ORDER_CNT_W is the empty flag (it needs the whole count, like the top bit)
+            next_if_bit0_clear = 1'b0;
+            next_if_bit0_set   = 1'b0;
+            for (count_value_idx = 0; count_value_idx < COUNT_VALUES / 2; count_value_idx = count_value_idx + 1)
+                if (count_value_idx < (1 << ((count_bit_idx < ORDER_CNT_W) ? count_bit_idx : ORDER_CNT_W - 1))) begin
+                    if (count_bit_idx < COUNT_LOW_W)
+                        count_prefix_hit = (((order_count >> 1) & ((1 << count_bit_idx) - 1)) == count_value_idx);
+                    else
+                        count_prefix_hit = mid_hit_onehot[count_value_idx % COUNT_LOW_VALUES] &
+                            (((order_count >> (COUNT_LOW_W + 1)) &
+                              (((1 << ((count_bit_idx < ORDER_CNT_W) ? count_bit_idx : ORDER_CNT_W - 1)) - 1) >> COUNT_LOW_W)) ==
+                             (count_value_idx >> COUNT_LOW_W));
+                    if (count_bit_idx < ORDER_CNT_W) begin
+                        next_if_bit0_clear = next_if_bit0_clear |
+                            (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + 2*count_value_idx]);
+                        next_if_bit0_set   = next_if_bit0_set |
+                            (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + 2*count_value_idx + 1]);
+                    end else begin
+                        next_if_bit0_clear = next_if_bit0_clear | (count_prefix_hit & empty_select[2*count_value_idx]);
+                        next_if_bit0_set   = next_if_bit0_set   | (count_prefix_hit & empty_select[2*count_value_idx + 1]);
+                    end
                 end
-        // empty flag: same two-level form over the whole count
-        for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1) begin
-            high_part_select = 1'b0;
-            for (high_value_idx = 0; high_value_idx < COUNT_HIGH_VALUES; high_value_idx = high_value_idx + 1)
-                high_part_select = high_part_select |
-                    (high_hit_onehot[high_value_idx] & empty_select[high_value_idx*COUNT_LOW_VALUES + count_value_idx]);
-            ring_empty_next = ring_empty_next | (low_hit_onehot[count_value_idx] & high_part_select);
+            if (count_bit_idx < ORDER_CNT_W)
+                count_next_sel[count_bit_idx] = order_count[0] ? next_if_bit0_set : next_if_bit0_clear;
+            else  // reset value 1, even before order_count is known
+                ring_empty_next = rst | (order_count[0] ? next_if_bit0_set : next_if_bit0_clear);
         end
     end
     always @* begin

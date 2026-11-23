@@ -2,7 +2,6 @@
 # iteration PF-I2 (2026-11-23): one-hot join counts, fill count and empty flag selected from precomputed values
 + DECL reg[LSU_PORTS:0]join_cnt_onehot
 + DECL reg[LSU_PORTS:0]rank_before_onehot[0:LSU_PORTS-1]
-+ DECL reg[LSU_PORTS:0]join_run
 + DECL reg[ORDER_CNT_W-1:0]count_next_sel
 + DECL reg ring_empty_next
 + DECL reg[ORDER_CNT_W-1:0]count_candidate
@@ -36,3 +35,24 @@
 + DECL reg count_prefix_hit
 + FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
+# iteration BO-3 (2026-11-23): flat join decode (no serial rank chain), rank-first order_port write, write pointer last
+# (removed with it: the line "+ DECL reg[LSU_PORTS:0]join_run" of iteration PF-I2, join_run is gone)
++ DECL localparam JOIN_PATTERNS = 1 << LSU_PORTS
++ DECL integer join_pattern_idx
++ DECL integer rank_idx
++ DECL reg join_pattern_hit
++ DECL reg[LSU_PORTS-1:0]rank_used
++ DECL reg[LSU_PORTS*PORT_W-1:0]rank_port
++ DECL integer join_pattern_ones
++ DECL integer pattern_value
++ DECL integer pattern_width
++ DECL integer pattern_bit
++ FOR for(pattern_bit=0;pattern_bit<pattern_width;pattern_bit=pattern_bit+1)
++ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
++ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
++ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
++ FOR for(rank_idx=0;rank_idx<=LSU_PORTS;rank_idx=rank_idx+1)
++ FOR for(rank_idx=0;rank_idx<LSU_PORTS;rank_idx=rank_idx+1)
++ FOR for(place_rank_idx=0;place_rank_idx<LSU_PORTS;place_rank_idx=place_rank_idx+1)
++ DECL integer place_rank_idx
++ DECL reg[LSU_PORTS:0]rank_build

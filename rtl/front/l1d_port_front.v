@@ -217,9 +217,21 @@ module l1d_port_front #(
         input                  push_now;
         input                  pop_now;
         reg   [SKID_CNT_W:0]   used_next;
+        reg   [SKID_CNT_W:0]   used_if_push;
+        reg   [SKID_CNT_W:0]   used_if_pop;
+        reg                    stop_if_hold;
+        reg                    stop_if_push;
+        reg                    stop_if_pop;
         begin
-            used_next  = {1'b0, used_now} + {{SKID_CNT_W{1'b0}}, push_now} - {{SKID_CNT_W{1'b0}}, pop_now};
-            stop_after = (used_next + STOP_MARGIN > PORT_QUEUE_DEPTH);
+            used_next    = {1'b0, used_now};
+            used_if_push = used_next + {{SKID_CNT_W{1'b0}}, 1'b1};
+            used_if_pop  = used_next - {{SKID_CNT_W{1'b0}}, 1'b1};
+            stop_if_hold = (used_next    + STOP_MARGIN > PORT_QUEUE_DEPTH);
+            stop_if_push = (used_if_push + STOP_MARGIN > PORT_QUEUE_DEPTH);
+            stop_if_pop  = (used_if_pop  + STOP_MARGIN > PORT_QUEUE_DEPTH);
+            if (push_now == pop_now) stop_after = stop_if_hold;
+            else if (push_now)       stop_after = stop_if_push;
+            else                     stop_after = stop_if_pop;
         end
     endfunction
     always @(posedge clk) begin : stop_proc

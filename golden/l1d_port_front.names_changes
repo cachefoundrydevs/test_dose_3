@@ -1,5 +1,6 @@
 # Approved name changes of l1d_port_front against golden/l1d_port_front.v (format: flow/check_names.pl)
 # iteration PF-I1 (2026-11-23): rank adders and compare replaced by a one-hot lower-port count and 'at least k free' flags
+# iteration PF-I3 (2026-11-23): stop_after as three precomputed answers selected by push / pop
 - DECL reg[RANK_W-1:0]rank[0:NP-1]
 + DECL reg[NP-1:0]rank_onehot[0:NP-1]
 + DECL reg[NP:1]free_at_least
@@ -9,3 +10,8 @@
 + FOR for(rk_k=1;rk_k<=NP;rk_k=rk_k+1)
 - FOR for(rk_l=0;rk_l<rk_p;rk_l=rk_l+1)
 + FOR for(rk_k=0;rk_k<NP;rk_k=rk_k+1)
++ DECL reg[SKID_CNT_W:0]used_if_push
++ DECL reg[SKID_CNT_W:0]used_if_pop
++ DECL reg stop_if_hold
++ DECL reg stop_if_push
++ DECL reg stop_if_pop

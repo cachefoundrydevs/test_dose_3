@@ -1,0 +1,17 @@
+approved + DECL localparam SKID_POP_LAST = 1
+approved + DECL reg[NP-1:0]rank_onehot[0:NP-1]
+approved + DECL reg[NP:1]free_at_least
+approved - DECL reg[RANK_W-1:0]rank[0:NP-1]
+approved + DECL integer rk_k
+approved + DECL reg[NP-1:0]rank_run
+approved - DECL integer rk_l
+approved + FOR for(rk_k=1;rk_k<=NP;rk_k=rk_k+1)
+approved + FOR for(rk_k=0;rk_k<NP;rk_k=rk_k+1)
+approved - FOR for(rk_l=0;rk_l<rk_p;rk_l=rk_l+1)
+approved + DECL reg[SKID_CNT_W:0]used_if_push
+approved + DECL reg[SKID_CNT_W:0]used_if_pop
+approved + DECL reg stop_if_hold
+approved + DECL reg stop_if_push
+approved + DECL reg stop_if_pop
+names: 116 items golden, 116 items current, 0 differences
+NAMES: PASS

@@ -18,3 +18,14 @@
 + FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
 + FOR for(pop_value_idx=0;pop_value_idx<=1;pop_value_idx=pop_value_idx+1)
+# iteration BO-1 (2026-11-23): fill count and empty flag as early select words AND-ORed with the decoded count (no adder)
++ DECL localparam COUNT_VALUES = 1 << ORDER_CNT_W
++ DECL reg[COUNT_VALUES-1:0]count_hit_onehot
++ DECL reg[ORDER_CNT_W*COUNT_VALUES-1:0]count_bit_select
++ DECL reg[COUNT_VALUES-1:0]empty_select
++ DECL integer count_value_idx
++ DECL integer count_bit_idx
++ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
++ FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
++ FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)

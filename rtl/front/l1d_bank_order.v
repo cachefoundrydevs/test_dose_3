@@ -81,6 +81,13 @@ module l1d_bank_order #(
     integer                join_count_idx;
     integer                pop_value_idx;
     reg                    candidate_selected;
+    // fill count and empty flag without an adder: early select words from join/pop, then AND-OR with the decoded count
+    localparam COUNT_VALUES = 1 << ORDER_CNT_W;                  // COUNT_VALUES = 16 count values
+    reg  [COUNT_VALUES-1:0]             count_hit_onehot;        // COUNT_VALUES = 16 bits: order_count decoded
+    reg  [ORDER_CNT_W*COUNT_VALUES-1:0] count_bit_select;        // ORDER_CNT_W*COUNT_VALUES = 64 bits: next-count bit k if count = c
+    reg  [COUNT_VALUES-1:0]             empty_select;            // COUNT_VALUES = 16 bits: next count is 0 if count = c
+    integer                count_value_idx;
+    integer                count_bit_idx;
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
         input [ORDER_DEPTH-1:0] pointer_onehot;
         input [LSU_PORTS:0]     step_onehot;
@@ -99,15 +106,27 @@ module l1d_bank_order #(
                 join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
         join_cnt_onehot = join_run;
-        count_next_sel  = {ORDER_CNT_W{1'b0}};
-        ring_empty_next = 1'b0;
-        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
-            for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
-                candidate_selected       = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop);
-                count_candidate = order_count + join_count_idx - pop_value_idx;
-                count_next_sel  = count_next_sel | ({ORDER_CNT_W{candidate_selected}} & count_candidate);
-                ring_empty_next = ring_empty_next | (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
-            end
+        // select words from join/pop only (early): bit k of (c + joins - pop) mod 2^ORDER_CNT_W, constants per (c, joins, pop)
+        count_bit_select = {(ORDER_CNT_W*COUNT_VALUES){1'b0}};
+        empty_select     = {COUNT_VALUES{1'b0}};
+        for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
+            for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+                for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
+                    candidate_selected = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop);
+                    count_candidate    = count_value_idx + join_count_idx - pop_value_idx; // constant, wraps like the flop
+                    for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
+                        count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] =
+                            count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] |
+                            (candidate_selected & count_candidate[count_bit_idx]);
+                    empty_select[count_value_idx] = empty_select[count_value_idx] |
+                                                    (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
+                end
+        // the flop value (late) only picks: one-hot decode, then a flat AND-OR
+        for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
+            count_hit_onehot[count_value_idx] = (order_count == count_value_idx);
+        for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
+            count_next_sel[count_bit_idx] = |(count_hit_onehot & count_bit_select[count_bit_idx*COUNT_VALUES +: COUNT_VALUES]);
+        ring_empty_next = |(count_hit_onehot & empty_select);
     end
     always @* begin
         rank_1   = {2'b00, join_now[0]};

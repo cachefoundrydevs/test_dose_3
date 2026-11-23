@@ -1,0 +1,154 @@
+Startpoint: rst (input port clocked by clk)
+Endpoint: slot_used[0]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    1.249    0.000    0.000    0.000 ^ rst (in)
+     1    0.548    3.479    3.615    3.615 v _6788_/Y (AOI21x1_ASAP7_75t_R)
+                   3.479    0.000    3.615 v slot_used[0]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                                     3.615   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                                    10.000 ^ slot_used[0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.880   18.880   library hold time
+                                    18.880   data required time
+---------------------------------------------------------------------------------
+                                    18.880   data required time
+                                    -3.615   data arrival time
+---------------------------------------------------------------------------------
+                                   -15.266   slack (VIOLATED)
+
+
+Startpoint: write_line_data[0] (input port clocked by clk)
+Endpoint: slot_line[1][0]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    0.837    0.000    0.000    0.000 v write_line_data[0] (in)
+     1    0.506    4.980    8.741    8.741 v _9827_/Y (AND4x1_ASAP7_75t_R)
+     1    0.548    5.832   11.911   20.652 v _9828_/Y (AO21x1_ASAP7_75t_R)
+                   5.832    0.000   20.652 v slot_line[1][0]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                    20.652   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                                    10.000 ^ slot_line[1][0]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.666   18.666   library hold time
+                                    18.666   data required time
+---------------------------------------------------------------------------------
+                                    18.666   data required time
+                                   -20.652   data arrival time
+---------------------------------------------------------------------------------
+                                     1.986   slack (MET)
+
+
+Startpoint: write_line_data[10] (input port clocked by clk)
+Endpoint: slot_line[1][10]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    0.837    0.000    0.000    0.000 v write_line_data[10] (in)
+     1    0.506    4.980    8.741    8.741 v _9797_/Y (AND4x1_ASAP7_75t_R)
+     1    0.548    5.832   11.911   20.652 v _9798_/Y (AO21x1_ASAP7_75t_R)
+                   5.832    0.000   20.652 v slot_line[1][10]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                    20.652   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                                    10.000 ^ slot_line[1][10]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.666   18.666   library hold time
+                                    18.666   data required time
+---------------------------------------------------------------------------------
+                                    18.666   data required time
+                                   -20.652   data arrival time
+---------------------------------------------------------------------------------
+                                     1.986   slack (MET)
+
+
+Startpoint: write_line_data[11] (input port clocked by clk)
+Endpoint: slot_line[1][11]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    0.837    0.000    0.000    0.000 v write_line_data[11] (in)
+     1    0.506    4.980    8.741    8.741 v _9793_/Y (AND4x1_ASAP7_75t_R)
+     1    0.548    5.832   11.911   20.652 v _9794_/Y (AO21x1_ASAP7_75t_R)
+                   5.832    0.000   20.652 v slot_line[1][11]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                    20.652   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                                    10.000 ^ slot_line[1][11]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.666   18.666   library hold time
+                                    18.666   data required time
+---------------------------------------------------------------------------------
+                                    18.666   data required time
+                                   -20.652   data arrival time
+---------------------------------------------------------------------------------
+                                     1.986   slack (MET)
+
+
+Startpoint: write_line_data[12] (input port clocked by clk)
+Endpoint: slot_line[1][12]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     2    0.837    0.000    0.000    0.000 v write_line_data[12] (in)
+     1    0.506    4.980    8.741    8.741 v _9788_/Y (AND4x1_ASAP7_75t_R)
+     1    0.548    5.832   11.911   20.652 v _9789_/Y (AO21x1_ASAP7_75t_R)
+                   5.832    0.000   20.652 v slot_line[1][12]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                    20.652   data arrival time
+
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                           10.000   10.000   clock uncertainty
+                            0.000   10.000   clock reconvergence pessimism
+                                    10.000 ^ slot_line[1][12]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                            8.666   18.666   library hold time
+                                    18.666   data required time
+---------------------------------------------------------------------------------
+                                    18.666   data required time
+                                   -20.652   data arrival time
+---------------------------------------------------------------------------------
+                                     1.986   slack (MET)
+
+

@@ -1,0 +1,375 @@
+Startpoint: read_set[2] (input port clocked by clk)
+Endpoint: read_inv_first[3] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     1    1.330    0.000    0.000    0.000 v read_set[2] (in)
+     6    9.627   11.546   13.428   13.428 v _06453_/Y (BUFx6f_ASAP7_75t_R)
+    10    9.528    8.421   15.465   28.893 v _06502_/Y (BUFx12f_ASAP7_75t_R)
+    10    8.274   16.774   19.697   48.590 v _06503_/Y (BUFx3_ASAP7_75t_R)
+    10    6.803   19.889   24.407   72.998 v _06504_/Y (BUFx2_ASAP7_75t_R)
+     1    0.562    9.034   30.132  103.130 v _09810_/Y (OA211x2_ASAP7_75t_R)
+     1    0.930   12.494   33.105  136.235 v _09811_/Y (OR5x1_ASAP7_75t_R)
+     2    1.240   18.782   14.181  150.416 ^ _09873_/Y (AOI221x1_ASAP7_75t_R)
+     3    1.900   11.159   24.791  175.207 ^ _11580_/Y (OA31x2_ASAP7_75t_R)
+     1    0.000    6.066   18.591  193.798 ^ _11947_/Y (AND4x1_ASAP7_75t_R)
+                   6.066    0.000  193.798 ^ read_inv_first[3] (out)
+                                   193.798   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -193.798   data arrival time
+---------------------------------------------------------------------------------
+                                    -3.798   slack (VIOLATED)
+
+
+Startpoint: read_set[0] (input port clocked by clk)
+Endpoint: read_any_invalid (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     1    1.330    0.000    0.000    0.000 v read_set[0] (in)
+     9    7.437    9.680   12.394   12.394 v _06458_/Y (BUFx6f_ASAP7_75t_R)
+    10    5.837   12.889   18.072   30.466 v _06459_/Y (BUFx3_ASAP7_75t_R)
+    10    5.062   15.676   21.020   51.486 v _06525_/Y (BUFx2_ASAP7_75t_R)
+    10    5.719   17.271   22.758   74.244 v _06536_/Y (BUFx2_ASAP7_75t_R)
+     1    0.605   11.486   11.137   85.382 ^ _09760_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.614    7.058   19.771  105.152 ^ _09767_/Y (OA33x2_ASAP7_75t_R)
+     1    0.959   11.934   21.669  126.821 ^ _09782_/Y (AND4x1_ASAP7_75t_R)
+     2    1.232   23.227   16.646  143.468 v _09873_/Y (AOI221x1_ASAP7_75t_R)
+     3    1.901   11.041   25.927  169.394 v _11580_/Y (OA31x2_ASAP7_75t_R)
+     1    0.000    6.134   22.034  191.428 v _11948_/Y (OR4x1_ASAP7_75t_R)
+                   6.134    0.000  191.428 v read_any_invalid (out)
+                                   191.428   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -191.428   data arrival time
+---------------------------------------------------------------------------------
+                                    -1.428   slack (VIOLATED)
+
+
+Startpoint: read_set[0] (input port clocked by clk)
+Endpoint: read_pf_bits[0] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 v input external delay
+     1    1.330    0.000    0.000    0.000 v read_set[0] (in)
+     9    7.437    9.680   12.394   12.394 v _06458_/Y (BUFx6f_ASAP7_75t_R)
+    10    6.003   13.153   18.209   30.604 v _06632_/Y (BUFx3_ASAP7_75t_R)
+    10    5.344   16.345   21.473   52.077 v _06633_/Y (BUFx2_ASAP7_75t_R)
+    10    4.391   14.162   21.222   73.299 v _06634_/Y (BUFx2_ASAP7_75t_R)
+     1    0.646    9.249   28.427  101.726 v _10512_/Y (OA211x2_ASAP7_75t_R)
+     1    0.430    7.224   19.467  121.193 v _10513_/Y (OR3x1_ASAP7_75t_R)
+     1    0.648    9.259   24.693  145.886 v _10514_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.118   16.715  162.601 v _10515_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  177.576 v _10516_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  189.484 v _10580_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  189.484 v read_pf_bits[0] (out)
+                                   189.484   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -189.484   data arrival time
+---------------------------------------------------------------------------------
+                                     0.516   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_pf_bits[1] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _10336_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.648    9.255   25.605  117.052 v _10337_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.714  133.766 v _10338_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.740 v _10339_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.557 v _10352_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.375 v _10382_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.283 v _10441_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.283 v read_pf_bits[1] (out)
+                                   188.283   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.283   data arrival time
+---------------------------------------------------------------------------------
+                                     1.717   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_pf_bits[2] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _10214_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.648    9.255   25.605  117.052 v _10215_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.714  133.766 v _10216_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.740 v _10217_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.557 v _10230_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.375 v _10260_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.283 v _10319_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.283 v read_pf_bits[2] (out)
+                                   188.283   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.283   data arrival time
+---------------------------------------------------------------------------------
+                                     1.717   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_plru_bits[0] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _06729_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.648    9.255   25.605  117.052 v _06730_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.714  133.766 v _06731_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.740 v _06732_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.557 v _06748_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.375 v _06780_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.283 v _06844_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.283 v read_plru_bits[0] (out)
+                                   188.283   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.283   data arrival time
+---------------------------------------------------------------------------------
+                                     1.717   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_plru_bits[1] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _06497_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.648    9.255   25.605  117.052 v _06501_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.714  133.766 v _06506_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.740 v _06507_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.557 v _06540_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.375 v _06600_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.283 v _06718_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.283 v read_plru_bits[1] (out)
+                                   188.283   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.283   data arrival time
+---------------------------------------------------------------------------------
+                                     1.717   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_pf_bits[3] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _11624_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.618    9.178   25.545  116.992 v _11625_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.492  133.484 v _11629_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.458 v _11630_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.276 v _11643_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.093 v _11673_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.002 v _11732_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.002 v read_pf_bits[3] (out)
+                                   188.002   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.002   data arrival time
+---------------------------------------------------------------------------------
+                                     1.998   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_plru_bits[2] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10   10.018   18.079   19.697   32.418 ^ _06468_/Y (BUFx4f_ASAP7_75t_R)
+    10    7.764   18.733   21.704   54.123 ^ _06469_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   34.798   29.924   84.047 ^ _06496_/Y (BUFx2_ASAP7_75t_R)
+     1    0.430   10.099    7.401   91.447 v _10813_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.618    9.178   25.545  116.992 v _10814_/Y (OA211x2_ASAP7_75t_R)
+     1    0.634    6.116   16.492  133.484 v _10818_/Y (OA21x2_ASAP7_75t_R)
+     1    0.634    7.021   14.974  148.458 v _10819_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.022   13.817  162.276 v _10835_/Y (AO21x1_ASAP7_75t_R)
+     1    0.634    7.021   13.817  176.093 v _10867_/Y (AO21x1_ASAP7_75t_R)
+     1    0.000    4.085   11.909  188.002 v _10931_/Y (AO21x1_ASAP7_75t_R)
+                   4.085    0.000  188.002 v read_plru_bits[2] (out)
+                                   188.002   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -188.002   data arrival time
+---------------------------------------------------------------------------------
+                                     1.998   slack (MET)
+
+
+Startpoint: read_set[1] (input port clocked by clk)
+Endpoint: read_inv_first[2] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock network delay (ideal)
+                            0.000    0.000 ^ input external delay
+     2    2.017    0.000    0.000    0.000 ^ read_set[1] (in)
+    10    8.502   11.839   12.722   12.722 ^ _06467_/Y (BUFx6f_ASAP7_75t_R)
+    10    6.732   16.603   19.060   31.782 ^ _06486_/Y (BUFx3_ASAP7_75t_R)
+    10   10.789   24.611   24.076   55.858 ^ _09109_/Y (BUFx3_ASAP7_75t_R)
+     1    0.430    8.770    6.814   62.672 v _09113_/Y (NAND2x1_ASAP7_75t_R)
+     1    0.646    9.249   25.180   87.851 v _09114_/Y (OA211x2_ASAP7_75t_R)
+     1    1.240   11.286   22.352  110.204 v _09115_/Y (OR3x1_ASAP7_75t_R)
+     1    0.888   19.073    8.729  118.933 ^ _09123_/Y (AOI21x1_ASAP7_75t_R)
+     2    1.691   10.335   22.022  140.955 ^ _09137_/Y (AO211x2_ASAP7_75t_R)
+     3    2.629   21.560   28.906  169.861 ^ _11578_/Y (AND4x1_ASAP7_75t_R)
+     1    0.000    5.311   17.506  187.367 ^ _11946_/Y (AND3x1_ASAP7_75t_R)
+                   5.311    0.000  187.367 ^ read_inv_first[2] (out)
+                                   187.367   data arrival time
+
+                   0.000  200.000  200.000   clock clk (rise edge)
+                            0.000  200.000   clock network delay (ideal)
+                          -10.000  190.000   clock uncertainty
+                            0.000  190.000   clock reconvergence pessimism
+                            0.000  190.000   output external delay
+                                   190.000   data required time
+---------------------------------------------------------------------------------
+                                   190.000   data required time
+                                  -187.367   data arrival time
+---------------------------------------------------------------------------------
+                                     2.633   slack (MET)
+
+

@@ -73,6 +73,7 @@ module l1d_bank_order #(
     integer                place_idx;
     reg  [LSU_PORTS:0]     join_cnt_onehot;
     reg  [LSU_PORTS:0]     rank_before_onehot [0:LSU_PORTS-1];
+    reg  [LSU_PORTS:0]     join_run;
     reg  [ORDER_CNT_W-1:0] count_next_sel;
     reg                    ring_empty_next;
     reg  [ORDER_CNT_W-1:0] count_candidate;
@@ -91,27 +92,6 @@ module l1d_bank_order #(
     reg                    count_prefix_hit;                     // order_count[k:0] equals the value of this term
     integer                count_value_idx;
     integer                count_bit_idx;
-    // join logic as flat sums of products of the join inputs (no serial chain), so the mapper keeps the input side
-    // shallow and must keep the flop side (order_count, order_write_onehot) shallow as well
-    localparam JOIN_PATTERNS = 1 << LSU_PORTS;                   // JOIN_PATTERNS = 16 patterns of the join inputs
-    integer                join_pattern_idx;
-    integer                rank_idx;
-    integer                place_rank_idx;                       // rank loop of the place write logic (own always block)
-    reg                    join_pattern_hit;                     // join_now equals the pattern of this term
-    reg  [LSU_PORTS:0]     rank_build;                           // LSU_PORTS+1 = 5 bits: rank one-hot of one port, built here
-    reg  [LSU_PORTS-1:0]          rank_used;                     // LSU_PORTS = 4 bits: a joiner with this rank exists
-    reg  [LSU_PORTS*PORT_W-1:0]   rank_port;                     // LSU_PORTS*PORT_W = 8 bits: port of the joiner with this rank
-    // number of ones in the low pattern_width bits of pattern_value (constant arguments only)
-    function integer join_pattern_ones;
-        input integer pattern_value;
-        input integer pattern_width;
-        integer       pattern_bit;
-        begin
-            join_pattern_ones = 0;
-            for (pattern_bit = 0; pattern_bit < pattern_width; pattern_bit = pattern_bit + 1)
-                join_pattern_ones = join_pattern_ones + ((pattern_value >> pattern_bit) & 1);
-        end
-    endfunction
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
         input [ORDER_DEPTH-1:0] pointer_onehot;
         input [LSU_PORTS:0]     step_onehot;
@@ -123,41 +103,22 @@ module l1d_bank_order #(
         end
     endfunction
     always @* begin
-        // rank of port k = ones among join_now[k-1:0], one-hot; flat decode of the lower join bits
-        // per rank s (inputs only, early): does a joiner with rank s exist, and which port is it
-        rank_used = {LSU_PORTS{1'b0}};
-        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
+        join_run = {{LSU_PORTS{1'b0}}, 1'b1};
         for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
-            rank_build = {(LSU_PORTS+1){1'b0}};
-            for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
-                if (join_pattern_idx < (1 << join_port_idx))
-                    for (rank_idx = 0; rank_idx <= LSU_PORTS; rank_idx = rank_idx + 1)
-                        if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == rank_idx)
-                            rank_build[rank_idx] = rank_build[rank_idx] |
-                                ((join_now & ((1 << join_port_idx) - 1)) == join_pattern_idx);
-            rank_before_onehot[join_port_idx] = rank_build;
-            for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
-                rank_used[rank_idx] = rank_used[rank_idx] | (join_now[join_port_idx] & rank_build[rank_idx]);
-                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
-                    ({PORT_W{join_now[join_port_idx] & rank_build[rank_idx]}} & join_port_idx);
-            end
+            rank_before_onehot[join_port_idx] = join_run;
+            if (join_now[join_port_idx])
+                join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
-        // number of joiners, one-hot; flat decode of all join bits
-        join_cnt_onehot = {(LSU_PORTS+1){1'b0}};
-        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
-            for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
-                if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == join_count_idx)
-                    join_cnt_onehot[join_count_idx] = join_cnt_onehot[join_count_idx] | (join_now == join_pattern_idx);
-        // select words from the inputs only (early), flat over (join pattern, pop): bit k of (c + joins - pop) mod 2^ORDER_CNT_W
+        join_cnt_onehot = join_run;
+        // select words from join/pop only (early): bit k of (c + joins - pop) mod 2^ORDER_CNT_W, constants per (c, joins, pop)
         count_bit_select = {(ORDER_CNT_W*COUNT_VALUES){1'b0}};
         empty_select     = {COUNT_VALUES{1'b0}};
         for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
-            for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
+            for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
                 for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
                     // reset folded in here (early input), so the flop D needs no reset gate after the AND-OR
-                    join_pattern_hit   = (join_now == join_pattern_idx);
-                    candidate_selected = join_pattern_hit & (pop_value_idx ? pop : !pop) & !rst;
-                    count_candidate    = count_value_idx + join_pattern_ones(join_pattern_idx, LSU_PORTS) - pop_value_idx; // constant, wraps like the flop
+                    candidate_selected = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop) & !rst;
+                    count_candidate    = count_value_idx + join_count_idx - pop_value_idx; // constant, wraps like the flop
                     for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
                         count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] =
                             count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] |
@@ -197,17 +158,12 @@ module l1d_bank_order #(
         place_1  = rotate_by_onehot(order_write_onehot, rank_before_onehot[1]);
         place_2  = rotate_by_onehot(order_write_onehot, rank_before_onehot[2]);
         place_3  = rotate_by_onehot(order_write_onehot, rank_before_onehot[3]);
-        // place p takes the joiner of rank s when the write pointer is at p - s: the flop pointer only picks (last)
-        place_write_en   = {ORDER_DEPTH{1'b0}};
-        place_write_port = {(ORDER_DEPTH*PORT_W){1'b0}};
+        place_write_en = ({ORDER_DEPTH{join_now[0]}} & place_0) | ({ORDER_DEPTH{join_now[1]}} & place_1) |
+                         ({ORDER_DEPTH{join_now[2]}} & place_2) | ({ORDER_DEPTH{join_now[3]}} & place_3);
         for (place_idx = 0; place_idx < ORDER_DEPTH; place_idx = place_idx + 1)
-            for (place_rank_idx = 0; place_rank_idx < LSU_PORTS; place_rank_idx = place_rank_idx + 1) begin
-                place_write_en[place_idx] = place_write_en[place_idx] |
-                    (order_write_onehot[(place_idx + ORDER_DEPTH - place_rank_idx) % ORDER_DEPTH] & rank_used[place_rank_idx]);
-                place_write_port[place_idx*PORT_W +: PORT_W] = place_write_port[place_idx*PORT_W +: PORT_W] |
-                    ({PORT_W{order_write_onehot[(place_idx + ORDER_DEPTH - place_rank_idx) % ORDER_DEPTH]}} &
-                     rank_port[place_rank_idx*PORT_W +: PORT_W]);
-            end
+            place_write_port[place_idx*PORT_W +: PORT_W] = ({PORT_W{join_now[1] && place_1[place_idx]}} & 2'd1) |
+                                                           ({PORT_W{join_now[2] && place_2[place_idx]}} & 2'd2) |
+                                                           ({PORT_W{join_now[3] && place_3[place_idx]}} & 2'd3);
     end
     wire [ORDER_CNT_W-1:0] order_count_next;
     assign order_count_next = count_next_sel;

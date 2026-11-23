@@ -1,0 +1,27 @@
+Source SHA: 091b9339dd9fcd03e034726d7931a9f80ce793c9
+Period: 200 ps
+FLOW_HOME: /OpenROAD-flow-scripts/flow
+OPENROAD: /OpenROAD-flow-scripts/flow/../tools/install/OpenROAD/bin/openroad
+unknown 
+Job: timing
+Run: 45127801936
+ASSUMED dual-port SRAM macro timing (not foundry data)
+l1d_macro_data_tdp: 64 x 576, clk->rdata 180.0 ps, setup 50.0 ps, hold 15.0 ps, 60 x 40 um
+l1d_macro_tag_tdp: 64 x 57, clk->rdata 150.0 ps, setup 40.0 ps, hold 15.0 ps, 20 x 12 um
+
+=== l1d_resp_merge at 200 ps (rtl/front/l1d_resp_merge.v; clock=1; children=l1d_arb_rr l1d_fifo) ===
+RESULT l1d_resp_merge: worst setup slack -112.674 ps
+# cache — ASAP7 timing (4-cycle-hit pipeline)
+
+Post-synthesis estimates: ideal clock, no wires, zero I/O delays, 5% clock uncertainty. SRAM models assume data clock-to-output 180 ps and tag 150 ps (defaults of the run); these are not foundry measurements.
+
+Parents include their flattened children. Combinational modules use a virtual clock; their equivalent GHz value is not a measured operating clock. Generic blocks use their own default parameters; the parent rows include instance-specific sizes. The SRAM row uses the dual-port data-macro timing model (assumed, see macros/macro_assumptions.txt), not a synthesized flip-flop RAM.
+
+Effective critical period = target period − worst setup slack; equivalent GHz = 1000 / effective critical period. Setup and uncertainty are included. Passing the workflow means measurement completed, not that every target was met. No post-route frequency or functional/latency compliance is established.
+
+| Module | Target ps | Clock | Worst slack ps | Effective critical ps | Equivalent GHz | Area um² | Result |
+|---|---:|---|---:|---:|---:|---:|---|
+| l1d_resp_merge | 200 | real | -112.674 | 312.674 | 3.1982 | 903 | MISSES |
+
+Raw CSV, input hashes/revision, constraints, synthesis/STA logs, library selections and detailed worst/hold paths are saved in the job artifacts. Review check_setup reports for unconstrained or other coverage warnings.
+

@@ -1,0 +1,57 @@
+Source SHA: 091b9339dd9fcd03e034726d7931a9f80ce793c9
+Period: 200 ps
+FLOW_HOME: /OpenROAD-flow-scripts/flow
+OPENROAD: /OpenROAD-flow-scripts/flow/../tools/install/OpenROAD/bin/openroad
+unknown 
+Job: timing
+Run: 45127801936
+ASSUMED dual-port SRAM macro timing (not foundry data)
+l1d_macro_data_tdp: 64 x 576, clk->rdata 180.0 ps, setup 50.0 ps, hold 15.0 ps, 60 x 40 um
+l1d_macro_tag_tdp: 64 x 57, clk->rdata 150.0 ps, setup 40.0 ps, hold 15.0 ps, 20 x 12 um
+
+=== l1d_sram_tdp at 200 ps (rtl/common/l1d_sram_tdp.v; clock=1; children=-) ===
+43. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s1/l1d_s1_lookup.v
+44. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s1/l1d_mesi_next.v
+45. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s1/l1d_reservation_unit.v
+46. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s2/l1d_resp_gen.v
+47. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s2/l1d_amo_alu.v
+48. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s1/l1d_bank_s1.v
+49. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s2/l1d_bank_s2.v
+50. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/s3/l1d_bank_s3.v
+51. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/arrays/l1d_tag_array.v
+52. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/arrays/l1d_data_array.v
+53. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/arrays/l1d_bank_r.v
+54. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/miss/l1d_mshr_entry.v
+55. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/miss/l1d_mshr.v
+56. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/miss/l1d_mshr_nc.v
+57. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/miss/l1d_victim_cache.v
+58. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/l1d_maint.v
+59. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/bank/l1d_bank.v
+60. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/snoop/l1d_snoop_ctrl.v
+61. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/l2/l1d_l2_port.v
+62. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/top/l1d_prefetch_unit.v
+63. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/rtl/top/l1d_top.v
+64. Executing Verilog-2005 frontend: /__w/test_dose_3/test_dose_3/flow/asap7/l1d_sram_tdp_asap7.v
+65. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+66. Executing HIERARCHY pass (managing design hierarchy).
+67. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_sram_tdp'.
+67.1. Analyzing design hierarchy..
+ERROR: Module `\l1d_sram_tdp_size_not_supported_by_asap7_flow' referenced in module `\l1d_sram_tdp' in cell `\genblk1.g_unsupported.u_err' is not part of the design.
+Elapsed time: 0:00.87[h:]min:sec. CPU time: user 0.83 sys 0.03 (99%). Peak memory: 82372KB.
+make[1]: *** [Makefile:334: do-yosys-canonicalize] Error 1
+make: *** [Makefile:337: /__w/test_dose_3/test_dose_3/timing_results/l1d_sram_tdp/work_l1d_sram_tdp/results/asap7/l1d_sram_tdp/base/1_1_yosys_canonicalize.rtlil] Error 2
+ERROR: l1d_sram_tdp SYNTH_FAIL; see results logs
+# cache — ASAP7 timing (4-cycle-hit pipeline)
+
+Post-synthesis estimates: ideal clock, no wires, zero I/O delays, 5% clock uncertainty. SRAM models assume data clock-to-output 180 ps and tag 150 ps (defaults of the run); these are not foundry measurements.
+
+Parents include their flattened children. Combinational modules use a virtual clock; their equivalent GHz value is not a measured operating clock. Generic blocks use their own default parameters; the parent rows include instance-specific sizes. The SRAM row uses the dual-port data-macro timing model (assumed, see macros/macro_assumptions.txt), not a synthesized flip-flop RAM.
+
+Effective critical period = target period − worst setup slack; equivalent GHz = 1000 / effective critical period. Setup and uncertainty are included. Passing the workflow means measurement completed, not that every target was met. No post-route frequency or functional/latency compliance is established.
+
+| Module | Target ps | Clock | Worst slack ps | Effective critical ps | Equivalent GHz | Area um² | Result |
+|---|---:|---|---:|---:|---:|---:|---|
+| l1d_sram_tdp | 200 | real | — | — | — | — | SYNTH_FAIL |
+
+Raw CSV, input hashes/revision, constraints, synthesis/STA logs, library selections and detailed worst/hold paths are saved in the job artifacts. Review check_setup reports for unconstrained or other coverage warnings.
+

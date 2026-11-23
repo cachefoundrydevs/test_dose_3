@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  golden/l1d_bank_order.v
+hierarchy -top l1d_bank_order
+proc
+flatten
+opt_clean
+rename l1d_bank_order gold
+write_rtlil proof/gold.il

@@ -1,14 +1,14 @@
-`ifndef L1D_PF_SMS_FIFO_V
-`define L1D_PF_SMS_FIFO_V
+`ifndef L1D_PF3_FIFO_V
+`define L1D_PF3_FIFO_V
 `default_nettype none
-module l1d_pf_sms_fifo #(
-    parameter WIDTH = 62,
+module l1d_pf3_fifo #(
+    parameter WIDTH = 79,
     parameter DEPTH = 4
 ) (
     input  wire             clk,
     input  wire             rst,
+    input  wire [WIDTH-1:0] stage_data,
     input  wire             push_valid,
-    input  wire [WIDTH-1:0] push_data,
     input  wire             pop_en,
     output wire             head_valid,
     output wire [WIDTH-1:0] head_data
@@ -28,7 +28,12 @@ module l1d_pf_sms_fifo #(
     assign head_valid = (count_q != {CNT_W{1'b0}});
     assign pop_ok     = pop_en & head_valid;
     assign head_data  = mem_q[rd_ptr_q*WIDTH +: WIDTH];
-    always @(posedge clk) begin : fifo_proc
+    always @(posedge clk) begin : data_proc
+        if (!full) begin
+            mem_q[wr_ptr_q*WIDTH +: WIDTH] <= stage_data;
+        end
+    end
+    always @(posedge clk) begin : ptr_proc
         if (rst) begin
             wr_ptr_q <= {PTR_W{1'b0}};
             rd_ptr_q <= {PTR_W{1'b0}};
@@ -36,7 +41,6 @@ module l1d_pf_sms_fifo #(
         end
         else begin
             if (push_ok) begin
-                mem_q[wr_ptr_q*WIDTH +: WIDTH] <= push_data;
                 wr_ptr_q <= wr_ptr_q + 1'b1;
             end
             if (pop_ok) begin

@@ -1,0 +1,119 @@
+approved + DECL localparam NC_SIZE_W = 3
+approved + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
+approved + DECL localparam CANDIDATES = 2 * NB
+approved + DECL localparam CAND_ADDR_LO = 0
+approved + DECL localparam CAND_SUB_LO = CAND_ADDR_LO + AXI_ADDR_W
+approved + DECL localparam CAND_NC_BIT = CAND_SUB_LO + AXI_SUBID_W
+approved + DECL localparam CAND_UNIQUE_BIT = CAND_NC_BIT + 1
+approved + DECL localparam CAND_MASK_LO = CAND_UNIQUE_BIT + 1
+approved + DECL localparam CAND_DATA_LO = CAND_MASK_LO + MASK_W
+approved + DECL localparam CAND_W = CAND_DATA_LO + LINE_W
+approved + DECL localparam TID_LOW_W = L2_TID_W / 2
+approved + DECL localparam TID_HIGH_W = L2_TID_W - TID_LOW_W
+approved + DECL localparam TID_GROUP_SIZE = 1 << TID_LOW_W
+approved + DECL localparam TID_GROUPS = 1 << TID_HIGH_W
+approved + DECL wire[NB-1:0]read_pick_onehot
+approved + DECL wire[NB-1:0]write_pick_onehot
+approved + DECL wire[CANDIDATES-1:0]cand_pick
+approved + DECL wire[NB*MASK_W-1:0]read_nc_mask_all
+approved + DECL wire[NB*MASK_W-1:0]write_nc_mask_all
+approved + DECL wire[NB*LINE_W-1:0]write_nc_line_all
+approved + DECL wire[CANDIDATES*CAND_W-1:0]cand_fields
+approved + DECL wire[CAND_W*CANDIDATES-1:0]cand_columns
+approved + DECL wire[CAND_W-1:0]sel_cand
+approved + DECL wire[NTID-1:0]tid_free_below
+approved + DECL wire[NTID-1:0]tid_new_onehot
+approved + DECL wire[L2_TID_W*NTID-1:0]tid_index_terms
+approved + DECL wire[L2_TID_W-1:0]tid_new_encoded
+approved + DECL integer tid_slot
+approved + DECL genvar mask_idx
+approved + DECL genvar size_idx
+approved + DECL genvar beat_idx
+approved + DECL genvar cand_idx
+approved + DECL genvar field_bit
+approved + DECL genvar tid_idx
+approved + DECL genvar tid_bit
+approved + DECL wire[TID_GROUPS-1:0]tid_group_all_busy
+approved + DECL wire[TID_GROUPS-1:0]tid_groups_below_busy
+approved + DECL wire[TID_GROUPS-1:0]tid_group_first
+approved + DECL wire[NTID-1:0]tid_lower_in_group_busy
+approved + DECL wire[NTID-1:0]tid_in_group_first
+approved + DECL wire[TID_GROUPS*TID_LOW_W-1:0]tid_group_low_index
+approved + DECL wire take_if_requested
+approved + DECL wire take_if_tid_free
+approved + DECL wire read_turn
+approved + DECL wire write_turn
+approved + DECL wire[NTID-1:0]resp_tid_onehot
+approved + DECL wire[ROUTE_W*NTID-1:0]route_columns
+approved + DECL wire[BEAT_W*NTID-1:0]route_start_columns
+approved + DECL wire[BEAT_W*NTID-1:0]route_end_columns
+approved + DECL wire[NTID-1:0]route_line_read_column
+approved + DECL wire[BEAT_W-1:0]resp_start_beat
+approved + DECL wire[BEAT_W-1:0]resp_end_beat
+approved + DECL wire resp_line_read
+approved + DECL genvar group_idx
+approved + DECL genvar place_idx
+approved + DECL genvar route_bit
+approved + DECL genvar beat_bit
+approved + FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
+approved + LABEL g_tid_group
+approved + LABEL g_lowest_group
+approved + LABEL g_upper_group
+approved + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
+approved + LABEL g_tid_onehot
+approved + LABEL g_first
+approved + LABEL g_rest
+approved + FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
+approved + LABEL g_tid_term
+approved + LABEL g_set
+approved + LABEL g_clear
+approved + FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
+approved + LABEL g_group_place
+approved + FOR for(tid_bit=0;tid_bit<TID_LOW_W;tid_bit=tid_bit+1)
+approved + LABEL g_place_bit
+approved + DECL wire[TID_GROUP_SIZE-1:0]place_terms
+approved + FOR for(place_idx=0;place_idx<TID_GROUP_SIZE;place_idx=place_idx+1)
+approved + LABEL g_place_term
+approved + LABEL g_place_set
+approved + LABEL g_place_clear
+approved + FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
+approved + LABEL g_tid_encode
+approved + DECL wire[TID_GROUPS-1:0]group_terms
+approved + FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
+approved + LABEL g_group_term
+approved + LABEL g_low_bit
+approved + LABEL g_high_set
+approved + LABEL g_high_clear
+approved + FOR for(bank_idx=0;bank_idx<NB;bank_idx=bank_idx+1)
+approved + LABEL g_cand
+approved + DECL wire[OFFSET_W-1:0]read_offset
+approved + DECL wire[NC_SIZE_W-1:0]read_size
+approved + DECL wire[BEAT_W-1:0]write_beat
+approved + FOR for(mask_idx=0;mask_idx<MASK_W;mask_idx=mask_idx+1)
+approved + LABEL g_read_mask
+approved + DECL wire[NC_SIZE_CODES-1:0]ends_after
+approved + FOR for(size_idx=0;size_idx<NC_SIZE_CODES;size_idx=size_idx+1)
+approved + LABEL g_size
+approved + LABEL g_always
+approved + LABEL g_compare
+approved + FOR for(beat_idx=0;beat_idx<AXI_BEATS;beat_idx=beat_idx+1)
+approved + LABEL g_write_beat
+approved + LABEL g_pick_first
+approved + LABEL g_pick_rest
+approved + FOR for(field_bit=0;field_bit<CAND_W;field_bit=field_bit+1)
+approved + LABEL g_pick_bit
+approved + FOR for(cand_idx=0;cand_idx<CANDIDATES;cand_idx=cand_idx+1)
+approved + LABEL g_column
+approved + FOR for(tid_slot=0;tid_slot<NTID;tid_slot=tid_slot+1)
+approved + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
+approved + LABEL g_route_entry
+approved + FOR for(route_bit=0;route_bit<ROUTE_W;route_bit=route_bit+1)
+approved + LABEL g_route_column
+approved + FOR for(beat_bit=0;beat_bit<BEAT_W;beat_bit=beat_bit+1)
+approved + LABEL g_beat_column
+approved + FOR for(route_bit=0;route_bit<ROUTE_W;route_bit=route_bit+1)
+approved + LABEL g_route_read
+approved + FOR for(beat_bit=0;beat_bit<BEAT_W;beat_bit=beat_bit+1)
+approved + LABEL g_beat_read
+names: 134 items golden, 134 items current, 0 differences
+NAMES: PASS

@@ -40,6 +40,16 @@ module l1d_l2_port #(
     localparam [7:0]          LINE_LEN  = AXI_BEATS - 1;
     localparam [L2_MID_W-1:0] MASTER_ID_C = L2_MASTER_ID;
     localparam ROUTE_W   = 2 + BANK_W + AXI_SUBID_W + BEAT_W;
+    localparam NC_SIZE_W       = 3;
+    localparam NC_SIZE_CODES   = 1 << NC_SIZE_W;
+    localparam CANDIDATES      = 2 * NB;
+    localparam CAND_ADDR_LO    = 0;
+    localparam CAND_SUB_LO     = CAND_ADDR_LO + AXI_ADDR_W;
+    localparam CAND_NC_BIT     = CAND_SUB_LO + AXI_SUBID_W;
+    localparam CAND_UNIQUE_BIT = CAND_NC_BIT + 1;
+    localparam CAND_MASK_LO    = CAND_UNIQUE_BIT + 1;
+    localparam CAND_DATA_LO    = CAND_MASK_LO + MASK_W;
+    localparam CAND_W          = CAND_DATA_LO + LINE_W;
     input  wire                        clk;
     input  wire                        rst;
     input  wire [NB-1:0]               bank_read_req_valid;
@@ -133,6 +143,27 @@ module l1d_l2_port #(
     wire                    resp_ready_int;
     reg                     err_pulse_q;
     genvar                  bank_idx;
+    wire [NB-1:0]                read_pick_onehot;
+    wire [NB-1:0]                write_pick_onehot;
+    wire [CANDIDATES-1:0]        cand_pick;
+    wire [NB*MASK_W-1:0]         read_nc_mask_all;
+    wire [NB*MASK_W-1:0]         write_nc_mask_all;
+    wire [NB*LINE_W-1:0]         write_nc_line_all;
+    wire [CANDIDATES*CAND_W-1:0] cand_fields;
+    wire [CAND_W*CANDIDATES-1:0] cand_columns;
+    wire [CAND_W-1:0]            sel_cand;
+    wire [NTID-1:0]              tid_free_below;
+    wire [NTID-1:0]              tid_new_onehot;
+    wire [L2_TID_W*NTID-1:0]     tid_index_terms;
+    wire [L2_TID_W-1:0]          tid_new_encoded;
+    integer                      tid_slot;
+    genvar                       mask_idx;
+    genvar                       size_idx;
+    genvar                       beat_idx;
+    genvar                       cand_idx;
+    genvar                       field_bit;
+    genvar                       tid_idx;
+    genvar                       tid_bit;
     l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_read_rr (
         .clk          (clk),
         .rst          (rst),
@@ -157,6 +188,26 @@ module l1d_l2_port #(
         .lowest_set_index (tid_new),
         .any_set          (tid_any_free)
     );
+    generate
+        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
+            if (tid_idx == 0) begin : g_first
+                assign tid_free_below[tid_idx] = 1'b0;
+            end else begin : g_rest
+                assign tid_free_below[tid_idx] = |tid_free[tid_idx-1:0];
+            end
+            assign tid_new_onehot[tid_idx] = tid_free[tid_idx] & ~tid_free_below[tid_idx];
+            for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
+                if ((tid_idx >> tid_bit) & 1) begin : g_set
+                    assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];
+                end else begin : g_clear
+                    assign tid_index_terms[tid_bit*NTID + tid_idx] = 1'b0;
+                end
+            end
+        end
+        for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_encode
+            assign tid_new_encoded[tid_bit] = |tid_index_terms[tid_bit*NTID +: NTID];
+        end
+    endgenerate
     assign pick_write = write_any & (~read_any | ~last_was_write);
     assign req_take   = ~req_reg_valid & tid_any_free & (read_any | write_any);
     assign read_take  = req_take & ~pick_write;
@@ -169,18 +220,82 @@ module l1d_l2_port #(
         else if (req_take)
             last_was_write <= pick_write;
     end
+    generate
+        for (bank_idx = 0; bank_idx < NB; bank_idx = bank_idx + 1) begin : g_cand
+            wire [OFFSET_W-1:0]  read_offset;
+            wire [NC_SIZE_W-1:0] read_size;
+            wire [BEAT_W-1:0]    write_beat;
+            assign read_offset = bank_read_req_addr[bank_idx*AXI_ADDR_W +: OFFSET_W];
+            assign read_size   = bank_read_req_size[bank_idx*NC_SIZE_W +: NC_SIZE_W];
+            assign write_beat  = (AXI_BEATS > 1) ? bank_write_req_addr[bank_idx*AXI_ADDR_W + AXI_OFF_W +: BEAT_W]
+                                                 : {BEAT_W{1'b0}};
+            for (mask_idx = 0; mask_idx < MASK_W; mask_idx = mask_idx + 1) begin : g_read_mask
+                wire [NC_SIZE_CODES-1:0] ends_after;
+                for (size_idx = 0; size_idx < NC_SIZE_CODES; size_idx = size_idx + 1) begin : g_size
+                    if (mask_idx + 1 <= (1 << size_idx)) begin : g_always
+                        assign ends_after[size_idx] = 1'b1;
+                    end else begin : g_compare
+                        assign ends_after[size_idx] = (read_offset >= mask_idx + 1 - (1 << size_idx));
+                    end
+                end
+                assign read_nc_mask_all[bank_idx*MASK_W + mask_idx] =
+                    (read_offset <= mask_idx) & ends_after[read_size];
+            end
+            for (beat_idx = 0; beat_idx < AXI_BEATS; beat_idx = beat_idx + 1) begin : g_write_beat
+                assign write_nc_line_all[bank_idx*LINE_W + beat_idx*AXI_DATA_W +: AXI_DATA_W] =
+                    (write_beat == beat_idx) ? bank_write_req_data[bank_idx*LINE_W +: AXI_DATA_W] : {AXI_DATA_W{1'b0}};
+                assign write_nc_mask_all[bank_idx*MASK_W + beat_idx*AXI_STRB_W +: AXI_STRB_W] =
+                    (write_beat == beat_idx) ? bank_write_req_strobe[bank_idx*AXI_STRB_W +: AXI_STRB_W] : {AXI_STRB_W{1'b0}};
+            end
+            assign cand_fields[bank_idx*CAND_W + CAND_ADDR_LO +: AXI_ADDR_W] =
+                bank_read_req_addr[bank_idx*AXI_ADDR_W +: AXI_ADDR_W];
+            assign cand_fields[bank_idx*CAND_W + CAND_SUB_LO +: AXI_SUBID_W] =
+                bank_read_req_sub_id[bank_idx*AXI_SUBID_W +: AXI_SUBID_W];
+            assign cand_fields[bank_idx*CAND_W + CAND_NC_BIT] = bank_read_req_non_cacheable[bank_idx];
+            assign cand_fields[bank_idx*CAND_W + CAND_UNIQUE_BIT] =
+                ~bank_read_req_non_cacheable[bank_idx] & bank_read_req_unique[bank_idx];
+            assign cand_fields[bank_idx*CAND_W + CAND_MASK_LO +: MASK_W] =
+                bank_read_req_non_cacheable[bank_idx] ? read_nc_mask_all[bank_idx*MASK_W +: MASK_W] : {MASK_W{1'b1}};
+            assign cand_fields[bank_idx*CAND_W + CAND_DATA_LO +: LINE_W] = {LINE_W{1'b0}};
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_ADDR_LO +: AXI_ADDR_W] =
+                bank_write_req_addr[bank_idx*AXI_ADDR_W +: AXI_ADDR_W];
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_SUB_LO +: AXI_SUBID_W] =
+                bank_write_req_sub_id[bank_idx*AXI_SUBID_W +: AXI_SUBID_W];
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_NC_BIT] = bank_write_req_non_cacheable[bank_idx];
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_UNIQUE_BIT] = 1'b0;
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_MASK_LO +: MASK_W] =
+                bank_write_req_non_cacheable[bank_idx] ? write_nc_mask_all[bank_idx*MASK_W +: MASK_W] : {MASK_W{1'b1}};
+            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_DATA_LO +: LINE_W] =
+                bank_write_req_non_cacheable[bank_idx] ? write_nc_line_all[bank_idx*LINE_W +: LINE_W]
+                                                       : bank_write_req_data[bank_idx*LINE_W +: LINE_W];
+            if (bank_idx == 0) begin : g_pick_first
+                assign read_pick_onehot[bank_idx]  = ~pick_write & (read_grant_onehot[bank_idx]  | ~read_any);
+                assign write_pick_onehot[bank_idx] =  pick_write & (write_grant_onehot[bank_idx] | ~write_any);
+            end else begin : g_pick_rest
+                assign read_pick_onehot[bank_idx]  = ~pick_write & read_grant_onehot[bank_idx];
+                assign write_pick_onehot[bank_idx] =  pick_write & write_grant_onehot[bank_idx];
+            end
+        end
+    endgenerate
+    assign cand_pick = {write_pick_onehot, read_pick_onehot};
+    generate
+        for (field_bit = 0; field_bit < CAND_W; field_bit = field_bit + 1) begin : g_pick_bit
+            for (cand_idx = 0; cand_idx < CANDIDATES; cand_idx = cand_idx + 1) begin : g_column
+                assign cand_columns[field_bit*CANDIDATES + cand_idx] = cand_fields[cand_idx*CAND_W + field_bit];
+            end
+            assign sel_cand[field_bit] = |(cand_pick & cand_columns[field_bit*CANDIDATES +: CANDIDATES]);
+        end
+    endgenerate
     assign sel_bank         = pick_write ? write_grant_bank : read_grant_bank;
-    assign sel_addr         = pick_write ? bank_write_req_addr[write_grant_bank*AXI_ADDR_W +: AXI_ADDR_W]
-                                         : bank_read_req_addr[read_grant_bank*AXI_ADDR_W +: AXI_ADDR_W];
-    assign sel_nc           = pick_write ? bank_write_req_non_cacheable[write_grant_bank] : bank_read_req_non_cacheable[read_grant_bank];
-    assign sel_unique       = ~pick_write & ~sel_nc & bank_read_req_unique[read_grant_bank];
-    assign sel_sub          = pick_write ? bank_write_req_sub_id[write_grant_bank*AXI_SUBID_W +: AXI_SUBID_W]
-                                         : bank_read_req_sub_id[read_grant_bank*AXI_SUBID_W +: AXI_SUBID_W];
-    assign sel_read_size    = bank_read_req_size[read_grant_bank*3 +: 3];
+    assign sel_addr         = sel_cand[CAND_ADDR_LO +: AXI_ADDR_W];
+    assign sel_nc           = sel_cand[CAND_NC_BIT];
+    assign sel_unique       = sel_cand[CAND_UNIQUE_BIT];
+    assign sel_sub          = sel_cand[CAND_SUB_LO +: AXI_SUBID_W];
+    assign sel_beat         = (AXI_BEATS > 1) ? sel_addr[AXI_OFF_W +: BEAT_W] : {BEAT_W{1'b0}};
+    assign sel_read_size    = bank_read_req_size[read_grant_bank*NC_SIZE_W +: NC_SIZE_W];
     assign sel_write_line   = bank_write_req_data[write_grant_bank*LINE_W +: LINE_W];
     assign sel_write_strobe = bank_write_req_strobe[write_grant_bank*AXI_STRB_W +: AXI_STRB_W];
     assign sel_offset       = sel_addr[OFFSET_W-1:0];
-    assign sel_beat         = (AXI_BEATS > 1) ? sel_addr[AXI_OFF_W +: BEAT_W] : {BEAT_W{1'b0}};
     assign nc_write_line = {{(LINE_W - AXI_DATA_W){1'b0}}, sel_write_line[AXI_DATA_W-1:0]} << (sel_beat * AXI_DATA_W);
     assign nc_write_mask = {{(MASK_W - AXI_STRB_W){1'b0}}, sel_write_strobe} << (sel_beat * AXI_STRB_W);
     always @* begin : nc_read_mask_proc
@@ -188,9 +303,9 @@ module l1d_l2_port #(
         for (mask_bit = 0; mask_bit < MASK_W; mask_bit = mask_bit + 1)
             nc_read_mask[mask_bit] = (mask_bit >= sel_offset) && (mask_bit < sel_offset + nc_read_bytes);
     end
-    assign sel_mask  = ~sel_nc ? {MASK_W{1'b1}} : (pick_write ? nc_write_mask : nc_read_mask);
-    assign sel_data  = ~pick_write ? {LINE_W{1'b0}} : (sel_nc ? nc_write_line : sel_write_line);
-    assign sel_pkt   = {sel_unique, sel_addr[L2_ADDR_W-1:0], pick_write, MASTER_ID_C, tid_new, sel_nc, sel_mask, sel_data};
+    assign sel_mask  = sel_cand[CAND_MASK_LO +: MASK_W];
+    assign sel_data  = sel_cand[CAND_DATA_LO +: LINE_W];
+    assign sel_pkt   = {sel_unique, sel_addr[L2_ADDR_W-1:0], pick_write, MASTER_ID_C, tid_new_encoded, sel_nc, sel_mask, sel_data};
     assign sel_route = {pick_write, sel_nc, sel_bank, sel_sub, sel_beat};
     always @(posedge clk) begin : req_reg_valid_proc
         if (rst)
@@ -205,14 +320,15 @@ module l1d_l2_port #(
             req_reg_pkt <= sel_pkt;
     end
     always @(posedge clk) begin : route_write_proc
-        if (req_take)
-            route_table[tid_new] <= sel_route;
+        for (tid_slot = 0; tid_slot < NTID; tid_slot = tid_slot + 1)
+            if (req_take && tid_new_onehot[tid_slot])
+                route_table[tid_slot] <= sel_route;
     end
     always @(posedge clk) begin : tid_busy_proc
         if (rst)
             tid_busy <= {NTID{1'b0}};
         else begin
-            if (req_take)  tid_busy[tid_new]  <= 1'b1;
+            tid_busy <= tid_busy | ({NTID{req_take}} & tid_new_onehot);
             if (resp_take) tid_busy[resp_tid] <= 1'b0;
         end
     end

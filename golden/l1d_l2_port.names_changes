@@ -1,0 +1,63 @@
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid)
++ DECL localparam NC_SIZE_W = 3
++ DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
++ DECL localparam CANDIDATES = 2 * NB
++ DECL localparam CAND_ADDR_LO = 0
++ DECL localparam CAND_SUB_LO = CAND_ADDR_LO + AXI_ADDR_W
++ DECL localparam CAND_NC_BIT = CAND_SUB_LO + AXI_SUBID_W
++ DECL localparam CAND_UNIQUE_BIT = CAND_NC_BIT + 1
++ DECL localparam CAND_MASK_LO = CAND_UNIQUE_BIT + 1
++ DECL localparam CAND_DATA_LO = CAND_MASK_LO + MASK_W
++ DECL localparam CAND_W = CAND_DATA_LO + LINE_W
++ DECL wire[NB-1:0]read_pick_onehot
++ DECL wire[NB-1:0]write_pick_onehot
++ DECL wire[CANDIDATES-1:0]cand_pick
++ DECL wire[NB*MASK_W-1:0]read_nc_mask_all
++ DECL wire[NB*MASK_W-1:0]write_nc_mask_all
++ DECL wire[NB*LINE_W-1:0]write_nc_line_all
++ DECL wire[CANDIDATES*CAND_W-1:0]cand_fields
++ DECL wire[CAND_W*CANDIDATES-1:0]cand_columns
++ DECL wire[CAND_W-1:0]sel_cand
++ DECL wire[NTID-1:0]tid_free_below
++ DECL wire[NTID-1:0]tid_new_onehot
++ DECL wire[L2_TID_W*NTID-1:0]tid_index_terms
++ DECL wire[L2_TID_W-1:0]tid_new_encoded
++ DECL integer tid_slot
++ DECL genvar mask_idx
++ DECL genvar size_idx
++ DECL genvar beat_idx
++ DECL genvar cand_idx
++ DECL genvar field_bit
++ DECL genvar tid_idx
++ DECL genvar tid_bit
++ FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
++ LABEL g_tid_onehot
++ LABEL g_first
++ LABEL g_rest
++ FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
++ LABEL g_tid_term
++ LABEL g_set
++ LABEL g_clear
++ FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
++ LABEL g_tid_encode
++ FOR for(bank_idx=0;bank_idx<NB;bank_idx=bank_idx+1)
++ LABEL g_cand
++ DECL wire[OFFSET_W-1:0]read_offset
++ DECL wire[NC_SIZE_W-1:0]read_size
++ DECL wire[BEAT_W-1:0]write_beat
++ FOR for(mask_idx=0;mask_idx<MASK_W;mask_idx=mask_idx+1)
++ LABEL g_read_mask
++ DECL wire[NC_SIZE_CODES-1:0]ends_after
++ FOR for(size_idx=0;size_idx<NC_SIZE_CODES;size_idx=size_idx+1)
++ LABEL g_size
++ LABEL g_always
++ LABEL g_compare
++ FOR for(beat_idx=0;beat_idx<AXI_BEATS;beat_idx=beat_idx+1)
++ LABEL g_write_beat
++ LABEL g_pick_first
++ LABEL g_pick_rest
++ FOR for(field_bit=0;field_bit<CAND_W;field_bit=field_bit+1)
++ LABEL g_pick_bit
++ FOR for(cand_idx=0;cand_idx<CANDIDATES;cand_idx=cand_idx+1)
++ LABEL g_column
++ FOR for(tid_slot=0;tid_slot<NTID;tid_slot=tid_slot+1)

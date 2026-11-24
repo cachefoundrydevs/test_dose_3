@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid)
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: two-level free tid, early take terms, one-hot route read)
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -9,6 +9,10 @@
 + DECL localparam CAND_MASK_LO = CAND_UNIQUE_BIT + 1
 + DECL localparam CAND_DATA_LO = CAND_MASK_LO + MASK_W
 + DECL localparam CAND_W = CAND_DATA_LO + LINE_W
++ DECL localparam TID_LOW_W = L2_TID_W / 2
++ DECL localparam TID_HIGH_W = L2_TID_W - TID_LOW_W
++ DECL localparam TID_GROUP_SIZE = 1 << TID_LOW_W
++ DECL localparam TID_GROUPS = 1 << TID_HIGH_W
 + DECL wire[NB-1:0]read_pick_onehot
 + DECL wire[NB-1:0]write_pick_onehot
 + DECL wire[CANDIDATES-1:0]cand_pick
@@ -30,6 +34,32 @@
 + DECL genvar field_bit
 + DECL genvar tid_idx
 + DECL genvar tid_bit
++ DECL wire[TID_GROUPS-1:0]tid_group_all_busy
++ DECL wire[TID_GROUPS-1:0]tid_groups_below_busy
++ DECL wire[TID_GROUPS-1:0]tid_group_first
++ DECL wire[NTID-1:0]tid_lower_in_group_busy
++ DECL wire[NTID-1:0]tid_in_group_first
++ DECL wire[TID_GROUPS*TID_LOW_W-1:0]tid_group_low_index
++ DECL wire take_if_requested
++ DECL wire take_if_tid_free
++ DECL wire read_turn
++ DECL wire write_turn
++ DECL wire[NTID-1:0]resp_tid_onehot
++ DECL wire[ROUTE_W*NTID-1:0]route_columns
++ DECL wire[BEAT_W*NTID-1:0]route_start_columns
++ DECL wire[BEAT_W*NTID-1:0]route_end_columns
++ DECL wire[NTID-1:0]route_line_read_column
++ DECL wire[BEAT_W-1:0]resp_start_beat
++ DECL wire[BEAT_W-1:0]resp_end_beat
++ DECL wire resp_line_read
++ DECL genvar group_idx
++ DECL genvar place_idx
++ DECL genvar route_bit
++ DECL genvar beat_bit
++ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
++ LABEL g_tid_group
++ LABEL g_lowest_group
++ LABEL g_upper_group
 + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
 + LABEL g_tid_onehot
 + LABEL g_first
@@ -38,8 +68,23 @@
 + LABEL g_tid_term
 + LABEL g_set
 + LABEL g_clear
++ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
++ LABEL g_group_place
++ FOR for(tid_bit=0;tid_bit<TID_LOW_W;tid_bit=tid_bit+1)
++ LABEL g_place_bit
++ DECL wire[TID_GROUP_SIZE-1:0]place_terms
++ FOR for(place_idx=0;place_idx<TID_GROUP_SIZE;place_idx=place_idx+1)
++ LABEL g_place_term
++ LABEL g_place_set
++ LABEL g_place_clear
 + FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
 + LABEL g_tid_encode
++ DECL wire[TID_GROUPS-1:0]group_terms
++ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
++ LABEL g_group_term
++ LABEL g_low_bit
++ LABEL g_high_set
++ LABEL g_high_clear
 + FOR for(bank_idx=0;bank_idx<NB;bank_idx=bank_idx+1)
 + LABEL g_cand
 + DECL wire[OFFSET_W-1:0]read_offset
@@ -61,3 +106,13 @@
 + FOR for(cand_idx=0;cand_idx<CANDIDATES;cand_idx=cand_idx+1)
 + LABEL g_column
 + FOR for(tid_slot=0;tid_slot<NTID;tid_slot=tid_slot+1)
++ FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
++ LABEL g_route_entry
++ FOR for(route_bit=0;route_bit<ROUTE_W;route_bit=route_bit+1)
++ LABEL g_route_column
++ FOR for(beat_bit=0;beat_bit<BEAT_W;beat_bit=beat_bit+1)
++ LABEL g_beat_column
++ FOR for(route_bit=0;route_bit<ROUTE_W;route_bit=route_bit+1)
++ LABEL g_route_read
++ FOR for(beat_bit=0;beat_bit<BEAT_W;beat_bit=beat_bit+1)
++ LABEL g_beat_read

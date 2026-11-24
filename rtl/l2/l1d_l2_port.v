@@ -50,6 +50,10 @@ module l1d_l2_port #(
     localparam CAND_MASK_LO    = CAND_UNIQUE_BIT + 1;
     localparam CAND_DATA_LO    = CAND_MASK_LO + MASK_W;
     localparam CAND_W          = CAND_DATA_LO + LINE_W;
+    localparam TID_LOW_W       = L2_TID_W / 2;
+    localparam TID_HIGH_W      = L2_TID_W - TID_LOW_W;
+    localparam TID_GROUP_SIZE  = 1 << TID_LOW_W;
+    localparam TID_GROUPS      = 1 << TID_HIGH_W;
     input  wire                        clk;
     input  wire                        rst;
     input  wire [NB-1:0]               bank_read_req_valid;
@@ -164,6 +168,28 @@ module l1d_l2_port #(
     genvar                       field_bit;
     genvar                       tid_idx;
     genvar                       tid_bit;
+    wire [TID_GROUPS-1:0]          tid_group_all_busy;
+    wire [TID_GROUPS-1:0]          tid_groups_below_busy;
+    wire [TID_GROUPS-1:0]          tid_group_first;
+    wire [NTID-1:0]                tid_lower_in_group_busy;
+    wire [NTID-1:0]                tid_in_group_first;
+    wire [TID_GROUPS*TID_LOW_W-1:0] tid_group_low_index;
+    wire                           take_if_requested;
+    wire                           take_if_tid_free;
+    wire                           read_turn;
+    wire                           write_turn;
+    wire [NTID-1:0]                resp_tid_onehot;
+    wire [ROUTE_W*NTID-1:0]        route_columns;
+    wire [BEAT_W*NTID-1:0]         route_start_columns;
+    wire [BEAT_W*NTID-1:0]         route_end_columns;
+    wire [NTID-1:0]                route_line_read_column;
+    wire [BEAT_W-1:0]              resp_start_beat;
+    wire [BEAT_W-1:0]              resp_end_beat;
+    wire                           resp_line_read;
+    genvar                         group_idx;
+    genvar                         place_idx;
+    genvar                         route_bit;
+    genvar                         beat_bit;
     l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_read_rr (
         .clk          (clk),
         .rst          (rst),
@@ -189,13 +215,28 @@ module l1d_l2_port #(
         .any_set          (tid_any_free)
     );
     generate
-        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
-            if (tid_idx == 0) begin : g_first
-                assign tid_free_below[tid_idx] = 1'b0;
-            end else begin : g_rest
-                assign tid_free_below[tid_idx] = |tid_free[tid_idx-1:0];
+        for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_tid_group
+            assign tid_group_all_busy[group_idx] =
+                &tid_busy[group_idx*TID_GROUP_SIZE +: TID_GROUP_SIZE];
+            if (group_idx == 0) begin : g_lowest_group
+                assign tid_groups_below_busy[group_idx] = 1'b1;
+            end else begin : g_upper_group
+                assign tid_groups_below_busy[group_idx] = &tid_group_all_busy[group_idx-1:0];
             end
-            assign tid_new_onehot[tid_idx] = tid_free[tid_idx] & ~tid_free_below[tid_idx];
+            assign tid_group_first[group_idx] = ~tid_group_all_busy[group_idx] & tid_groups_below_busy[group_idx];
+        end
+        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
+            if ((tid_idx % TID_GROUP_SIZE) == 0) begin : g_first
+                assign tid_lower_in_group_busy[tid_idx] = 1'b1;
+            end else begin : g_rest
+                assign tid_lower_in_group_busy[tid_idx] =
+                    &tid_busy[tid_idx - (tid_idx % TID_GROUP_SIZE) +: (tid_idx % TID_GROUP_SIZE)];
+            end
+            assign tid_in_group_first[tid_idx] = tid_free[tid_idx] & tid_lower_in_group_busy[tid_idx];
+            assign tid_free_below[tid_idx]     =
+                ~(tid_lower_in_group_busy[tid_idx] & tid_groups_below_busy[tid_idx / TID_GROUP_SIZE]);
+            assign tid_new_onehot[tid_idx]     =
+                tid_in_group_first[tid_idx] & tid_groups_below_busy[tid_idx / TID_GROUP_SIZE];
             for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
                 if ((tid_idx >> tid_bit) & 1) begin : g_set
                     assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];
@@ -204,16 +245,44 @@ module l1d_l2_port #(
                 end
             end
         end
+        for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_group_place
+            for (tid_bit = 0; tid_bit < TID_LOW_W; tid_bit = tid_bit + 1) begin : g_place_bit
+                wire [TID_GROUP_SIZE-1:0] place_terms;
+                for (place_idx = 0; place_idx < TID_GROUP_SIZE; place_idx = place_idx + 1) begin : g_place_term
+                    if ((place_idx >> tid_bit) & 1) begin : g_place_set
+                        assign place_terms[place_idx] = tid_in_group_first[group_idx*TID_GROUP_SIZE + place_idx];
+                    end else begin : g_place_clear
+                        assign place_terms[place_idx] = 1'b0;
+                    end
+                end
+                assign tid_group_low_index[group_idx*TID_LOW_W + tid_bit] = |place_terms;
+            end
+        end
         for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_encode
-            assign tid_new_encoded[tid_bit] = |tid_index_terms[tid_bit*NTID +: NTID];
+            wire [TID_GROUPS-1:0] group_terms;
+            for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_group_term
+                if (tid_bit < TID_LOW_W) begin : g_low_bit
+                    assign group_terms[group_idx] =
+                        tid_group_first[group_idx] & tid_group_low_index[group_idx*TID_LOW_W + tid_bit];
+                end else if ((group_idx >> (tid_bit - TID_LOW_W)) & 1) begin : g_high_set
+                    assign group_terms[group_idx] = tid_group_first[group_idx];
+                end else begin : g_high_clear
+                    assign group_terms[group_idx] = 1'b0;
+                end
+            end
+            assign tid_new_encoded[tid_bit] = |group_terms;
         end
     endgenerate
     assign pick_write = write_any & (~read_any | ~last_was_write);
     assign req_take   = ~req_reg_valid & tid_any_free & (read_any | write_any);
     assign read_take  = req_take & ~pick_write;
     assign write_take = req_take &  pick_write;
-    assign bank_read_req_ready  = read_take  ? read_grant_onehot  : {NB{1'b0}};
-    assign bank_write_req_ready = write_take ? write_grant_onehot : {NB{1'b0}};
+    assign take_if_requested = ~req_reg_valid & tid_any_free;
+    assign take_if_tid_free  = ~req_reg_valid & (read_any | write_any);
+    assign read_turn         = ~write_any | last_was_write;
+    assign write_turn        = ~read_any | ~last_was_write;
+    assign bank_read_req_ready  = read_grant_onehot  & {NB{take_if_requested & read_turn}};
+    assign bank_write_req_ready = write_grant_onehot & {NB{take_if_requested & write_turn}};
     always @(posedge clk) begin : turn_proc
         if (rst)
             last_was_write <= 1'b0;
@@ -269,11 +338,11 @@ module l1d_l2_port #(
                 bank_write_req_non_cacheable[bank_idx] ? write_nc_line_all[bank_idx*LINE_W +: LINE_W]
                                                        : bank_write_req_data[bank_idx*LINE_W +: LINE_W];
             if (bank_idx == 0) begin : g_pick_first
-                assign read_pick_onehot[bank_idx]  = ~pick_write & (read_grant_onehot[bank_idx]  | ~read_any);
-                assign write_pick_onehot[bank_idx] =  pick_write & (write_grant_onehot[bank_idx] | ~write_any);
+                assign read_pick_onehot[bank_idx]  = (read_grant_onehot[bank_idx] & read_turn) | (~read_any & ~write_any);
+                assign write_pick_onehot[bank_idx] =  write_grant_onehot[bank_idx] & write_turn;
             end else begin : g_pick_rest
-                assign read_pick_onehot[bank_idx]  = ~pick_write & read_grant_onehot[bank_idx];
-                assign write_pick_onehot[bank_idx] =  pick_write & write_grant_onehot[bank_idx];
+                assign read_pick_onehot[bank_idx]  = read_grant_onehot[bank_idx]  & read_turn;
+                assign write_pick_onehot[bank_idx] = write_grant_onehot[bank_idx] & write_turn;
             end
         end
     endgenerate
@@ -321,22 +390,44 @@ module l1d_l2_port #(
     end
     always @(posedge clk) begin : route_write_proc
         for (tid_slot = 0; tid_slot < NTID; tid_slot = tid_slot + 1)
-            if (req_take && tid_new_onehot[tid_slot])
+            if (take_if_tid_free && tid_new_onehot[tid_slot])
                 route_table[tid_slot] <= sel_route;
     end
     always @(posedge clk) begin : tid_busy_proc
         if (rst)
             tid_busy <= {NTID{1'b0}};
-        else begin
-            tid_busy <= tid_busy | ({NTID{req_take}} & tid_new_onehot);
-            if (resp_take) tid_busy[resp_tid] <= 1'b0;
-        end
+        else
+            tid_busy <= (tid_busy | ({NTID{take_if_tid_free}} & tid_new_onehot))
+                      & ~({NTID{resp_take}} & resp_tid_onehot);
     end
     assign l2_req_valid = req_reg_valid;
     assign l2_req_pkt   = req_reg_pkt;
     assign resp_tid       = l2_resp_pkt[TID_LO +: L2_TID_W];
-    assign resp_route     = route_table[resp_tid];
-    assign ans_last       = ans_valid & (ans_is_write | (ans_beat == ans_end_beat));
+    generate
+        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_route_entry
+            assign resp_tid_onehot[tid_idx] = (resp_tid == tid_idx);
+            for (route_bit = 0; route_bit < ROUTE_W; route_bit = route_bit + 1) begin : g_route_column
+                assign route_columns[route_bit*NTID + tid_idx] = route_table[tid_idx][route_bit];
+            end
+            for (beat_bit = 0; beat_bit < BEAT_W; beat_bit = beat_bit + 1) begin : g_beat_column
+                assign route_start_columns[beat_bit*NTID + tid_idx] =
+                    route_table[tid_idx][ROUTE_W-2] & route_table[tid_idx][beat_bit];
+                assign route_end_columns[beat_bit*NTID + tid_idx] =
+                    route_table[tid_idx][ROUTE_W-2] ? route_table[tid_idx][beat_bit] : LAST_BEAT[beat_bit];
+            end
+            assign route_line_read_column[tid_idx] =
+                ~route_table[tid_idx][ROUTE_W-1] & ~route_table[tid_idx][ROUTE_W-2];
+        end
+        for (route_bit = 0; route_bit < ROUTE_W; route_bit = route_bit + 1) begin : g_route_read
+            assign resp_route[route_bit] = |(resp_tid_onehot & route_columns[route_bit*NTID +: NTID]);
+        end
+        for (beat_bit = 0; beat_bit < BEAT_W; beat_bit = beat_bit + 1) begin : g_beat_read
+            assign resp_start_beat[beat_bit] = |(resp_tid_onehot & route_start_columns[beat_bit*NTID +: NTID]);
+            assign resp_end_beat[beat_bit]   = |(resp_tid_onehot & route_end_columns[beat_bit*NTID +: NTID]);
+        end
+    endgenerate
+    assign resp_line_read = |(resp_tid_onehot & route_line_read_column);
+    assign ans_last      = ans_valid & (ans_is_write | (ans_beat == ans_end_beat));
     assign resp_ready_int = ~ans_valid | ans_last;
     assign resp_take      = l2_resp_valid & resp_ready_int;
     always @(posedge clk) begin : ans_ctrl_proc
@@ -355,13 +446,13 @@ module l1d_l2_port #(
         if (resp_take) begin
             ans_is_write <= resp_route[ROUTE_W-1];
             ans_nc       <= resp_route[ROUTE_W-2];
-            ans_shared   <= ~resp_route[ROUTE_W-1] & ~resp_route[ROUTE_W-2] & l2_resp_pkt[US_BIT];
+            ans_shared   <= resp_line_read & l2_resp_pkt[US_BIT];
             ans_bank     <= resp_route[AXI_SUBID_W + BEAT_W +: BANK_W];
             ans_sub      <= resp_route[BEAT_W +: AXI_SUBID_W];
             ans_err      <= l2_resp_err;
             ans_line     <= l2_resp_pkt[LINE_W-1:0];
-            ans_beat     <= resp_route[ROUTE_W-2] ? resp_route[BEAT_W-1:0] : {BEAT_W{1'b0}};
-            ans_end_beat <= resp_route[ROUTE_W-2] ? resp_route[BEAT_W-1:0] : LAST_BEAT;
+            ans_beat     <= resp_start_beat;
+            ans_end_beat <= resp_end_beat;
         end else if (ans_valid && !ans_last) begin
             ans_beat <= ans_beat + 1'b1;
         end

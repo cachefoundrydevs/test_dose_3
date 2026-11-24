@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: two-level free tid, early take terms, one-hot route read)
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: two-level free tid, early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select)
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -13,6 +13,11 @@
 + DECL localparam TID_HIGH_W = L2_TID_W - TID_LOW_W
 + DECL localparam TID_GROUP_SIZE = 1 << TID_LOW_W
 + DECL localparam TID_GROUPS = 1 << TID_HIGH_W
++ DECL localparam TID_DIGIT_W = L2_TID_W / 3
++ DECL localparam TID_QUAD_SIZE = 1 << TID_DIGIT_W
++ DECL localparam TID_QUADS = NTID / TID_QUAD_SIZE
++ DECL localparam TID_BLOCK_SIZE = TID_QUAD_SIZE * TID_QUAD_SIZE
++ DECL localparam TID_BLOCKS = NTID / TID_BLOCK_SIZE
 + DECL wire[NB-1:0]read_pick_onehot
 + DECL wire[NB-1:0]write_pick_onehot
 + DECL wire[CANDIDATES-1:0]cand_pick
@@ -56,14 +61,36 @@
 + DECL genvar place_idx
 + DECL genvar route_bit
 + DECL genvar beat_bit
++ DECL wire[TID_QUADS-1:0]tid_quad_free
++ DECL wire[TID_QUADS-1:0]tid_quads_below_free
++ DECL wire[TID_BLOCKS-1:0]tid_block_free
++ DECL wire[TID_BLOCKS-1:0]tid_blocks_below_free
++ DECL wire[NTID-1:0]tid_bits_below_free
++ DECL wire[NTID-1:0]tid_take_early
++ DECL wire[NTID-1:0]tid_take_onehot
++ DECL wire no_request
++ DECL wire[CAND_W-1:0]read_grant_value
++ DECL wire[CAND_W-1:0]write_grant_value
++ DECL genvar quad_idx
++ DECL genvar block_idx
 + FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
 + LABEL g_tid_group
 + LABEL g_lowest_group
 + LABEL g_upper_group
++ FOR for(quad_idx=0;quad_idx<TID_QUADS;quad_idx=quad_idx+1)
++ LABEL g_tid_quad
++ LABEL g_block_first
++ LABEL g_block_rest
++ FOR for(block_idx=0;block_idx<TID_BLOCKS;block_idx=block_idx+1)
++ LABEL g_tid_block
++ LABEL g_lowest_block
++ LABEL g_upper_block
 + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
 + LABEL g_tid_onehot
 + LABEL g_first
 + LABEL g_rest
++ LABEL g_quad_first
++ LABEL g_quad_rest
 + FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
 + LABEL g_tid_term
 + LABEL g_set

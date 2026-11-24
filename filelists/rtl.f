@@ -29,6 +29,7 @@ rtl/prefetch56/l1d_pf3_rank_low.v
 rtl/prefetch56/l1d_pf3_rank.v
 rtl/front/l1d_bank_order.v
 rtl/front/l1d_port_front.v
+rtl/front/l1d_front_s0.v
 rtl/front/l1d_resp_merge.v
 rtl/bank/fifo/l1d_snoop_buf.v
 rtl/bank/fifo/l1d_vec_store_buf.v

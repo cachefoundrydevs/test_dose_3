@@ -1,13 +1,106 @@
+// ============================================================================
+// l1d_l2_port.v  -  the cache's one connection to the L2 (packet port, cache_v5)
+// ============================================================================
+// IN SIMPLE WORDS
+//   Every bank wants to read lines from the L2 (refills), write lines back (victim write-backs) and do single
+//   non-cacheable (NC) accesses. There is ONE request wire bundle and ONE response wire bundle to the L2. This block
+//   shares them, like a post office with one counter:
+//     - REQUEST : each bank offers at most one read and one write. A round-robin picks a bank; reads and writes take
+//                 turns when both wait. The chosen request gets a free transaction number (tid), is packed into one
+//                 packet and held in the request register until the L2 takes it (l2_req_ready).
+//     - RESPONSE: the L2 answers each request once, with the same tid. The tid tells which bank and which MSHR entry or
+//                 victim slot the answer belongs to (route table). A line read is handed to the bank as AXI_BEATS beats
+//                 (one per cycle, the bank's MSHR collects them); a write answer is one cycle.
+//   No AXI here (user decision 2026-11-05: no AXI signals inside the D-cache). AXI exists only in the dummy L2
+//   (../../dummy_l2/l2_pkt_axi_bridge.v), which turns these packets into AXI for the test memory.
+//
+// WHERE IT SITS
+//   Parent: l1d_top (instance u_l2_port). Not a pipeline stage: a miss already left the bank pipeline when it asks here.
+//   Built from cache_v1_4's l1d_l2_port (same request / response logic); the bank side keeps cache_v2_bank_pipe's names so
+//   the banks connect unchanged; v5 adds the unique / shared bit `us` and the replay-busy output below.
+//
+// PACKET (packet v2 + 1 bit, MSB first, L2_PKT_W = 643 bits at the defaults)
+//   us 1 | address 56 | rw 1 | master id 2 | trans id 6 | nc 1 | byte mask 64 | data 512
+//   us in a request : 1 = read the line UNIQUE (store, LR, SC, AMO; was ARUSER[0] in cache_v2_bank_pipe)
+//   us in a response: 1 = another cache keeps a copy, install the line SHARED (was RUSER[0])
+//   line read : mask all ones, data 0          line write: mask all ones, data = the line
+//   NC read   : mask = the 1 / 2 / 4 / 8 bytes NC write  : the same mask; data = the NC beat at its place in the line
+//
+// WHY refill_replay_busy (new in v5, README section 5)
+//   The L2 sends a whole line in one packet, but the bank's MSHR takes it as AXI_BEATS beats over AXI_BEATS cycles. A snoop
+//   to that line, handled in the bank while the beats are still coming, would see the MSHR entry "without data" and answer
+//   "not present" although the line is about to be installed (a stale copy). The L2 contract (no response for a line while
+//   a snoop on it is open) cannot cover this, because the beats are inside the cache. So while this block is handing a
+//   line to bank b, refill_replay_busy[b] = 1 and bank b does not start a snoop (same hold as an AMO read in flight).
+//   The hold lasts at most AXI_BEATS cycles (the bank always takes a beat), so it is bounded (rule S-1).
+//
+// PARAMETERS (defaults in brackets)
+//   the cache parameters `L1D_PARAMS (NUM_BANKS 4, LINE_BYTES 64, AXI_DATA_W 128 = beat width inside the cache, ...)
+//   L2_ADDR_W    [56] packet address bits (Rev K physical address)
+//   L2_MID_W     [2]  packet master id bits
+//   L2_TID_W     [6]  packet transaction id bits (64 tids)
+//   L2_MASTER_ID [0]  master id this cache puts in every request
+//
+// PORTS (direction, width at the defaults, meaning)
+//   clk, rst                          in  1     clock; synchronous reset, active high
+//   bank_read_req_valid               in  4     one bit per bank: it offers a read
+//   bank_read_req_ready               out 4     one bit per bank: its read was taken this cycle
+//   bank_read_req_addr                in  4x64  read address of each bank
+//   bank_read_req_burst_len           in  4x8   beats - 1 of each read (checked only, see EXCEPTIONS)
+//   bank_read_req_size                in  4x3   bytes of an NC read as a power of two
+//   bank_read_req_sub_id              in  4x2   MSHR entry / NC queue place of each read
+//   bank_read_req_non_cacheable       in  4     NC flag of each read
+//   bank_read_req_unique              in  4     the read wants the line unique
+//   bank_read_data_valid              out 4     one bit per bank: a read beat for it this cycle
+//   bank_read_data_sub_id, _non_cacheable, bank_read_data (128), _last, _error, _shared   out  the beat and its route
+//   bank_write_req_valid / _ready / _addr / _burst_len / _size / _sub_id / _non_cacheable / _data (4x512) / _strobe (4x16)
+//   bank_write_resp_valid (4) / _sub_id / _non_cacheable / _error                          out  the write answer
+//   bank_refill_replay_busy           out 4     a line is being handed to the bank (hold snoops)
+//   l2_error_pulse                    out 1     an answer came with l2_resp_err = 1
+//   l2_req_valid / l2_req_ready / l2_req_pkt (643)     request packet, valid / ready
+//   l2_resp_valid / l2_resp_ready / l2_resp_pkt (643) / l2_resp_err   response packet, valid / ready, error flag
+//
+// WORKED EXAMPLE
+//   Bank 2, MSHR entry 1, misses on line 0x...1080 for a store. Cycle t: bank_read_req_valid[2] = 1, unique = 1; tid 0 is
+//   free, so the packet {us 1, addr 0x..1080, rw 0, mid 0, tid 0, nc 0, mask all ones, data 0} goes into the request
+//   register and route[0] = {read, line, bank 2, sub 1, beat 0}. The L2 answers tid 0 with the line and us = 0 at cycle u.
+//   Cycles u+1 .. u+4: bank_read_data_valid[2] = 1 with beats 0..3, last on beat 3, sub id 1; bank_refill_replay_busy[2] = 1.
+//
+// WAIT BOUNDS (DESIGN_RULES S-1)
+//   a bank waits at most NUM_BANKS - 1 grants of the same class (round robin); a read waits at most 1 write grant and a
+//   write 1 read grant (turns); a request without a free tid waits until one answer comes back (the L2 always answers;
+//   at the defaults up to NUM_BANKS * (MSHR_ENTRIES + VC_SLOTS + MSHR_NC_ENTRIES) = 4 * 18 = 72 requests could be out, more
+//   than the 64 tids, so this wait can happen but is bounded); the request register waits for l2_req_ready (the L2's bound).
+//
+// ASSUMPTIONS (V-9.2)
+//   - A bank holds its read / write request until it sees *_ready (as for cache_v2_bank_pipe's AXI master).
+//   - The L2 answers every request exactly once, with the request's tid, and keeps the snoop contract (README section 5).
+//   - At most 2**L2_TID_W requests are out at once; with fewer free tids a request simply waits for one (no loss).
+//   - PA[AXI_ADDR_W-1:L2_ADDR_W] of every request is 0 (Rev K PA is 56 bits); reported under L1D_DEBUG.
+//   - A bank always takes a beat (the old RREADY = 1).
+//
+// EXCEPTIONS (written reason, CODING_RULES V-5.23)
+//   bank_read_req_burst_len, bank_write_req_burst_len and bank_write_req_size are not used for the packet (a line is always
+//   AXI_BEATS beats, an NC write is described by its strobes). They are kept so the bank side is the same as
+//   cache_v2_bank_pipe's and the banks connect unchanged; they are checked under L1D_DEBUG.
+//
+// TIMING [Estimate, not timed]: request: bank request -> round robin (4) -> 4:1 field mux -> NC mask / beat shift ->
+//   request register: about 10 to 12 levels. Response: route table read (64:1 of 8 bits) -> answer register: about 7.
+//   Free tid: 64-bit lowest-free encoder, about 6 levels. Off every promised-cycle path (rule GR-1 applies to the hit path).
+// ============================================================================
+
 `ifndef L1D_L2_PORT_V
 `define L1D_L2_PORT_V
+
 `default_nettype none
 `include "l1d_defines.vh"
+
 module l1d_l2_port #(
-    `L1D_PARAMS,
-    parameter L2_ADDR_W    = 56,
-    parameter L2_MID_W     = 2,
-    parameter L2_TID_W     = 6,
-    parameter L2_MASTER_ID = 0
+    `L1D_PARAMS,                       // the cache parameters (l1d_defines.vh), defaults: 4 banks, 64 B lines, 128-bit beats
+    parameter L2_ADDR_W    = 56,       // default 56: packet address bits (Rev K physical address)
+    parameter L2_MID_W     = 2,        // default 2:  packet master id bits
+    parameter L2_TID_W     = 6,        // default 6:  packet transaction id bits (64 tids)
+    parameter L2_MASTER_ID = 0         // default 0:  master id this cache puts in every request
 ) (
     clk, rst,
     bank_read_req_valid, bank_read_req_ready, bank_read_req_addr, bank_read_req_burst_len, bank_read_req_size,
@@ -24,195 +117,142 @@ module l1d_l2_port #(
 );
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
-    localparam NB        = NUM_BANKS;
-    localparam MASK_W    = LINE_BYTES;
-    localparam L2_PKT_W  = 1 + L2_ADDR_W + 1 + L2_MID_W + L2_TID_W + 1 + MASK_W + LINE_W;
-    localparam MASK_LO   = LINE_W;
-    localparam NC_LO     = MASK_LO + MASK_W;
-    localparam TID_LO    = NC_LO + 1;
-    localparam MID_LO    = TID_LO + L2_TID_W;
-    localparam RW_LO     = MID_LO + L2_MID_W;
-    localparam ADDR_LO   = RW_LO + 1;
-    localparam US_BIT    = ADDR_LO + L2_ADDR_W;
-    localparam NTID      = 1 << L2_TID_W;
-    localparam APAD_W    = AXI_ADDR_W - L2_ADDR_W;
-    localparam [BEAT_W-1:0]   LAST_BEAT = AXI_BEATS - 1;
-    localparam [7:0]          LINE_LEN  = AXI_BEATS - 1;
-    localparam [L2_MID_W-1:0] MASTER_ID_C = L2_MASTER_ID;
-    localparam ROUTE_W   = 2 + BANK_W + AXI_SUBID_W + BEAT_W;
-    localparam NC_SIZE_W       = 3;
-    localparam NC_SIZE_CODES   = 1 << NC_SIZE_W;
-    localparam CANDIDATES      = 2 * NB;
-    localparam CAND_ADDR_LO    = 0;
-    localparam CAND_SUB_LO     = CAND_ADDR_LO + AXI_ADDR_W;
-    localparam CAND_NC_BIT     = CAND_SUB_LO + AXI_SUBID_W;
-    localparam CAND_UNIQUE_BIT = CAND_NC_BIT + 1;
-    localparam CAND_MASK_LO    = CAND_UNIQUE_BIT + 1;
-    localparam CAND_DATA_LO    = CAND_MASK_LO + MASK_W;
-    localparam CAND_W          = CAND_DATA_LO + LINE_W;
-    localparam TID_DIGIT_W     = L2_TID_W / 3;
-    localparam TID_QUAD_SIZE   = 1 << TID_DIGIT_W;
-    localparam TID_QUADS       = NTID / TID_QUAD_SIZE;
-    localparam TID_BLOCK_SIZE  = TID_QUAD_SIZE * TID_QUAD_SIZE;
-    localparam TID_BLOCKS      = NTID / TID_BLOCK_SIZE;
-    localparam TID_QUAD_DIGIT_LO  = TID_DIGIT_W;
-    localparam TID_BLOCK_DIGIT_LO = 2 * TID_DIGIT_W;
-    input  wire                        clk;
-    input  wire                        rst;
-    input  wire [NB-1:0]               bank_read_req_valid;
-    output wire [NB-1:0]               bank_read_req_ready;
-    input  wire [NB*AXI_ADDR_W-1:0]    bank_read_req_addr;
-    input  wire [NB*8-1:0]             bank_read_req_burst_len;
-    input  wire [NB*3-1:0]             bank_read_req_size;
-    input  wire [NB*AXI_SUBID_W-1:0]   bank_read_req_sub_id;
-    input  wire [NB-1:0]               bank_read_req_non_cacheable;
-    input  wire [NB-1:0]               bank_read_req_unique;
-    output wire [NB-1:0]               bank_read_data_valid;
-    output wire [AXI_SUBID_W-1:0]      bank_read_data_sub_id;
-    output wire                        bank_read_data_non_cacheable;
-    output wire [AXI_DATA_W-1:0]       bank_read_data;
-    output wire                        bank_read_data_last;
-    output wire                        bank_read_data_error;
-    output wire                        bank_read_data_shared;
-    input  wire [NB-1:0]               bank_write_req_valid;
-    output wire [NB-1:0]               bank_write_req_ready;
-    input  wire [NB*AXI_ADDR_W-1:0]    bank_write_req_addr;
-    input  wire [NB*8-1:0]             bank_write_req_burst_len;
-    input  wire [NB*3-1:0]             bank_write_req_size;
-    input  wire [NB*AXI_SUBID_W-1:0]   bank_write_req_sub_id;
-    input  wire [NB-1:0]               bank_write_req_non_cacheable;
-    input  wire [NB*LINE_W-1:0]        bank_write_req_data;
-    input  wire [NB*AXI_STRB_W-1:0]    bank_write_req_strobe;
-    output wire [NB-1:0]               bank_write_resp_valid;
-    output wire [AXI_SUBID_W-1:0]      bank_write_resp_sub_id;
-    output wire                        bank_write_resp_non_cacheable;
-    output wire                        bank_write_resp_error;
-    output wire [NB-1:0]               bank_refill_replay_busy;
-    output wire                        l2_error_pulse;
-    output wire                        l2_req_valid;
-    input  wire                        l2_req_ready;
-    output wire [L2_PKT_W-1:0]         l2_req_pkt;
-    input  wire                        l2_resp_valid;
-    output wire                        l2_resp_ready;
-    input  wire [L2_PKT_W-1:0]         l2_resp_pkt;
-    input  wire                        l2_resp_err;
-    wire [NB-1:0]           read_grant_onehot;
-    wire [BANK_W-1:0]       read_grant_bank;
-    wire                    read_any;
-    wire [NB-1:0]           write_grant_onehot;
-    wire [BANK_W-1:0]       write_grant_bank;
-    wire                    write_any;
-    wire                    pick_write;
-    wire                    req_take;
-    wire                    read_take;
-    wire                    write_take;
-    reg                     last_was_write;
-    reg  [NTID-1:0]         tid_busy;
-    wire [NTID-1:0]         tid_free;
-    wire [L2_TID_W-1:0]     tid_new;
-    wire                    tid_any_free;
-    wire [BANK_W-1:0]       sel_bank;
-    wire [AXI_ADDR_W-1:0]   sel_addr;
-    wire                    sel_nc;
-    wire                    sel_unique;
-    wire [AXI_SUBID_W-1:0]  sel_sub;
-    wire [2:0]              sel_read_size;
-    wire [LINE_W-1:0]       sel_write_line;
-    wire [AXI_STRB_W-1:0]   sel_write_strobe;
-    wire [OFFSET_W-1:0]     sel_offset;
-    wire [BEAT_W-1:0]       sel_beat;
-    wire [LINE_W-1:0]       nc_write_line;
-    wire [MASK_W-1:0]       nc_write_mask;
-    reg  [MASK_W-1:0]       nc_read_mask;
-    wire [MASK_W-1:0]       sel_mask;
-    wire [LINE_W-1:0]       sel_data;
-    wire [L2_PKT_W-1:0]     sel_pkt;
-    wire [ROUTE_W-1:0]      sel_route;
-    integer                 nc_read_bytes;
-    integer                 mask_bit;
-    reg                     req_reg_valid;
-    reg  [L2_PKT_W-1:0]     req_reg_pkt;
-    reg  [ROUTE_W-1:0]      route_table [0:NTID-1];
-    wire [L2_TID_W-1:0]     resp_tid;
-    wire [ROUTE_W-1:0]      resp_route;
-    wire                    resp_take;
-    reg                     ans_valid;
-    reg                     ans_is_write;
-    reg                     ans_nc;
-    reg                     ans_shared;
-    reg  [BANK_W-1:0]       ans_bank;
-    reg  [AXI_SUBID_W-1:0]  ans_sub;
-    reg                     ans_err;
-    reg  [LINE_W-1:0]       ans_line;
-    reg  [BEAT_W-1:0]       ans_beat;
-    reg  [BEAT_W-1:0]       ans_end_beat;
-    wire                    ans_last;
-    wire                    resp_ready_int;
-    reg                     err_pulse_q;
+
+    // ---------------- sizes and packet field positions ----------------
+    localparam NB        = NUM_BANKS;                                                       // 4 banks
+    localparam MASK_W    = LINE_BYTES;                                                      // 64 bits, one per byte of the line
+    localparam L2_PKT_W  = 1 + L2_ADDR_W + 1 + L2_MID_W + L2_TID_W + 1 + MASK_W + LINE_W;  // 1+56+1+2+6+1+64+512 = 643 bits
+    localparam MASK_LO   = LINE_W;                                                          // 512: byte mask starts here
+    localparam NC_LO     = MASK_LO + MASK_W;                                                // 576: nc bit
+    localparam TID_LO    = NC_LO + 1;                                                       // 577: trans id starts here
+    localparam MID_LO    = TID_LO + L2_TID_W;                                               // 583: master id starts here
+    localparam RW_LO     = MID_LO + L2_MID_W;                                               // 585: rw bit
+    localparam ADDR_LO   = RW_LO + 1;                                                       // 586: address starts here
+    localparam US_BIT    = ADDR_LO + L2_ADDR_W;                                             // 642: unique / shared bit (MSB)
+    localparam NTID      = 1 << L2_TID_W;                                                   // 64 tids
+    localparam APAD_W    = AXI_ADDR_W - L2_ADDR_W;                                          // 8 address bits above the packet address
+    localparam [BEAT_W-1:0]   LAST_BEAT = AXI_BEATS - 1;                                    // 3: last beat of a line
+    localparam [7:0]          LINE_LEN  = AXI_BEATS - 1;                                    // 3: beats - 1 of a line (debug check only)
+    localparam [L2_MID_W-1:0] MASTER_ID_C = L2_MASTER_ID;                                   // master id, 2 bits
+    // route of a request, written at its tid: {is_write, is_nc, bank, sub id, beat}
+    localparam ROUTE_W   = 2 + BANK_W + AXI_SUBID_W + BEAT_W;                               // 2+2+2+2 = 8 bits
+
+    // ---------------- ports ----------------
+    input  wire                        clk;                            // clock: all registers change on its rising edge
+    input  wire                        rst;                            // synchronous reset, active high
+    // banks: read requests
+    input  wire [NB-1:0]               bank_read_req_valid;            // NB = 4 bits: bank offers a read
+    output wire [NB-1:0]               bank_read_req_ready;            // 4 bits: its read was taken this cycle
+    input  wire [NB*AXI_ADDR_W-1:0]    bank_read_req_addr;             // NB*AXI_ADDR_W = 256 bits: read address per bank
+    input  wire [NB*8-1:0]             bank_read_req_burst_len;        // 32 bits: beats - 1 per bank (debug check only)
+    input  wire [NB*3-1:0]             bank_read_req_size;             // 12 bits: NC read size (power of two bytes)
+    input  wire [NB*AXI_SUBID_W-1:0]   bank_read_req_sub_id;           // NB*AXI_SUBID_W = 8 bits: MSHR entry / NC place
+    input  wire [NB-1:0]               bank_read_req_non_cacheable;    // 4 bits: NC read
+    input  wire [NB-1:0]               bank_read_req_unique;           // 4 bits: read the line unique (packet bit us)
+    // banks: read data (shared beat bus, one valid per bank)
+    output wire [NB-1:0]               bank_read_data_valid;           // 4 bits: a beat for this bank
+    output wire [AXI_SUBID_W-1:0]      bank_read_data_sub_id;          // AXI_SUBID_W = 2 bits: MSHR entry / NC place
+    output wire                        bank_read_data_non_cacheable;   // the beat answers an NC read
+    output wire [AXI_DATA_W-1:0]       bank_read_data;                 // AXI_DATA_W = 128 bits: the beat
+    output wire                        bank_read_data_last;            // last beat of the answer
+    output wire                        bank_read_data_error;           // the answer came with an error
+    output wire                        bank_read_data_shared;          // another cache keeps the line (install S)
+    // banks: write requests
+    input  wire [NB-1:0]               bank_write_req_valid;           // 4 bits: bank offers a write
+    output wire [NB-1:0]               bank_write_req_ready;           // 4 bits: its write was taken this cycle
+    input  wire [NB*AXI_ADDR_W-1:0]    bank_write_req_addr;            // 256 bits: write address per bank
+    input  wire [NB*8-1:0]             bank_write_req_burst_len;       // 32 bits: not used (debug check only)
+    input  wire [NB*3-1:0]             bank_write_req_size;            // 12 bits: not used (debug check only)
+    input  wire [NB*AXI_SUBID_W-1:0]   bank_write_req_sub_id;          // 8 bits: victim slot / NC place
+    input  wire [NB-1:0]               bank_write_req_non_cacheable;   // 4 bits: NC write
+    input  wire [NB*LINE_W-1:0]        bank_write_req_data;            // NB*LINE_W = 2048 bits: the line (NC: beat in the low bits)
+    input  wire [NB*AXI_STRB_W-1:0]    bank_write_req_strobe;          // NB*AXI_STRB_W = 64 bits: NC write byte strobes
+    // banks: write answers
+    output wire [NB-1:0]               bank_write_resp_valid;          // 4 bits: a write answer for this bank
+    output wire [AXI_SUBID_W-1:0]      bank_write_resp_sub_id;         // 2 bits: victim slot / NC place
+    output wire                        bank_write_resp_non_cacheable;  // the answer is for an NC write
+    output wire                        bank_write_resp_error;          // the answer came with an error
+    // banks: snoop hold while a line is handed over (see header)
+    output wire [NB-1:0]               bank_refill_replay_busy;        // 4 bits: a line is being handed to this bank
+    // status
+    output wire                        l2_error_pulse;                 // one cycle: an answer came with l2_resp_err = 1
+    // L2 packet port
+    output wire                        l2_req_valid;                   // a request packet is offered
+    input  wire                        l2_req_ready;                   // the L2 takes it
+    output wire [L2_PKT_W-1:0]         l2_req_pkt;                     // L2_PKT_W = 643 bits
+    input  wire                        l2_resp_valid;                  // a response packet is offered
+    output wire                        l2_resp_ready;                  // this block takes it
+    input  wire [L2_PKT_W-1:0]         l2_resp_pkt;                    // 643 bits
+    input  wire                        l2_resp_err;                    // the response is an error
+
+    // ======================================================================
+    // Declarations
+    // ======================================================================
+    // round-robin choice among the banks
+    wire [NB-1:0]           read_grant_onehot;     // 4 bits: bank whose read is next
+    wire [BANK_W-1:0]       read_grant_bank;       // BANK_W = 2 bits: its number
+    wire                    read_any;              // some bank offers a read
+    wire [NB-1:0]           write_grant_onehot;    // 4 bits: bank whose write is next
+    wire [BANK_W-1:0]       write_grant_bank;      // 2 bits: its number
+    wire                    write_any;             // some bank offers a write
+    wire                    pick_write;            // this cycle's request is a write
+    wire                    req_take;              // a request is taken into the request register this cycle
+    wire                    read_take;             // ... and it is a read
+    wire                    write_take;            // ... and it is a write
+    reg                     last_was_write;        // the last request taken was a write (reads and writes take turns)
+    // transaction ids
+    reg  [NTID-1:0]         tid_busy;              // NTID = 64 bits: tid in use
+    wire [NTID-1:0]         tid_free;              // 64 bits: tid free
+    wire [L2_TID_W-1:0]     tid_new;               // 6 bits: lowest free tid
+    wire                    tid_any_free;          // a tid is free
+    // fields of the chosen request
+    wire [BANK_W-1:0]       sel_bank;              // 2 bits
+    wire [AXI_ADDR_W-1:0]   sel_addr;              // 64 bits
+    wire                    sel_nc;                // non-cacheable
+    wire                    sel_unique;            // line read wanted unique
+    wire [AXI_SUBID_W-1:0]  sel_sub;               // 2 bits: MSHR entry / victim slot / NC place
+    wire [2:0]              sel_read_size;         // NC read size
+    wire [LINE_W-1:0]       sel_write_line;        // 512 bits: write line (NC: beat in the low bits)
+    wire [AXI_STRB_W-1:0]   sel_write_strobe;      // 16 bits: NC write strobes
+    wire [OFFSET_W-1:0]     sel_offset;            // 6 bits: byte offset in the line
+    wire [BEAT_W-1:0]       sel_beat;              // 2 bits: beat of the address
+    wire [LINE_W-1:0]       nc_write_line;         // 512 bits: NC write beat at its place in the line
+    wire [MASK_W-1:0]       nc_write_mask;         // 64 bits: NC write mask
+    reg  [MASK_W-1:0]       nc_read_mask;          // 64 bits: NC read mask
+    wire [MASK_W-1:0]       sel_mask;              // 64 bits: packet mask
+    wire [LINE_W-1:0]       sel_data;              // 512 bits: packet data
+    wire [L2_PKT_W-1:0]     sel_pkt;               // 643 bits: packet
+    wire [ROUTE_W-1:0]      sel_route;             // 8 bits: route of the new request
+    integer                 nc_read_bytes;         // NC read size in bytes
+    integer                 mask_bit;              // loop index over the mask bits
+    // request register
+    reg                     req_reg_valid;         // the request register holds a packet
+    reg  [L2_PKT_W-1:0]     req_reg_pkt;           // 643 bits
+    // route table: written at the request, read at the answer
+    reg  [ROUTE_W-1:0]      route_table [0:NTID-1]; // 64 x 8 bits
+    wire [L2_TID_W-1:0]     resp_tid;              // 6 bits: tid of the answer
+    wire [ROUTE_W-1:0]      resp_route;            // 8 bits: its route
+    wire                    resp_take;             // an answer is taken this cycle
+    // answer register (hands the answer to the bank)
+    reg                     ans_valid;             // an answer is being given to a bank
+    reg                     ans_is_write;          // 1 = write answer (one cycle)
+    reg                     ans_nc;                // NC answer
+    reg                     ans_shared;            // line read: another cache keeps the line
+    reg  [BANK_W-1:0]       ans_bank;              // 2 bits
+    reg  [AXI_SUBID_W-1:0]  ans_sub;               // 2 bits
+    reg                     ans_err;               // error flag
+    reg  [LINE_W-1:0]       ans_line;              // 512 bits: answer data
+    reg  [BEAT_W-1:0]       ans_beat;              // 2 bits: beat given now
+    reg  [BEAT_W-1:0]       ans_end_beat;          // 2 bits: last beat
+    wire                    ans_last;              // this cycle ends the answer
+    wire                    resp_ready_int;        // internal copy of l2_resp_ready
+    reg                     err_pulse_q;           // error pulse register
     genvar                  bank_idx;
-    wire [NB-1:0]                read_pick_onehot;
-    wire [NB-1:0]                write_pick_onehot;
-    wire [CANDIDATES-1:0]        cand_pick;
-    wire [NB*MASK_W-1:0]         read_nc_mask_all;
-    wire [NB*MASK_W-1:0]         write_nc_mask_all;
-    wire [NB*LINE_W-1:0]         write_nc_line_all;
-    wire [CANDIDATES*CAND_W-1:0] cand_fields;
-    wire [CAND_W*CANDIDATES-1:0] cand_columns;
-    wire [CAND_W-1:0]            sel_cand;
-    wire [NTID-1:0]              tid_free_below;
-    wire [NTID-1:0]              tid_new_onehot;
-    wire [L2_TID_W*NTID-1:0]     tid_index_terms;
-    wire [L2_TID_W-1:0]          tid_new_encoded;
-    integer                      tid_slot;
-    genvar                       mask_idx;
-    genvar                       size_idx;
-    genvar                       beat_idx;
-    genvar                       cand_idx;
-    genvar                       field_bit;
-    genvar                       tid_idx;
-    genvar                       tid_bit;
-    wire                           take_if_requested;
-    wire                           take_if_tid_free;
-    wire                           read_turn;
-    wire                           write_turn;
-    wire [NTID-1:0]                resp_tid_onehot;
-    wire [ROUTE_W*NTID-1:0]        route_columns;
-    wire [BEAT_W*NTID-1:0]         route_start_columns;
-    wire [BEAT_W*NTID-1:0]         route_end_columns;
-    wire [NTID-1:0]                route_line_read_column;
-    wire [BEAT_W-1:0]              resp_start_beat;
-    wire [BEAT_W-1:0]              resp_end_beat;
-    wire                           resp_line_read;
-    genvar                         place_idx;
-    genvar                         route_bit;
-    genvar                         beat_bit;
-    (* keep *) wire [TID_QUADS-1:0]  tid_quads_below_free;
-    (* keep *) wire [TID_BLOCKS-1:0] tid_blocks_below_free;
-    (* keep *) wire [NTID-1:0]       tid_bits_below_free;
-    wire [NTID-1:0]                tid_take_onehot;
-    reg  [TID_QUADS-1:0]           tid_quad_free_q;
-    (* keep *) wire [TID_QUADS-1:0]  tid_quad_take;
-    wire [TID_QUADS-1:0]           tid_quad_two_free;
-    wire [TID_QUADS-1:0]           tid_quad_clear;
-    wire [TID_QUADS-1:0]           tid_quad_free_next;
-    reg  [TID_BLOCKS-1:0]          tid_block_free_q;
-    wire [TID_BLOCKS-1:0]          tid_block_take;
-    wire [TID_BLOCKS-1:0]          tid_block_two_free;
-    wire [TID_BLOCKS-1:0]          tid_block_clear;
-    wire [TID_BLOCKS-1:0]          tid_block_free_next;
-    wire                           no_request;
-    wire [CAND_W-1:0]              read_grant_value;
-    wire [CAND_W-1:0]              write_grant_value;
-    genvar                         quad_idx;
-    genvar                         block_idx;
-    wire [NTID-1:0]                tid_in_quad_first;
-    wire [TID_QUADS*TID_DIGIT_W-1:0]  tid_quad_place;
-    wire [TID_QUADS-1:0]           tid_quad_first_in_block;
-    wire [TID_BLOCKS*TID_DIGIT_W-1:0] tid_block_place;
-    wire [TID_BLOCKS*TID_DIGIT_W-1:0] tid_block_quad;
-    wire [TID_BLOCKS-1:0]          tid_block_first;
-    genvar                         digit_bit;
-    l1d_arb_rr_flat #(.N(NB), .IDX_W(BANK_W)) u_read_rr (
+
+    // ======================================================================
+    // Request: round robin per class, read / write turn, free tid
+    // ======================================================================
+    l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_read_rr (     // which bank's read goes next
         .clk          (clk),
         .rst          (rst),
         .request_bits (bank_read_req_valid),
@@ -221,7 +261,8 @@ module l1d_l2_port #(
         .grant_index  (read_grant_bank),
         .any_request  (read_any)
     );
-    l1d_arb_rr_flat #(.N(NB), .IDX_W(BANK_W)) u_write_rr (
+
+    l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_write_rr (    // which bank's write goes next
         .clk          (clk),
         .rst          (rst),
         .request_bits (bank_write_req_valid),
@@ -230,225 +271,65 @@ module l1d_l2_port #(
         .grant_index  (write_grant_bank),
         .any_request  (write_any)
     );
+
     assign tid_free = ~tid_busy;
-    l1d_pri_enc #(.N(NTID), .IDX_W(L2_TID_W)) u_free_tid (
+
+    l1d_pri_enc #(.N(NTID), .IDX_W(L2_TID_W)) u_free_tid (   // lowest free tid (many may be free: priority is needed)
         .request_bits     (tid_free),
         .lowest_set_index (tid_new),
         .any_set          (tid_any_free)
     );
-    generate
-        for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_tid_quad
-            if ((quad_idx % TID_QUAD_SIZE) == 0) begin : g_block_first
-                assign tid_quads_below_free[quad_idx] = 1'b0;
-            end else begin : g_block_rest
-                assign tid_quads_below_free[quad_idx] =
-                    |tid_quad_free_q[quad_idx - (quad_idx % TID_QUAD_SIZE) +: (quad_idx % TID_QUAD_SIZE)];
-            end
-            assign tid_quad_first_in_block[quad_idx] = tid_quad_free_q[quad_idx] & ~tid_quads_below_free[quad_idx];
-            assign tid_quad_take[quad_idx] = take_if_tid_free & tid_quad_first_in_block[quad_idx]
-                                           & ~tid_blocks_below_free[quad_idx / TID_QUAD_SIZE];
-            assign tid_quad_two_free[quad_idx] = |(tid_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]
-                                                 & tid_bits_below_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]);
-            assign tid_quad_clear[quad_idx] = resp_take & (resp_tid[L2_TID_W-1:TID_DIGIT_W] == quad_idx);
-            assign tid_quad_free_next[quad_idx] = tid_quad_clear[quad_idx]
-                                                | tid_quad_two_free[quad_idx]
-                                                | (tid_quad_free_q[quad_idx] & ~tid_quad_take[quad_idx]);
-        end
-        for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_block
-            if (block_idx == 0) begin : g_lowest_block
-                assign tid_blocks_below_free[block_idx] = 1'b0;
-            end else begin : g_upper_block
-                assign tid_blocks_below_free[block_idx] = |tid_block_free_q[block_idx-1:0];
-            end
-            assign tid_block_first[block_idx] = tid_block_free_q[block_idx] & ~tid_blocks_below_free[block_idx];
-            assign tid_block_take[block_idx] = take_if_tid_free & tid_block_first[block_idx];
-            assign tid_block_two_free[block_idx] =
-                  (|tid_quad_two_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE])
-                | (|(tid_quad_free_q[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]
-                     & tid_quads_below_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]));
-            assign tid_block_clear[block_idx] = resp_take
-                                              & (resp_tid[L2_TID_W-1:TID_BLOCK_DIGIT_LO] == block_idx);
-            assign tid_block_free_next[block_idx] = tid_block_clear[block_idx]
-                                                  | tid_block_two_free[block_idx]
-                                                  | (tid_block_free_q[block_idx] & ~tid_block_take[block_idx]);
-        end
-        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
-            if ((tid_idx % TID_QUAD_SIZE) == 0) begin : g_quad_first
-                assign tid_bits_below_free[tid_idx] = 1'b0;
-            end else begin : g_quad_rest
-                assign tid_bits_below_free[tid_idx] =
-                    |tid_free[tid_idx - (tid_idx % TID_QUAD_SIZE) +: (tid_idx % TID_QUAD_SIZE)];
-            end
-            assign tid_in_quad_first[tid_idx] = tid_free[tid_idx] & ~tid_bits_below_free[tid_idx];
-            assign tid_free_below[tid_idx]  = tid_bits_below_free[tid_idx]
-                                            | tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
-                                            | tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
-            assign tid_new_onehot[tid_idx]  = tid_free[tid_idx] & ~tid_free_below[tid_idx];
-            assign tid_take_onehot[tid_idx] = tid_quad_take[tid_idx / TID_QUAD_SIZE] & tid_in_quad_first[tid_idx];
-            for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
-                if ((tid_idx >> tid_bit) & 1) begin : g_set
-                    assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];
-                end else begin : g_clear
-                    assign tid_index_terms[tid_bit*NTID + tid_idx] = 1'b0;
-                end
-            end
-        end
-        for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_quad_place
-            for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_quad_place_bit
-                wire [TID_QUAD_SIZE-1:0] place_terms;
-                for (place_idx = 0; place_idx < TID_QUAD_SIZE; place_idx = place_idx + 1) begin : g_quad_place_term
-                    if ((place_idx >> digit_bit) & 1) begin : g_place_set
-                        assign place_terms[place_idx] = tid_in_quad_first[quad_idx*TID_QUAD_SIZE + place_idx];
-                    end else begin : g_place_clear
-                        assign place_terms[place_idx] = 1'b0;
-                    end
-                end
-                assign tid_quad_place[quad_idx*TID_DIGIT_W + digit_bit] = |place_terms;
-            end
-        end
-        for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_block_digits
-            for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_block_digit_bit
-                wire [TID_QUAD_SIZE-1:0] place_terms;
-                wire [TID_QUAD_SIZE-1:0] quad_terms;
-                for (place_idx = 0; place_idx < TID_QUAD_SIZE; place_idx = place_idx + 1) begin : g_block_digit_term
-                    assign place_terms[place_idx] = tid_quad_first_in_block[block_idx*TID_QUAD_SIZE + place_idx]
-                                                  & tid_quad_place[(block_idx*TID_QUAD_SIZE + place_idx)*TID_DIGIT_W + digit_bit];
-                    if ((place_idx >> digit_bit) & 1) begin : g_quad_set
-                        assign quad_terms[place_idx] = tid_quad_first_in_block[block_idx*TID_QUAD_SIZE + place_idx];
-                    end else begin : g_quad_clear
-                        assign quad_terms[place_idx] = 1'b0;
-                    end
-                end
-                assign tid_block_place[block_idx*TID_DIGIT_W + digit_bit] = |place_terms;
-                assign tid_block_quad[block_idx*TID_DIGIT_W + digit_bit]  = |quad_terms;
-            end
-        end
-        for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_tid_digit
-            wire [TID_BLOCKS-1:0] place_terms;
-            wire [TID_BLOCKS-1:0] quad_terms;
-            wire [TID_BLOCKS-1:0] block_terms;
-            for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_digit_term
-                assign place_terms[block_idx] = tid_block_first[block_idx] & tid_block_place[block_idx*TID_DIGIT_W + digit_bit];
-                assign quad_terms[block_idx]  = tid_block_first[block_idx] & tid_block_quad[block_idx*TID_DIGIT_W + digit_bit];
-                if ((block_idx >> digit_bit) & 1) begin : g_block_set
-                    assign block_terms[block_idx] = tid_block_first[block_idx];
-                end else begin : g_block_clear
-                    assign block_terms[block_idx] = 1'b0;
-                end
-            end
-            assign tid_new_encoded[digit_bit]                      = |place_terms;
-            assign tid_new_encoded[TID_QUAD_DIGIT_LO + digit_bit]  = |quad_terms;
-            assign tid_new_encoded[TID_BLOCK_DIGIT_LO + digit_bit] = |block_terms;
-        end
-    endgenerate
+
+    // reads and writes take turns when both wait; one request per cycle at most, only into an empty request register
     assign pick_write = write_any & (~read_any | ~last_was_write);
-    assign req_take   = take_if_requested & (read_any | write_any);
+    assign req_take   = ~req_reg_valid & tid_any_free & (read_any | write_any);
     assign read_take  = req_take & ~pick_write;
     assign write_take = req_take &  pick_write;
-    assign take_if_requested = ~req_reg_valid & (|tid_block_free_q);
-    assign take_if_tid_free  = ~req_reg_valid & (read_any | write_any);
-    assign read_turn         = ~write_any | last_was_write;
-    assign write_turn        = ~read_any | ~last_was_write;
-    assign bank_read_req_ready  = read_grant_onehot  & {NB{take_if_requested & read_turn}};
-    assign bank_write_req_ready = write_grant_onehot & {NB{take_if_requested & write_turn}};
+
+    assign bank_read_req_ready  = read_take  ? read_grant_onehot  : {NB{1'b0}};
+    assign bank_write_req_ready = write_take ? write_grant_onehot : {NB{1'b0}};
+
     always @(posedge clk) begin : turn_proc
         if (rst)
             last_was_write <= 1'b0;
         else if (req_take)
             last_was_write <= pick_write;
     end
-    generate
-        for (bank_idx = 0; bank_idx < NB; bank_idx = bank_idx + 1) begin : g_cand
-            wire [OFFSET_W-1:0]  read_offset;
-            wire [NC_SIZE_W-1:0] read_size;
-            wire [BEAT_W-1:0]    write_beat;
-            assign read_offset = bank_read_req_addr[bank_idx*AXI_ADDR_W +: OFFSET_W];
-            assign read_size   = bank_read_req_size[bank_idx*NC_SIZE_W +: NC_SIZE_W];
-            assign write_beat  = (AXI_BEATS > 1) ? bank_write_req_addr[bank_idx*AXI_ADDR_W + AXI_OFF_W +: BEAT_W]
-                                                 : {BEAT_W{1'b0}};
-            for (mask_idx = 0; mask_idx < MASK_W; mask_idx = mask_idx + 1) begin : g_read_mask
-                wire [NC_SIZE_CODES-1:0] ends_after;
-                for (size_idx = 0; size_idx < NC_SIZE_CODES; size_idx = size_idx + 1) begin : g_size
-                    if (mask_idx + 1 <= (1 << size_idx)) begin : g_always
-                        assign ends_after[size_idx] = 1'b1;
-                    end else begin : g_compare
-                        assign ends_after[size_idx] = (read_offset >= mask_idx + 1 - (1 << size_idx));
-                    end
-                end
-                assign read_nc_mask_all[bank_idx*MASK_W + mask_idx] =
-                    (read_offset <= mask_idx) & ends_after[read_size];
-            end
-            for (beat_idx = 0; beat_idx < AXI_BEATS; beat_idx = beat_idx + 1) begin : g_write_beat
-                assign write_nc_line_all[bank_idx*LINE_W + beat_idx*AXI_DATA_W +: AXI_DATA_W] =
-                    (write_beat == beat_idx) ? bank_write_req_data[bank_idx*LINE_W +: AXI_DATA_W] : {AXI_DATA_W{1'b0}};
-                assign write_nc_mask_all[bank_idx*MASK_W + beat_idx*AXI_STRB_W +: AXI_STRB_W] =
-                    (write_beat == beat_idx) ? bank_write_req_strobe[bank_idx*AXI_STRB_W +: AXI_STRB_W] : {AXI_STRB_W{1'b0}};
-            end
-            assign cand_fields[bank_idx*CAND_W + CAND_ADDR_LO +: AXI_ADDR_W] =
-                bank_read_req_addr[bank_idx*AXI_ADDR_W +: AXI_ADDR_W];
-            assign cand_fields[bank_idx*CAND_W + CAND_SUB_LO +: AXI_SUBID_W] =
-                bank_read_req_sub_id[bank_idx*AXI_SUBID_W +: AXI_SUBID_W];
-            assign cand_fields[bank_idx*CAND_W + CAND_NC_BIT] = bank_read_req_non_cacheable[bank_idx];
-            assign cand_fields[bank_idx*CAND_W + CAND_UNIQUE_BIT] =
-                ~bank_read_req_non_cacheable[bank_idx] & bank_read_req_unique[bank_idx];
-            assign cand_fields[bank_idx*CAND_W + CAND_MASK_LO +: MASK_W] =
-                bank_read_req_non_cacheable[bank_idx] ? read_nc_mask_all[bank_idx*MASK_W +: MASK_W] : {MASK_W{1'b1}};
-            assign cand_fields[bank_idx*CAND_W + CAND_DATA_LO +: LINE_W] = {LINE_W{1'b0}};
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_ADDR_LO +: AXI_ADDR_W] =
-                bank_write_req_addr[bank_idx*AXI_ADDR_W +: AXI_ADDR_W];
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_SUB_LO +: AXI_SUBID_W] =
-                bank_write_req_sub_id[bank_idx*AXI_SUBID_W +: AXI_SUBID_W];
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_NC_BIT] = bank_write_req_non_cacheable[bank_idx];
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_UNIQUE_BIT] = 1'b0;
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_MASK_LO +: MASK_W] =
-                bank_write_req_non_cacheable[bank_idx] ? write_nc_mask_all[bank_idx*MASK_W +: MASK_W] : {MASK_W{1'b1}};
-            assign cand_fields[(NB+bank_idx)*CAND_W + CAND_DATA_LO +: LINE_W] =
-                bank_write_req_non_cacheable[bank_idx] ? write_nc_line_all[bank_idx*LINE_W +: LINE_W]
-                                                       : bank_write_req_data[bank_idx*LINE_W +: LINE_W];
-            if (bank_idx == 0) begin : g_pick_first
-                assign read_pick_onehot[bank_idx]  = (read_grant_onehot[bank_idx] & read_turn) | (~read_any & ~write_any);
-                assign write_pick_onehot[bank_idx] =  write_grant_onehot[bank_idx] & write_turn;
-            end else begin : g_pick_rest
-                assign read_pick_onehot[bank_idx]  = read_grant_onehot[bank_idx]  & read_turn;
-                assign write_pick_onehot[bank_idx] = write_grant_onehot[bank_idx] & write_turn;
-            end
-        end
-    endgenerate
-    assign cand_pick = {write_pick_onehot, read_pick_onehot};
-    assign no_request = ~read_any & ~write_any;
-    generate
-        for (field_bit = 0; field_bit < CAND_W; field_bit = field_bit + 1) begin : g_pick_bit
-            for (cand_idx = 0; cand_idx < CANDIDATES; cand_idx = cand_idx + 1) begin : g_column
-                assign cand_columns[field_bit*CANDIDATES + cand_idx] = cand_fields[cand_idx*CAND_W + field_bit];
-            end
-            assign read_grant_value[field_bit]  = |(read_grant_onehot  & cand_columns[field_bit*CANDIDATES      +: NB]);
-            assign write_grant_value[field_bit] = |(write_grant_onehot & cand_columns[field_bit*CANDIDATES + NB +: NB]);
-            assign sel_cand[field_bit] = (read_turn  & read_grant_value[field_bit])
-                                       | (write_turn & write_grant_value[field_bit])
-                                       | (no_request & cand_columns[field_bit*CANDIDATES]);
-        end
-    endgenerate
+
+    // ======================================================================
+    // Request: fields and packet
+    // ======================================================================
     assign sel_bank         = pick_write ? write_grant_bank : read_grant_bank;
-    assign sel_addr         = sel_cand[CAND_ADDR_LO +: AXI_ADDR_W];
-    assign sel_nc           = sel_cand[CAND_NC_BIT];
-    assign sel_unique       = sel_cand[CAND_UNIQUE_BIT];
-    assign sel_sub          = sel_cand[CAND_SUB_LO +: AXI_SUBID_W];
-    assign sel_beat         = (AXI_BEATS > 1) ? sel_addr[AXI_OFF_W +: BEAT_W] : {BEAT_W{1'b0}};
-    assign sel_read_size    = bank_read_req_size[read_grant_bank*NC_SIZE_W +: NC_SIZE_W];
+    assign sel_addr         = pick_write ? bank_write_req_addr[write_grant_bank*AXI_ADDR_W +: AXI_ADDR_W]
+                                         : bank_read_req_addr[read_grant_bank*AXI_ADDR_W +: AXI_ADDR_W];
+    assign sel_nc           = pick_write ? bank_write_req_non_cacheable[write_grant_bank] : bank_read_req_non_cacheable[read_grant_bank];
+    assign sel_unique       = ~pick_write & ~sel_nc & bank_read_req_unique[read_grant_bank];
+    assign sel_sub          = pick_write ? bank_write_req_sub_id[write_grant_bank*AXI_SUBID_W +: AXI_SUBID_W]
+                                         : bank_read_req_sub_id[read_grant_bank*AXI_SUBID_W +: AXI_SUBID_W];
+    assign sel_read_size    = bank_read_req_size[read_grant_bank*3 +: 3];
     assign sel_write_line   = bank_write_req_data[write_grant_bank*LINE_W +: LINE_W];
     assign sel_write_strobe = bank_write_req_strobe[write_grant_bank*AXI_STRB_W +: AXI_STRB_W];
     assign sel_offset       = sel_addr[OFFSET_W-1:0];
+    assign sel_beat         = (AXI_BEATS > 1) ? sel_addr[AXI_OFF_W +: BEAT_W] : {BEAT_W{1'b0}};
+
+    // NC write: the bank gives the beat in the low AXI_DATA_W bits and its strobes (already on the byte lanes of the
+    // address); put both at the address's beat of the line
     assign nc_write_line = {{(LINE_W - AXI_DATA_W){1'b0}}, sel_write_line[AXI_DATA_W-1:0]} << (sel_beat * AXI_DATA_W);
     assign nc_write_mask = {{(MASK_W - AXI_STRB_W){1'b0}}, sel_write_strobe} << (sel_beat * AXI_STRB_W);
+
+    // NC read: the 1 / 2 / 4 / 8 bytes from the offset
     always @* begin : nc_read_mask_proc
         nc_read_bytes = 1 << sel_read_size;
         for (mask_bit = 0; mask_bit < MASK_W; mask_bit = mask_bit + 1)
             nc_read_mask[mask_bit] = (mask_bit >= sel_offset) && (mask_bit < sel_offset + nc_read_bytes);
     end
-    assign sel_mask  = sel_cand[CAND_MASK_LO +: MASK_W];
-    assign sel_data  = sel_cand[CAND_DATA_LO +: LINE_W];
-    assign sel_pkt   = {sel_unique, sel_addr[L2_ADDR_W-1:0], pick_write, MASTER_ID_C, tid_new_encoded, sel_nc, sel_mask, sel_data};
+
+    assign sel_mask  = ~sel_nc ? {MASK_W{1'b1}} : (pick_write ? nc_write_mask : nc_read_mask);
+    assign sel_data  = ~pick_write ? {LINE_W{1'b0}} : (sel_nc ? nc_write_line : sel_write_line);
+    assign sel_pkt   = {sel_unique, sel_addr[L2_ADDR_W-1:0], pick_write, MASTER_ID_C, tid_new, sel_nc, sel_mask, sel_data};
     assign sel_route = {pick_write, sel_nc, sel_bank, sel_sub, sel_beat};
+
+    // request register: holds the packet until the L2 takes it
     always @(posedge clk) begin : req_reg_valid_proc
         if (rst)
             req_reg_valid <= 1'b0;
@@ -457,64 +338,40 @@ module l1d_l2_port #(
         else if (req_reg_valid && l2_req_ready)
             req_reg_valid <= 1'b0;
     end
-    always @(posedge clk) begin : req_reg_data_proc
+
+    always @(posedge clk) begin : req_reg_data_proc     // no reset: read only while req_reg_valid = 1
         if (req_take)
             req_reg_pkt <= sel_pkt;
     end
+
+    // route table (no reset: written at allocation, read only while the tid is busy)
     always @(posedge clk) begin : route_write_proc
-        for (tid_slot = 0; tid_slot < NTID; tid_slot = tid_slot + 1)
-            if (tid_take_onehot[tid_slot])
-                route_table[tid_slot] <= sel_route;
+        if (req_take)
+            route_table[tid_new] <= sel_route;
     end
+
+    // tid busy bits: set at allocation, cleared when the answer is taken
     always @(posedge clk) begin : tid_busy_proc
         if (rst)
             tid_busy <= {NTID{1'b0}};
-        else
-            tid_busy <= (tid_busy | tid_take_onehot)
-                      & ~({NTID{resp_take}} & resp_tid_onehot);
+        else begin
+            if (req_take)  tid_busy[tid_new]  <= 1'b1;
+            if (resp_take) tid_busy[resp_tid] <= 1'b0;
+        end
     end
-    always @(posedge clk) begin : tid_quad_free_proc
-        if (rst)
-            tid_quad_free_q <= {TID_QUADS{1'b1}};
-        else
-            tid_quad_free_q <= tid_quad_free_next;
-    end
-    always @(posedge clk) begin : tid_block_free_proc
-        if (rst)
-            tid_block_free_q <= {TID_BLOCKS{1'b1}};
-        else
-            tid_block_free_q <= tid_block_free_next;
-    end
+
     assign l2_req_valid = req_reg_valid;
     assign l2_req_pkt   = req_reg_pkt;
+
+    // ======================================================================
+    // Response: route lookup, then hand the answer to the bank
+    // ======================================================================
     assign resp_tid       = l2_resp_pkt[TID_LO +: L2_TID_W];
-    generate
-        for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_route_entry
-            assign resp_tid_onehot[tid_idx] = (resp_tid == tid_idx);
-            for (route_bit = 0; route_bit < ROUTE_W; route_bit = route_bit + 1) begin : g_route_column
-                assign route_columns[route_bit*NTID + tid_idx] = route_table[tid_idx][route_bit];
-            end
-            for (beat_bit = 0; beat_bit < BEAT_W; beat_bit = beat_bit + 1) begin : g_beat_column
-                assign route_start_columns[beat_bit*NTID + tid_idx] =
-                    route_table[tid_idx][ROUTE_W-2] & route_table[tid_idx][beat_bit];
-                assign route_end_columns[beat_bit*NTID + tid_idx] =
-                    route_table[tid_idx][ROUTE_W-2] ? route_table[tid_idx][beat_bit] : LAST_BEAT[beat_bit];
-            end
-            assign route_line_read_column[tid_idx] =
-                ~route_table[tid_idx][ROUTE_W-1] & ~route_table[tid_idx][ROUTE_W-2];
-        end
-        for (route_bit = 0; route_bit < ROUTE_W; route_bit = route_bit + 1) begin : g_route_read
-            assign resp_route[route_bit] = |(resp_tid_onehot & route_columns[route_bit*NTID +: NTID]);
-        end
-        for (beat_bit = 0; beat_bit < BEAT_W; beat_bit = beat_bit + 1) begin : g_beat_read
-            assign resp_start_beat[beat_bit] = |(resp_tid_onehot & route_start_columns[beat_bit*NTID +: NTID]);
-            assign resp_end_beat[beat_bit]   = |(resp_tid_onehot & route_end_columns[beat_bit*NTID +: NTID]);
-        end
-    endgenerate
-    assign resp_line_read = |(resp_tid_onehot & route_line_read_column);
-    assign ans_last      = ans_valid & (ans_is_write | (ans_beat == ans_end_beat));
-    assign resp_ready_int = ~ans_valid | ans_last;
+    assign resp_route     = route_table[resp_tid];
+    assign ans_last       = ans_valid & (ans_is_write | (ans_beat == ans_end_beat));
+    assign resp_ready_int = ~ans_valid | ans_last;          // the next answer is taken in the cycle the current one ends
     assign resp_take      = l2_resp_valid & resp_ready_int;
+
     always @(posedge clk) begin : ans_ctrl_proc
         if (rst) begin
             ans_valid   <= 1'b0;
@@ -527,21 +384,24 @@ module l1d_l2_port #(
                 ans_valid <= 1'b0;
         end
     end
-    always @(posedge clk) begin : ans_data_proc
+
+    always @(posedge clk) begin : ans_data_proc      // no reset: read only while ans_valid = 1
         if (resp_take) begin
             ans_is_write <= resp_route[ROUTE_W-1];
             ans_nc       <= resp_route[ROUTE_W-2];
-            ans_shared   <= resp_line_read & l2_resp_pkt[US_BIT];
+            ans_shared   <= ~resp_route[ROUTE_W-1] & ~resp_route[ROUTE_W-2] & l2_resp_pkt[US_BIT];
             ans_bank     <= resp_route[AXI_SUBID_W + BEAT_W +: BANK_W];
             ans_sub      <= resp_route[BEAT_W +: AXI_SUBID_W];
             ans_err      <= l2_resp_err;
             ans_line     <= l2_resp_pkt[LINE_W-1:0];
-            ans_beat     <= resp_start_beat;
-            ans_end_beat <= resp_end_beat;
+            ans_beat     <= resp_route[ROUTE_W-2] ? resp_route[BEAT_W-1:0] : {BEAT_W{1'b0}};   // NC: only its own beat
+            ans_end_beat <= resp_route[ROUTE_W-2] ? resp_route[BEAT_W-1:0] : LAST_BEAT;
         end else if (ans_valid && !ans_last) begin
             ans_beat <= ans_beat + 1'b1;
         end
     end
+
+    // steer the answer to its bank; the line hand-over holds that bank's snoops (header)
     generate
         for (bank_idx = 0; bank_idx < NB; bank_idx = bank_idx + 1) begin : g_steer
             assign bank_read_data_valid[bank_idx]    = ans_valid & ~ans_is_write & (ans_bank == bank_idx);
@@ -549,6 +409,7 @@ module l1d_l2_port #(
             assign bank_refill_replay_busy[bank_idx] = ans_valid & ~ans_is_write & ~ans_nc & (ans_bank == bank_idx);
         end
     endgenerate
+
     assign bank_read_data_sub_id         = ans_sub;
     assign bank_read_data_non_cacheable  = ans_nc;
     assign bank_read_data                = ans_line[ans_beat*AXI_DATA_W +: AXI_DATA_W];
@@ -560,7 +421,11 @@ module l1d_l2_port #(
     assign bank_write_resp_error         = ans_err;
     assign l2_resp_ready                 = resp_ready_int;
     assign l2_error_pulse                = err_pulse_q;
+
 `ifdef L1D_DEBUG
+    // ======================================================================
+    // Debug trace (simulation only): requests, answers, checks of the L2 side, watchdogs
+    // ======================================================================
     integer dbg_req_wait, dbg_ans_wait, dbg_k, dbg_busy_count;
     initial begin
         dbg_req_wait = 0;
@@ -609,6 +474,9 @@ module l1d_l2_port #(
         end
     end
 `endif
+
 endmodule
+
 `default_nettype wire
-`endif
+
+`endif // L1D_L2_PORT_V

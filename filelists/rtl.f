@@ -1,25 +1,33 @@
+# TARGET tree for the crossbank timing run: rtl/ = cache_v6 rtl_tm_opt + crossbank step 1 (copy of cache_for_vivado/rtl)
 -i rtl/include
--i rtl/prefetch/stride
 rtl/common/l1d_fifo.v
 rtl/common/l1d_pri_enc.v
 rtl/common/l1d_arb_rr.v
-rtl/common/l1d_arb_rr_flat.v
 rtl/common/l1d_age_matrix.v
 rtl/common/l1d_cam.v
 rtl/common/l1d_sram_tdp.v
 rtl/common/l1d_ecc_enc.v
 rtl/common/l1d_ecc_syn.v
 rtl/common/l1d_ecc_fix.v
-rtl/prefetch/stride/l1d_add_eq.v
-rtl/prefetch/stride/l1d_ks_add.v
-rtl/prefetch/stride/l1d_ks_add_q.v
-rtl/prefetch/stride/l1d_pf_stride.v
-rtl/prefetch/stream/l1d_pf_stream.v
-rtl/prefetch/sms/l1d_pf_sms_fifo.v
-rtl/prefetch/sms/l1d_pf_sms_front.v
-rtl/prefetch/sms/l1d_pf_sms_core.v
-rtl/prefetch/sms/l1d_pf_sms_expand.v
-rtl/prefetch/sms/l1d_pf_sms.v
+rtl/prefetch56/l1d_pf3_rep.v
+rtl/prefetch56/l1d_pf3_fifo.v
+rtl/prefetch56/l1d_pf3_or_rows.v
+rtl/prefetch56/l1d_pf3_fold.v
+rtl/prefetch56/l1d_pf3_keep_or.v
+rtl/prefetch56/l1d_pf3_mux2.v
+rtl/prefetch56/l1d_pf3_mux4oh.v
+rtl/prefetch56/l1d_pf3_ffs.v
+rtl/prefetch56/l1d_pf3_ks_add.v
+rtl/prefetch56/l1d_pf3_stride_anew.v
+rtl/prefetch56/l1d_pf3_stride_entry.v
+rtl/prefetch56/l1d_pf3_stride.v
+rtl/prefetch56/l1d_pf3_stream_card.v
+rtl/prefetch56/l1d_pf3_stream.v
+rtl/prefetch56/l1d_pf3_sms_way_pick.v
+rtl/prefetch56/l1d_pf3_sms_core.v
+rtl/prefetch56/l1d_pf3_sms_expand.v
+rtl/prefetch56/l1d_pf3_rank_low.v
+rtl/prefetch56/l1d_pf3_rank.v
 rtl/front/l1d_bank_order.v
 rtl/front/l1d_port_front.v
 rtl/front/l1d_resp_merge.v
@@ -28,7 +36,6 @@ rtl/bank/fifo/l1d_vec_store_buf.v
 rtl/bank/s0/l1d_req_tracker.v
 rtl/bank/s0/l1d_book_select.v
 rtl/bank/s0/l1d_bank_s0.v
-rtl/front/l1d_front_s0.v
 rtl/bank/s1/l1d_plru.v
 rtl/bank/s1/l1d_meta_flops.v
 rtl/bank/s1/l1d_s1_lookup.v
@@ -52,3 +59,4 @@ rtl/snoop/l1d_snoop_ctrl.v
 rtl/l2/l1d_l2_port.v
 rtl/top/l1d_prefetch_unit.v
 rtl/top/l1d_top.v
+rtl/top/l1d_top_single_port.v

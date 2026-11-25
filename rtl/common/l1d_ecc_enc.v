@@ -1,19 +1,53 @@
+// ============================================================================
+// l1d_ecc_enc.v  -  SECDED encoder: the check bits of one data word (Hamming + overall parity)
+// ============================================================================
+// IN SIMPLE WORDS  (cache_v6, PLAN_v6.md section 5)
+//   A stored word can lose a bit (a soft error). SECDED = Single Error Correction, Double Error Detection: HAM_W Hamming
+//   check bits locate ONE flipped bit so it can be put back, and one more parity bit over everything tells a single error
+//   (odd parity) from a double error (even parity, syndrome not zero). This module makes those HAM_W + 1 check bits for a
+//   data word on its way INTO the array. l1d_ecc_syn and l1d_ecc_fix read them on the way out.
+//
+//   HOW THE HAMMING BITS ARE BUILT. Every bit of the code word has a position number 1, 2, 3 ... Check bit i sits at position
+//   2**i; the data bits fill the other positions in order (3, 5, 6, 7, 9, ...). Check bit i = XOR of all data bits whose
+//   position number has bit i set. l1d_ecc_syn recomputes them: the XOR of stored and recomputed check bits (the syndrome)
+//   is the position number of the flipped bit, or 0.
+//   Example (DATA_W = 4, HAM_W = 3): data d0..d3 at positions 3, 5, 6, 7. c0 = d0^d1^d3 (positions 3, 5, 7 have bit 0 set),
+//   c1 = d0^d2^d3 (3, 6, 7), c2 = d1^d2^d3 (5, 6, 7). Flip d2 (position 6 = 110b): syndrome = 110b = 6.
+//
+// STAGE / CYCLE
+//   Combinational: used on the write data path of the data array (S2 store / refill, S3 AMO) and the tag array (S2 refill),
+//   8 copies per line (one per 64-bit granule) and one per tag write. A 64-input XOR tree is 6 XOR2 levels (about 9 gate
+//   equivalents; estimate, PLAN_v6 O-6).
+//
+// INSTANTIATED BY
+//   l1d_bank_r (data write path, GRANULES = 8 copies per bank; tag write path, 1 copy).
+//
+// PARAMETERS
+//   DATA_W   default 64: data bits of the word
+//   HAM_W    default 7: Hamming check bits (2**HAM_W must be >= DATA_W + HAM_W + 1; 64 -> 7, 50 -> 6)
+//
+// PORTS
+//   data        in   DATA_W      the data word
+//   check       out  HAM_W + 1   {overall parity, Hamming bits}: the check bits stored beside the word
+// ============================================================================
 `ifndef L1D_ECC_ENC_V
 `define L1D_ECC_ENC_V
 `default_nettype none
+
 module l1d_ecc_enc #(
-    parameter DATA_W = 64,
-    parameter HAM_W  = 7
+    parameter DATA_W = 64,                                 // default 64: data bits of the word
+    parameter HAM_W  = 7                                   // default 7: Hamming check bits
 ) (
-    input  wire [DATA_W-1:0] data,
-    output wire [HAM_W:0]    check
+    input  wire [DATA_W-1:0] data,                         // the data word, DATA_W = 64 bits
+    output wire [HAM_W:0]    check                         // {overall parity, Hamming bits}, HAM_W + 1 = 8 bits
 );
+    // ---- position number of data bit d in the code word: the d-th position that is not a power of two (constant function) ----
     function integer data_pos;
-        input integer bit_num;
-        integer pos;
-        integer seen;
-        integer is_pow2;
-        integer k;
+        input integer bit_num;                             // data bit number 0 .. DATA_W-1
+        integer pos;                                       // candidate position
+        integer seen;                                      // data positions passed
+        integer is_pow2;                                   // candidate is a power of two (a check bit position)
+        integer k;                                         // loop variable: bit of the candidate
         begin
             data_pos = 0;
             seen     = 0;
@@ -28,38 +62,48 @@ module l1d_ecc_enc #(
             end
         end
     endfunction
+    // ---- the mask of Hamming bit i: data bits whose position has bit i set (constant function) ----
     function [DATA_W-1:0] ham_mask;
-        input integer ham_bit;
-        integer d;
+        input integer ham_bit;                             // Hamming bit number 0 .. HAM_W-1
+        integer d;                                         // loop variable: data bit
         begin
             for (d = 0; d < DATA_W; d = d + 1)
                 ham_mask[d] = ((data_pos(d) >> ham_bit) & 1) ? 1'b1 : 1'b0;
         end
     endfunction
-    wire [HAM_W-1:0] ham;
-    genvar hb;
+
+    // ---- the Hamming bits: one XOR tree per bit over the masked data ----
+    wire [HAM_W-1:0] ham;                                  // HAM_W = 7 bits
+    genvar hb;                                             // loop variable: Hamming bit
     generate
         for (hb = 0; hb < HAM_W; hb = hb + 1) begin : g_ham
-            localparam [DATA_W-1:0] MASK = ham_mask(hb);
+            localparam [DATA_W-1:0] MASK = ham_mask(hb);   // the data bits that take part in Hamming bit hb
             assign ham[hb] = ^(data & MASK);
         end
     endgenerate
+    // ---- the overall parity: even parity over data and Hamming bits ----
+    // tm_opt iter 1 (2026-11-19, new constant function parity_mask, no new signal): same value as (^data) ^ (^ham), built
+    // straight from the data in ONE tree. Data bit d enters (^data) once and (^ham) once per Hamming bit that uses it, so it
+    // counts in the parity when 1 + (number of those Hamming bits) is odd. The old form waited for the Hamming trees
+    // (6 XOR2 levels) and then XORed their results (3 more levels); now one DATA_W = 64-input tree, 6 XOR2 levels.
     function [DATA_W-1:0] parity_mask;
-        input integer dummy;
-        integer d;
-        integer k;
-        reg     odd;
+        input integer dummy;                               // unused: Verilog-2005 functions need an input
+        integer d;                                         // loop variable: data bit
+        integer k;                                         // loop variable: Hamming bit
+        reg     odd;                                       // data bit d counts an odd number of times
         begin
             for (d = 0; d < DATA_W; d = d + 1) begin
-                odd = 1'b1;
+                odd = 1'b1;                                // once in ^data
                 for (k = 0; k < HAM_W; k = k + 1)
-                    odd = odd ^ (((data_pos(d) >> k) & 1) ? 1'b1 : 1'b0);
+                    odd = odd ^ (((data_pos(d) >> k) & 1) ? 1'b1 : 1'b0);   // once in each Hamming bit that uses it
                 parity_mask[d] = odd;
             end
         end
     endfunction
-    localparam [DATA_W-1:0] PARITY_MASK = parity_mask(0);
+    localparam [DATA_W-1:0] PARITY_MASK = parity_mask(0); // the data bits of the overall parity, DATA_W = 64 bits
     assign check = {^(data & PARITY_MASK), ham};
+
 endmodule
+
 `default_nettype wire
-`endif
+`endif // L1D_ECC_ENC_V

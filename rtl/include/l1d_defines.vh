@@ -74,7 +74,7 @@
 `define L1D_MSHR_ENTRIES      8                           // cacheable MSHR entries: one per line being fetched from memory or swapped back from the victim cache
 `define L1D_MSHR_NC_ENTRIES   2                           // places in the queue of non-cacheable accesses (done one at a time, in order)
 `define L1D_VC_SLOTS          8                           // victim-cache slots: lines recently evicted from the cache, clean or dirty
-`define L1D_RESP_FIFO_DEPTH   5                           // per-bank response FIFO in l1d_resp_merge; its free places are the bank's response credit
+`define L1D_RESP_FIFO_DEPTH   4                           // per-bank response FIFO in l1d_resp_merge; its free places are the bank's response credit
 `define L1D_REFILL_SKIP       2                           // after a refill is granted, Priority Select grants nothing for this many cycles (the arrays are busy)
 
 // ---- FIFO stage, snoops and atomics (new in v2) ----

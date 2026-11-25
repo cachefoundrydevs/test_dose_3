@@ -17,7 +17,7 @@
 `define L1D_MSHR_ENTRIES      8
 `define L1D_MSHR_NC_ENTRIES   2
 `define L1D_VC_SLOTS          8
-`define L1D_RESP_FIFO_DEPTH   4
+`define L1D_RESP_FIFO_DEPTH   5
 `define L1D_REFILL_SKIP       2
 `define L1D_SNP_BUF_DEPTH     2
 `define L1D_SNP_RESP_DEPTH    2

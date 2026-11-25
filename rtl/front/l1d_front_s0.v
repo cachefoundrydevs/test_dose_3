@@ -765,6 +765,7 @@ module l1d_front_s0 #(
         .r_deps(b0_r_deps),
         .tracker_empty(b0_tracker_empty),
         .miss_ok(b0_miss_ok),
+        .own_response_push_port(4'b0000),   // crossbank step 1: timing wrapper, no response FIFO behind it
         .vec_write_slot(b0_vec_write_slot),
         .vec_write_valid(b0_vec_write_valid)
     );
@@ -851,6 +852,7 @@ module l1d_front_s0 #(
         .r_deps(b1_r_deps),
         .tracker_empty(b1_tracker_empty),
         .miss_ok(b1_miss_ok),
+        .own_response_push_port(4'b0000),   // crossbank step 1: timing wrapper, no response FIFO behind it
         .vec_write_slot(b1_vec_write_slot),
         .vec_write_valid(b1_vec_write_valid)
     );
@@ -937,6 +939,7 @@ module l1d_front_s0 #(
         .r_deps(b2_r_deps),
         .tracker_empty(b2_tracker_empty),
         .miss_ok(b2_miss_ok),
+        .own_response_push_port(4'b0000),   // crossbank step 1: timing wrapper, no response FIFO behind it
         .vec_write_slot(b2_vec_write_slot),
         .vec_write_valid(b2_vec_write_valid)
     );
@@ -1023,6 +1026,7 @@ module l1d_front_s0 #(
         .r_deps(b3_r_deps),
         .tracker_empty(b3_tracker_empty),
         .miss_ok(b3_miss_ok),
+        .own_response_push_port(4'b0000),   // crossbank step 1: timing wrapper, no response FIFO behind it
         .vec_write_slot(b3_vec_write_slot),
         .vec_write_valid(b3_vec_write_valid)
     );

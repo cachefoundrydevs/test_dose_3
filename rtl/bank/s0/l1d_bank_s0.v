@@ -13,6 +13,7 @@ module l1d_bank_s0 #(
     drain_request, drain_packet, drain_pc,
     arrival_allocated_0, arrival_allocated_1, arrival_allocated_2, arrival_allocated_3, drain_allocated,
     tracker_free_count_q,
+    own_response_push_port,
     lsu_response_fifo_free_0, lsu_response_fifo_free_1, lsu_response_fifo_free_2, lsu_response_fifo_free_3,
     lsu_response_fifo_free_next_0, lsu_response_fifo_free_next_1, lsu_response_fifo_free_next_2, lsu_response_fifo_free_next_3,
     snoop_request_valid, snoop_request_line_addr, snoop_request_invalidate, snoop_request_ready, snoop_response_fifo_free,
@@ -41,6 +42,8 @@ module l1d_bank_s0 #(
     localparam NE          = TRK_ENTRIES;
     localparam [RCNT_W:0]  CREDIT_TWO   = 2;
     localparam [RCNT_W:0]  CREDIT_THREE = 3;
+    localparam [RCNT_W:0]  CREDIT_FOUR  = 4;   // crossbank step 1
+    localparam [RCNT_W:0]  CREDIT_FIVE  = 5;   // crossbank step 1
     input  wire                        clk;
     input  wire                        rst;
     input  wire                        arrival_request_0;
@@ -138,6 +141,7 @@ module l1d_bank_s0 #(
     output wire [TRK_ENTRIES-1:0]      r_deps;
     output wire                        tracker_empty;
     output wire                        miss_ok;
+    input  wire [LSU_PORTS-1:0]        own_response_push_port;   // crossbank step 1: bit p = this bank pushes an answer for port p this cycle
     input  wire                        vec_slot_available;
     input  wire [VEC_SLOT_W-1:0]       vec_write_slot;
     output wire                        vec_write_valid;
@@ -325,19 +329,32 @@ module l1d_bank_s0 #(
     reg  [LSU_PORTS-1:0] credit_book_if_none;
     reg  [LSU_PORTS-1:0] credit_book_if_issue;
     reg  [LSU_PORTS-1:0] port_miss_ok;
-    reg  [RCNT_W:0]      promised_next;
+    reg  [RCNT_W:0]      free_now_ext;   // crossbank step 1 (replaces promised_next)
+    reg                  credit_ge_two;
+    reg                  credit_ge_three;
+    reg                  credit_ge_four;
+    reg                  credit_ge_five;
     integer cr_port;
     always @* begin
         for (cr_port = 0; cr_port < LSU_PORTS; cr_port = cr_port + 1) begin
             r_is_port[cr_port]     = r_cpu_q && (r_port == cr_port);
             s1_is_port[cr_port]    = s1_lsu && !s1_pf && (s1_port == cr_port);
             issue_is_port[cr_port] = (book_entry_issue && (book_port_q == cr_port)) || (fresh_issue && fresh_port_onehot[cr_port]);
-            promised_next          = {{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, issue_is_port[cr_port]} + CREDIT_TWO;
-            credit_next[cr_port]   = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= promised_next);
-            credit_book_if_none[cr_port]  = r_is_port[cr_port] ? ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >  CREDIT_TWO)
-                                                               : ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= CREDIT_TWO);
-            credit_book_if_issue[cr_port] = r_is_port[cr_port] ? ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >  CREDIT_THREE)
-                                                               : ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= CREDIT_THREE);
+            // CROSSBANK STEP 1: credit from free_now (flop) + own push; see docs/CROSSBANK_CHANGES_v6.md
+            free_now_ext           = {1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]};
+            credit_ge_two          = (free_now_ext >= CREDIT_TWO);
+            credit_ge_three        = (free_now_ext >= CREDIT_THREE);
+            credit_ge_four         = (free_now_ext >= CREDIT_FOUR);
+            credit_ge_five         = (free_now_ext >= CREDIT_FIVE);
+            credit_next[cr_port]   = issue_is_port[cr_port]
+                                   ? (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
+                                                                      : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three))
+                                   : (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
+                                                                      : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two));
+            credit_book_if_none[cr_port]  = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four : credit_ge_three)
+                                                                            : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two);
+            credit_book_if_issue[cr_port] = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five : credit_ge_four)
+                                                                            : (r_is_port[cr_port] ? credit_ge_four : credit_ge_three);
             credit_book_next[cr_port] = issue_is_port[cr_port] ? credit_book_if_issue[cr_port] : credit_book_if_none[cr_port];
             port_miss_ok[cr_port]  = ({1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]} >
                                       ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, s1_is_port[cr_port]}));

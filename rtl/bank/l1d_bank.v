@@ -144,6 +144,13 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire [TRK_ENTRIES-1:0]  r_deps;
     wire                    tracker_empty;
     wire                    miss_ok;
+    wire [LSU_PORTS-1:0]    own_response_push_port;   // crossbank step 1: this bank pushes an answer for port p now
+    genvar                  push_port;
+    generate
+        for (push_port = 0; push_port < LSU_PORTS; push_port = push_port + 1) begin : g_own_push
+            assign own_response_push_port[push_port] = lsu_response_valid && (lsu_response_packet[RESP_PORT_LSB +: PORT_W] == push_port);
+        end
+    endgenerate
     wire                    s2_seat_trained;
     wire [PC_W-1:0]         s2_seat_pc;
     wire                    s1_valid;
@@ -394,7 +401,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .any_gnt (any_gnt), .g_set (g_set), .gnt_refill (gnt_refill), .gnt_maint (gnt_maint),
         .r_valid (r_valid), .r_kind (r_kind), .r_seat (r_seat), .r_req (r_req), .r_fast (r_fast), .r_mid (r_mid),
         .r_line (r_line), .r_mway (r_mway), .r_mop (r_mop), .r_sinv (r_sinv), .r_sid (r_sid), .r_deps (r_deps),
-        .tracker_empty (tracker_empty), .miss_ok (miss_ok),
+        .tracker_empty (tracker_empty), .miss_ok (miss_ok), .own_response_push_port (own_response_push_port),
         .vec_slot_available (vec_slot_free), .vec_write_slot (vec_write_slot), .vec_write_valid (vec_write_valid)
     );
     l1d_bank_r #(`L1D_PARAMS_PASS, .BANK_ID(BANK_ID)) u_r (

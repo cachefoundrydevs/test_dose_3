@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names)); L2-9: registered quad flags tid_quad_free_q (new flop, invariant flag = OR of the quad free bits, proven against the golden ghost wire of the same name), quad take term tid_quad_take, flag next-state terms; tid_quad_free and tid_take_early removed; the golden ghost wire tid_block_free_q has no counterpart yet)
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names)); L2-9: registered quad flags tid_quad_free_q (new flop, invariant flag = OR of the quad free bits, proven against the golden ghost wire of the same name), quad take term tid_quad_take, flag next-state terms; tid_quad_free and tid_take_early removed; the golden ghost wire tid_block_free_q has no counterpart yet); L2-10: registered block flags tid_block_free_q (new flop, invariant flag = OR of the block free bits, proven against the golden ghost wire of the same name), block flag next-state terms; tid_block_free removed
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -51,7 +51,6 @@
 + DECL genvar route_bit
 + DECL genvar beat_bit
 + DECL wire[TID_QUADS-1:0]tid_quads_below_free
-+ DECL wire[TID_BLOCKS-1:0]tid_block_free
 + DECL wire[TID_BLOCKS-1:0]tid_blocks_below_free
 + DECL wire[NTID-1:0]tid_bits_below_free
 + DECL wire[NTID-1:0]tid_take_onehot
@@ -153,3 +152,10 @@
 + LABEL tid_quad_free_proc
 - DECL wire[15:0]tid_quad_free_q
 - DECL wire[3:0]tid_block_free_q
++ DECL reg[TID_BLOCKS-1:0]tid_block_free_q
++ DECL wire[TID_BLOCKS-1:0]tid_block_take
++ DECL wire[TID_BLOCKS-1:0]tid_block_two_free
++ DECL wire[TID_BLOCKS-1:0]tid_block_clear
++ DECL wire[TID_BLOCKS-1:0]tid_block_free_next
++ ALWAYS always @(posedge clk)
++ LABEL tid_block_free_proc

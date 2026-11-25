@@ -187,7 +187,6 @@ module l1d_l2_port #(
     genvar                         route_bit;
     genvar                         beat_bit;
     (* keep *) wire [TID_QUADS-1:0]  tid_quads_below_free;
-    (* keep *) wire [TID_BLOCKS-1:0] tid_block_free;
     (* keep *) wire [TID_BLOCKS-1:0] tid_blocks_below_free;
     (* keep *) wire [NTID-1:0]       tid_bits_below_free;
     wire [NTID-1:0]                tid_take_onehot;
@@ -196,6 +195,11 @@ module l1d_l2_port #(
     wire [TID_QUADS-1:0]           tid_quad_two_free;
     wire [TID_QUADS-1:0]           tid_quad_clear;
     wire [TID_QUADS-1:0]           tid_quad_free_next;
+    reg  [TID_BLOCKS-1:0]          tid_block_free_q;
+    wire [TID_BLOCKS-1:0]          tid_block_take;
+    wire [TID_BLOCKS-1:0]          tid_block_two_free;
+    wire [TID_BLOCKS-1:0]          tid_block_clear;
+    wire [TID_BLOCKS-1:0]          tid_block_free_next;
     wire                           no_request;
     wire [CAND_W-1:0]              read_grant_value;
     wire [CAND_W-1:0]              write_grant_value;
@@ -251,13 +255,22 @@ module l1d_l2_port #(
                                                 | (tid_quad_free_q[quad_idx] & ~tid_quad_take[quad_idx]);
         end
         for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_block
-            assign tid_block_free[block_idx] = |tid_quad_free_q[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
             if (block_idx == 0) begin : g_lowest_block
                 assign tid_blocks_below_free[block_idx] = 1'b0;
             end else begin : g_upper_block
-                assign tid_blocks_below_free[block_idx] = |tid_block_free[block_idx-1:0];
+                assign tid_blocks_below_free[block_idx] = |tid_block_free_q[block_idx-1:0];
             end
-            assign tid_block_first[block_idx] = tid_block_free[block_idx] & ~tid_blocks_below_free[block_idx];
+            assign tid_block_first[block_idx] = tid_block_free_q[block_idx] & ~tid_blocks_below_free[block_idx];
+            assign tid_block_take[block_idx] = take_if_tid_free & tid_block_first[block_idx];
+            assign tid_block_two_free[block_idx] =
+                  (|tid_quad_two_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE])
+                | (|(tid_quad_free_q[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]
+                     & tid_quads_below_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]));
+            assign tid_block_clear[block_idx] = resp_take
+                                              & (resp_tid[L2_TID_W-1:TID_BLOCK_DIGIT_LO] == block_idx);
+            assign tid_block_free_next[block_idx] = tid_block_clear[block_idx]
+                                                  | tid_block_two_free[block_idx]
+                                                  | (tid_block_free_q[block_idx] & ~tid_block_take[block_idx]);
         end
         for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
             if ((tid_idx % TID_QUAD_SIZE) == 0) begin : g_quad_first
@@ -332,7 +345,7 @@ module l1d_l2_port #(
     assign req_take   = take_if_requested & (read_any | write_any);
     assign read_take  = req_take & ~pick_write;
     assign write_take = req_take &  pick_write;
-    assign take_if_requested = ~req_reg_valid & (|tid_block_free);
+    assign take_if_requested = ~req_reg_valid & (|tid_block_free_q);
     assign take_if_tid_free  = ~req_reg_valid & (read_any | write_any);
     assign read_turn         = ~write_any | last_was_write;
     assign write_turn        = ~read_any | ~last_was_write;
@@ -465,6 +478,12 @@ module l1d_l2_port #(
             tid_quad_free_q <= {TID_QUADS{1'b1}};
         else
             tid_quad_free_q <= tid_quad_free_next;
+    end
+    always @(posedge clk) begin : tid_block_free_proc
+        if (rst)
+            tid_block_free_q <= {TID_BLOCKS{1'b1}};
+        else
+            tid_block_free_q <= tid_block_free_next;
     end
     assign l2_req_valid = req_reg_valid;
     assign l2_req_pkt   = req_reg_pkt;

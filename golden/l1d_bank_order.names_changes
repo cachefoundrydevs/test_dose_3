@@ -9,6 +9,7 @@
 + DECL integer join_port_idx
 + DECL integer join_count_idx
 + DECL integer pop_value_idx
++ DECL reg candidate_selected
 + DECL input[ORDER_DEPTH-1:0]pointer_onehot
 + DECL input[LSU_PORTS:0]step_onehot
 + DECL integer step_idx
@@ -19,11 +20,17 @@
 + FOR for(pop_value_idx=0;pop_value_idx<=1;pop_value_idx=pop_value_idx+1)
 # iteration BO-1 (2026-11-23): fill count and empty flag as early select words AND-ORed with the decoded count (no adder)
 + DECL localparam COUNT_VALUES = 1 << ORDER_CNT_W
++ DECL reg[ORDER_CNT_W*COUNT_VALUES-1:0]count_bit_select
++ DECL reg[COUNT_VALUES-1:0]empty_select
 + DECL integer count_value_idx
 + DECL integer count_bit_idx
 + FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES;count_value_idx=count_value_idx+1)
 + FOR for(count_bit_idx=0;count_bit_idx<ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
 # iteration BO-2 (2026-11-23): low count pair predecoded, next bit k from order_count[k:0] only, reset folded into the selects
++ DECL localparam COUNT_LOW_W = ORDER_CNT_W / 2
++ DECL localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W
++ DECL reg count_prefix_hit
++ FOR for(count_value_idx=0;count_value_idx<COUNT_LOW_VALUES;count_value_idx=count_value_idx+1)
 # iteration BO-4 (2026-11-23): high count pair predecoded too; next count bits and the empty flag as
 # low one-hot AND (high one-hot AND early select); count_hit_onehot removed (its "+ DECL" line and two count loops dropped)
 # iteration BO-6 (2026-11-23): order_port write as AND-OR with the write pointer bit last (ranks from the join_run chain);
@@ -37,6 +44,11 @@
 # iteration BO-7 (2026-11-23): order_count[0] only in the last gate (Shannon split) of every next-count bit and of the
 # empty flag; order_count[2:1] predecoded (mid_hit_onehot). Dropped with it: low_hit_onehot, high_hit_onehot,
 # COUNT_HIGH_VALUES, high_part_select, high_value_idx and their loops (lines of BO-2 / BO-4 removed)
++ DECL reg[COUNT_LOW_VALUES-1:0]mid_hit_onehot
++ DECL reg next_if_bit0_clear
++ DECL reg next_if_bit0_set
++ FOR for(count_bit_idx=0;count_bit_idx<=ORDER_CNT_W;count_bit_idx=count_bit_idx+1)
++ FOR for(count_value_idx=0;count_value_idx<COUNT_VALUES/2;count_value_idx=count_value_idx+1)
 # iteration BO-8 (2026-11-23): join count one-hot from thresholds (at least n joins: OR of n-port ANDs, no XOR, no chain);
 # the join_run chain stays for the ranks of the order_port write
 + DECL localparam JOIN_PATTERNS = 1 << LSU_PORTS
@@ -50,19 +62,3 @@
 + FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
-# iteration PF-I5 (2026-11-25, pop computed in l1d_port_front): next count and empty flag as tables of the count flops per
-# (join count, pop); pop is a 2:1 select and the join count one-hot the last AND-OR. Dropped with it (their lines of BO-1,
-# BO-2 and BO-7 removed): count_bit_select, empty_select, candidate_selected, COUNT_LOW_W, COUNT_LOW_VALUES,
-# mid_hit_onehot, count_prefix_hit, next_if_bit0_clear, next_if_bit0_set and their loops
-+ DECL localparam NEXT_W = ORDER_CNT_W + 1
-+ DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_no_pop
-+ DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_pop
-+ DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_per_join
-+ DECL reg count_matches
-+ FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
-# PF-I5 too: order_port write ranks as flat 'exactly r lower joins' terms (rank_port) and rank_used = join_at_least[r+1];
-# the join_run chain stays only for rank_before_onehot
-+ DECL reg lower_joins_exact
-+ FOR for(join_port_idx=0;join_port_idx<LSU_PORTS;join_port_idx=join_port_idx+1)
-+ FOR for(rank_idx=0;rank_idx<=join_port_idx;rank_idx=rank_idx+1)
-+ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)

@@ -11,7 +11,7 @@ read_sdc $::env(SDC_FILE)
 set prefix $::env(REPORT_PREFIX)
 
 proc group_of {full} {
-    set n [string map {\ {}} $full]
+    set n [string map [list "\\" ""] $full]
     if {[regexp {^g_bank\[([0-9]+)\]} $n -> i]} { return bank$i }
     if {[regexp {^u_merge_([0-9]+)} $n -> i]}   { return merge$i }
     if {[string match u_front* $n]}             { return front }

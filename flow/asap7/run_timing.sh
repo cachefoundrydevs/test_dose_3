@@ -112,6 +112,7 @@ CFG
         "$OPENROAD" -no_init -exit "$HERE/sta_module.tcl" > "$OUT/results/sta_$M.log" 2>&1; then
         tail -30 "$OUT/results/sta_$M.log"; failure STA_FAIL; continue
     fi
+    LEF_FILES="$LEFS" LIB_FILES="$LIBS" NETLIST="$NET" TOP="$M" SDC_FILE="$SDC" REPORT_PREFIX="$OUT/results/$M" "$OPENROAD" -no_init -exit "$HERE/sta_pairs.tcl" > "$OUT/results/sta_pairs_$M.log" 2>&1 || echo "pairs STA failed (ignored)"
     R=$(grep '^RESULT ' "$OUT/results/sta_$M.log" | tail -1 || true)
     if [[ -z $R ]]; then failure STA_RESULT_MISSING; continue; fi
     get() { sed -n "s/.*$1=\([^ ]*\).*/\1/p" <<< "$R"; }

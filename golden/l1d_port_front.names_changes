@@ -31,3 +31,19 @@
 + FOR for(rk_k=1;rk_k<NP;rk_k=rk_k+1)
 + FOR for(rk_pattern=0;rk_pattern<(1<<NP);rk_pattern=rk_pattern+1)
 - DECL reg drain_line_store
+# iteration PF-I8 (2026-11-25): join thresholds of every port prefix for the ring (u_order.join_prefix_at_least), from
+# the pins and the room rule in parallel (P - min(L, G) as threshold AND/OR), ring_empty_q as the last select
++ DECL reg[NP*NP-1:0]join_prefix_at_least
++ DECL reg pins_at_least
++ DECL reg pins_at_least_m
++ DECL reg eligible_at_least
++ DECL reg joins_if_empty
++ DECL integer jp_k
++ DECL integer jp_m
++ DECL integer jp_a
++ DECL integer jp_pattern
++ FOR for(jp_k=1;jp_k<=NP;jp_k=jp_k+1)
++ FOR for(jp_m=1;jp_m<=NP;jp_m=jp_m+1)
++ FOR for(jp_pattern=0;jp_pattern<(1<<NP);jp_pattern=jp_pattern+1)
++ FOR for(jp_a=0;jp_a<=jp_k-jp_m;jp_a=jp_a+1)
++ FOR for(jp_pattern=0;jp_pattern<(1<<NP);jp_pattern=jp_pattern+1)

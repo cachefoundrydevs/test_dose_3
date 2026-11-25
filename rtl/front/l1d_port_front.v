@@ -158,6 +158,20 @@ module l1d_port_front #(
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
                 assign drain_alloc_port[b*NP + p] = head_port[b*NP + p] && drain_port_ready[b*NP + p]; // ring head is the last AND
             end
+            // Join thresholds for the ring, straight from the pins and the room rule (not from join_here):
+            // in the ports 0 .. k-1, P pins are for this bank, L of them are eligible_if_empty and min(L, G) of those
+            // get an entry (G = min(free_count, NA)), so with an empty ring joins = P - min(L, G), else joins = P.
+            // joins >= m  <=>  OR over a of (P >= m + a) AND (L < a+1 OR G < a+1): monotone AND/OR, no exact count,
+            // and ring_empty_q is the last select.
+            reg  [NP*NP-1:0] join_prefix_at_least; // NP*NP = 16 bits: bit (k-1)*NP + (m-1): at least m of the ports 0 .. k-1 join
+            reg              pins_at_least;        // at least jp_m + jp_a of the ports 0 .. jp_k-1 have a pin for this bank
+            reg              pins_at_least_m;      // at least jp_m of the ports 0 .. jp_k-1 have a pin for this bank
+            reg              eligible_at_least;    // at least jp_a + 1 of the ports 0 .. jp_k-1 are eligible_if_empty
+            reg              joins_if_empty;       // at least jp_m of the ports 0 .. jp_k-1 join when the ring is empty
+            integer          jp_k;
+            integer          jp_m;
+            integer          jp_a;
+            integer          jp_pattern;
             integer rk_p;
             integer rk_k;
             integer rk_pattern;
@@ -182,6 +196,37 @@ module l1d_port_front #(
                             alloc_here[rk_p] = alloc_here[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
                         end
                 end
+                // join thresholds of every port prefix (see above)
+                join_prefix_at_least = {(NP*NP){1'b0}};
+                pins_at_least     = 1'b0;
+                pins_at_least_m   = 1'b0;
+                eligible_at_least = 1'b0;
+                joins_if_empty    = 1'b0;
+                for (jp_k = 1; jp_k <= NP; jp_k = jp_k + 1)
+                    for (jp_m = 1; jp_m <= NP; jp_m = jp_m + 1)
+                        if (jp_m <= jp_k) begin
+                            pins_at_least_m = 1'b0;
+                            for (jp_pattern = 0; jp_pattern < (1 << NP); jp_pattern = jp_pattern + 1)
+                                if ((jp_pattern >> jp_k) == 0 && ones_in_pattern(jp_pattern) == jp_m)
+                                    pins_at_least_m = pins_at_least_m |
+                                        ((pin_for_bank[b*NP +: NP] & jp_pattern) == jp_pattern);
+                            joins_if_empty = 1'b0;
+                            for (jp_a = 0; jp_a <= jp_k - jp_m; jp_a = jp_a + 1) begin
+                                pins_at_least     = 1'b0;
+                                eligible_at_least = 1'b0;
+                                for (jp_pattern = 0; jp_pattern < (1 << NP); jp_pattern = jp_pattern + 1)
+                                    if ((jp_pattern >> jp_k) == 0) begin
+                                        if (ones_in_pattern(jp_pattern) == jp_m + jp_a)
+                                            pins_at_least = pins_at_least |
+                                                ((pin_for_bank[b*NP +: NP] & jp_pattern) == jp_pattern);
+                                        if (ones_in_pattern(jp_pattern) == jp_a + 1)
+                                            eligible_at_least = eligible_at_least | ((eligible_if_empty & jp_pattern) == jp_pattern);
+                                    end
+                                joins_if_empty = joins_if_empty | (pins_at_least &
+                                    (!eligible_at_least | !(free_at_least[jp_a + 1] & (jp_a + 1 <= NA))));
+                            end
+                            join_prefix_at_least[(jp_k-1)*NP + jp_m - 1] = ring_empty_q[b] ? joins_if_empty : pins_at_least_m;
+                        end
             end
             l1d_bank_order #(`L1D_PARAMS_PASS, .BANK_ID(b), .PORT_QUEUE_DEPTH(PORT_QUEUE_DEPTH)) u_order (
                 .clk              (clk),
@@ -190,6 +235,7 @@ module l1d_port_front #(
                 .join_1           (join_here[1]),
                 .join_2           (join_here[2]),
                 .join_3           (join_here[3]),
+                .join_prefix_at_least (join_prefix_at_least),
                 .pop              (drain_alloc_pred[b]),
                 .head_port_onehot (head_port_onehot_b),
                 .ring_empty_q     (ring_empty_q[b])

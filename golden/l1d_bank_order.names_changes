@@ -39,15 +39,7 @@
 # COUNT_HIGH_VALUES, high_part_select, high_value_idx and their loops (lines of BO-2 / BO-4 removed)
 # iteration BO-8 (2026-11-23): join count one-hot from thresholds (at least n joins: OR of n-port ANDs, no XOR, no chain);
 # the join_run chain stays for the ranks of the order_port write
-+ DECL localparam JOIN_PATTERNS = 1 << LSU_PORTS
 + DECL reg[LSU_PORTS+1:0]join_at_least
-+ DECL integer join_pattern_idx
-+ DECL integer join_pattern_ones
-+ DECL integer pattern_value
-+ DECL integer pattern_width
-+ DECL integer pattern_bit
-+ FOR for(pattern_bit=0;pattern_bit<pattern_width;pattern_bit=pattern_bit+1)
-+ FOR for(join_pattern_idx=0;join_pattern_idx<JOIN_PATTERNS;join_pattern_idx=join_pattern_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
 # iteration PF-I6 (2026-11-25, pop and joins computed in l1d_port_front): next count and empty flag as tables of the count
@@ -57,6 +49,22 @@
 + DECL localparam NEXT_W = ORDER_CNT_W + 1
 + DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_no_pop
 + DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_pop
-+ DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_per_join
 + DECL reg count_matches
-+ FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+# iteration PF-I8 (2026-11-25, user decision: the child's ports may change): new input join_prefix_at_least (join
+# thresholds of every port prefix from l1d_port_front); join_at_least, rank_used and rank_port from it (thermometer
+# joins_below_at_most). Dropped (their lines of BO-8 removed): JOIN_PATTERNS, join_pattern_idx, join_pattern_ones and its
+# inputs / loop, the join_at_least pattern loops
+- MODULE module l1d_bank_order #( `L1D_PARAMS, parameter BANK_ID = 0, parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk, rst, join_0, join_1, join_2, join_3, pop, head_port_onehot, ring_empty_q );
++ MODULE module l1d_bank_order #( `L1D_PARAMS, parameter BANK_ID = 0, parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk, rst, join_0, join_1, join_2, join_3, join_prefix_at_least, pop, head_port_onehot, ring_empty_q );
+- DECL parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk,rst,join_0,join_1,join_2,join_3,pop,head_port_onehot,ring_empty_q )
++ DECL parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk,rst,join_0,join_1,join_2,join_3,join_prefix_at_least,pop,head_port_onehot,ring_empty_q )
++ DECL wire[LSU_PORTS*LSU_PORTS-1:0]join_prefix_at_least
++ DECL reg[LSU_PORTS:0]joins_below_at_most
++ DECL integer below_idx
++ FOR for(join_count_idx=1;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
++ FOR for(below_idx=1;below_idx<=LSU_PORTS;below_idx=below_idx+1)
++ FOR for(below_idx=0;below_idx<LSU_PORTS;below_idx=below_idx+1)
+# PF-I8 too: join count selects within each pop value, pop is the last 2:1 select of the next count and the empty flag
+# (next_per_join of PF-I6 removed, its line dropped)
++ DECL reg[NEXT_W-1:0]count_after_no_pop
++ DECL reg[NEXT_W-1:0]count_after_pop

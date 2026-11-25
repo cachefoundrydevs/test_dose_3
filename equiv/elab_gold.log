@@ -1,0 +1,498 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gold.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/common/l1d_pri_enc.v
+Parsing Verilog input from `rtl/common/l1d_pri_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_pri_enc'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/common/l1d_arb_rr_flat.v
+Parsing Verilog input from `rtl/common/l1d_arb_rr_flat.v' to AST representation.
+Generating RTLIL representation for module `\l1d_arb_rr_flat'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/common/l1d_arb_rr.v
+Parsing Verilog input from `rtl/common/l1d_arb_rr.v' to AST representation.
+Generating RTLIL representation for module `\l1d_arb_rr'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: golden/l1d_l2_port.v
+Parsing Verilog input from `golden/l1d_l2_port.v' to AST representation.
+Generating RTLIL representation for module `\l1d_l2_port'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     \l1d_pri_enc
+Used module:     \l1d_arb_rr
+Parameter \N = 64
+Parameter \IDX_W = 6
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+Parameter \N = 64
+Parameter \IDX_W = 6
+Generating RTLIL representation for module `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+
+5.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_arb_rr'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Generating RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Found cached RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr'.
+
+5.4. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc
+Used module:     $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr
+
+5.5. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc
+Used module:     $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr
+Removing unused module `\l1d_arb_rr'.
+Removing unused module `\l1d_arb_rr_flat'.
+Removing unused module `\l1d_pri_enc'.
+Removed 3 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/common/l1d_arb_rr.v:53$551 in module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+Marked 64 switch rules as full_case in process $proc$rtl/common/l1d_pri_enc.v:11$543 in module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+Removed 1 dead cases from process $proc$golden/l1d_l2_port.v:222$540 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_l2_port.v:222$540 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_l2_port.v:238$454 in module l1d_l2_port.
+Marked 2 switch rules as full_case in process $proc$golden/l1d_l2_port.v:226$452 in module l1d_l2_port.
+Marked 3 switch rules as full_case in process $proc$golden/l1d_l2_port.v:211$421 in module l1d_l2_port.
+Marked 2 switch rules as full_case in process $proc$golden/l1d_l2_port.v:207$415 in module l1d_l2_port.
+Marked 2 switch rules as full_case in process $proc$golden/l1d_l2_port.v:195$412 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$golden/l1d_l2_port.v:166$111 in module l1d_l2_port.
+Removed a total of 1 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 77 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~83 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$551'.
+     1/1: $0\mask_r[3:0]
+Creating decoders for process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$547'.
+Creating decoders for process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$543'.
+     1/64: $64\lowest_set_index[5:0]
+     2/64: $63\lowest_set_index[5:0]
+     3/64: $62\lowest_set_index[5:0]
+     4/64: $61\lowest_set_index[5:0]
+     5/64: $60\lowest_set_index[5:0]
+     6/64: $59\lowest_set_index[5:0]
+     7/64: $58\lowest_set_index[5:0]
+     8/64: $57\lowest_set_index[5:0]
+     9/64: $56\lowest_set_index[5:0]
+    10/64: $55\lowest_set_index[5:0]
+    11/64: $54\lowest_set_index[5:0]
+    12/64: $53\lowest_set_index[5:0]
+    13/64: $52\lowest_set_index[5:0]
+    14/64: $51\lowest_set_index[5:0]
+    15/64: $50\lowest_set_index[5:0]
+    16/64: $49\lowest_set_index[5:0]
+    17/64: $48\lowest_set_index[5:0]
+    18/64: $47\lowest_set_index[5:0]
+    19/64: $46\lowest_set_index[5:0]
+    20/64: $45\lowest_set_index[5:0]
+    21/64: $44\lowest_set_index[5:0]
+    22/64: $43\lowest_set_index[5:0]
+    23/64: $42\lowest_set_index[5:0]
+    24/64: $41\lowest_set_index[5:0]
+    25/64: $40\lowest_set_index[5:0]
+    26/64: $39\lowest_set_index[5:0]
+    27/64: $38\lowest_set_index[5:0]
+    28/64: $37\lowest_set_index[5:0]
+    29/64: $36\lowest_set_index[5:0]
+    30/64: $35\lowest_set_index[5:0]
+    31/64: $34\lowest_set_index[5:0]
+    32/64: $33\lowest_set_index[5:0]
+    33/64: $32\lowest_set_index[5:0]
+    34/64: $31\lowest_set_index[5:0]
+    35/64: $30\lowest_set_index[5:0]
+    36/64: $29\lowest_set_index[5:0]
+    37/64: $28\lowest_set_index[5:0]
+    38/64: $27\lowest_set_index[5:0]
+    39/64: $26\lowest_set_index[5:0]
+    40/64: $25\lowest_set_index[5:0]
+    41/64: $24\lowest_set_index[5:0]
+    42/64: $23\lowest_set_index[5:0]
+    43/64: $22\lowest_set_index[5:0]
+    44/64: $21\lowest_set_index[5:0]
+    45/64: $20\lowest_set_index[5:0]
+    46/64: $19\lowest_set_index[5:0]
+    47/64: $18\lowest_set_index[5:0]
+    48/64: $17\lowest_set_index[5:0]
+    49/64: $16\lowest_set_index[5:0]
+    50/64: $15\lowest_set_index[5:0]
+    51/64: $14\lowest_set_index[5:0]
+    52/64: $13\lowest_set_index[5:0]
+    53/64: $12\lowest_set_index[5:0]
+    54/64: $11\lowest_set_index[5:0]
+    55/64: $10\lowest_set_index[5:0]
+    56/64: $9\lowest_set_index[5:0]
+    57/64: $8\lowest_set_index[5:0]
+    58/64: $7\lowest_set_index[5:0]
+    59/64: $6\lowest_set_index[5:0]
+    60/64: $5\lowest_set_index[5:0]
+    61/64: $4\lowest_set_index[5:0]
+    62/64: $3\lowest_set_index[5:0]
+    63/64: $2\lowest_set_index[5:0]
+    64/64: $1\lowest_set_index[5:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:222$540'.
+     1/1: $1$mem2reg_rd$\route_table$golden/l1d_l2_port.v:222$96_DATA[8:0]$542
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+     1/9: $0\ans_end_beat[1:0]
+     2/9: $0\ans_beat[1:0]
+     3/9: $0\ans_line[511:0]
+     4/9: $0\ans_err[0:0]
+     5/9: $0\ans_sub[2:0]
+     6/9: $0\ans_bank[1:0]
+     7/9: $0\ans_shared[0:0]
+     8/9: $0\ans_nc[0:0]
+     9/9: $0\ans_is_write[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:226$452'.
+     1/2: $0\err_pulse_q[0:0]
+     2/2: $0\ans_valid[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+     1/7: $3$lookahead\tid_busy$420[63:0]$438
+     2/7: $2$bitselwrite$pos$golden/l1d_l2_port.v:216$94[5:0]$437
+     3/7: $2$lookahead\tid_busy$420[63:0]$429
+     4/7: $2$bitselwrite$pos$golden/l1d_l2_port.v:215$93[5:0]$428
+     5/7: $1$lookahead\tid_busy$420[63:0]$427
+     6/7: $1$bitselwrite$pos$golden/l1d_l2_port.v:216$94[5:0]$426
+     7/7: $1$bitselwrite$pos$golden/l1d_l2_port.v:215$93[5:0]$425
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+     1/66: $1$mem2reg_wr$\route_table$golden/l1d_l2_port.v:209$95_ADDR[5:0]$418
+     2/66: $1$mem2reg_wr$\route_table$golden/l1d_l2_port.v:209$95_DATA[8:0]$419
+     3/66: $0\route_table[63][8:0]
+     4/66: $0\route_table[62][8:0]
+     5/66: $0\route_table[61][8:0]
+     6/66: $0\route_table[60][8:0]
+     7/66: $0\route_table[59][8:0]
+     8/66: $0\route_table[58][8:0]
+     9/66: $0\route_table[57][8:0]
+    10/66: $0\route_table[56][8:0]
+    11/66: $0\route_table[55][8:0]
+    12/66: $0\route_table[54][8:0]
+    13/66: $0\route_table[53][8:0]
+    14/66: $0\route_table[52][8:0]
+    15/66: $0\route_table[51][8:0]
+    16/66: $0\route_table[50][8:0]
+    17/66: $0\route_table[49][8:0]
+    18/66: $0\route_table[48][8:0]
+    19/66: $0\route_table[47][8:0]
+    20/66: $0\route_table[46][8:0]
+    21/66: $0\route_table[45][8:0]
+    22/66: $0\route_table[44][8:0]
+    23/66: $0\route_table[43][8:0]
+    24/66: $0\route_table[42][8:0]
+    25/66: $0\route_table[41][8:0]
+    26/66: $0\route_table[40][8:0]
+    27/66: $0\route_table[39][8:0]
+    28/66: $0\route_table[38][8:0]
+    29/66: $0\route_table[37][8:0]
+    30/66: $0\route_table[36][8:0]
+    31/66: $0\route_table[35][8:0]
+    32/66: $0\route_table[34][8:0]
+    33/66: $0\route_table[33][8:0]
+    34/66: $0\route_table[32][8:0]
+    35/66: $0\route_table[31][8:0]
+    36/66: $0\route_table[30][8:0]
+    37/66: $0\route_table[29][8:0]
+    38/66: $0\route_table[28][8:0]
+    39/66: $0\route_table[27][8:0]
+    40/66: $0\route_table[26][8:0]
+    41/66: $0\route_table[25][8:0]
+    42/66: $0\route_table[24][8:0]
+    43/66: $0\route_table[23][8:0]
+    44/66: $0\route_table[22][8:0]
+    45/66: $0\route_table[21][8:0]
+    46/66: $0\route_table[20][8:0]
+    47/66: $0\route_table[19][8:0]
+    48/66: $0\route_table[18][8:0]
+    49/66: $0\route_table[17][8:0]
+    50/66: $0\route_table[16][8:0]
+    51/66: $0\route_table[15][8:0]
+    52/66: $0\route_table[14][8:0]
+    53/66: $0\route_table[13][8:0]
+    54/66: $0\route_table[12][8:0]
+    55/66: $0\route_table[11][8:0]
+    56/66: $0\route_table[10][8:0]
+    57/66: $0\route_table[9][8:0]
+    58/66: $0\route_table[8][8:0]
+    59/66: $0\route_table[7][8:0]
+    60/66: $0\route_table[6][8:0]
+    61/66: $0\route_table[5][8:0]
+    62/66: $0\route_table[4][8:0]
+    63/66: $0\route_table[3][8:0]
+    64/66: $0\route_table[2][8:0]
+    65/66: $0\route_table[1][8:0]
+    66/66: $0\route_table[0][8:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:203$414'.
+     1/1: $0\req_reg_pkt[642:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:195$412'.
+     1/1: $0\req_reg_valid[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:186$148'.
+Creating decoders for process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:166$111'.
+     1/1: $0\last_was_write[0:0]
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\grant_onehot' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$547'.
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\grant_index' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$547'.
+No latch inferred for signal `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.\i' from process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$543'.
+No latch inferred for signal `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.\lowest_set_index' from process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$543'.
+No latch inferred for signal `\l1d_l2_port.$mem2reg_rd$\route_table$golden/l1d_l2_port.v:222$96_DATA' from process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:222$540'.
+No latch inferred for signal `\l1d_l2_port.\nc_read_mask' from process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:186$148'.
+No latch inferred for signal `\l1d_l2_port.\nc_read_bytes' from process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:186$148'.
+No latch inferred for signal `\l1d_l2_port.\mask_bit' from process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:186$148'.
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\mask_r' using process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$551'.
+  created $dff cell `$procdff$3269' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_is_write' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3270' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_nc' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3271' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_shared' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3272' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_bank' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3273' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_sub' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3274' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_err' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3275' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_line' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3276' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_beat' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3277' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_end_beat' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+  created $dff cell `$procdff$3278' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_valid' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:226$452'.
+  created $dff cell `$procdff$3279' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\err_pulse_q' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:226$452'.
+  created $dff cell `$procdff$3280' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\tid_busy' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+  created $dff cell `$procdff$3281' with positive edge clock.
+Creating register for signal `\l1d_l2_port.$bitselwrite$pos$golden/l1d_l2_port.v:215$93' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+  created $dff cell `$procdff$3282' with positive edge clock.
+Creating register for signal `\l1d_l2_port.$bitselwrite$pos$golden/l1d_l2_port.v:216$94' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+  created $dff cell `$procdff$3283' with positive edge clock.
+Creating register for signal `\l1d_l2_port.$lookahead\tid_busy$420' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+  created $dff cell `$procdff$3284' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[0]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3285' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[1]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3286' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[2]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3287' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[3]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3288' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[4]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3289' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[5]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3290' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[6]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3291' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[7]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3292' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[8]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3293' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[9]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3294' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[10]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3295' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[11]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3296' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[12]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3297' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[13]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3298' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[14]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3299' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[15]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3300' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[16]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3301' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[17]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3302' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[18]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3303' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[19]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3304' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[20]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3305' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[21]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3306' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[22]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3307' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[23]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3308' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[24]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3309' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[25]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3310' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[26]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3311' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[27]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3312' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[28]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3313' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[29]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3314' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[30]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3315' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[31]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3316' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[32]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3317' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[33]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3318' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[34]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3319' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[35]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3320' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[36]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3321' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[37]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3322' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[38]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3323' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[39]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3324' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[40]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3325' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[41]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3326' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[42]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3327' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[43]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3328' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[44]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3329' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[45]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3330' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[46]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3331' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[47]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3332' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[48]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3333' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[49]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3334' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[50]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3335' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[51]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3336' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[52]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3337' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[53]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3338' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[54]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3339' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[55]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3340' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[56]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3341' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[57]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3342' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[58]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3343' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[59]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3344' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[60]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3345' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[61]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3346' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[62]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3347' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[63]' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3348' with positive edge clock.
+Creating register for signal `\l1d_l2_port.$mem2reg_wr$\route_table$golden/l1d_l2_port.v:209$95_ADDR' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3349' with positive edge clock.
+Creating register for signal `\l1d_l2_port.$mem2reg_wr$\route_table$golden/l1d_l2_port.v:209$95_DATA' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+  created $dff cell `$procdff$3350' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\req_reg_pkt' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:203$414'.
+  created $dff cell `$procdff$3351' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\req_reg_valid' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:195$412'.
+  created $dff cell `$procdff$3352' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\last_was_write' using process `\l1d_l2_port.$proc$golden/l1d_l2_port.v:166$111'.
+  created $dff cell `$procdff$3353' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$551'.
+Removing empty process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$551'.
+Removing empty process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$547'.
+Found and cleaned up 64 empty switches in `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$543'.
+Removing empty process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$543'.
+Found and cleaned up 1 empty switch in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:222$540'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:222$540'.
+Found and cleaned up 2 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:238$454'.
+Found and cleaned up 3 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:226$452'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:226$452'.
+Found and cleaned up 3 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:211$421'.
+Found and cleaned up 2 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:207$415'.
+Found and cleaned up 1 empty switch in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:203$414'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:203$414'.
+Found and cleaned up 3 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:195$412'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:195$412'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:186$148'.
+Found and cleaned up 2 empty switches in `\l1d_l2_port.$proc$golden/l1d_l2_port.v:166$111'.
+Removing empty process `l1d_l2_port.$proc$golden/l1d_l2_port.v:166$111'.
+Cleaned up 83 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+Optimizing module l1d_l2_port.
+<suppressed ~7 debug messages>
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+Deleting now unused module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+<suppressed ~3 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_l2_port..
+Removed 15 unused cells and 522 unused wires.
+<suppressed ~16 debug messages>
+Renaming module \l1d_l2_port to \gold.
+
+9. Executing RTLIL backend.
+Output filename: proof/gold.il
+
+End of script. Logfile hash: 9717502952, time: 0.06s, user: 0.06s, system: 0.01s, MEM: 32.32 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 32% 5x read_verilog (0 sec), 26% 1x opt_clean (0 sec), ...

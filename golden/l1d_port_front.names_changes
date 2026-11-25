@@ -4,11 +4,9 @@
 # iteration PF-I4 (2026-11-23): skid FIFO fill level with the pop as the last select (POP_LAST)
 + DECL localparam SKID_POP_LAST = 1
 - DECL reg[RANK_W-1:0]rank[0:NP-1]
-+ DECL reg[NP-1:0]rank_onehot[0:NP-1]
 + DECL reg[NP:1]free_at_least
 - DECL integer rk_l
 + DECL integer rk_k
-+ DECL reg[NP-1:0]rank_run
 + FOR for(rk_k=1;rk_k<=NP;rk_k=rk_k+1)
 - FOR for(rk_l=0;rk_l<rk_p;rk_l=rk_l+1)
 + FOR for(rk_k=0;rk_k<NP;rk_k=rk_k+1)
@@ -17,3 +15,18 @@
 + DECL reg stop_if_hold
 + DECL reg stop_if_push
 + DECL reg stop_if_pop
+# iteration PF-I5 (2026-11-25): drain decided per port before the ring-head select (drain_port_ready / drain_alloc_port,
+# drain_line_store dropped); alloc_here as flat 'exactly k lower eligible_if_empty' terms with ring_empty_q last (the
+# rank_run chain and rank_onehot of PF-I1 removed, their lines dropped); stop_after with pop as the last select
++ DECL wire[NB*NP-1:0]drain_port_ready
++ DECL wire[NB*NP-1:0]drain_alloc_port
++ DECL wire[NP-1:0]eligible_if_empty
++ DECL wire free_nonzero
+- DECL reg drain_line_store
++ DECL integer ones_in_pattern
++ DECL integer pattern_value
++ DECL integer pattern_bit
++ FOR for(pattern_bit=0;pattern_bit<NP;pattern_bit=pattern_bit+1)
++ DECL integer rk_pattern
++ DECL reg lower_exact
++ FOR for(rk_pattern=0;rk_pattern<(1<<NP);rk_pattern=rk_pattern+1)

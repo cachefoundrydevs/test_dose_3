@@ -116,44 +116,71 @@ module l1d_port_front #(
     wire [NB*NP-1:0] head_port;
     wire [NB-1:0]    ring_empty_q;
     wire [NB-1:0]    drain_alloc_pred;
+    // drain decided per port before the ring-head select (head_port_onehot is one-hot or zero, so the head select is the last AND-OR)
+    wire [NB*NP-1:0] drain_port_ready; // NB*NP = 16 bits: port p's skid head could be drained into bank b now (head select not applied)
+    wire [NB*NP-1:0] drain_alloc_port; // NB*NP = 16 bits: bank b drains port p this cycle (ring head AND ready)
+    // number of ones of a constant port pattern (elaboration only: builds the flat 'exactly k lower ports' terms)
+    function integer ones_in_pattern;
+        input integer pattern_value;
+        integer       pattern_bit;
+        begin
+            ones_in_pattern = 0;
+            for (pattern_bit = 0; pattern_bit < NP; pattern_bit = pattern_bit + 1)
+                ones_in_pattern = ones_in_pattern + ((pattern_value >> pattern_bit) & 1);
+        end
+    endfunction
     genvar b;
     generate
         for (b = 0; b < NB; b = b + 1) begin : g_bank
             wire [TRK_CNT_W-1:0] free_count;
             wire                 vec_ok;
             wire [NP-1:0]        eligible;
-            reg  [NP-1:0]        rank_onehot [0:NP-1];
+            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: eligible without ring_empty_q (the rank chain runs on it, the flop comes last)
+            wire                 free_nonzero;      // at least one tracker entry free
             reg  [NP:1]          free_at_least;
             reg  [NP-1:0]        alloc_here;
             wire [NP-1:0]        join_here;
             wire [NP-1:0]        head_port_onehot_b;
             assign free_count = bank_tracker_free_count[b*TRK_CNT_W +: TRK_CNT_W];
             assign vec_ok     = bank_vec_slot_available[b];
+            assign free_nonzero = (free_count != {TRK_CNT_W{1'b0}});
             genvar p;
             for (p = 0; p < NP; p = p + 1) begin : g_port
                 assign pin_for_bank[b*NP + p]    = port_valid[p] && (pin_bank[p*BANK_W +: BANK_W] == b);
                 assign arrival_request[b*NP + p] = pin_for_bank[b*NP + p] && ring_empty_q[b];
                 assign eligible[p]               = arrival_request[b*NP + p] && (!pin_line_store[p] || vec_ok);
+                assign eligible_if_empty[p]      = pin_for_bank[b*NP + p] && (!pin_line_store[p] || vec_ok);
+                // ready to drain: head present, for this bank, a free entry, and a vec slot for a line store (flops and early pins only)
+                assign drain_port_ready[b*NP + p] = !skid_empty[p] && (head_bank[p*BANK_W +: BANK_W] == b) && free_nonzero &&
+                                                    (!head_line_store[p] || vec_ok);
                 assign alloc_pred[b*NP + p]      = alloc_here[p];
                 assign join_here[p]              = pin_for_bank[b*NP + p] && !alloc_here[p];
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
+                assign drain_alloc_port[b*NP + p] = head_port[b*NP + p] && drain_port_ready[b*NP + p]; // ring head is the last AND
             end
             integer rk_p;
             integer rk_k;
-            reg  [NP-1:0] rank_run;
+            integer rk_pattern;
+            reg     lower_exact; // exactly rk_k of the lower ports 0 .. rk_p-1 are eligible_if_empty
+            // port p is allocated when it is eligible and fewer of the lower ports are eligible than entries are free (and < NA):
+            // OR over k of (exactly k lower eligible AND at least k+1 free), each 'exactly k' a flat AND-OR of the lower ports
+            // (no serial rank chain). eligible = eligible_if_empty AND ring_empty_q: when the ring is not empty no port is
+            // eligible and alloc_here is 0 either way, so the lower ports are counted without ring_empty_q (it comes last)
             always @* begin
                 for (rk_k = 1; rk_k <= NP; rk_k = rk_k + 1)
                     free_at_least[rk_k] = (free_count >= rk_k);
-                rank_run = {{(NP-1){1'b0}}, 1'b1};
+                lower_exact = 1'b0;
                 for (rk_p = 0; rk_p < NP; rk_p = rk_p + 1) begin
-                    rank_onehot[rk_p] = rank_run;
-                    alloc_here[rk_p]  = 1'b0;
+                    alloc_here[rk_p] = 1'b0;
                     for (rk_k = 0; rk_k < NP; rk_k = rk_k + 1)
-                        if (rk_k < NA)
-                            alloc_here[rk_p] = alloc_here[rk_p] | (rank_run[rk_k] & free_at_least[rk_k + 1]);
+                        if (rk_k < NA && rk_k <= rk_p) begin
+                            lower_exact = 1'b0;
+                            for (rk_pattern = 0; rk_pattern < (1 << NP); rk_pattern = rk_pattern + 1)
+                                if ((rk_pattern >> rk_p) == 0 && ones_in_pattern(rk_pattern) == rk_k)
+                                    lower_exact = lower_exact | ((eligible_if_empty & ((1 << rk_p) - 1)) == rk_pattern);
+                            alloc_here[rk_p] = alloc_here[rk_p] | (lower_exact & free_at_least[rk_k + 1]);
+                        end
                     alloc_here[rk_p] = alloc_here[rk_p] & eligible[rk_p];
-                    if (eligible[rk_p])
-                        rank_run = {rank_run[NP-2:0], 1'b0};
                 end
             end
             l1d_bank_order #(`L1D_PARAMS_PASS, .BANK_ID(b), .PORT_QUEUE_DEPTH(PORT_QUEUE_DEPTH)) u_order (
@@ -169,20 +196,19 @@ module l1d_port_front #(
             );
             reg  [SKID_W-1:0] drain_entry;
             reg               drain_head_ok;
-            reg               drain_line_store;
             integer dr_p;
             always @* begin
                 drain_entry      = {SKID_W{1'b0}};
                 drain_head_ok    = 1'b0;
-                drain_line_store = 1'b0;
                 for (dr_p = 0; dr_p < NP; dr_p = dr_p + 1) begin
                     drain_entry      = drain_entry | ({SKID_W{head_port_onehot_b[dr_p]}} & skid_head[dr_p*SKID_W +: SKID_W]);
                     drain_head_ok    = drain_head_ok | (head_port_onehot_b[dr_p] && !skid_empty[dr_p] && (head_bank[dr_p*BANK_W +: BANK_W] == b));
-                    drain_line_store = drain_line_store | (head_port_onehot_b[dr_p] & head_line_store[dr_p]);
                 end
             end
             assign bank_drain_request[b] = !ring_empty_q[b] && drain_head_ok;
-            assign drain_alloc_pred[b]   = bank_drain_request[b] && (free_count != {TRK_CNT_W{1'b0}}) && (!drain_line_store || vec_ok);
+            // = bank_drain_request && free entry && (!line store of the head || vec_ok): head_port_onehot_b is one-hot or zero
+            // and already holds !ring_empty_q, so the per-port ready flags are ORed after the head select
+            assign drain_alloc_pred[b]   = |drain_alloc_port[b*NP +: NP];
             assign bank_drain_packet[b*REQ_W +: REQ_W] = drain_entry[0 +: REQ_W];
             assign bank_drain_pc[b*PC_W +: PC_W]       = drain_entry[REQ_W +: PC_W];
             assign bank_arrival_line_data[b*LINE_W +: LINE_W] = ring_empty_q[b] ? port_request_line_3 : skid_head_line_3;
@@ -207,7 +233,7 @@ module l1d_port_front #(
             port_drained[pp]   = 1'b0;
             for (pb = 0; pb < NB; pb = pb + 1) begin
                 port_allocated[pp] = port_allocated[pp] | alloc_pred[pb*NP + pp];
-                port_drained[pp]   = port_drained[pp]   | (drain_alloc_pred[pb] & head_port[pb*NP + pp]);
+                port_drained[pp]   = port_drained[pp]   | drain_alloc_port[pb*NP + pp]; // = drain_alloc_pred & head_port (one-hot head)
             end
         end
     end
@@ -230,9 +256,9 @@ module l1d_port_front #(
             stop_if_hold = (used_next    + STOP_MARGIN > PORT_QUEUE_DEPTH);
             stop_if_push = (used_if_push + STOP_MARGIN > PORT_QUEUE_DEPTH);
             stop_if_pop  = (used_if_pop  + STOP_MARGIN > PORT_QUEUE_DEPTH);
-            if (push_now == pop_now) stop_after = stop_if_hold;
-            else if (push_now)       stop_after = stop_if_push;
-            else                     stop_after = stop_if_pop;
+            // pop is the last select (no push == pop compare): hold if both or neither
+            if (pop_now) stop_after = push_now ? stop_if_hold : stop_if_pop;
+            else         stop_after = push_now ? stop_if_push : stop_if_hold;
         end
     endfunction
     always @(posedge clk) begin : stop_proc

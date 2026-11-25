@@ -1,0 +1,31 @@
+FAIL tb_l1d_coh_TINY_L1D_DEBUG_NOPS_300 (no TEST PASSED / ERROR / timeout after 3600 s)  [tb_l1d_coh -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry R beat 0 of 4 last=0 err=0 data=b29ff8250e6b54b19ac7200d7653bc99
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry R beat 1 of 4 last=0 err=0 data=624fa895fedb04614ab790fd26036c49
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry R beat 2 of 4 last=0 err=0 data=d23f1845ae8bf4d13a6740ad96f3dc39
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry R beat 3 of 4 last=1 err=0 data=82efc8351e7ba481ead7301d46a38ce9
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry: DATA -> MERGE  line=00000000000001c0 fetch primary idx=4 ST err=0
+[0] L1D B3 S3 RESP from     MSHR  seat=0 idx=4 ST-ack data=0000000000000000 (resp_free=170)
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry: MERGE -> RESP  line=00000000000001c0 fetch primary idx=4 ST err=0
+[0] L1D MERGE bank 3 -> output  idx=4 ST-ack (visible next cycle)
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry: RESP -> TOKEN  line=00000000000001c0 fetch primary idx=4 ST err=0
+[0] L1D TOP  DONE  port 2 idx=4 ST C  addr=00000000000001c7 latency=101 cycles
+[0] L1D SNPB tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_s0.u_snp snoop in: entry 0 READ line=0000000000000100
+[0] L1D TRACKER bank 3: source 2 (port 2) -> entry 00000001 rank 0       deps=00000000
+[0] L1D B3 S0 ISSUE refill token  mshr=0 line=00000000000001c0
+[0] L1D SNPC snoop READ addr=0000000000000128 -> bank 0
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry: TOKEN -> INSTALL  line=00000000000001c0 fetch primary idx=4 ST err=0
+[0] L1D SNPB tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_s0.u_snp entry 0 state 0 line=0000000000000100 wait_id=0
+[0] L1D B0 S0 ISSUE snoop READ line=0000000000000100
+[0] L1D B3 S1 REFILL mshr=0 line=00000000000001c0 set=1 victim way=0 state=3 swap=0 slot=1 install=3 pf=0        
+[0] L1D VC   tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_vc insert slot 1 line=00000000000005c0 dirty=1 as  VALID (old state VALID)
+[0] L1D B3 S2 EVICT line=00000000000005c0
+[0] L1D B3 S2 REFILL mshr=0 line=00000000000001c0 INSTALLED (line + tag written), entry freed
+[0] L1D B3 S2 victim line 00000000000005c0 (dirty=1 shared=0) -> victim-cache slot 1
+[0] L1D DATA tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_r.u_data word write set/way=1/0 data=31de3417de631c0a82efc8351e7ba481ead7301d46a38ce9d23f1845ae8bf4d13a6740ad96f3dc39624fa895fedb04614ab790fd26036c49b29ff8250e6b54b1abc7200d7653bc99
+[0] L1D TAG  tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_r.u_tags write set=1 ways=01 word=0000000000000000
+[0] L1D B0 S0 NOTE: booked 00001 cancelled (source offer changed): bubble
+[0] L1D SNPB tb_l1d_coh.dut.u_ports.u_dcache.g_bank[0].u_bank.u_s0.u_snp entry 0 state 1 line=0000000000000100 wait_id=0
+[0] L1D B0 S1 SNOOP READ line=0000000000000100 -> tag miss way=0
+[0] L1D B3 S0 ISSUE BOOKED entry 0 port 2 idx=4 ST addr=00000000000009fa
+[0] L1D MSHR tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_mshr.g_entry[0].u_entry: INSTALL -> IDLE  line=00000000000001c0 fetch primary idx=4 ST err=0
+[0] L1D VC   tb_l1d_coh.dut.u_ports.u_dcache.g_bank[3].u_bank.u_vc writeback start slot 1 line=00000000000005c0 (no free slot)

@@ -1,0 +1,29 @@
+FAIL tb_ports_order_NOPS_1500 (no TEST PASSED / ERROR / timeout after 3600 s)  [tb_ports_order -d NOPS=1500]
+=== D1 (CC-4): a store waits in its port line, a younger load of the same bytes on another port ===
+  ok: D1 the younger load (P1) returns the store data of P2
+=== D2 (CC-5): a load waits, a younger store to the same bytes on another port ===
+  ok: D2 the older load (P1) returns the OLD data, not the younger store's
+  ok: D2 a later load sees the store
+=== D3: byte stores of different sizes to one word from the store port P2, one after the other ===
+  ok: D3 the bytes are merged in send order (CCCCDDDD AAAA BB 44)
+SLOW 6085000: port 1 idx 3 kind 0 @000000000000c1a4 took 434 cycles (sent at cycle 174)
+SLOW 8635000: port 0 idx 3 kind 0 @0000000000080078 took 548 cycles (sent at cycle 315)
+SLOW 11045000: port 0 idx 1 kind 0 @000000000008009c took 474 cycles (sent at cycle 630)
+SLOW 12295000: port 0 idx 7 kind 0 @0000000000014020 took 538 cycles (sent at cycle 691)
+SLOW 12465000: port 2 idx 4 kind 1 @0000000000020094 took 419 cycles (sent at cycle 827)
+SLOW 13705000: port 1 idx 7 kind 0 @000000000001c12c took 511 cycles (sent at cycle 859)
+SLOW 14065000: port 2 idx 3 kind 1 @00000000000180ec took 563 cycles (sent at cycle 843)
+SLOW 14855000: port 2 idx 0 kind 1 @00000000000380a2 took 548 cycles (sent at cycle 937)
+SLOW 16435000: port 1 idx 3 kind 0 @00000000000800fa took 718 cycles (sent at cycle 925)
+SLOW 16555000: port 2 idx 1 kind 1 @00000000000300e8 took 452 cycles (sent at cycle 1203)
+SLOW 17065000: port 1 idx 5 kind 0 @00000000000800f0 took 768 cycles (sent at cycle 938)
+SLOW 17165000: port 0 idx 3 kind 0 @000000000001c0c8 took 420 cycles (sent at cycle 1296)
+SLOW 17285000: port 0 idx 6 kind 0 @000000000002010d took 526 cycles (sent at cycle 1202)
+SLOW 17985000: port 1 idx 2 kind 0 @000000000002c0aa took 433 cycles (sent at cycle 1365)
+SLOW 18055000: port 0 idx 2 kind 0 @00000000000800d2 took 653 cycles (sent at cycle 1152)
+SLOW 18195000: port 2 idx 4 kind 1 @00000000000800f6 took 560 cycles (sent at cycle 1259)
+SLOW 18305000: port 2 idx 3 kind 1 @00000000000800cf took 410 cycles (sent at cycle 1420)
+SLOW 20555000: port 0 idx 4 kind 0 @00000000000800b4 took 604 cycles (sent at cycle 1451)
+SLOW 21695000: port 0 idx 6 kind 0 @000000000000c120 took 434 cycles (sent at cycle 1735)
+SLOW 23385000: port 0 idx 1 kind 0 @0000000000080078 took 466 cycles (sent at cycle 1872)
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble

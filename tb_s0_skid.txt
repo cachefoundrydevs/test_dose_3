@@ -1,0 +1,31 @@
+PASS tb_s0_skid (177 s)  [tb_s0_skid]
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B1 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00100 cancelled (source offer changed): bubble
+memory matches the reference after flush
+coverage: skid full P0 79 P1 61 P2 49, late sends 43, ring max 6, from ring 89, replay max 8
+coverage: pipe conflicts 0, replay conflicts 28, replay entries held 996, replay credit stalls 6
+monitor errors: skid 0, order 0, replay 0, stage R cancel 0
+  ok: coverage: the skid of P0 held 2 requests
+  ok: coverage: the skid of P1 held 2 requests
+  ok: coverage: the skid of P2 held 2 requests
+  ok: coverage: requests were sent while their stop was 1 (late LSU)
+stats: 98 requests (LD 69, ST 29, LR 0, SC 0, AMO 0), 98 answered; max latency per port: P0 99 P1 103 P2 154 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 0 0 0 0 0 21 77 0
+TEST PASSED: tb_s0_skid (98 requests, seed 1)
+tb/common/tb_ports_common.vh:701: $finish called at 17310000 (1ps)

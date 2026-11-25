@@ -1,0 +1,8 @@
+FAIL tb_ports_order_TINY_ONEBANK_STALL_NOPS_1500_SEED_2 (no TEST PASSED / ERROR / timeout after 3600 s)  [tb_ports_order -d TINY -d ONEBANK -d STALL -d NOPS=1500 -d SEED=2]
+=== D1 (CC-4): a store waits in its port line, a younger load of the same bytes on another port ===
+  ok: D1 the younger load (P1) returns the store data of P2
+=== D2 (CC-5): a load waits, a younger store to the same bytes on another port ===
+  ok: D2 the older load (P1) returns the OLD data, not the younger store's
+  ok: D2 a later load sees the store
+=== D3: byte stores of different sizes to one word from the store port P2, one after the other ===
+  ok: D3 the bytes are merged in send order (CCCCDDDD AAAA BB 44)

@@ -1,0 +1,19 @@
+FAIL tb_ports (no TEST PASSED / ERROR / timeout after 3600 s)  [tb_ports]
+=== timing: four ports at once ===
+  ok: a load / store hit on one port alone answers in 4 cycles
+  ok: a load / store hit on one port alone answers in 4 cycles
+  ok: a load / store hit on one port alone answers in 4 cycles
+  CC-1 latencies: P0 4, P1 4, P2 (store) 4
+  ok: CC-1: three hits (2 loads, 1 store) to three banks in one cycle: all in 4 cycles
+  CC-2 latencies: P0 4, P1 5
+  ok: -2: two load hits to one bank in one cycle: 4 and 5 cycles, in port order P0, P1
+=== LR / SC across ports (one global reservation) ===
+  ok: LR on P0, SC on P2 to the same line: success
+  ok: CC-9: LR A (bank 1, P0), LR B (bank 2, P1), SC A (P2) fails
+  ok: the failed SC ended the reservation: SC B fails too
+  ok: LR on P1 to bank 2, SC on P2: success
+  ok: LR on P0, store on P2 to the line, SC on P2: fail
+[0] L1D B1 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B2 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble

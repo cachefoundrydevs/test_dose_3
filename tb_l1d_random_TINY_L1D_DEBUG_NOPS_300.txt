@@ -1,0 +1,31 @@
+FAIL tb_l1d_random_TINY_L1D_DEBUG_NOPS_300 (no TEST PASSED / ERROR / timeout after 3600 s)  [tb_l1d_random -d TINY -d L1D_DEBUG -d "NOPS=300"]
+[0] L1D B3 S0 ISSUE PREFETCH line=00000000000014c0 unique=0
+[0] L1D B3 S2 LSU  idx=4 ST   addr=00000000000008fd -> MISS, all MSHR entries busy: entry waits (WANY)
+[0] L1D B3 S2 TRAIN port=2 pc=0000000000000000 addr=00000000000008fd ST miss=1 pf_hit=0           
+[0] L1D PF   SMS    request line=0000000000001540 unique=0 captured
+[0] L1D PF   hint to bank 1 line=0000000000001540 unique=0
+[0] L1D B2 S2 PF   line=0000000000001480 unique=0 ->        dropped: in the cache
+[0] L1D B1 S1 REFILL mshr=0 line=0000000000001a40 set=2 victim way=1 state=2 swap=0 slot=0 install=2 pf=1        
+[0] L1D B0 S0 ISSUE PREFETCH line=0000000000001500 unique=0
+[0] L1D TAG  tb_l1d_random.dut.u_ports.u_dcache.g_bank[1].u_bank.u_r.u_tags write set=2 ways=10 word=00c0000000000006
+[0] L1D DATA tb_l1d_random.dut.u_ports.u_dcache.g_bank[1].u_bank.u_r.u_data word write set/way=2/1 data=c728c2e12895eac235587f82a9cc13365d6087aaf1143b5e6588aff2193c43668dd0f71a21446b8ed5f81f22496cb3d6fd00274a91b4dbfe05284f92b9dce3062d7097bac1e40b2e
+[0] L1D B1 S2 EVICT line=0000000000001240
+[0] L1D B1 S2 REFILL mshr=0 line=0000000000001a40 INSTALLED (line + tag written), entry freed
+[0] L1D B1 S2 victim line 0000000000001240 (dirty=0 shared=0) -> victim-cache slot 0
+[0] L1D VC   tb_l1d_random.dut.u_ports.u_dcache.g_bank[1].u_bank.u_vc insert slot 0 line=0000000000001240 dirty=0 as  VALID (old state VALID)
+[0] L1D B3 S1 PF  entry=0 idx=0 LD C  addr=00000000000014c0 set=0 ->           HIT way=0 state=3                                                     
+[0] L1D PF   SMS    request line=0000000000001580 unique=0 captured
+[0] L1D PF   hint to bank 2 line=0000000000001580 unique=0
+[0] L1D B3 S2 PF   line=00000000000014c0 unique=0 ->        dropped: in the cache
+[0] L1D MSHR tb_l1d_random.dut.u_ports.u_dcache.g_bank[1].u_bank.u_mshr.g_entry[0].u_entry: INSTALL -> IDLE  line=0000000000001a40 fetch primary idx=0 LD err=0
+[0] L1D B0 S1 PF  entry=0 idx=0 LD C  addr=0000000000001500 set=1 ->          MISS way=0 state=2                                                     
+[0] L1D B1 S0 ISSUE BOOKED entry 0 port 2 idx=3 ST addr=0000000000001060
+[0] L1D PF   SMS    request line=00000000000015c0 unique=0 captured
+[0] L1D PF   hint to bank 3 line=00000000000015c0 unique=0
+[0] L1D B1 S0 ISSUE PREFETCH line=0000000000001540 unique=0
+[0] L1D B0 S2 PF   line=0000000000001500 unique=0 ->        dropped: in the cache
+[0] L1D B1 S1 LSU entry=0 idx=3 ST C  addr=0000000000001060 set=0 ->          MISS way=0 state=2                                                     
+[0] L1D B2 S0 ISSUE PREFETCH line=0000000000001580 unique=0
+[0] L1D B1 S2 LSU  idx=3 ST   addr=0000000000001060 -> MISS: MSHR entry 0 allocated, unique fetch of line 0000000000001040
+[0] L1D B1 S1 PF  entry=0 idx=0 LD C  addr=0000000000001540 set=1 ->           HIT way=1 state=2                                                     
+[0] L1D TRACKER bank 1: entry 0 freed (free next = 7)

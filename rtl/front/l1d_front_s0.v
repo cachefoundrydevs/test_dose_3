@@ -330,7 +330,6 @@ module l1d_front_s0 #(
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
     localparam NB = NUM_BANKS;
-    localparam LINE_W = LINE_BYTES*8;
     input  wire clk;
     input  wire rst;
     input  wire port_request_valid_0;

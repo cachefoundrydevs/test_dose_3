@@ -85,8 +85,7 @@ module l1d_bank_order #(
     localparam NEXT_W       = ORDER_CNT_W + 1;   // NEXT_W = 5 bits: next count (4) and empty flag (1)
     reg  [(LSU_PORTS+1)*NEXT_W-1:0] next_if_no_pop;  // (LSU_PORTS+1)*NEXT_W = 25 bits: count + j, empty flag (rst folded in)
     reg  [(LSU_PORTS+1)*NEXT_W-1:0] next_if_pop;     // 25 bits: count + j - 1, empty flag (rst folded in)
-    reg  [NEXT_W-1:0]      count_after_no_pop;       // NEXT_W = 5 bits: next count and empty flag if no pop (join count selected)
-    reg  [NEXT_W-1:0]      count_after_pop;          // NEXT_W = 5 bits: next count and empty flag if pop (join count selected)
+    reg  [(LSU_PORTS+1)*NEXT_W-1:0] next_per_join;   // 25 bits: pop picks one of the two above; the join count one-hot selects last
     reg                    count_matches;            // order_count equals count_value_idx
     integer                count_value_idx;
     integer                count_bit_idx;
@@ -140,7 +139,7 @@ module l1d_bank_order #(
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
             join_cnt_onehot[join_count_idx] = join_at_least[join_count_idx] & !join_at_least[join_count_idx + 1];
         // count_next = order_count + join count - pop (ORDER_CNT_W bits, wraps like the adder), reset gives 0 / empty.
-        // Every (join count, pop) answer is a table of the count flops (early); join count AND-OR, then pop as the last 2:1 select.
+        // Every (join count, pop) answer is a table of the count flops; pop is a 2:1 select, the join count one-hot is the last AND-OR.
         next_if_no_pop = {((LSU_PORTS+1)*NEXT_W){1'b0}};
         next_if_pop    = {((LSU_PORTS+1)*NEXT_W){1'b0}};
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1) begin
@@ -170,18 +169,15 @@ module l1d_bank_order #(
                 end
             end
         end
-        // join_cnt_onehot is exactly one-hot (thresholds), so the AND-OR is a select and rst inside the table holds;
-        // the join count selects within each pop value, the pop (decided late in l1d_port_front) is the last 2:1 select
-        count_after_no_pop = {NEXT_W{1'b0}};
-        count_after_pop    = {NEXT_W{1'b0}};
+        next_per_join   = pop ? next_if_pop : next_if_no_pop;
+        // join_cnt_onehot is exactly one-hot (thresholds), so the AND-OR is a select and rst inside the table holds
+        count_next_sel  = {ORDER_CNT_W{1'b0}};
+        ring_empty_next = 1'b0;
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1) begin
-            count_after_no_pop = count_after_no_pop |
-                                 ({NEXT_W{join_cnt_onehot[join_count_idx]}} & next_if_no_pop[join_count_idx*NEXT_W +: NEXT_W]);
-            count_after_pop    = count_after_pop |
-                                 ({NEXT_W{join_cnt_onehot[join_count_idx]}} & next_if_pop[join_count_idx*NEXT_W +: NEXT_W]);
+            count_next_sel  = count_next_sel |
+                              ({ORDER_CNT_W{join_cnt_onehot[join_count_idx]}} & next_per_join[join_count_idx*NEXT_W +: ORDER_CNT_W]);
+            ring_empty_next = ring_empty_next | (join_cnt_onehot[join_count_idx] & next_per_join[join_count_idx*NEXT_W + ORDER_CNT_W]);
         end
-        count_next_sel  = pop ? count_after_pop[ORDER_CNT_W-1:0] : count_after_no_pop[ORDER_CNT_W-1:0];
-        ring_empty_next = pop ? count_after_pop[ORDER_CNT_W]     : count_after_no_pop[ORDER_CNT_W];
     end
     always @* begin
         rank_1   = {2'b00, join_now[0]};

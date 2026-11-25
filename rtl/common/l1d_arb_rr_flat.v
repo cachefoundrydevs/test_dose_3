@@ -11,7 +11,8 @@ module l1d_arb_rr_flat #(
     input  wire             grant_taken,
     output wire [N-1:0]     grant_onehot,
     output wire [IDX_W-1:0] grant_index,
-    output wire             any_request
+    output wire             any_request,
+    output wire [N-1:0]     not_beaten
 );
     reg  [N-1:0]   mask_r;
     wire [N*N-1:0] beat_terms;
@@ -34,7 +35,8 @@ module l1d_arb_rr_flat #(
                 end
             end
             assign beaten[winner_idx]       = |beat_terms[winner_idx*N +: N];
-            assign grant_onehot[winner_idx] = request_bits[winner_idx] & ~beaten[winner_idx];
+            assign not_beaten[winner_idx]   = ~beaten[winner_idx];
+            assign grant_onehot[winner_idx] = request_bits[winner_idx] & not_beaten[winner_idx];
             if (winner_idx == 0) begin : g_mask_first
                 assign mask_after_grant[winner_idx] = 1'b0;
             end else begin : g_mask_rest

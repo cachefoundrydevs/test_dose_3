@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names)); L2-9: registered quad flags tid_quad_free_q (new flop, invariant flag = OR of the quad free bits, proven against the golden ghost wire of the same name), quad take term tid_quad_take, flag next-state terms; tid_quad_free and tid_take_early removed; the golden ghost wire tid_block_free_q has no counterpart yet); L2-10: registered block flags tid_block_free_q (new flop, invariant flag = OR of the block free bits, proven against the golden ghost wire of the same name), block flag next-state terms; tid_block_free removed
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names)); L2-9: registered quad flags tid_quad_free_q (new flop, invariant flag = OR of the quad free bits, proven against the golden ghost wire of the same name), quad take term tid_quad_take, flag next-state terms; tid_quad_free and tid_take_early removed; the golden ghost wire tid_block_free_q has no counterpart yet); L2-10: registered block flags tid_block_free_q (new flop, invariant flag = OR of the block free bits, proven against the golden ghost wire of the same name), block flag next-state terms; tid_block_free removed; L2-11: request select with not_beaten from the round robins (new l1d_arb_rr_flat output) and kept early ask & field terms, sel_bank as OR of picked banks; route fields nc, sub id, beat by a pick-based select (kept picks); read_grant_value and write_grant_value removed
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -55,8 +55,6 @@
 + DECL wire[NTID-1:0]tid_bits_below_free
 + DECL wire[NTID-1:0]tid_take_onehot
 + DECL wire no_request
-+ DECL wire[CAND_W-1:0]read_grant_value
-+ DECL wire[CAND_W-1:0]write_grant_value
 + DECL genvar quad_idx
 + DECL genvar block_idx
 + FOR for(quad_idx=0;quad_idx<TID_QUADS;quad_idx=quad_idx+1)
@@ -159,3 +157,31 @@
 + DECL wire[TID_BLOCKS-1:0]tid_block_free_next
 + ALWAYS always @(posedge clk)
 + LABEL tid_block_free_proc
++ DECL wire[NB-1:0]read_not_beaten
++ DECL wire[NB-1:0]write_not_beaten
++ DECL wire[NB-1:0]read_ask_turn
++ DECL wire[NB-1:0]write_ask_turn
++ DECL wire[CAND_DATA_LO*NB-1:0]read_early_terms
++ DECL wire[CAND_W*NB-1:0]write_early_terms
++ DECL genvar bank_bit
++ LABEL g_write_term
++ LABEL g_read_term
++ LABEL g_select_both
++ LABEL g_select_write
++ FOR for(bank_bit=0;bank_bit<BANK_W;bank_bit=bank_bit+1)
++ LABEL g_sel_bank_bit
++ DECL wire[NB-1:0]bank_terms
++ FOR for(bank_idx=0;bank_idx<NB;bank_idx=bank_idx+1)
++ LABEL g_sel_bank_term
++ LABEL g_bank_set
++ LABEL g_bank_clear
++ DECL localparam ROUTE_FIELD_W = BEAT_W + AXI_SUBID_W + 1
++ DECL wire[ROUTE_FIELD_W-1:0]route_pick_fields
++ FOR for(route_bit=0;route_bit<ROUTE_FIELD_W;route_bit=route_bit+1)
++ LABEL g_route_pick_bit
++ DECL wire[CANDIDATES-1:0]field_column
++ FOR for(cand_idx=0;cand_idx<CANDIDATES;cand_idx=cand_idx+1)
++ LABEL g_route_pick_column
++ LABEL g_route_beat
++ LABEL g_route_sub
++ LABEL g_route_nc

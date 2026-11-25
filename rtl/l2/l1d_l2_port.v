@@ -50,6 +50,7 @@ module l1d_l2_port #(
     localparam CAND_MASK_LO    = CAND_UNIQUE_BIT + 1;
     localparam CAND_DATA_LO    = CAND_MASK_LO + MASK_W;
     localparam CAND_W          = CAND_DATA_LO + LINE_W;
+    localparam ROUTE_FIELD_W   = BEAT_W + AXI_SUBID_W + 1;
     localparam TID_DIGIT_W     = L2_TID_W / 3;
     localparam TID_QUAD_SIZE   = 1 << TID_DIGIT_W;
     localparam TID_QUADS       = NTID / TID_QUAD_SIZE;
@@ -102,7 +103,7 @@ module l1d_l2_port #(
     wire [NB-1:0]           write_grant_onehot;
     wire [BANK_W-1:0]       write_grant_bank;
     wire                    write_any;
-    wire                    pick_write;
+    (* keep *) wire         pick_write;
     wire                    req_take;
     wire                    read_take;
     wire                    write_take;
@@ -150,8 +151,8 @@ module l1d_l2_port #(
     wire                    resp_ready_int;
     reg                     err_pulse_q;
     genvar                  bank_idx;
-    wire [NB-1:0]                read_pick_onehot;
-    wire [NB-1:0]                write_pick_onehot;
+    (* keep *) wire [NB-1:0]     read_pick_onehot;
+    (* keep *) wire [NB-1:0]     write_pick_onehot;
     wire [CANDIDATES-1:0]        cand_pick;
     wire [NB*MASK_W-1:0]         read_nc_mask_all;
     wire [NB*MASK_W-1:0]         write_nc_mask_all;
@@ -201,8 +202,14 @@ module l1d_l2_port #(
     wire [TID_BLOCKS-1:0]          tid_block_clear;
     wire [TID_BLOCKS-1:0]          tid_block_free_next;
     wire                           no_request;
-    wire [CAND_W-1:0]              read_grant_value;
-    wire [CAND_W-1:0]              write_grant_value;
+    (* keep *) wire [NB-1:0]       read_not_beaten;
+    (* keep *) wire [NB-1:0]       write_not_beaten;
+    wire [NB-1:0]                  read_ask_turn;
+    wire [NB-1:0]                  write_ask_turn;
+    (* keep *) wire [CAND_DATA_LO*NB-1:0] read_early_terms;
+    (* keep *) wire [CAND_W*NB-1:0]       write_early_terms;
+    genvar                         bank_bit;
+    wire [ROUTE_FIELD_W-1:0]       route_pick_fields;
     genvar                         quad_idx;
     genvar                         block_idx;
     wire [NTID-1:0]                tid_in_quad_first;
@@ -219,7 +226,8 @@ module l1d_l2_port #(
         .grant_taken  (read_take),
         .grant_onehot (read_grant_onehot),
         .grant_index  (read_grant_bank),
-        .any_request  (read_any)
+        .any_request  (read_any),
+        .not_beaten   (read_not_beaten)
     );
     l1d_arb_rr_flat #(.N(NB), .IDX_W(BANK_W)) u_write_rr (
         .clk          (clk),
@@ -228,7 +236,8 @@ module l1d_l2_port #(
         .grant_taken  (write_take),
         .grant_onehot (write_grant_onehot),
         .grant_index  (write_grant_bank),
-        .any_request  (write_any)
+        .any_request  (write_any),
+        .not_beaten   (write_not_beaten)
     );
     assign tid_free = ~tid_busy;
     l1d_pri_enc #(.N(NTID), .IDX_W(L2_TID_W)) u_free_tid (
@@ -405,12 +414,14 @@ module l1d_l2_port #(
             assign cand_fields[(NB+bank_idx)*CAND_W + CAND_DATA_LO +: LINE_W] =
                 bank_write_req_non_cacheable[bank_idx] ? write_nc_line_all[bank_idx*LINE_W +: LINE_W]
                                                        : bank_write_req_data[bank_idx*LINE_W +: LINE_W];
+            assign read_pick_onehot[bank_idx]  = read_not_beaten[bank_idx]  & read_ask_turn[bank_idx];
+            assign write_pick_onehot[bank_idx] = write_not_beaten[bank_idx] & write_ask_turn[bank_idx];
             if (bank_idx == 0) begin : g_pick_first
-                assign read_pick_onehot[bank_idx]  = (read_grant_onehot[bank_idx] & read_turn) | (~read_any & ~write_any);
-                assign write_pick_onehot[bank_idx] =  write_grant_onehot[bank_idx] & write_turn;
+                assign read_ask_turn[bank_idx]  = (bank_read_req_valid[bank_idx] & read_turn) | no_request;
+                assign write_ask_turn[bank_idx] =  bank_write_req_valid[bank_idx] & write_turn;
             end else begin : g_pick_rest
-                assign read_pick_onehot[bank_idx]  = read_grant_onehot[bank_idx]  & read_turn;
-                assign write_pick_onehot[bank_idx] = write_grant_onehot[bank_idx] & write_turn;
+                assign read_ask_turn[bank_idx]  = bank_read_req_valid[bank_idx]  & read_turn;
+                assign write_ask_turn[bank_idx] = bank_write_req_valid[bank_idx] & write_turn;
             end
         end
     endgenerate
@@ -420,15 +431,47 @@ module l1d_l2_port #(
         for (field_bit = 0; field_bit < CAND_W; field_bit = field_bit + 1) begin : g_pick_bit
             for (cand_idx = 0; cand_idx < CANDIDATES; cand_idx = cand_idx + 1) begin : g_column
                 assign cand_columns[field_bit*CANDIDATES + cand_idx] = cand_fields[cand_idx*CAND_W + field_bit];
+                if (cand_idx >= NB) begin : g_write_term
+                    assign write_early_terms[field_bit*NB + cand_idx - NB] =
+                        write_ask_turn[cand_idx - NB] & cand_fields[cand_idx*CAND_W + field_bit];
+                end else if (field_bit < CAND_DATA_LO) begin : g_read_term
+                    assign read_early_terms[field_bit*NB + cand_idx] =
+                        read_ask_turn[cand_idx] & cand_fields[cand_idx*CAND_W + field_bit];
+                end
             end
-            assign read_grant_value[field_bit]  = |(read_grant_onehot  & cand_columns[field_bit*CANDIDATES      +: NB]);
-            assign write_grant_value[field_bit] = |(write_grant_onehot & cand_columns[field_bit*CANDIDATES + NB +: NB]);
-            assign sel_cand[field_bit] = (read_turn  & read_grant_value[field_bit])
-                                       | (write_turn & write_grant_value[field_bit])
-                                       | (no_request & cand_columns[field_bit*CANDIDATES]);
+            if (field_bit < CAND_DATA_LO) begin : g_select_both
+                assign sel_cand[field_bit] = (|(read_not_beaten  & read_early_terms[field_bit*NB +: NB]))
+                                           | (|(write_not_beaten & write_early_terms[field_bit*NB +: NB]));
+            end else begin : g_select_write
+                assign sel_cand[field_bit] = |(write_not_beaten & write_early_terms[field_bit*NB +: NB]);
+            end
+        end
+        for (bank_bit = 0; bank_bit < BANK_W; bank_bit = bank_bit + 1) begin : g_sel_bank_bit
+            wire [NB-1:0] bank_terms;
+            for (bank_idx = 0; bank_idx < NB; bank_idx = bank_idx + 1) begin : g_sel_bank_term
+                if ((bank_idx >> bank_bit) & 1) begin : g_bank_set
+                    assign bank_terms[bank_idx] = read_pick_onehot[bank_idx] | write_pick_onehot[bank_idx];
+                end else begin : g_bank_clear
+                    assign bank_terms[bank_idx] = 1'b0;
+                end
+            end
+            assign sel_bank[bank_bit] = |bank_terms;
+        end
+        for (route_bit = 0; route_bit < ROUTE_FIELD_W; route_bit = route_bit + 1) begin : g_route_pick_bit
+            wire [CANDIDATES-1:0] field_column;
+            for (cand_idx = 0; cand_idx < CANDIDATES; cand_idx = cand_idx + 1) begin : g_route_pick_column
+                if (route_bit < BEAT_W) begin : g_route_beat
+                    assign field_column[cand_idx] = (AXI_BEATS > 1)
+                        ? cand_fields[cand_idx*CAND_W + CAND_ADDR_LO + AXI_OFF_W + route_bit] : 1'b0;
+                end else if (route_bit < BEAT_W + AXI_SUBID_W) begin : g_route_sub
+                    assign field_column[cand_idx] = cand_fields[cand_idx*CAND_W + CAND_SUB_LO + route_bit - BEAT_W];
+                end else begin : g_route_nc
+                    assign field_column[cand_idx] = cand_fields[cand_idx*CAND_W + CAND_NC_BIT];
+                end
+            end
+            assign route_pick_fields[route_bit] = |(cand_pick & field_column);
         end
     endgenerate
-    assign sel_bank         = pick_write ? write_grant_bank : read_grant_bank;
     assign sel_addr         = sel_cand[CAND_ADDR_LO +: AXI_ADDR_W];
     assign sel_nc           = sel_cand[CAND_NC_BIT];
     assign sel_unique       = sel_cand[CAND_UNIQUE_BIT];
@@ -448,7 +491,7 @@ module l1d_l2_port #(
     assign sel_mask  = sel_cand[CAND_MASK_LO +: MASK_W];
     assign sel_data  = sel_cand[CAND_DATA_LO +: LINE_W];
     assign sel_pkt   = {sel_unique, sel_addr[L2_ADDR_W-1:0], pick_write, MASTER_ID_C, tid_new_encoded, sel_nc, sel_mask, sel_data};
-    assign sel_route = {pick_write, sel_nc, sel_bank, sel_sub, sel_beat};
+    assign sel_route = {pick_write, route_pick_fields[ROUTE_FIELD_W-1], sel_bank, route_pick_fields[ROUTE_FIELD_W-2:0]};
     always @(posedge clk) begin : req_reg_valid_proc
         if (rst)
             req_reg_valid <= 1'b0;

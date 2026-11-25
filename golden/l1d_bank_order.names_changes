@@ -55,9 +55,9 @@
 # joins_below_at_most). Dropped (their lines of BO-8 removed): JOIN_PATTERNS, join_pattern_idx, join_pattern_ones and its
 # inputs / loop, the join_at_least pattern loops
 - MODULE module l1d_bank_order #( `L1D_PARAMS, parameter BANK_ID = 0, parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk, rst, join_0, join_1, join_2, join_3, pop, head_port_onehot, ring_empty_q );
-+ MODULE module l1d_bank_order #( `L1D_PARAMS, parameter BANK_ID = 0, parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk, rst, join_0, join_1, join_2, join_3, join_prefix_at_least, pop, head_port_onehot, ring_empty_q );
++ MODULE module l1d_bank_order #( `L1D_PARAMS, parameter BANK_ID = 0, parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk, rst, join_0, join_1, join_2, join_3, join_prefix_at_least, pop, drain_ready_port, head_port_onehot, ring_empty_q );
 - DECL parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk,rst,join_0,join_1,join_2,join_3,pop,head_port_onehot,ring_empty_q )
-+ DECL parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk,rst,join_0,join_1,join_2,join_3,join_prefix_at_least,pop,head_port_onehot,ring_empty_q )
++ DECL parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH ) ( clk,rst,join_0,join_1,join_2,join_3,join_prefix_at_least,pop,drain_ready_port,head_port_onehot,ring_empty_q )
 + DECL wire[LSU_PORTS*LSU_PORTS-1:0]join_prefix_at_least
 + DECL reg[LSU_PORTS:0]joins_below_at_most
 + DECL integer below_idx
@@ -68,3 +68,8 @@
 # (next_per_join of PF-I6 removed, its line dropped)
 + DECL reg[NEXT_W-1:0]count_after_no_pop
 + DECL reg[NEXT_W-1:0]count_after_pop
+# iteration PF-I10 (2026-11-25): new input drain_ready_port (per-port drain ready flags from l1d_port_front); the pop of
+# the count and the read pointer is decided here as ready_by_index[oldest_port] (2^PORT_W:1 mux, no head decode)
++ DECL wire[LSU_PORTS-1:0]drain_ready_port
++ DECL wire[(1 << PORT_W)-1:0]ready_by_index
++ DECL wire pop_from_head

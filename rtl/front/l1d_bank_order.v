@@ -10,7 +10,7 @@ module l1d_bank_order #(
     clk, rst,
     join_0, join_1, join_2, join_3,
     join_prefix_at_least,
-    pop,
+    pop, drain_ready_port,
     head_port_onehot, ring_empty_q
 );
     `include "l1d_encodings.vh"
@@ -28,7 +28,8 @@ module l1d_bank_order #(
     // bit (k-1)*LSU_PORTS + (m-1): at least m of the ports 0 .. k-1 join this cycle (k, m = 1 .. LSU_PORTS; m > k reads 0).
     // Thresholds computed by l1d_port_front straight from the pins and the room rule, equal to the counts of join_0 .. join_3.
     input  wire [LSU_PORTS*LSU_PORTS-1:0] join_prefix_at_least; // LSU_PORTS*LSU_PORTS = 16 bits
-    input  wire                 pop;
+    input  wire                 pop;              // = the head's drain_ready_port bit when the ring is not empty (checks only)
+    input  wire [LSU_PORTS-1:0] drain_ready_port; // LSU_PORTS = 4 bits: port p's skid head could be drained now (l1d_port_front)
     output wire [LSU_PORTS-1:0] head_port_onehot;
     output reg                  ring_empty_q;
     reg  [PORT_W-1:0]      order_port [0:ORDER_DEPTH-1];
@@ -63,6 +64,13 @@ module l1d_bank_order #(
         for (read_place = 0; read_place < ORDER_DEPTH; read_place = read_place + 1)
             oldest_port = oldest_port | ({PORT_W{order_read_onehot[read_place]}} & order_port[read_place]);
     end
+    // pop decided here from the head index bits and the per-port ready flags (exactly the front's drain_alloc_pred =
+    // OR over p of head_port_onehot[p] AND drain_ready_port[p]): a 2^PORT_W:1 mux by oldest_port, no one-hot decode
+    // and no head_port_onehot fan-out on the pop path
+    wire [(1 << PORT_W)-1:0] ready_by_index; // 2^PORT_W = 4 bits: drain_ready_port padded to every oldest_port value
+    wire                     pop_from_head;  // the ring head is drained this cycle
+    assign ready_by_index = {{(1 << PORT_W){1'b0}}, drain_ready_port}; // zero-extended (the upper zeros are cut off)
+    assign pop_from_head  = !ring_empty_q && ready_by_index[oldest_port];
     genvar hp_idx;
     generate
         for (hp_idx = 0; hp_idx < LSU_PORTS; hp_idx = hp_idx + 1) begin : g_head
@@ -179,8 +187,8 @@ module l1d_bank_order #(
             count_after_pop    = count_after_pop |
                                  ({NEXT_W{join_cnt_onehot[join_count_idx]}} & next_if_pop[join_count_idx*NEXT_W +: NEXT_W]);
         end
-        count_next_sel  = pop ? count_after_pop[ORDER_CNT_W-1:0] : count_after_no_pop[ORDER_CNT_W-1:0];
-        ring_empty_next = pop ? count_after_pop[ORDER_CNT_W]     : count_after_no_pop[ORDER_CNT_W];
+        count_next_sel  = pop_from_head ? count_after_pop[ORDER_CNT_W-1:0] : count_after_no_pop[ORDER_CNT_W-1:0];
+        ring_empty_next = pop_from_head ? count_after_pop[ORDER_CNT_W]     : count_after_no_pop[ORDER_CNT_W];
     end
     always @* begin
         rank_1   = {2'b00, join_now[0]};
@@ -214,7 +222,7 @@ module l1d_bank_order #(
                 if (place_write_en[write_place])
                     order_port[write_place] <= place_write_port[write_place*PORT_W +: PORT_W];
             order_write_onehot <= rotate_by_onehot(order_write_onehot, join_cnt_onehot);
-            if (pop)
+            if (pop_from_head)
                 order_read_onehot <= rotate_left(order_read_onehot, 1);
         end
         order_count  <= order_count_next;
@@ -226,6 +234,8 @@ module l1d_bank_order #(
     always @(posedge clk) begin
         if (!rst && (order_count + join_cnt > ORDER_DEPTH))
             $display("[%0t] L1D ORDER ERROR bank %0d: ring overflow (%0d waiting + %0d new)", $time, BANK_ID, order_count, join_cnt);
+        if (!rst && (pop != pop_from_head))
+            $display("[%0t] L1D ORDER ERROR bank %0d: pop input %b differs from the head pop %b", $time, BANK_ID, pop, pop_from_head);
         if (!rst && pop && ring_empty_q)
             $display("[%0t] L1D ORDER ERROR bank %0d: pop of an empty ring", $time, BANK_ID);
     end

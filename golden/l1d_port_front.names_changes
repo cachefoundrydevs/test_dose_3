@@ -47,3 +47,8 @@
 + FOR for(jp_pattern=0;jp_pattern<(1<<NP);jp_pattern=jp_pattern+1)
 + FOR for(jp_a=0;jp_a<=jp_k-jp_m;jp_a=jp_a+1)
 + FOR for(jp_pattern=0;jp_pattern<(1<<NP);jp_pattern=jp_pattern+1)
+# iteration PF-I10 (2026-11-25): room rule as alloc_if_empty with ring_empty_q ANDed last; port_allocated from
+# alloc_if_ring_empty and the ring_empty_q of the pin's bank (the per-bank 'eligible' wire is no longer needed)
++ DECL wire[NB*NP-1:0]alloc_if_ring_empty
++ DECL reg[NP-1:0]alloc_if_empty
+- DECL wire[NP-1:0]eligible

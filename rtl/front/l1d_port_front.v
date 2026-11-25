@@ -119,6 +119,7 @@ module l1d_port_front #(
     // drain decided per port before the ring-head select (head_port_onehot is one-hot or zero, so the head select is the last AND-OR)
     wire [NB*NP-1:0] drain_port_ready; // NB*NP = 16 bits: port p's skid head could be drained into bank b now (head select not applied)
     wire [NB*NP-1:0] drain_alloc_port; // NB*NP = 16 bits: bank b drains port p this cycle (ring head AND ready)
+    wire [NB*NP-1:0] alloc_if_ring_empty; // NB*NP = 16 bits: port p gets an entry of bank b if b's ring is empty
     // number of ones of a constant port pattern (elaboration only: builds the 'at least k lower ports' threshold terms)
     function integer ones_in_pattern;
         input integer pattern_value;
@@ -134,11 +135,11 @@ module l1d_port_front #(
         for (b = 0; b < NB; b = b + 1) begin : g_bank
             wire [TRK_CNT_W-1:0] free_count;
             wire                 vec_ok;
-            wire [NP-1:0]        eligible;
-            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: eligible without ring_empty_q (counted for the lower ports)
+            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: port p may take an entry if the ring is empty (pin for bank, vec ok)
             wire                 free_nonzero;      // at least one tracker entry free
             reg  [NP:1]          free_at_least;
             reg  [NP-1:0]        alloc_here;
+            reg  [NP-1:0]        alloc_if_empty;    // NP = 4 bits: the room rule without ring_empty_q (alloc_here = this AND ring_empty_q)
             wire [NP-1:0]        join_here;
             wire [NP-1:0]        head_port_onehot_b;
             assign free_count = bank_tracker_free_count[b*TRK_CNT_W +: TRK_CNT_W];
@@ -148,12 +149,12 @@ module l1d_port_front #(
             for (p = 0; p < NP; p = p + 1) begin : g_port
                 assign pin_for_bank[b*NP + p]    = port_valid[p] && (pin_bank[p*BANK_W +: BANK_W] == b);
                 assign arrival_request[b*NP + p] = pin_for_bank[b*NP + p] && ring_empty_q[b];
-                assign eligible[p]               = arrival_request[b*NP + p] && (!pin_line_store[p] || vec_ok);
                 assign eligible_if_empty[p]      = pin_for_bank[b*NP + p] && (!pin_line_store[p] || vec_ok);
                 // ready to drain: head present, for this bank, a free entry, and a vec slot for a line store (flops and early pins only)
                 assign drain_port_ready[b*NP + p] = !skid_empty[p] && (head_bank[p*BANK_W +: BANK_W] == b) && free_nonzero &&
                                                     (!head_line_store[p] || vec_ok);
                 assign alloc_pred[b*NP + p]      = alloc_here[p];
+                assign alloc_if_ring_empty[b*NP + p] = alloc_if_empty[p];
                 assign join_here[p]              = pin_for_bank[b*NP + p] && !alloc_here[p];
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
                 assign drain_alloc_port[b*NP + p] = head_port[b*NP + p] && drain_port_ready[b*NP + p]; // ring head is the last AND
@@ -176,25 +177,25 @@ module l1d_port_front #(
             integer rk_k;
             integer rk_pattern;
             reg     lower_at_least; // at least rk_k of the lower ports 0 .. rk_p-1 are eligible_if_empty (monotone AND-OR)
-            // port p is allocated when it is eligible, at least one entry is free, and for every k >= 1:
+            // port p is allocated when the ring is empty, it is eligible, at least one entry is free, and for every k >= 1:
             // (at least k lower ports eligible) implies (at least k+1 entries free, and k < NA).
-            // Threshold implications only (no exact-count decode, no XOR). eligible = eligible_if_empty AND ring_empty_q:
-            // when the ring is not empty no port is eligible and alloc_here is 0 either way, so the lower ports are
-            // counted without ring_empty_q; it enters only through eligible[p] in the last AND.
+            // Threshold implications only (no exact-count decode, no XOR). When the ring is not empty no port is eligible
+            // and alloc_here is 0, so the rule is built as alloc_if_empty and ring_empty_q is ANDed last.
             always @* begin
                 for (rk_k = 1; rk_k <= NP; rk_k = rk_k + 1)
                     free_at_least[rk_k] = (free_count >= rk_k);
                 lower_at_least = 1'b0;
                 for (rk_p = 0; rk_p < NP; rk_p = rk_p + 1) begin
-                    alloc_here[rk_p] = eligible[rk_p] & free_at_least[1] & (NA > 0);
+                    alloc_if_empty[rk_p] = eligible_if_empty[rk_p] & free_at_least[1] & (NA > 0);
                     for (rk_k = 1; rk_k < NP; rk_k = rk_k + 1)
                         if (rk_k <= rk_p) begin
                             lower_at_least = 1'b0;
                             for (rk_pattern = 0; rk_pattern < (1 << NP); rk_pattern = rk_pattern + 1)
                                 if ((rk_pattern >> rk_p) == 0 && ones_in_pattern(rk_pattern) == rk_k)
                                     lower_at_least = lower_at_least | ((eligible_if_empty & rk_pattern) == rk_pattern);
-                            alloc_here[rk_p] = alloc_here[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
+                            alloc_if_empty[rk_p] = alloc_if_empty[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
                         end
+                    alloc_here[rk_p] = alloc_if_empty[rk_p] & ring_empty_q[b];
                 end
                 // join thresholds of every port prefix (see above)
                 join_prefix_at_least = {(NP*NP){1'b0}};
@@ -237,6 +238,7 @@ module l1d_port_front #(
                 .join_3           (join_here[3]),
                 .join_prefix_at_least (join_prefix_at_least),
                 .pop              (drain_alloc_pred[b]),
+                .drain_ready_port (drain_port_ready[b*NP +: NP]),
                 .head_port_onehot (head_port_onehot_b),
                 .ring_empty_q     (ring_empty_q[b])
             );
@@ -278,9 +280,12 @@ module l1d_port_front #(
             port_allocated[pp] = 1'b0;
             port_drained[pp]   = 1'b0;
             for (pb = 0; pb < NB; pb = pb + 1) begin
-                port_allocated[pp] = port_allocated[pp] | alloc_pred[pb*NP + pp];
+                port_allocated[pp] = port_allocated[pp] | alloc_if_ring_empty[pb*NP + pp];
                 port_drained[pp]   = port_drained[pp]   | drain_alloc_port[pb*NP + pp]; // = drain_alloc_pred & head_port (one-hot head)
             end
+            // = OR over banks of alloc_here: a pin is for one bank only, so the ring_empty_q of that bank (picked by the pin's
+            // bank bits, in parallel with the room rule) is the last AND before the skid push
+            port_allocated[pp] = port_allocated[pp] & ring_empty_q[pin_bank[pp*BANK_W +: BANK_W]];
         end
     end
     assign skid_push = port_valid & ~port_allocated;

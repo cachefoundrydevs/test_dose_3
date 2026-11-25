@@ -244,11 +244,10 @@ module l1d_l2_port #(
         end
         for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_tid_quad
             assign tid_quad_free[quad_idx] = |tid_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
-            if ((quad_idx % TID_QUAD_SIZE) == 0) begin : g_block_first
+            if (quad_idx == 0) begin : g_block_first
                 assign tid_quads_below_free[quad_idx] = 1'b0;
             end else begin : g_block_rest
-                assign tid_quads_below_free[quad_idx] =
-                    |tid_quad_free[quad_idx - (quad_idx % TID_QUAD_SIZE) +: (quad_idx % TID_QUAD_SIZE)];
+                assign tid_quads_below_free[quad_idx] = |tid_quad_free[quad_idx-1:0];
             end
         end
         for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_block
@@ -274,14 +273,12 @@ module l1d_l2_port #(
                     |tid_free[tid_idx - (tid_idx % TID_QUAD_SIZE) +: (tid_idx % TID_QUAD_SIZE)];
             end
             assign tid_free_below[tid_idx]  = tid_bits_below_free[tid_idx]
-                                            | tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
-                                            | tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
+                                            | tid_quads_below_free[tid_idx / TID_QUAD_SIZE];
             assign tid_new_onehot[tid_idx]  = tid_free[tid_idx] & ~tid_free_below[tid_idx];
             assign tid_take_early[tid_idx]  =
                 take_if_tid_free & tid_free[tid_idx] & ~tid_bits_below_free[tid_idx];
             assign tid_take_onehot[tid_idx] = tid_take_early[tid_idx]
-                                            & ~tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
-                                            & ~tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
+                                            & ~tid_quads_below_free[tid_idx / TID_QUAD_SIZE];
             for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
                 if ((tid_idx >> tid_bit) & 1) begin : g_set
                     assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];

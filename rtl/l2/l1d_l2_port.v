@@ -186,13 +186,16 @@ module l1d_l2_port #(
     genvar                         place_idx;
     genvar                         route_bit;
     genvar                         beat_bit;
-    (* keep *) wire [TID_QUADS-1:0]  tid_quad_free;
     (* keep *) wire [TID_QUADS-1:0]  tid_quads_below_free;
     (* keep *) wire [TID_BLOCKS-1:0] tid_block_free;
     (* keep *) wire [TID_BLOCKS-1:0] tid_blocks_below_free;
     (* keep *) wire [NTID-1:0]       tid_bits_below_free;
-    (* keep *) wire [NTID-1:0]       tid_take_early;
     wire [NTID-1:0]                tid_take_onehot;
+    reg  [TID_QUADS-1:0]           tid_quad_free_q;
+    (* keep *) wire [TID_QUADS-1:0]  tid_quad_take;
+    wire [TID_QUADS-1:0]           tid_quad_two_free;
+    wire [TID_QUADS-1:0]           tid_quad_clear;
+    wire [TID_QUADS-1:0]           tid_quad_free_next;
     wire                           no_request;
     wire [CAND_W-1:0]              read_grant_value;
     wire [CAND_W-1:0]              write_grant_value;
@@ -231,17 +234,24 @@ module l1d_l2_port #(
     );
     generate
         for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_tid_quad
-            assign tid_quad_free[quad_idx] = |tid_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
             if ((quad_idx % TID_QUAD_SIZE) == 0) begin : g_block_first
                 assign tid_quads_below_free[quad_idx] = 1'b0;
             end else begin : g_block_rest
                 assign tid_quads_below_free[quad_idx] =
-                    |tid_quad_free[quad_idx - (quad_idx % TID_QUAD_SIZE) +: (quad_idx % TID_QUAD_SIZE)];
+                    |tid_quad_free_q[quad_idx - (quad_idx % TID_QUAD_SIZE) +: (quad_idx % TID_QUAD_SIZE)];
             end
-            assign tid_quad_first_in_block[quad_idx] = tid_quad_free[quad_idx] & ~tid_quads_below_free[quad_idx];
+            assign tid_quad_first_in_block[quad_idx] = tid_quad_free_q[quad_idx] & ~tid_quads_below_free[quad_idx];
+            assign tid_quad_take[quad_idx] = take_if_tid_free & tid_quad_first_in_block[quad_idx]
+                                           & ~tid_blocks_below_free[quad_idx / TID_QUAD_SIZE];
+            assign tid_quad_two_free[quad_idx] = |(tid_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]
+                                                 & tid_bits_below_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE]);
+            assign tid_quad_clear[quad_idx] = resp_take & (resp_tid[L2_TID_W-1:TID_DIGIT_W] == quad_idx);
+            assign tid_quad_free_next[quad_idx] = tid_quad_clear[quad_idx]
+                                                | tid_quad_two_free[quad_idx]
+                                                | (tid_quad_free_q[quad_idx] & ~tid_quad_take[quad_idx]);
         end
         for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_block
-            assign tid_block_free[block_idx] = |tid_quad_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
+            assign tid_block_free[block_idx] = |tid_quad_free_q[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
             if (block_idx == 0) begin : g_lowest_block
                 assign tid_blocks_below_free[block_idx] = 1'b0;
             end else begin : g_upper_block
@@ -261,11 +271,7 @@ module l1d_l2_port #(
                                             | tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
                                             | tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
             assign tid_new_onehot[tid_idx]  = tid_free[tid_idx] & ~tid_free_below[tid_idx];
-            assign tid_take_early[tid_idx]  =
-                take_if_tid_free & tid_in_quad_first[tid_idx];
-            assign tid_take_onehot[tid_idx] = tid_take_early[tid_idx]
-                                            & ~tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
-                                            & ~tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
+            assign tid_take_onehot[tid_idx] = tid_quad_take[tid_idx / TID_QUAD_SIZE] & tid_in_quad_first[tid_idx];
             for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
                 if ((tid_idx >> tid_bit) & 1) begin : g_set
                     assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];
@@ -453,6 +459,12 @@ module l1d_l2_port #(
         else
             tid_busy <= (tid_busy | tid_take_onehot)
                       & ~({NTID{resp_take}} & resp_tid_onehot);
+    end
+    always @(posedge clk) begin : tid_quad_free_proc
+        if (rst)
+            tid_quad_free_q <= {TID_QUADS{1'b1}};
+        else
+            tid_quad_free_q <= tid_quad_free_next;
     end
     assign l2_req_valid = req_reg_valid;
     assign l2_req_pkt   = req_reg_pkt;

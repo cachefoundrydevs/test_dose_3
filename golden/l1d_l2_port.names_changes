@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names; L2-8: route-table write enable as two kept l1d_tid_write_enable instances per tid (instances are not listed))
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names))
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -146,7 +146,3 @@
 + LABEL g_tid_digit_term
 + LABEL g_block_set
 + LABEL g_block_clear
-+ DECL localparam ROUTE_LOW_W = ROUTE_W / 2
-+ DECL localparam TID_ENABLE_TERMS = 3
-+ DECL wire[NTID-1:0]tid_write_enable_high
-+ DECL wire[TID_ENABLE_TERMS-1:0]enable_blockers

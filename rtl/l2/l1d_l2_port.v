@@ -40,7 +40,6 @@ module l1d_l2_port #(
     localparam [7:0]          LINE_LEN  = AXI_BEATS - 1;
     localparam [L2_MID_W-1:0] MASTER_ID_C = L2_MASTER_ID;
     localparam ROUTE_W   = 2 + BANK_W + AXI_SUBID_W + BEAT_W;
-    localparam ROUTE_LOW_W = ROUTE_W / 2;
     localparam NC_SIZE_W       = 3;
     localparam NC_SIZE_CODES   = 1 << NC_SIZE_W;
     localparam CANDIDATES      = 2 * NB;
@@ -58,7 +57,6 @@ module l1d_l2_port #(
     localparam TID_BLOCKS      = NTID / TID_BLOCK_SIZE;
     localparam TID_QUAD_DIGIT_LO  = TID_DIGIT_W;
     localparam TID_BLOCK_DIGIT_LO = 2 * TID_DIGIT_W;
-    localparam TID_ENABLE_TERMS   = 3;
     input  wire                        clk;
     input  wire                        rst;
     input  wire [NB-1:0]               bank_read_req_valid;
@@ -193,9 +191,8 @@ module l1d_l2_port #(
     (* keep *) wire [TID_BLOCKS-1:0] tid_block_free;
     (* keep *) wire [TID_BLOCKS-1:0] tid_blocks_below_free;
     (* keep *) wire [NTID-1:0]       tid_bits_below_free;
-    wire [NTID-1:0]                tid_take_early;
+    (* keep *) wire [NTID-1:0]       tid_take_early;
     wire [NTID-1:0]                tid_take_onehot;
-    wire [NTID-1:0]                tid_write_enable_high;
     wire                           no_request;
     wire [CAND_W-1:0]              read_grant_value;
     wire [CAND_W-1:0]              write_grant_value;
@@ -266,18 +263,9 @@ module l1d_l2_port #(
             assign tid_new_onehot[tid_idx]  = tid_free[tid_idx] & ~tid_free_below[tid_idx];
             assign tid_take_early[tid_idx]  =
                 take_if_tid_free & tid_in_quad_first[tid_idx];
-            wire [TID_ENABLE_TERMS-1:0] enable_blockers;
-            assign enable_blockers = {tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE],
-                                      tid_quads_below_free[tid_idx / TID_QUAD_SIZE],
-                                      ~tid_take_early[tid_idx]};
-            l1d_tid_write_enable #(.N(TID_ENABLE_TERMS)) u_enable_low (
-                .block_flags  (enable_blockers),
-                .write_enable (tid_take_onehot[tid_idx])
-            );
-            l1d_tid_write_enable #(.N(TID_ENABLE_TERMS)) u_enable_high (
-                .block_flags  (enable_blockers),
-                .write_enable (tid_write_enable_high[tid_idx])
-            );
+            assign tid_take_onehot[tid_idx] = tid_take_early[tid_idx]
+                                            & ~tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
+                                            & ~tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
             for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_term
                 if ((tid_idx >> tid_bit) & 1) begin : g_set
                     assign tid_index_terms[tid_bit*NTID + tid_idx] = tid_new_onehot[tid_idx];
@@ -455,12 +443,9 @@ module l1d_l2_port #(
             req_reg_pkt <= sel_pkt;
     end
     always @(posedge clk) begin : route_write_proc
-        for (tid_slot = 0; tid_slot < NTID; tid_slot = tid_slot + 1) begin
+        for (tid_slot = 0; tid_slot < NTID; tid_slot = tid_slot + 1)
             if (tid_take_onehot[tid_slot])
-                route_table[tid_slot][ROUTE_LOW_W-1:0] <= sel_route[ROUTE_LOW_W-1:0];
-            if (tid_write_enable_high[tid_slot])
-                route_table[tid_slot][ROUTE_W-1:ROUTE_LOW_W] <= sel_route[ROUTE_W-1:ROUTE_LOW_W];
-        end
+                route_table[tid_slot] <= sel_route;
     end
     always @(posedge clk) begin : tid_busy_proc
         if (rst)

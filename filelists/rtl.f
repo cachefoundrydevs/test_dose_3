@@ -4,7 +4,6 @@ rtl/common/l1d_fifo.v
 rtl/common/l1d_pri_enc.v
 rtl/common/l1d_arb_rr.v
 rtl/common/l1d_arb_rr_flat.v
-rtl/common/l1d_tid_write_enable.v
 rtl/common/l1d_age_matrix.v
 rtl/common/l1d_cam.v
 rtl/common/l1d_sram_tdp.v

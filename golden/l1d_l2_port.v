@@ -317,6 +317,28 @@ module l1d_l2_port #(
         end
     end
 `endif
+(* keep *) wire [15:0] tid_quad_free_q;
+assign tid_quad_free_q[0] = |tid_free[3:0];
+assign tid_quad_free_q[1] = |tid_free[7:4];
+assign tid_quad_free_q[2] = |tid_free[11:8];
+assign tid_quad_free_q[3] = |tid_free[15:12];
+assign tid_quad_free_q[4] = |tid_free[19:16];
+assign tid_quad_free_q[5] = |tid_free[23:20];
+assign tid_quad_free_q[6] = |tid_free[27:24];
+assign tid_quad_free_q[7] = |tid_free[31:28];
+assign tid_quad_free_q[8] = |tid_free[35:32];
+assign tid_quad_free_q[9] = |tid_free[39:36];
+assign tid_quad_free_q[10] = |tid_free[43:40];
+assign tid_quad_free_q[11] = |tid_free[47:44];
+assign tid_quad_free_q[12] = |tid_free[51:48];
+assign tid_quad_free_q[13] = |tid_free[55:52];
+assign tid_quad_free_q[14] = |tid_free[59:56];
+assign tid_quad_free_q[15] = |tid_free[63:60];
+(* keep *) wire [3:0] tid_block_free_q;
+assign tid_block_free_q[0] = |tid_free[15:0];
+assign tid_block_free_q[1] = |tid_free[31:16];
+assign tid_block_free_q[2] = |tid_free[47:32];
+assign tid_block_free_q[3] = |tid_free[63:48];
 endmodule
 `default_nettype wire
 `endif

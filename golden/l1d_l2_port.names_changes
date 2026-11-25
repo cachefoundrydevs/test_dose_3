@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names; L2-6: per-quad lower-quads flag, req_take in the golden form)
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names))
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -68,6 +68,8 @@
 + LABEL g_block_rest
 + FOR for(block_idx=0;block_idx<TID_BLOCKS;block_idx=block_idx+1)
 + LABEL g_tid_block
++ LABEL g_lowest_block
++ LABEL g_upper_block
 + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
 + LABEL g_tid_onehot
 + LABEL g_quad_first
@@ -144,6 +146,3 @@
 + LABEL g_tid_digit_term
 + LABEL g_block_set
 + LABEL g_block_clear
-+ DECL wire[TID_QUADS-1:0]tid_quads_lower_free
-+ LABEL g_lowest_block_quad
-+ LABEL g_upper_block_quad

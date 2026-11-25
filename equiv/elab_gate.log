@@ -1,0 +1,468 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+
+-- Executing script file `proof/elab_gate.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/common/l1d_pri_enc.v
+Parsing Verilog input from `rtl/common/l1d_pri_enc.v' to AST representation.
+Generating RTLIL representation for module `\l1d_pri_enc'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/common/l1d_arb_rr.v
+Parsing Verilog input from `rtl/common/l1d_arb_rr.v' to AST representation.
+Generating RTLIL representation for module `\l1d_arb_rr'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/l2/l1d_l2_port.v
+Parsing Verilog input from `rtl/l2/l1d_l2_port.v' to AST representation.
+Generating RTLIL representation for module `\l1d_l2_port'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     \l1d_pri_enc
+Used module:     \l1d_arb_rr
+Parameter \N = 64
+Parameter \IDX_W = 6
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_pri_enc'.
+Parameter \N = 64
+Parameter \IDX_W = 6
+Generating RTLIL representation for module `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\l1d_arb_rr'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Generating RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr'.
+Parameter \N = 4
+Parameter \IDX_W = 2
+Found cached RTLIL representation for module `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr'.
+
+4.4. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc
+Used module:     $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr
+
+4.5. Analyzing design hierarchy..
+Top module:  \l1d_l2_port
+Used module:     $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc
+Used module:     $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr
+Removing unused module `\l1d_arb_rr'.
+Removing unused module `\l1d_pri_enc'.
+Removed 2 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/l2/l1d_l2_port.v:492$360 in module l1d_l2_port.
+Marked 2 switch rules as full_case in process $proc$rtl/l2/l1d_l2_port.v:480$358 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$rtl/l2/l1d_l2_port.v:443$345 in module l1d_l2_port.
+Marked 2 switch rules as full_case in process $proc$rtl/l2/l1d_l2_port.v:426$341 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$rtl/l2/l1d_l2_port.v:328$65 in module l1d_l2_port.
+Marked 1 switch rules as full_case in process $proc$rtl/common/l1d_arb_rr.v:53$9723 in module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+Marked 64 switch rules as full_case in process $proc$rtl/common/l1d_pri_enc.v:11$9715 in module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 71 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~142 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+     1/9: $0\ans_end_beat[1:0]
+     2/9: $0\ans_beat[1:0]
+     3/9: $0\ans_line[511:0]
+     4/9: $0\ans_err[0:0]
+     5/9: $0\ans_sub[2:0]
+     6/9: $0\ans_bank[1:0]
+     7/9: $0\ans_shared[0:0]
+     8/9: $0\ans_nc[0:0]
+     9/9: $0\ans_is_write[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:480$358'.
+     1/2: $0\err_pulse_q[0:0]
+     2/2: $0\ans_valid[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:443$345'.
+     1/1: $0\tid_busy[63:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+     1/64: $0\route_table[63][8:0]
+     2/64: $0\route_table[62][8:0]
+     3/64: $0\route_table[61][8:0]
+     4/64: $0\route_table[60][8:0]
+     5/64: $0\route_table[59][8:0]
+     6/64: $0\route_table[58][8:0]
+     7/64: $0\route_table[57][8:0]
+     8/64: $0\route_table[56][8:0]
+     9/64: $0\route_table[55][8:0]
+    10/64: $0\route_table[54][8:0]
+    11/64: $0\route_table[53][8:0]
+    12/64: $0\route_table[52][8:0]
+    13/64: $0\route_table[51][8:0]
+    14/64: $0\route_table[50][8:0]
+    15/64: $0\route_table[49][8:0]
+    16/64: $0\route_table[48][8:0]
+    17/64: $0\route_table[47][8:0]
+    18/64: $0\route_table[46][8:0]
+    19/64: $0\route_table[45][8:0]
+    20/64: $0\route_table[44][8:0]
+    21/64: $0\route_table[43][8:0]
+    22/64: $0\route_table[42][8:0]
+    23/64: $0\route_table[41][8:0]
+    24/64: $0\route_table[40][8:0]
+    25/64: $0\route_table[39][8:0]
+    26/64: $0\route_table[38][8:0]
+    27/64: $0\route_table[37][8:0]
+    28/64: $0\route_table[36][8:0]
+    29/64: $0\route_table[35][8:0]
+    30/64: $0\route_table[34][8:0]
+    31/64: $0\route_table[33][8:0]
+    32/64: $0\route_table[32][8:0]
+    33/64: $0\route_table[31][8:0]
+    34/64: $0\route_table[30][8:0]
+    35/64: $0\route_table[29][8:0]
+    36/64: $0\route_table[28][8:0]
+    37/64: $0\route_table[27][8:0]
+    38/64: $0\route_table[26][8:0]
+    39/64: $0\route_table[25][8:0]
+    40/64: $0\route_table[24][8:0]
+    41/64: $0\route_table[23][8:0]
+    42/64: $0\route_table[22][8:0]
+    43/64: $0\route_table[21][8:0]
+    44/64: $0\route_table[20][8:0]
+    45/64: $0\route_table[19][8:0]
+    46/64: $0\route_table[18][8:0]
+    47/64: $0\route_table[17][8:0]
+    48/64: $0\route_table[16][8:0]
+    49/64: $0\route_table[15][8:0]
+    50/64: $0\route_table[14][8:0]
+    51/64: $0\route_table[13][8:0]
+    52/64: $0\route_table[12][8:0]
+    53/64: $0\route_table[11][8:0]
+    54/64: $0\route_table[10][8:0]
+    55/64: $0\route_table[9][8:0]
+    56/64: $0\route_table[8][8:0]
+    57/64: $0\route_table[7][8:0]
+    58/64: $0\route_table[6][8:0]
+    59/64: $0\route_table[5][8:0]
+    60/64: $0\route_table[4][8:0]
+    61/64: $0\route_table[3][8:0]
+    62/64: $0\route_table[2][8:0]
+    63/64: $0\route_table[1][8:0]
+    64/64: $0\route_table[0][8:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:434$343'.
+     1/1: $0\req_reg_pkt[642:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:426$341'.
+     1/1: $0\req_reg_valid[0:0]
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:417$83'.
+Creating decoders for process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:328$65'.
+     1/1: $0\last_was_write[0:0]
+Creating decoders for process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$9723'.
+     1/1: $0\mask_r[3:0]
+Creating decoders for process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$9719'.
+Creating decoders for process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$9715'.
+     1/64: $64\lowest_set_index[5:0]
+     2/64: $63\lowest_set_index[5:0]
+     3/64: $62\lowest_set_index[5:0]
+     4/64: $61\lowest_set_index[5:0]
+     5/64: $60\lowest_set_index[5:0]
+     6/64: $59\lowest_set_index[5:0]
+     7/64: $58\lowest_set_index[5:0]
+     8/64: $57\lowest_set_index[5:0]
+     9/64: $56\lowest_set_index[5:0]
+    10/64: $55\lowest_set_index[5:0]
+    11/64: $54\lowest_set_index[5:0]
+    12/64: $53\lowest_set_index[5:0]
+    13/64: $52\lowest_set_index[5:0]
+    14/64: $51\lowest_set_index[5:0]
+    15/64: $50\lowest_set_index[5:0]
+    16/64: $49\lowest_set_index[5:0]
+    17/64: $48\lowest_set_index[5:0]
+    18/64: $47\lowest_set_index[5:0]
+    19/64: $46\lowest_set_index[5:0]
+    20/64: $45\lowest_set_index[5:0]
+    21/64: $44\lowest_set_index[5:0]
+    22/64: $43\lowest_set_index[5:0]
+    23/64: $42\lowest_set_index[5:0]
+    24/64: $41\lowest_set_index[5:0]
+    25/64: $40\lowest_set_index[5:0]
+    26/64: $39\lowest_set_index[5:0]
+    27/64: $38\lowest_set_index[5:0]
+    28/64: $37\lowest_set_index[5:0]
+    29/64: $36\lowest_set_index[5:0]
+    30/64: $35\lowest_set_index[5:0]
+    31/64: $34\lowest_set_index[5:0]
+    32/64: $33\lowest_set_index[5:0]
+    33/64: $32\lowest_set_index[5:0]
+    34/64: $31\lowest_set_index[5:0]
+    35/64: $30\lowest_set_index[5:0]
+    36/64: $29\lowest_set_index[5:0]
+    37/64: $28\lowest_set_index[5:0]
+    38/64: $27\lowest_set_index[5:0]
+    39/64: $26\lowest_set_index[5:0]
+    40/64: $25\lowest_set_index[5:0]
+    41/64: $24\lowest_set_index[5:0]
+    42/64: $23\lowest_set_index[5:0]
+    43/64: $22\lowest_set_index[5:0]
+    44/64: $21\lowest_set_index[5:0]
+    45/64: $20\lowest_set_index[5:0]
+    46/64: $19\lowest_set_index[5:0]
+    47/64: $18\lowest_set_index[5:0]
+    48/64: $17\lowest_set_index[5:0]
+    49/64: $16\lowest_set_index[5:0]
+    50/64: $15\lowest_set_index[5:0]
+    51/64: $14\lowest_set_index[5:0]
+    52/64: $13\lowest_set_index[5:0]
+    53/64: $12\lowest_set_index[5:0]
+    54/64: $11\lowest_set_index[5:0]
+    55/64: $10\lowest_set_index[5:0]
+    56/64: $9\lowest_set_index[5:0]
+    57/64: $8\lowest_set_index[5:0]
+    58/64: $7\lowest_set_index[5:0]
+    59/64: $6\lowest_set_index[5:0]
+    60/64: $5\lowest_set_index[5:0]
+    61/64: $4\lowest_set_index[5:0]
+    62/64: $3\lowest_set_index[5:0]
+    63/64: $2\lowest_set_index[5:0]
+    64/64: $1\lowest_set_index[5:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\l1d_l2_port.\nc_read_mask' from process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:417$83'.
+No latch inferred for signal `\l1d_l2_port.\nc_read_bytes' from process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:417$83'.
+No latch inferred for signal `\l1d_l2_port.\mask_bit' from process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:417$83'.
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\grant_onehot' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$9719'.
+No latch inferred for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\grant_index' from process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$9719'.
+No latch inferred for signal `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.\i' from process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$9715'.
+No latch inferred for signal `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.\lowest_set_index' from process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$9715'.
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\l1d_l2_port.\ans_is_write' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10132' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_nc' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10133' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_shared' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10134' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_bank' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10135' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_sub' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10136' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_err' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10137' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_line' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10138' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_beat' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10139' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_end_beat' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+  created $dff cell `$procdff$10140' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\ans_valid' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:480$358'.
+  created $dff cell `$procdff$10141' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\err_pulse_q' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:480$358'.
+  created $dff cell `$procdff$10142' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\tid_busy' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:443$345'.
+  created $dff cell `$procdff$10143' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\tid_slot' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10144' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[0]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10145' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[1]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10146' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[2]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10147' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[3]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10148' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[4]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10149' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[5]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10150' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[6]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10151' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[7]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10152' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[8]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10153' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[9]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10154' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[10]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10155' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[11]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10156' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[12]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10157' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[13]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10158' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[14]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10159' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[15]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10160' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[16]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10161' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[17]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10162' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[18]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10163' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[19]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10164' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[20]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10165' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[21]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10166' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[22]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10167' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[23]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10168' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[24]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10169' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[25]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10170' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[26]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10171' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[27]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10172' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[28]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10173' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[29]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10174' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[30]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10175' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[31]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10176' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[32]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10177' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[33]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10178' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[34]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10179' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[35]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10180' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[36]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10181' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[37]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10182' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[38]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10183' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[39]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10184' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[40]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10185' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[41]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10186' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[42]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10187' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[43]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10188' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[44]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10189' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[45]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10190' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[46]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10191' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[47]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10192' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[48]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10193' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[49]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10194' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[50]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10195' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[51]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10196' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[52]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10197' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[53]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10198' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[54]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10199' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[55]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10200' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[56]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10201' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[57]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10202' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[58]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10203' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[59]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10204' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[60]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10205' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[61]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10206' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[62]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10207' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\route_table[63]' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+  created $dff cell `$procdff$10208' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\req_reg_pkt' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:434$343'.
+  created $dff cell `$procdff$10209' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\req_reg_valid' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:426$341'.
+  created $dff cell `$procdff$10210' with positive edge clock.
+Creating register for signal `\l1d_l2_port.\last_was_write' using process `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:328$65'.
+  created $dff cell `$procdff$10211' with positive edge clock.
+Creating register for signal `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.\mask_r' using process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$9723'.
+  created $dff cell `$procdff$10212' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:492$360'.
+Found and cleaned up 3 empty switches in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:480$358'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:480$358'.
+Found and cleaned up 1 empty switch in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:443$345'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:443$345'.
+Found and cleaned up 64 empty switches in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:438$344'.
+Found and cleaned up 1 empty switch in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:434$343'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:434$343'.
+Found and cleaned up 3 empty switches in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:426$341'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:426$341'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:417$83'.
+Found and cleaned up 2 empty switches in `\l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:328$65'.
+Removing empty process `l1d_l2_port.$proc$rtl/l2/l1d_l2_port.v:328$65'.
+Found and cleaned up 2 empty switches in `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$9723'.
+Removing empty process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:53$9723'.
+Removing empty process `$paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.$proc$rtl/common/l1d_arb_rr.v:47$9719'.
+Found and cleaned up 64 empty switches in `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$9715'.
+Removing empty process `$paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.$proc$rtl/common/l1d_pri_enc.v:11$9715'.
+Cleaned up 142 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module l1d_l2_port.
+<suppressed ~3185 debug messages>
+Optimizing module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$d5afdc3c831df247a77dddb733d1f817c4308982\l1d_arb_rr.
+Deleting now unused module $paramod$1c2e1aaffabd1e304dffe740e09e73858e9376e3\l1d_pri_enc.
+<suppressed ~3 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \l1d_l2_port..
+Removed 596 unused cells and 7918 unused wires.
+<suppressed ~610 debug messages>
+Renaming module \l1d_l2_port to \gate.
+
+8. Executing RTLIL backend.
+Output filename: proof/gate.il
+
+End of script. Logfile hash: 7b80520a83, time: 1.31s, user: 1.30s, system: 0.04s, MEM: 97.60 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 15.2.0)
+Time spent: 84% 4x read_verilog (1 sec), 6% 1x opt_clean (0 sec), ...

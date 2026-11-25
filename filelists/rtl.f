@@ -59,4 +59,3 @@ rtl/snoop/l1d_snoop_ctrl.v
 rtl/l2/l1d_l2_port.v
 rtl/top/l1d_prefetch_unit.v
 rtl/top/l1d_top.v
-rtl/top/l1d_top_single_port.v

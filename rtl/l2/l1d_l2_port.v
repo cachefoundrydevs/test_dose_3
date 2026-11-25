@@ -50,15 +50,13 @@ module l1d_l2_port #(
     localparam CAND_MASK_LO    = CAND_UNIQUE_BIT + 1;
     localparam CAND_DATA_LO    = CAND_MASK_LO + MASK_W;
     localparam CAND_W          = CAND_DATA_LO + LINE_W;
-    localparam TID_LOW_W       = L2_TID_W / 2;
-    localparam TID_HIGH_W      = L2_TID_W - TID_LOW_W;
-    localparam TID_GROUP_SIZE  = 1 << TID_LOW_W;
-    localparam TID_GROUPS      = 1 << TID_HIGH_W;
     localparam TID_DIGIT_W     = L2_TID_W / 3;
     localparam TID_QUAD_SIZE   = 1 << TID_DIGIT_W;
     localparam TID_QUADS       = NTID / TID_QUAD_SIZE;
     localparam TID_BLOCK_SIZE  = TID_QUAD_SIZE * TID_QUAD_SIZE;
     localparam TID_BLOCKS      = NTID / TID_BLOCK_SIZE;
+    localparam TID_QUAD_DIGIT_LO  = TID_DIGIT_W;
+    localparam TID_BLOCK_DIGIT_LO = 2 * TID_DIGIT_W;
     input  wire                        clk;
     input  wire                        rst;
     input  wire [NB-1:0]               bank_read_req_valid;
@@ -173,12 +171,6 @@ module l1d_l2_port #(
     genvar                       field_bit;
     genvar                       tid_idx;
     genvar                       tid_bit;
-    wire [TID_GROUPS-1:0]          tid_group_all_busy;
-    wire [TID_GROUPS-1:0]          tid_groups_below_busy;
-    wire [TID_GROUPS-1:0]          tid_group_first;
-    wire [NTID-1:0]                tid_lower_in_group_busy;
-    wire [NTID-1:0]                tid_in_group_first;
-    wire [TID_GROUPS*TID_LOW_W-1:0] tid_group_low_index;
     wire                           take_if_requested;
     wire                           take_if_tid_free;
     wire                           read_turn;
@@ -191,23 +183,29 @@ module l1d_l2_port #(
     wire [BEAT_W-1:0]              resp_start_beat;
     wire [BEAT_W-1:0]              resp_end_beat;
     wire                           resp_line_read;
-    genvar                         group_idx;
     genvar                         place_idx;
     genvar                         route_bit;
     genvar                         beat_bit;
-    wire [TID_QUADS-1:0]           tid_quad_free;
-    wire [TID_QUADS-1:0]           tid_quads_below_free;
-    wire [TID_BLOCKS-1:0]          tid_block_free;
-    wire [TID_BLOCKS-1:0]          tid_blocks_below_free;
-    wire [NTID-1:0]                tid_bits_below_free;
-    wire [NTID-1:0]                tid_take_early;
+    (* keep *) wire [TID_QUADS-1:0]  tid_quad_free;
+    (* keep *) wire [TID_QUADS-1:0]  tid_quads_below_free;
+    (* keep *) wire [TID_BLOCKS-1:0] tid_block_free;
+    (* keep *) wire [TID_BLOCKS-1:0] tid_blocks_below_free;
+    (* keep *) wire [NTID-1:0]       tid_bits_below_free;
+    (* keep *) wire [NTID-1:0]       tid_take_early;
     wire [NTID-1:0]                tid_take_onehot;
     wire                           no_request;
     wire [CAND_W-1:0]              read_grant_value;
     wire [CAND_W-1:0]              write_grant_value;
     genvar                         quad_idx;
     genvar                         block_idx;
-    l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_read_rr (
+    wire [NTID-1:0]                tid_in_quad_first;
+    wire [TID_QUADS*TID_DIGIT_W-1:0]  tid_quad_place;
+    wire [TID_QUADS-1:0]           tid_quad_first_in_block;
+    wire [TID_BLOCKS*TID_DIGIT_W-1:0] tid_block_place;
+    wire [TID_BLOCKS*TID_DIGIT_W-1:0] tid_block_quad;
+    wire [TID_BLOCKS-1:0]          tid_block_first;
+    genvar                         digit_bit;
+    l1d_arb_rr_flat #(.N(NB), .IDX_W(BANK_W)) u_read_rr (
         .clk          (clk),
         .rst          (rst),
         .request_bits (bank_read_req_valid),
@@ -216,7 +214,7 @@ module l1d_l2_port #(
         .grant_index  (read_grant_bank),
         .any_request  (read_any)
     );
-    l1d_arb_rr #(.N(NB), .IDX_W(BANK_W)) u_write_rr (
+    l1d_arb_rr_flat #(.N(NB), .IDX_W(BANK_W)) u_write_rr (
         .clk          (clk),
         .rst          (rst),
         .request_bits (bank_write_req_valid),
@@ -232,16 +230,6 @@ module l1d_l2_port #(
         .any_set          (tid_any_free)
     );
     generate
-        for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_tid_group
-            assign tid_group_all_busy[group_idx] =
-                &tid_busy[group_idx*TID_GROUP_SIZE +: TID_GROUP_SIZE];
-            if (group_idx == 0) begin : g_lowest_group
-                assign tid_groups_below_busy[group_idx] = 1'b1;
-            end else begin : g_upper_group
-                assign tid_groups_below_busy[group_idx] = &tid_group_all_busy[group_idx-1:0];
-            end
-            assign tid_group_first[group_idx] = ~tid_group_all_busy[group_idx] & tid_groups_below_busy[group_idx];
-        end
         for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_tid_quad
             assign tid_quad_free[quad_idx] = |tid_free[quad_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
             if ((quad_idx % TID_QUAD_SIZE) == 0) begin : g_block_first
@@ -250,6 +238,7 @@ module l1d_l2_port #(
                 assign tid_quads_below_free[quad_idx] =
                     |tid_quad_free[quad_idx - (quad_idx % TID_QUAD_SIZE) +: (quad_idx % TID_QUAD_SIZE)];
             end
+            assign tid_quad_first_in_block[quad_idx] = tid_quad_free[quad_idx] & ~tid_quads_below_free[quad_idx];
         end
         for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_block
             assign tid_block_free[block_idx] = |tid_quad_free[block_idx*TID_QUAD_SIZE +: TID_QUAD_SIZE];
@@ -258,27 +247,22 @@ module l1d_l2_port #(
             end else begin : g_upper_block
                 assign tid_blocks_below_free[block_idx] = |tid_block_free[block_idx-1:0];
             end
+            assign tid_block_first[block_idx] = tid_block_free[block_idx] & ~tid_blocks_below_free[block_idx];
         end
         for (tid_idx = 0; tid_idx < NTID; tid_idx = tid_idx + 1) begin : g_tid_onehot
-            if ((tid_idx % TID_GROUP_SIZE) == 0) begin : g_first
-                assign tid_lower_in_group_busy[tid_idx] = 1'b1;
-            end else begin : g_rest
-                assign tid_lower_in_group_busy[tid_idx] =
-                    &tid_busy[tid_idx - (tid_idx % TID_GROUP_SIZE) +: (tid_idx % TID_GROUP_SIZE)];
-            end
-            assign tid_in_group_first[tid_idx] = tid_free[tid_idx] & tid_lower_in_group_busy[tid_idx];
             if ((tid_idx % TID_QUAD_SIZE) == 0) begin : g_quad_first
                 assign tid_bits_below_free[tid_idx] = 1'b0;
             end else begin : g_quad_rest
                 assign tid_bits_below_free[tid_idx] =
                     |tid_free[tid_idx - (tid_idx % TID_QUAD_SIZE) +: (tid_idx % TID_QUAD_SIZE)];
             end
+            assign tid_in_quad_first[tid_idx] = tid_free[tid_idx] & ~tid_bits_below_free[tid_idx];
             assign tid_free_below[tid_idx]  = tid_bits_below_free[tid_idx]
                                             | tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
                                             | tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
             assign tid_new_onehot[tid_idx]  = tid_free[tid_idx] & ~tid_free_below[tid_idx];
             assign tid_take_early[tid_idx]  =
-                take_if_tid_free & tid_free[tid_idx] & ~tid_bits_below_free[tid_idx];
+                take_if_tid_free & tid_in_quad_first[tid_idx];
             assign tid_take_onehot[tid_idx] = tid_take_early[tid_idx]
                                             & ~tid_quads_below_free[tid_idx / TID_QUAD_SIZE]
                                             & ~tid_blocks_below_free[tid_idx / TID_BLOCK_SIZE];
@@ -290,36 +274,56 @@ module l1d_l2_port #(
                 end
             end
         end
-        for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_group_place
-            for (tid_bit = 0; tid_bit < TID_LOW_W; tid_bit = tid_bit + 1) begin : g_place_bit
-                wire [TID_GROUP_SIZE-1:0] place_terms;
-                for (place_idx = 0; place_idx < TID_GROUP_SIZE; place_idx = place_idx + 1) begin : g_place_term
-                    if ((place_idx >> tid_bit) & 1) begin : g_place_set
-                        assign place_terms[place_idx] = tid_in_group_first[group_idx*TID_GROUP_SIZE + place_idx];
+        for (quad_idx = 0; quad_idx < TID_QUADS; quad_idx = quad_idx + 1) begin : g_quad_place
+            for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_quad_place_bit
+                wire [TID_QUAD_SIZE-1:0] place_terms;
+                for (place_idx = 0; place_idx < TID_QUAD_SIZE; place_idx = place_idx + 1) begin : g_quad_place_term
+                    if ((place_idx >> digit_bit) & 1) begin : g_place_set
+                        assign place_terms[place_idx] = tid_in_quad_first[quad_idx*TID_QUAD_SIZE + place_idx];
                     end else begin : g_place_clear
                         assign place_terms[place_idx] = 1'b0;
                     end
                 end
-                assign tid_group_low_index[group_idx*TID_LOW_W + tid_bit] = |place_terms;
+                assign tid_quad_place[quad_idx*TID_DIGIT_W + digit_bit] = |place_terms;
             end
         end
-        for (tid_bit = 0; tid_bit < L2_TID_W; tid_bit = tid_bit + 1) begin : g_tid_encode
-            wire [TID_GROUPS-1:0] group_terms;
-            for (group_idx = 0; group_idx < TID_GROUPS; group_idx = group_idx + 1) begin : g_group_term
-                if (tid_bit < TID_LOW_W) begin : g_low_bit
-                    assign group_terms[group_idx] =
-                        tid_group_first[group_idx] & tid_group_low_index[group_idx*TID_LOW_W + tid_bit];
-                end else if ((group_idx >> (tid_bit - TID_LOW_W)) & 1) begin : g_high_set
-                    assign group_terms[group_idx] = tid_group_first[group_idx];
-                end else begin : g_high_clear
-                    assign group_terms[group_idx] = 1'b0;
+        for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_block_digits
+            for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_block_digit_bit
+                wire [TID_QUAD_SIZE-1:0] place_terms;
+                wire [TID_QUAD_SIZE-1:0] quad_terms;
+                for (place_idx = 0; place_idx < TID_QUAD_SIZE; place_idx = place_idx + 1) begin : g_block_digit_term
+                    assign place_terms[place_idx] = tid_quad_first_in_block[block_idx*TID_QUAD_SIZE + place_idx]
+                                                  & tid_quad_place[(block_idx*TID_QUAD_SIZE + place_idx)*TID_DIGIT_W + digit_bit];
+                    if ((place_idx >> digit_bit) & 1) begin : g_quad_set
+                        assign quad_terms[place_idx] = tid_quad_first_in_block[block_idx*TID_QUAD_SIZE + place_idx];
+                    end else begin : g_quad_clear
+                        assign quad_terms[place_idx] = 1'b0;
+                    end
+                end
+                assign tid_block_place[block_idx*TID_DIGIT_W + digit_bit] = |place_terms;
+                assign tid_block_quad[block_idx*TID_DIGIT_W + digit_bit]  = |quad_terms;
+            end
+        end
+        for (digit_bit = 0; digit_bit < TID_DIGIT_W; digit_bit = digit_bit + 1) begin : g_tid_digit
+            wire [TID_BLOCKS-1:0] place_terms;
+            wire [TID_BLOCKS-1:0] quad_terms;
+            wire [TID_BLOCKS-1:0] block_terms;
+            for (block_idx = 0; block_idx < TID_BLOCKS; block_idx = block_idx + 1) begin : g_tid_digit_term
+                assign place_terms[block_idx] = tid_block_first[block_idx] & tid_block_place[block_idx*TID_DIGIT_W + digit_bit];
+                assign quad_terms[block_idx]  = tid_block_first[block_idx] & tid_block_quad[block_idx*TID_DIGIT_W + digit_bit];
+                if ((block_idx >> digit_bit) & 1) begin : g_block_set
+                    assign block_terms[block_idx] = tid_block_first[block_idx];
+                end else begin : g_block_clear
+                    assign block_terms[block_idx] = 1'b0;
                 end
             end
-            assign tid_new_encoded[tid_bit] = |group_terms;
+            assign tid_new_encoded[digit_bit]                      = |place_terms;
+            assign tid_new_encoded[TID_QUAD_DIGIT_LO + digit_bit]  = |quad_terms;
+            assign tid_new_encoded[TID_BLOCK_DIGIT_LO + digit_bit] = |block_terms;
         end
     endgenerate
     assign pick_write = write_any & (~read_any | ~last_was_write);
-    assign req_take   = ~req_reg_valid & tid_any_free & (read_any | write_any);
+    assign req_take   = take_if_requested & (read_any | write_any);
     assign read_take  = req_take & ~pick_write;
     assign write_take = req_take &  pick_write;
     assign take_if_requested = ~req_reg_valid & (|tid_block_free);

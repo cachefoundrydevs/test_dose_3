@@ -1,4 +1,4 @@
-# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: two-level free tid, early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select)
+# Approved name changes of l1d_l2_port against golden (L2-1: per-bank candidates, one-hot grants, one-hot free tid; L2-2: early take terms, one-hot route read; L2-3: radix-4 free tid, shared take one-hot, grant-first candidate select; L2-5: kept radix-4 levels, 3-digit tid number from them (the L2-2 group form is removed), round robins are l1d_arb_rr_flat (instance names unchanged; instances are not listed by check_names))
 + DECL localparam NC_SIZE_W = 3
 + DECL localparam NC_SIZE_CODES = 1 << NC_SIZE_W
 + DECL localparam CANDIDATES = 2 * NB
@@ -9,10 +9,6 @@
 + DECL localparam CAND_MASK_LO = CAND_UNIQUE_BIT + 1
 + DECL localparam CAND_DATA_LO = CAND_MASK_LO + MASK_W
 + DECL localparam CAND_W = CAND_DATA_LO + LINE_W
-+ DECL localparam TID_LOW_W = L2_TID_W / 2
-+ DECL localparam TID_HIGH_W = L2_TID_W - TID_LOW_W
-+ DECL localparam TID_GROUP_SIZE = 1 << TID_LOW_W
-+ DECL localparam TID_GROUPS = 1 << TID_HIGH_W
 + DECL localparam TID_DIGIT_W = L2_TID_W / 3
 + DECL localparam TID_QUAD_SIZE = 1 << TID_DIGIT_W
 + DECL localparam TID_QUADS = NTID / TID_QUAD_SIZE
@@ -39,12 +35,6 @@
 + DECL genvar field_bit
 + DECL genvar tid_idx
 + DECL genvar tid_bit
-+ DECL wire[TID_GROUPS-1:0]tid_group_all_busy
-+ DECL wire[TID_GROUPS-1:0]tid_groups_below_busy
-+ DECL wire[TID_GROUPS-1:0]tid_group_first
-+ DECL wire[NTID-1:0]tid_lower_in_group_busy
-+ DECL wire[NTID-1:0]tid_in_group_first
-+ DECL wire[TID_GROUPS*TID_LOW_W-1:0]tid_group_low_index
 + DECL wire take_if_requested
 + DECL wire take_if_tid_free
 + DECL wire read_turn
@@ -57,7 +47,6 @@
 + DECL wire[BEAT_W-1:0]resp_start_beat
 + DECL wire[BEAT_W-1:0]resp_end_beat
 + DECL wire resp_line_read
-+ DECL genvar group_idx
 + DECL genvar place_idx
 + DECL genvar route_bit
 + DECL genvar beat_bit
@@ -73,10 +62,6 @@
 + DECL wire[CAND_W-1:0]write_grant_value
 + DECL genvar quad_idx
 + DECL genvar block_idx
-+ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
-+ LABEL g_tid_group
-+ LABEL g_lowest_group
-+ LABEL g_upper_group
 + FOR for(quad_idx=0;quad_idx<TID_QUADS;quad_idx=quad_idx+1)
 + LABEL g_tid_quad
 + LABEL g_block_first
@@ -87,31 +72,14 @@
 + LABEL g_upper_block
 + FOR for(tid_idx=0;tid_idx<NTID;tid_idx=tid_idx+1)
 + LABEL g_tid_onehot
-+ LABEL g_first
-+ LABEL g_rest
 + LABEL g_quad_first
 + LABEL g_quad_rest
 + FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
 + LABEL g_tid_term
 + LABEL g_set
 + LABEL g_clear
-+ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
-+ LABEL g_group_place
-+ FOR for(tid_bit=0;tid_bit<TID_LOW_W;tid_bit=tid_bit+1)
-+ LABEL g_place_bit
-+ DECL wire[TID_GROUP_SIZE-1:0]place_terms
-+ FOR for(place_idx=0;place_idx<TID_GROUP_SIZE;place_idx=place_idx+1)
-+ LABEL g_place_term
 + LABEL g_place_set
 + LABEL g_place_clear
-+ FOR for(tid_bit=0;tid_bit<L2_TID_W;tid_bit=tid_bit+1)
-+ LABEL g_tid_encode
-+ DECL wire[TID_GROUPS-1:0]group_terms
-+ FOR for(group_idx=0;group_idx<TID_GROUPS;group_idx=group_idx+1)
-+ LABEL g_group_term
-+ LABEL g_low_bit
-+ LABEL g_high_set
-+ LABEL g_high_clear
 + FOR for(bank_idx=0;bank_idx<NB;bank_idx=bank_idx+1)
 + LABEL g_cand
 + DECL wire[OFFSET_W-1:0]read_offset
@@ -143,3 +111,38 @@
 + LABEL g_route_read
 + FOR for(beat_bit=0;beat_bit<BEAT_W;beat_bit=beat_bit+1)
 + LABEL g_beat_read
++ DECL localparam TID_QUAD_DIGIT_LO = TID_DIGIT_W
++ DECL localparam TID_BLOCK_DIGIT_LO = 2 * TID_DIGIT_W
++ DECL wire[NTID-1:0]tid_in_quad_first
++ DECL wire[TID_QUADS*TID_DIGIT_W-1:0]tid_quad_place
++ DECL wire[TID_QUADS-1:0]tid_quad_first_in_block
++ DECL wire[TID_BLOCKS*TID_DIGIT_W-1:0]tid_block_place
++ DECL wire[TID_BLOCKS*TID_DIGIT_W-1:0]tid_block_quad
++ DECL wire[TID_BLOCKS-1:0]tid_block_first
++ DECL genvar digit_bit
++ FOR for(quad_idx=0;quad_idx<TID_QUADS;quad_idx=quad_idx+1)
++ FOR for(block_idx=0;block_idx<TID_BLOCKS;block_idx=block_idx+1)
++ LABEL g_quad_place
++ FOR for(digit_bit=0;digit_bit<TID_DIGIT_W;digit_bit=digit_bit+1)
++ LABEL g_quad_place_bit
++ DECL wire[TID_QUAD_SIZE-1:0]place_terms
++ FOR for(place_idx=0;place_idx<TID_QUAD_SIZE;place_idx=place_idx+1)
++ LABEL g_quad_place_term
++ FOR for(block_idx=0;block_idx<TID_BLOCKS;block_idx=block_idx+1)
++ LABEL g_block_digits
++ FOR for(digit_bit=0;digit_bit<TID_DIGIT_W;digit_bit=digit_bit+1)
++ LABEL g_block_digit_bit
++ DECL wire[TID_QUAD_SIZE-1:0]place_terms
++ DECL wire[TID_QUAD_SIZE-1:0]quad_terms
++ FOR for(place_idx=0;place_idx<TID_QUAD_SIZE;place_idx=place_idx+1)
++ LABEL g_block_digit_term
++ LABEL g_quad_set
++ LABEL g_quad_clear
++ FOR for(digit_bit=0;digit_bit<TID_DIGIT_W;digit_bit=digit_bit+1)
++ LABEL g_tid_digit
++ DECL wire[TID_BLOCKS-1:0]place_terms
++ DECL wire[TID_BLOCKS-1:0]quad_terms
++ DECL wire[TID_BLOCKS-1:0]block_terms
++ LABEL g_tid_digit_term
++ LABEL g_block_set
++ LABEL g_block_clear

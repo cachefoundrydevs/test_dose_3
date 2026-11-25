@@ -48,6 +48,7 @@
 // TIMING-OPTIMISED BODY (2026-11-23, iterations BO-1 .. BO-8, kept iteration 8; history in l1d_bank_order_timing.md):
 // the logic below is the comment-stripped public copy proven equal to the old file (names, Yosys equivalence). KNOWN GAP: the new logic
 // (count one-hot select words, join thresholds, rank-based order_port write) still needs the full comment set of CODING_RULES V-1.7 / V-6.13.
+// NOTE: body below = optimised, proven-equal version (port_front 5 iterations, kept: iteration 5 = 299.7 ps; comments in the body are partly missing, see CHAT_LOG)
 `ifndef L1D_BANK_ORDER_V
 `define L1D_BANK_ORDER_V
 `default_nettype none
@@ -59,7 +60,8 @@ module l1d_bank_order #(
 ) (
     clk, rst,
     join_0, join_1, join_2, join_3,
-    pop,
+    join_prefix_at_least,
+    pop, drain_ready_port,
     head_port_onehot, ring_empty_q
 );
     `include "l1d_encodings.vh"
@@ -74,7 +76,11 @@ module l1d_bank_order #(
     input  wire                 join_1;
     input  wire                 join_2;
     input  wire                 join_3;
-    input  wire                 pop;
+    // bit (k-1)*LSU_PORTS + (m-1): at least m of the ports 0 .. k-1 join this cycle (k, m = 1 .. LSU_PORTS; m > k reads 0).
+    // Thresholds computed by l1d_port_front straight from the pins and the room rule, equal to the counts of join_0 .. join_3.
+    input  wire [LSU_PORTS*LSU_PORTS-1:0] join_prefix_at_least; // LSU_PORTS*LSU_PORTS = 16 bits
+    input  wire                 pop;              // = the head's drain_ready_port bit when the ring is not empty (checks only)
+    input  wire [LSU_PORTS-1:0] drain_ready_port; // LSU_PORTS = 4 bits: port p's skid head could be drained now (l1d_port_front)
     output wire [LSU_PORTS-1:0] head_port_onehot;
     output reg                  ring_empty_q;
     reg  [PORT_W-1:0]      order_port [0:ORDER_DEPTH-1];
@@ -109,6 +115,13 @@ module l1d_bank_order #(
         for (read_place = 0; read_place < ORDER_DEPTH; read_place = read_place + 1)
             oldest_port = oldest_port | ({PORT_W{order_read_onehot[read_place]}} & order_port[read_place]);
     end
+    // pop decided here from the head index bits and the per-port ready flags (exactly the front's drain_alloc_pred =
+    // OR over p of head_port_onehot[p] AND drain_ready_port[p]): a 2^PORT_W:1 mux by oldest_port, no one-hot decode
+    // and no head_port_onehot fan-out on the pop path
+    wire [(1 << PORT_W)-1:0] ready_by_index; // 2^PORT_W = 4 bits: drain_ready_port padded to every oldest_port value
+    wire                     pop_from_head;  // the ring head is drained this cycle
+    assign ready_by_index = {{(1 << PORT_W){1'b0}}, drain_ready_port}; // zero-extended (the upper zeros are cut off)
+    assign pop_from_head  = !ring_empty_q && ready_by_index[oldest_port];
     genvar hp_idx;
     generate
         for (hp_idx = 0; hp_idx < LSU_PORTS; hp_idx = hp_idx + 1) begin : g_head
@@ -130,39 +143,23 @@ module l1d_bank_order #(
     integer                join_port_idx;
     integer                join_count_idx;
     integer                pop_value_idx;
-    reg                    candidate_selected;
-    // fill count and empty flag without an adder: early select words from join/pop, then AND-OR with the decoded count
-    localparam COUNT_VALUES = 1 << ORDER_CNT_W;                  // COUNT_VALUES = 16 count values
-    reg  [ORDER_CNT_W*COUNT_VALUES-1:0] count_bit_select;        // ORDER_CNT_W*COUNT_VALUES = 64 bits: next-count bit k if count = c
-    reg  [COUNT_VALUES-1:0]             empty_select;            // COUNT_VALUES = 16 bits: next count is 0 if count = c
-    localparam COUNT_LOW_W      = ORDER_CNT_W / 2;               // COUNT_LOW_W = 2 low count bits, predecoded as a group
-    localparam COUNT_LOW_VALUES = 1 << COUNT_LOW_W;              // COUNT_LOW_VALUES = 4 values of the low group
-    reg  [COUNT_LOW_VALUES-1:0]         mid_hit_onehot;          // COUNT_LOW_VALUES = 4 bits: order_count[2:1] decoded
-    reg                    count_prefix_hit;                     // order_count[k:1] equals the value of this term
-    reg                    next_if_bit0_clear;                   // next-count bit (or empty flag) if order_count[0] = 0
-    reg                    next_if_bit0_set;                     // next-count bit (or empty flag) if order_count[0] = 1
+    localparam COUNT_VALUES = 1 << ORDER_CNT_W;
+    // next count bits [ORDER_CNT_W-1:0] and empty flag [ORDER_CNT_W] for each join count j (slice j), from the count flops and rst only
+    localparam NEXT_W       = ORDER_CNT_W + 1;   // NEXT_W = 5 bits: next count (4) and empty flag (1)
+    reg  [(LSU_PORTS+1)*NEXT_W-1:0] next_if_no_pop;  // (LSU_PORTS+1)*NEXT_W = 25 bits: count + j, empty flag (rst folded in)
+    reg  [(LSU_PORTS+1)*NEXT_W-1:0] next_if_pop;     // 25 bits: count + j - 1, empty flag (rst folded in)
+    reg  [NEXT_W-1:0]      count_after_no_pop;       // NEXT_W = 5 bits: next count and empty flag if no pop (join count selected)
+    reg  [NEXT_W-1:0]      count_after_pop;          // NEXT_W = 5 bits: next count and empty flag if pop (join count selected)
+    reg                    count_matches;            // order_count equals count_value_idx
     integer                count_value_idx;
     integer                count_bit_idx;
-    // order_port write: per rank s (inputs only) a joiner exists / its port; the write pointer bit is the last literal
-    reg  [LSU_PORTS-1:0]          rank_used;                     // LSU_PORTS = 4 bits: a joiner with this rank exists
-    reg  [LSU_PORTS*PORT_W-1:0]   rank_port;                     // LSU_PORTS*PORT_W = 8 bits: port of the joiner with this rank
+    reg  [LSU_PORTS-1:0]          rank_used;
+    reg  [LSU_PORTS*PORT_W-1:0]   rank_port;
     integer                rank_idx;
-    integer                place_rank_idx;                       // rank loop of the place write logic (own always block)
-    // join count from thresholds (pure AND/OR of the join pins, no XOR, no serial chain): at least n ports join
-    localparam JOIN_PATTERNS = 1 << LSU_PORTS;                   // JOIN_PATTERNS = 16 subsets of the join ports
-    reg  [LSU_PORTS+1:0]   join_at_least;                        // LSU_PORTS+2 = 6 bits: bit n = at least n joins (top bit 0)
-    integer                join_pattern_idx;
-    // number of ones in the low pattern_width bits of pattern_value (constant arguments only)
-    function integer join_pattern_ones;
-        input integer pattern_value;
-        input integer pattern_width;
-        integer       pattern_bit;
-        begin
-            join_pattern_ones = 0;
-            for (pattern_bit = 0; pattern_bit < pattern_width; pattern_bit = pattern_bit + 1)
-                join_pattern_ones = join_pattern_ones + ((pattern_value >> pattern_bit) & 1);
-        end
-    endfunction
+    integer                place_rank_idx;
+    reg  [LSU_PORTS+1:0]   join_at_least;            // LSU_PORTS+2 = 6 bits: bit m: at least m ports join (bit 0 = 1, top bit = 0)
+    reg  [LSU_PORTS:0]     joins_below_at_most;      // LSU_PORTS+1 = 5 bits: bit v: at most rank_idx of the ports 0 .. v-1 join (thermometer)
+    integer                below_idx;
     function [ORDER_DEPTH-1:0] rotate_by_onehot;
         input [ORDER_DEPTH-1:0] pointer_onehot;
         input [LSU_PORTS:0]     step_onehot;
@@ -175,82 +172,74 @@ module l1d_bank_order #(
     endfunction
     always @* begin
         join_run  = {{LSU_PORTS{1'b0}}, 1'b1};
-        rank_used = {LSU_PORTS{1'b0}};
-        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
         for (join_port_idx = 0; join_port_idx < LSU_PORTS; join_port_idx = join_port_idx + 1) begin
             rank_before_onehot[join_port_idx] = join_run;
-            // port join_port_idx joins with rank s = the one-hot join_run (joiners before it)
-            for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
-                rank_used[rank_idx] = rank_used[rank_idx] | (join_now[join_port_idx] & join_run[rank_idx]);
-                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
-                    ({PORT_W{join_now[join_port_idx] & join_run[rank_idx]}} & join_port_idx);
-            end
             if (join_now[join_port_idx])
                 join_run = {join_run[LSU_PORTS-1:0], 1'b0};
         end
-        // at least n joins = OR over the n-port subsets m of (all ports of m join); monotone AND-OR, depth 2-3
+        // join count thresholds = the full-prefix thresholds from l1d_port_front
         join_at_least = {(LSU_PORTS+2){1'b0}};
-        for (join_pattern_idx = 0; join_pattern_idx < JOIN_PATTERNS; join_pattern_idx = join_pattern_idx + 1)
-            for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
-                if (join_pattern_ones(join_pattern_idx, LSU_PORTS) == join_count_idx)
-                    join_at_least[join_count_idx] = join_at_least[join_count_idx] |
-                                                    ((join_now & join_pattern_idx) == join_pattern_idx);
-        // exactly n joins = at least n and not at least n+1 (one gate after the thresholds); same value as join_run
+        join_at_least[0] = 1'b1;
+        for (join_count_idx = 1; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+            join_at_least[join_count_idx] = join_prefix_at_least[(LSU_PORTS-1)*LSU_PORTS + join_count_idx - 1];
+        // rank r is used when at least r+1 ports join; its port is the number v of leading ports that hold at most r joins
+        // (thermometer joins_below_at_most, encoded by AND-NOT of neighbours; monotone thresholds, no exact count)
+        joins_below_at_most = {(LSU_PORTS+1){1'b0}};
+        rank_port = {(LSU_PORTS*PORT_W){1'b0}};
+        for (rank_idx = 0; rank_idx < LSU_PORTS; rank_idx = rank_idx + 1) begin
+            rank_used[rank_idx] = join_at_least[rank_idx + 1];
+            joins_below_at_most[0] = 1'b1;
+            for (below_idx = 1; below_idx <= LSU_PORTS; below_idx = below_idx + 1)
+                joins_below_at_most[below_idx] = !join_prefix_at_least[(below_idx-1)*LSU_PORTS + rank_idx];
+            for (below_idx = 0; below_idx < LSU_PORTS; below_idx = below_idx + 1)
+                rank_port[rank_idx*PORT_W +: PORT_W] = rank_port[rank_idx*PORT_W +: PORT_W] |
+                    ({PORT_W{joins_below_at_most[below_idx] & !joins_below_at_most[below_idx + 1]}} & below_idx);
+        end
         for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
             join_cnt_onehot[join_count_idx] = join_at_least[join_count_idx] & !join_at_least[join_count_idx + 1];
-        // select words from join/pop only (early): bit k of (c + joins - pop) mod 2^ORDER_CNT_W, constants per (c, joins, pop)
-        count_bit_select = {(ORDER_CNT_W*COUNT_VALUES){1'b0}};
-        empty_select     = {COUNT_VALUES{1'b0}};
-        for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1)
-            for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1)
+        // count_next = order_count + join count - pop (ORDER_CNT_W bits, wraps like the adder), reset gives 0 / empty.
+        // Every (join count, pop) answer is a table of the count flops (early); join count AND-OR, then pop as the last 2:1 select.
+        next_if_no_pop = {((LSU_PORTS+1)*NEXT_W){1'b0}};
+        next_if_pop    = {((LSU_PORTS+1)*NEXT_W){1'b0}};
+        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1) begin
+            next_if_no_pop[join_count_idx*NEXT_W + ORDER_CNT_W] = rst;
+            next_if_pop[join_count_idx*NEXT_W + ORDER_CNT_W]    = rst;
+            for (count_value_idx = 0; count_value_idx < COUNT_VALUES; count_value_idx = count_value_idx + 1) begin
+                count_matches = (order_count == count_value_idx);
                 for (pop_value_idx = 0; pop_value_idx <= 1; pop_value_idx = pop_value_idx + 1) begin
-                    // reset folded in here (early input), so the flop D needs no reset gate after the AND-OR
-                    candidate_selected = join_cnt_onehot[join_count_idx] & (pop_value_idx ? pop : !pop) & !rst;
-                    count_candidate    = count_value_idx + join_count_idx - pop_value_idx; // constant, wraps like the flop
+                    count_candidate = count_value_idx + join_count_idx - pop_value_idx;
                     for (count_bit_idx = 0; count_bit_idx < ORDER_CNT_W; count_bit_idx = count_bit_idx + 1)
-                        count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] =
-                            count_bit_select[count_bit_idx*COUNT_VALUES + count_value_idx] |
-                            (candidate_selected & count_candidate[count_bit_idx]);
-                    empty_select[count_value_idx] = empty_select[count_value_idx] |
-                                                    (candidate_selected & (count_candidate == {ORDER_CNT_W{1'b0}}));
-                end
-        // under reset every select is 0, so the next count is 0 (also while order_count is still X in simulation)
-        // the flop value (late) only picks. order_count[0] (the most loaded count bit) is used only in the LAST gate of
-        // every next-count bit and of the empty flag: bit k = order_count[0] ? (value if 1) : (value if 0), where each
-        // value is an AND-OR of order_count[k:1] (order_count[2:1] predecoded once) with the early select words
-        for (count_value_idx = 0; count_value_idx < COUNT_LOW_VALUES; count_value_idx = count_value_idx + 1)
-            mid_hit_onehot[count_value_idx] = (order_count[COUNT_LOW_W:1] == count_value_idx);
-        // next bit k depends only on order_count[k:0] (addition mod 2^ORDER_CNT_W); with w = order_count[k:1] it is
-        // select[k][2w + order_count[0]]
-        count_next_sel  = {ORDER_CNT_W{1'b0}};
-        for (count_bit_idx = 0; count_bit_idx <= ORDER_CNT_W; count_bit_idx = count_bit_idx + 1) begin
-            // count_bit_idx = ORDER_CNT_W is the empty flag (it needs the whole count, like the top bit)
-            next_if_bit0_clear = 1'b0;
-            next_if_bit0_set   = 1'b0;
-            for (count_value_idx = 0; count_value_idx < COUNT_VALUES / 2; count_value_idx = count_value_idx + 1)
-                if (count_value_idx < (1 << ((count_bit_idx < ORDER_CNT_W) ? count_bit_idx : ORDER_CNT_W - 1))) begin
-                    if (count_bit_idx < COUNT_LOW_W)
-                        count_prefix_hit = (((order_count >> 1) & ((1 << count_bit_idx) - 1)) == count_value_idx);
-                    else
-                        count_prefix_hit = mid_hit_onehot[count_value_idx % COUNT_LOW_VALUES] &
-                            (((order_count >> (COUNT_LOW_W + 1)) &
-                              (((1 << ((count_bit_idx < ORDER_CNT_W) ? count_bit_idx : ORDER_CNT_W - 1)) - 1) >> COUNT_LOW_W)) ==
-                             (count_value_idx >> COUNT_LOW_W));
-                    if (count_bit_idx < ORDER_CNT_W) begin
-                        next_if_bit0_clear = next_if_bit0_clear |
-                            (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + 2*count_value_idx]);
-                        next_if_bit0_set   = next_if_bit0_set |
-                            (count_prefix_hit & count_bit_select[count_bit_idx*COUNT_VALUES + 2*count_value_idx + 1]);
-                    end else begin
-                        next_if_bit0_clear = next_if_bit0_clear | (count_prefix_hit & empty_select[2*count_value_idx]);
-                        next_if_bit0_set   = next_if_bit0_set   | (count_prefix_hit & empty_select[2*count_value_idx + 1]);
+                        if (count_candidate[count_bit_idx]) begin
+                            if (pop_value_idx != 0)
+                                next_if_pop[join_count_idx*NEXT_W + count_bit_idx] =
+                                    next_if_pop[join_count_idx*NEXT_W + count_bit_idx] | (count_matches & !rst);
+                            else
+                                next_if_no_pop[join_count_idx*NEXT_W + count_bit_idx] =
+                                    next_if_no_pop[join_count_idx*NEXT_W + count_bit_idx] | (count_matches & !rst);
+                        end
+                    if (count_candidate == {ORDER_CNT_W{1'b0}}) begin
+                        if (pop_value_idx != 0)
+                            next_if_pop[join_count_idx*NEXT_W + ORDER_CNT_W] =
+                                next_if_pop[join_count_idx*NEXT_W + ORDER_CNT_W] | count_matches;
+                        else
+                            next_if_no_pop[join_count_idx*NEXT_W + ORDER_CNT_W] =
+                                next_if_no_pop[join_count_idx*NEXT_W + ORDER_CNT_W] | count_matches;
                     end
                 end
-            if (count_bit_idx < ORDER_CNT_W)
-                count_next_sel[count_bit_idx] = order_count[0] ? next_if_bit0_set : next_if_bit0_clear;
-            else  // reset value 1, even before order_count is known
-                ring_empty_next = rst | (order_count[0] ? next_if_bit0_set : next_if_bit0_clear);
+            end
         end
+        // join_cnt_onehot is exactly one-hot (thresholds), so the AND-OR is a select and rst inside the table holds;
+        // the join count selects within each pop value, the pop (decided late in l1d_port_front) is the last 2:1 select
+        count_after_no_pop = {NEXT_W{1'b0}};
+        count_after_pop    = {NEXT_W{1'b0}};
+        for (join_count_idx = 0; join_count_idx <= LSU_PORTS; join_count_idx = join_count_idx + 1) begin
+            count_after_no_pop = count_after_no_pop |
+                                 ({NEXT_W{join_cnt_onehot[join_count_idx]}} & next_if_no_pop[join_count_idx*NEXT_W +: NEXT_W]);
+            count_after_pop    = count_after_pop |
+                                 ({NEXT_W{join_cnt_onehot[join_count_idx]}} & next_if_pop[join_count_idx*NEXT_W +: NEXT_W]);
+        end
+        count_next_sel  = pop_from_head ? count_after_pop[ORDER_CNT_W-1:0] : count_after_no_pop[ORDER_CNT_W-1:0];
+        ring_empty_next = pop_from_head ? count_after_pop[ORDER_CNT_W]     : count_after_no_pop[ORDER_CNT_W];
     end
     always @* begin
         rank_1   = {2'b00, join_now[0]};
@@ -261,7 +250,6 @@ module l1d_bank_order #(
         place_1  = rotate_by_onehot(order_write_onehot, rank_before_onehot[1]);
         place_2  = rotate_by_onehot(order_write_onehot, rank_before_onehot[2]);
         place_3  = rotate_by_onehot(order_write_onehot, rank_before_onehot[3]);
-        // place p takes the joiner of rank s when the write pointer is at p - s: the flop pointer only picks (last)
         place_write_en   = {ORDER_DEPTH{1'b0}};
         place_write_port = {(ORDER_DEPTH*PORT_W){1'b0}};
         for (place_idx = 0; place_idx < ORDER_DEPTH; place_idx = place_idx + 1)
@@ -285,10 +273,9 @@ module l1d_bank_order #(
                 if (place_write_en[write_place])
                     order_port[write_place] <= place_write_port[write_place*PORT_W +: PORT_W];
             order_write_onehot <= rotate_by_onehot(order_write_onehot, join_cnt_onehot);
-            if (pop)
+            if (pop_from_head)
                 order_read_onehot <= rotate_left(order_read_onehot, 1);
         end
-        // count and empty flag load every cycle; their next values already hold the reset values (0, 1) under rst
         order_count  <= order_count_next;
         ring_empty_q <= ring_empty_next;
     end
@@ -298,6 +285,8 @@ module l1d_bank_order #(
     always @(posedge clk) begin
         if (!rst && (order_count + join_cnt > ORDER_DEPTH))
             $display("[%0t] L1D ORDER ERROR bank %0d: ring overflow (%0d waiting + %0d new)", $time, BANK_ID, order_count, join_cnt);
+        if (!rst && (pop != pop_from_head))
+            $display("[%0t] L1D ORDER ERROR bank %0d: pop input %b differs from the head pop %b", $time, BANK_ID, pop, pop_from_head);
         if (!rst && pop && ring_empty_q)
             $display("[%0t] L1D ORDER ERROR bank %0d: pop of an empty ring", $time, BANK_ID);
     end

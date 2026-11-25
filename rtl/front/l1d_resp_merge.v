@@ -3,7 +3,7 @@
 // ============================================================================
 // IN SIMPLE WORDS
 //   Each bank can finish one request per cycle, but the CPU has ONE response port. So every bank
-//   puts its response into its own little FIFO (a queue). A round-robin arbiter (l1d_arb_rr) picks
+//   puts its response into its own little FIFO (a queue). A round-robin arbiter (written flat inside this module since RM-3, same order as l1d_arb_rr) picks
 //   one non-empty FIFO and moves its oldest response into a single OUTPUT REGISTER, which drives the
 //   lsu_response_* pins of l1d_top. The register holds the response until the CPU says
 //   lsu_read_enable = 1 ("I took it"). Only then can the next response be loaded.
@@ -42,7 +42,9 @@
 // VERILOG WORDS USED IN THIS FILE
 //   bank_response_packet[b*RESP_W +: RESP_W]   the response of bank b: the RESP_W bits starting at bit b*RESP_W
 //   output reg merged_response_valid           a register (flip-flop): it keeps its value until the next load
-// TIMING OPT: RM-1 POP_LAST FIFOs (session 42); RM-2 one-hot response select (session 45). Same pins in every cycle.
+// TIMING OPT: RM-1 POP_LAST FIFOs (session 42); RM-2 one-hot response select (session 45); RM-3 (session 80, GR-1 rework): flat round-robin
+//   grant inside this module (no l1d_arb_rr, no use_masked mux), push / pop / bypass / data select from `sel_win` (no head_v of the bank in
+//   the cone), the empty-FIFO mux folded into the AND-OR, `free_next` picked by push / pop from free - 1 / free / free + 1. Same pins in every cycle.
 // ============================================================================
 
 `default_nettype none
@@ -71,12 +73,14 @@ module l1d_resp_merge #(
     output reg  [PKT_W-1:0]           merged_response_packet;  // the response packet shown to the LSU, 74 bits (VPU: 586)
     input  wire                       lsu_read_enable;    // the LSU takes the current response this cycle
 
-    // signals of the per-bank FIFOs: f_empty = FIFO is empty, f_dout = its oldest response, f_pop = take it out
+    // signals of the per-bank FIFOs: f_empty = FIFO is empty, f_full = FIFO is full, f_dout = its oldest response, f_pop = take it out
     wire [NUM_BANKS-1:0]        f_empty;
+    wire [NUM_BANKS-1:0]        f_full;                // NUM_BANKS = 4 bits
     wire [NUM_BANKS*PKT_W-1:0] f_dout;
     wire [NUM_BANKS-1:0]        f_pop;
+    wire [NUM_BANKS-1:0]        f_push;               // RM-3: the push the FIFO sees (an answer that is not taken directly)
     wire [NUM_BANKS-1:0]        head_v;               // cache_v2_bank_pipe: the bank has an answer at its head (stored, or pushed now into an empty FIFO)
-    wire [NUM_BANKS*PKT_W-1:0] head_d;               // that answer
+    wire [NUM_BANKS*PKT_W-1:0] head_d;               // that answer (RM-3: used by the debug trace only; the output register takes the flat AND-OR below)
     wire [NUM_BANKS-1:0]        byp;                  // the answer pushed now is taken directly (FIFO empty, granted, register loads)
 
     // The output register can take a new response when it is empty or when the
@@ -86,58 +90,129 @@ module l1d_resp_merge #(
 
     // the arbiter's answer: sel_gnt = one-hot choice, sel_idx = its number, sel_any = at least one FIFO has a response
     wire [NUM_BANKS-1:0] sel_gnt;
-    wire [BANK_W-1:0]    sel_idx;
-    wire                 sel_any;
+    wire [NUM_BANKS-1:0] sel_win;                         // RM-3: bank b would win if it asks (nobody who asks beats it); needs no head_v[b]
+    reg  [BANK_W-1:0]    sel_idx;
+    wire                 sel_any = |head_v;
 
-    // round-robin over the FIFOs that are not empty; the turn moves on only when the output register really loads (advance = load)
-    l1d_arb_rr #(.N(NUM_BANKS), .IDX_W(BANK_W)) u_arb (
-        .clk          (clk),
-        .rst          (rst),
-        .request_bits (head_v),
-        .grant_taken  (load),
-        .grant_onehot (sel_gnt),
-        .grant_index  (sel_idx),
-        .any_request  (sel_any)
-    );
+    // ---- RM-3 (GR-1 rework): the round-robin arbiter written flat, inside this module ----
+    // Old: l1d_arb_rr = masked requests -> OR4 (use_masked) -> mux of two lowest-set-bit chains; every consumer waited for that.
+    // New: `turn_above` is the registered thermometer "bank j is after the one served last" (bit 0 is always 0, so it has no flop).
+    //      Bank i beats bank j when        i < j :  turn_above[i] | ~turn_above[j]      (the lower bank wins, unless only j is after `last`)
+    //                                      i > j :  turn_above[i] & ~turn_above[j]      (the higher bank wins only when only i is after `last`)
+    //      Both are flop-only terms (early). Bank j is granted when it asks and no asking bank beats it: one AND-OR, no mux, no use_masked.
+    //      This is exactly the order last+1 .. N-1, 0 .. last of l1d_arb_rr (checked over every request pattern and mask, N = 2 to 6).
+    reg  [NUM_BANKS-1:1] turn_above_q;                    // bank j (j >= 1) is after the bank served last; 0 after reset; NUM_BANKS-1 = 3 flops
+    wire [NUM_BANKS-1:0] turn_above = {turn_above_q, 1'b0};  // NUM_BANKS = 4 bits, bit 0 constant 0
+
+    genvar b;
+    genvar rival;
+    generate
+        for (b = 0; b < NUM_BANKS; b = b + 1) begin : g_grant
+            wire [NUM_BANKS-1:0] beaten_by;               // bit i = bank i asks and beats bank b, NUM_BANKS = 4 bits
+            for (rival = 0; rival < NUM_BANKS; rival = rival + 1) begin : g_rival
+                if (rival == b) begin : g_self
+                    assign beaten_by[rival] = 1'b0;
+                end else if (rival < b) begin : g_lower
+                    assign beaten_by[rival] = head_v[rival] & (turn_above[rival] | ~turn_above[b]);
+                end else begin : g_higher
+                    assign beaten_by[rival] = head_v[rival] & turn_above[rival] & ~turn_above[b];
+                end
+            end
+            assign sel_win[b] = ~|beaten_by;
+            assign sel_gnt[b] = head_v[b] & sel_win[b];
+        end
+    endgenerate
+
+    // the number of the granted bank (debug trace only; the datapath uses the one-hot sel_gnt)
+    integer kb;
+    always @* begin
+        sel_idx = {BANK_W{1'b0}};
+        for (kb = 0; kb < NUM_BANKS; kb = kb + 1)
+            if (sel_gnt[kb]) sel_idx = sel_idx | kb[BANK_W-1:0];
+    end
+
+    // the turn moves on when the output register really loads an answer (advance = load, as l1d_arb_rr): the banks after the winner
+    reg [NUM_BANKS-1:1] turn_above_next;                  // NUM_BANKS-1 = 3 bits: bit j = some granted bank is below j
+    integer kt;
+    always @* begin
+        turn_above_next = {(NUM_BANKS-1){1'b0}};
+        for (kt = 1; kt < NUM_BANKS; kt = kt + 1)
+            turn_above_next[kt] = |(sel_gnt & ((1 << kt) - 1));
+    end
+    always @(posedge clk) begin
+        if (rst)
+            turn_above_q <= {(NUM_BANKS-1){1'b0}};
+        else if (load && sel_any)
+            turn_above_q <= turn_above_next;
+    end
 
     // one response FIFO per bank; a FIFO is popped when the arbiter chose it and the output register loads
-    genvar b;
     generate
         for (b = 0; b < NUM_BANKS; b = b + 1) begin : g_fifo
             // TIMING OPT (RM-1, session 42): POP_LAST = 1, because the pop of these FIFOs comes late (FIFO not empty -> arbiter grant ->
             // output register loads -> pop); the level update then keeps the pop out of its arithmetic. Same FIFO behaviour in every cycle.
+            // RM-3: free_slots_next is made here (see g_credit) from values that are ready early, so the FIFO's own output is left open.
             l1d_fifo #(.WIDTH(PKT_W), .DEPTH(RESP_FIFO_DEPTH), .CNT_W(RCNT_W), .POP_LAST(1)) u_fifo (
                 .clk        (clk),
                 .rst        (rst),
-                .push       (bank_response_valid[b] && !byp[b]),   // a bypassed answer is not stored
+                .push       (f_push[b]),
                 .push_data  (bank_response_packet[b*PKT_W +: PKT_W]),
                 .pop        (f_pop[b]),
                 .front_data (f_dout[b*PKT_W +: PKT_W]),
                 .empty      (f_empty[b]),
-                .full       (),
+                .full       (f_full[b]),
                 .used_slots (),
                 .free_slots (bank_response_fifo_free[b*RCNT_W +: RCNT_W]),
-                .free_slots_next (bank_response_fifo_free_next[b*RCNT_W +: RCNT_W])
+                .free_slots_next ()
             );
-            assign f_pop[b] = load && sel_gnt[b] && !f_empty[b];
+            // RM-3: head_v / byp / f_pop / f_push use sel_win (no head_v[b] in the cone): when the FIFO is not empty head_v[b] is 1 anyway,
+            // and a push means bank_response_valid[b] = 1 (so head_v[b] = 1). Same values as the old sel_gnt based terms.
+            assign f_pop[b]  = load && !f_empty[b] && sel_win[b];
             // cache_v2_bank_pipe: BYPASS. An answer pushed into an EMPTY FIFO is visible at the head in the same cycle (head_v / head_d);
             // if the arbiter takes it, it goes straight into the output register and is not stored. Per-bank order is kept
             // (only an empty FIFO is bypassed) and the round-robin stays fair. Load / store hit: 4 cycles at the pins.
             assign head_v[b] = !f_empty[b] || bank_response_valid[b];
             assign head_d[b*PKT_W +: PKT_W] = f_empty[b] ? bank_response_packet[b*PKT_W +: PKT_W] : f_dout[b*PKT_W +: PKT_W];
-            assign byp[b]    = f_empty[b] && load && sel_gnt[b];
+            assign byp[b]    = f_empty[b] && load && sel_win[b];       // only meaningful with bank_response_valid[b] = 1
+            assign f_push[b] = bank_response_valid[b] && !byp[b];      // a bypassed answer is not stored
+        end
+    endgenerate
+
+    // ---- RM-3: the credit after this cycle (bank_response_fifo_free_next), picked by the late push / pop from early values ----
+    // The FIFO takes a push when it is not full and a pop only when it is not empty (f_pop already has that). Free places after the cycle:
+    // push only -> free - 1, pop only -> free + 1, else free. free is registered state, free - 1 and free + 1 are ready before push / pop.
+    genvar c;
+    generate
+        for (c = 0; c < NUM_BANKS; c = c + 1) begin : g_credit
+            wire [RCNT_W-1:0] free_now  = bank_response_fifo_free[c*RCNT_W +: RCNT_W];  // RCNT_W = 3 bits
+            wire [RCNT_W-1:0] free_less = free_now - {{(RCNT_W-1){1'b0}}, 1'b1};      // one more answer stored
+            wire [RCNT_W-1:0] free_more = free_now + {{(RCNT_W-1){1'b0}}, 1'b1};      // one answer taken out
+            wire              store_one = f_push[c] && !f_full[c];                    // the FIFO really stores an answer
+            wire              take_one  = f_pop[c];                                  // the FIFO really gives one out
+            assign bank_response_fifo_free_next[c*RCNT_W +: RCNT_W] =
+                  ({RCNT_W{ store_one && !take_one}} & free_less)
+                | ({RCNT_W{!store_one &&  take_one}} & free_more)
+                | ({RCNT_W{ store_one ==  take_one}} & free_now);
         end
     endgenerate
 
     // ---- the output register: loads the chosen FIFO's oldest response when `load` is 1 (rising edge) ----
     // TIMING OPT (RM-2, session 45): the granted FIFO's response by AND-OR with the one-hot grant instead of the binary index (a shift
     // by sel_idx fans out to every bit). The register loads only with sel_any, and then sel_gnt is one-hot at sel_idx: same value.
+    // RM-3: the "FIFO empty -> take the pushed answer, else the stored one" mux is folded into the AND-OR: two selects per bank,
+    // pick_new = granted and the FIFO is empty (the answer comes straight from the bank), pick_old = granted and the FIFO has it stored.
     reg [PKT_W-1:0] sel_resp;                            // the response of the granted FIFO, PKT_W = 74 bits (scalar), 586 bits (VPU)
     integer          k;
+    reg              pick_new;                           // bank k: take the answer pushed this cycle (FIFO empty)
+    reg              pick_old;                           // bank k: take the oldest stored answer
     always @* begin
         sel_resp = {PKT_W{1'b0}};
-        for (k = 0; k < NUM_BANKS; k = k + 1)
-            sel_resp = sel_resp | ({PKT_W{sel_gnt[k]}} & head_d[k*PKT_W +: PKT_W]);
+        for (k = 0; k < NUM_BANKS; k = k + 1) begin
+            pick_new = bank_response_valid[k] && f_empty[k] && sel_win[k];
+            pick_old = !f_empty[k] && sel_win[k];
+            sel_resp = sel_resp | ({PKT_W{pick_new}} & bank_response_packet[k*PKT_W +: PKT_W])
+                                | ({PKT_W{pick_old}} & f_dout[k*PKT_W +: PKT_W]);
+        end
     end
     always @(posedge clk) begin
         if (rst) begin

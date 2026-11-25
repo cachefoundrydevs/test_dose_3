@@ -1,0 +1,7 @@
+read_verilog -DSYNTHESIS -mem2reg -Irtl/include  rtl/common/l1d_fifo.v rtl/front/l1d_bank_order.v rtl/front/l1d_port_front.v
+hierarchy -top l1d_port_front
+proc
+flatten
+opt_clean
+rename l1d_port_front gate
+write_rtlil proof/gate.il

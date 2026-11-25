@@ -1,0 +1,27 @@
+approved + DECL localparam SKID_POP_LAST = 1
+approved + DECL wire[NB*NP-1:0]drain_port_ready
+approved + DECL wire[NB*NP-1:0]drain_alloc_port
+approved + DECL integer ones_in_pattern
+approved + DECL integer pattern_value
+approved + DECL integer pattern_bit
+approved + FOR for(pattern_bit=0;pattern_bit<NP;pattern_bit=pattern_bit+1)
+approved + DECL wire[NP-1:0]eligible_if_empty
+approved + DECL wire free_nonzero
+approved + DECL reg[NP:1]free_at_least
+approved - DECL reg[RANK_W-1:0]rank[0:NP-1]
+approved + DECL integer rk_k
+approved + DECL integer rk_pattern
+approved + DECL reg lower_at_least
+approved - DECL integer rk_l
+approved + FOR for(rk_k=1;rk_k<=NP;rk_k=rk_k+1)
+approved + FOR for(rk_k=1;rk_k<NP;rk_k=rk_k+1)
+approved + FOR for(rk_pattern=0;rk_pattern<(1<<NP);rk_pattern=rk_pattern+1)
+approved - FOR for(rk_l=0;rk_l<rk_p;rk_l=rk_l+1)
+approved - DECL reg drain_line_store
+approved + DECL reg[SKID_CNT_W:0]used_if_push
+approved + DECL reg[SKID_CNT_W:0]used_if_pop
+approved + DECL reg stop_if_hold
+approved + DECL reg stop_if_push
+approved + DECL reg stop_if_pop
+names: 115 items golden, 115 items current, 0 differences
+NAMES: PASS

@@ -9,7 +9,7 @@ M=$1; GOLD=$2; CUR=$3; OUT=$4
 mkdir -p "$OUT"
 # children: the files of rtl.f whose module is instantiated (transitively) by MODULE
 ALL=$(grep -v '^[-#]' filelists/rtl.f | sed '/^\s*$/d')
-KIDS=""; QUEUE="$CUR"
+KIDS=""; QUEUE="$CUR $GOLD"   # children of BOTH sides (an edit may swap a child module, the golden side keeps its own)
 while [[ -n "$QUEUE" ]]; do
     set -- $QUEUE; f=$1; shift; QUEUE="$*"
     for g in $ALL; do

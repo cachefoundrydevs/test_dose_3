@@ -57,6 +57,9 @@
 + DECL localparam NEXT_W = ORDER_CNT_W + 1
 + DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_no_pop
 + DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_if_pop
-+ DECL reg[(LSU_PORTS+1)*NEXT_W-1:0]next_per_join
 + DECL reg count_matches
 + FOR for(join_count_idx=0;join_count_idx<=LSU_PORTS;join_count_idx=join_count_idx+1)
+# iteration PF-I7 (2026-11-25): join count selects within each pop value, pop is the last 2:1 select of the next count
+# and the empty flag (next_per_join of PF-I6 removed, its line dropped)
++ DECL reg[NEXT_W-1:0]count_after_no_pop
++ DECL reg[NEXT_W-1:0]count_after_pop

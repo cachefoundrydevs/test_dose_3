@@ -134,8 +134,8 @@ module l1d_port_front #(
         for (b = 0; b < NB; b = b + 1) begin : g_bank
             wire [TRK_CNT_W-1:0] free_count;
             wire                 vec_ok;
-            wire [NP-1:0]        eligible;
-            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: eligible without ring_empty_q (counted for the lower ports)
+            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: port p may take an entry if the ring is empty (pin for bank, vec ok)
+            reg  [NP-1:0]        alloc_if_empty;    // NP = 4 bits: port p gets an entry if the ring is empty (ring_empty_q not applied)
             wire                 free_nonzero;      // at least one tracker entry free
             reg  [NP:1]          free_at_least;
             reg  [NP-1:0]        alloc_here;
@@ -148,13 +148,14 @@ module l1d_port_front #(
             for (p = 0; p < NP; p = p + 1) begin : g_port
                 assign pin_for_bank[b*NP + p]    = port_valid[p] && (pin_bank[p*BANK_W +: BANK_W] == b);
                 assign arrival_request[b*NP + p] = pin_for_bank[b*NP + p] && ring_empty_q[b];
-                assign eligible[p]               = arrival_request[b*NP + p] && (!pin_line_store[p] || vec_ok);
                 assign eligible_if_empty[p]      = pin_for_bank[b*NP + p] && (!pin_line_store[p] || vec_ok);
                 // ready to drain: head present, for this bank, a free entry, and a vec slot for a line store (flops and early pins only)
                 assign drain_port_ready[b*NP + p] = !skid_empty[p] && (head_bank[p*BANK_W +: BANK_W] == b) && free_nonzero &&
                                                     (!head_line_store[p] || vec_ok);
                 assign alloc_pred[b*NP + p]      = alloc_here[p];
-                assign join_here[p]              = pin_for_bank[b*NP + p] && !alloc_here[p];
+                // = pin_for_bank && !alloc_here, split on ring_empty_q (the flop is the last select, not inside the count)
+                assign join_here[p]              = ring_empty_q[b] ? (pin_for_bank[b*NP + p] && !alloc_if_empty[p])
+                                                                   : pin_for_bank[b*NP + p];
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
                 assign drain_alloc_port[b*NP + p] = head_port[b*NP + p] && drain_port_ready[b*NP + p]; // ring head is the last AND
             end
@@ -162,25 +163,25 @@ module l1d_port_front #(
             integer rk_k;
             integer rk_pattern;
             reg     lower_at_least; // at least rk_k of the lower ports 0 .. rk_p-1 are eligible_if_empty (monotone AND-OR)
-            // port p is allocated when it is eligible, at least one entry is free, and for every k >= 1:
+            // port p is allocated when the ring is empty, it is eligible, at least one entry is free, and for every k >= 1:
             // (at least k lower ports eligible) implies (at least k+1 entries free, and k < NA).
-            // Threshold implications only (no exact-count decode, no XOR). eligible = eligible_if_empty AND ring_empty_q:
-            // when the ring is not empty no port is eligible and alloc_here is 0 either way, so the lower ports are
-            // counted without ring_empty_q; it enters only through eligible[p] in the last AND.
+            // Threshold implications only (no exact-count decode, no XOR). When the ring is not empty no port is eligible
+            // and alloc_here is 0, so the rule is built on eligible_if_empty (alloc_if_empty) and ring_empty_q is ANDed last.
             always @* begin
                 for (rk_k = 1; rk_k <= NP; rk_k = rk_k + 1)
                     free_at_least[rk_k] = (free_count >= rk_k);
                 lower_at_least = 1'b0;
                 for (rk_p = 0; rk_p < NP; rk_p = rk_p + 1) begin
-                    alloc_here[rk_p] = eligible[rk_p] & free_at_least[1] & (NA > 0);
+                    alloc_if_empty[rk_p] = eligible_if_empty[rk_p] & free_at_least[1] & (NA > 0);
                     for (rk_k = 1; rk_k < NP; rk_k = rk_k + 1)
                         if (rk_k <= rk_p) begin
                             lower_at_least = 1'b0;
                             for (rk_pattern = 0; rk_pattern < (1 << NP); rk_pattern = rk_pattern + 1)
                                 if ((rk_pattern >> rk_p) == 0 && ones_in_pattern(rk_pattern) == rk_k)
                                     lower_at_least = lower_at_least | ((eligible_if_empty & rk_pattern) == rk_pattern);
-                            alloc_here[rk_p] = alloc_here[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
+                            alloc_if_empty[rk_p] = alloc_if_empty[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
                         end
+                    alloc_here[rk_p] = alloc_if_empty[rk_p] & ring_empty_q[b];
                 end
             end
             l1d_bank_order #(`L1D_PARAMS_PASS, .BANK_ID(b), .PORT_QUEUE_DEPTH(PORT_QUEUE_DEPTH)) u_order (

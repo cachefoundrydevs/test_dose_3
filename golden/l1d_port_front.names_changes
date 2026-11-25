@@ -31,3 +31,7 @@
 + FOR for(rk_k=1;rk_k<NP;rk_k=rk_k+1)
 + FOR for(rk_pattern=0;rk_pattern<(1<<NP);rk_pattern=rk_pattern+1)
 - DECL reg drain_line_store
+# iteration PF-I7 (2026-11-25): join_here split on ring_empty_q (last select); alloc rule built as alloc_if_empty and
+# ring_empty_q ANDed last; the per-bank 'eligible' wire (pins AND ring_empty_q) is no longer needed
++ DECL reg[NP-1:0]alloc_if_empty
+- DECL wire[NP-1:0]eligible

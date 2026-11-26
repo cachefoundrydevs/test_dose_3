@@ -6,8 +6,10 @@
 //   the victim cache) while the pipeline carries on with other requests. This file contains the MSHR_ENTRIES (8) copies
 //   of l1d_mshr_entry (generate loop) plus everything they SHARE:
 //
-//     LOOKUP      "is this line already being brought in?"  A CAM (l1d_cam) compares the line with every busy
-//                 entry; l1d_pri_enc gives the entry number (lookup_hit, lookup_entry_id).
+//     LOOKUP      "is this line already being brought in?"  TIMING OPT (CB-4): each entry compares its line
+//                 ONE CYCLE AHEAD with the line now in Stage 1 (lookup_line_addr_next) and keeps the answer
+//                 in the flop lk_addr_q; in Stage 2 the match is lk_addr_q AND busy (no 58-bit compare);
+//                 l1d_pri_enc gives the entry number (lookup_hit, lookup_entry_id).
 //     ALLOCATION  the first free entry takes a new miss (can_allocate, allocate_entry_id).
 //     THREE ROUND-ROBIN ARBITERS (l1d_arb_rr), because many entries may want ONE shared resource at the same time:
 //                   u_ar_arb  entries with an AXI read address to send  -> the bank's read channel
@@ -29,7 +31,8 @@
 //            -> E_IDLE and entry_freed_pulses[entry] = 1, which wakes the seats that were waiting for it.
 //
 // PORTS (new name, old name, meaning)
-//   lookup_line_addr                     (was lk_line)                  line address looked up (is it already coming?)
+//   lookup_line_addr_next                (new in CB-4)                  line looked up in the NEXT cycle (bank: s1_line)
+//   lookup_line_addr                     (was lk_line)                  line address looked up (is it already coming?); CB-4: check only
 //   lookup_hit                           (was lk_hit)                   an entry already works on that line
 //   lookup_entry_id                      (was lk_id)                    that entry's number
 //   lookup_entry_has_data                (was lk_has_data)              that entry already holds the line
@@ -96,7 +99,7 @@
 
 module l1d_mshr #(`L1D_PARAMS) (
     clk, rst,
-    lookup_line_addr, lookup_hit, lookup_entry_id, lookup_entry_has_data,
+    lookup_line_addr_next, lookup_line_addr, lookup_hit, lookup_entry_id, lookup_entry_has_data,
     allocate_valid, allocate_line_addr, allocate_is_swap, allocate_swap_line_data, allocate_swap_dirty, allocate_swap_shared, allocate_swap_vc_slot,
     allocate_unique_read, allocate_seat, allocate_is_write, allocate_no_response, allocate_is_prefetch, allocate_access_size, allocate_master_id, allocate_rob_index, allocate_port, allocate_byte_offset, allocate_store_data, can_allocate, allocate_entry_id, prefetch_can_allocate,
     axi_read_req_valid, axi_read_req_ready, axi_read_req_line_addr, axi_read_req_sub_id, axi_read_req_unique,
@@ -117,7 +120,9 @@ module l1d_mshr #(`L1D_PARAMS) (
     input  wire                        clk;               // clock: all registers change on its rising edge
     input  wire                        rst;               // synchronous reset, active high (control state goes to its idle value)
     // lookup (Stage 2)
-    input  wire [LINE_ADDR_W-1:0]      lookup_line_addr;  // line address looked up (is it already coming?)
+    input  wire [LINE_ADDR_W-1:0]      lookup_line_addr_next;  // CB-4: line looked up in the NEXT cycle, LINE_ADDR_W = 58 bits
+                                                               // (bank: s1_line, which becomes s2_line at every edge, no stall)
+    input  wire [LINE_ADDR_W-1:0]      lookup_line_addr;  // line looked up now (bank: s2_line); CB-4: read only by the check
     output wire                        lookup_hit;        // an entry already works on that line
     output wire [MSHR_ID_W-1:0]        lookup_entry_id;   // that entry's number
     output wire                        lookup_entry_has_data;  // that entry already holds the line
@@ -198,14 +203,48 @@ module l1d_mshr #(`L1D_PARAMS) (
     wire [N*VC_ID_W-1:0]       e_slot;
 
     // ---------------- lookup ----------------
-    // ---- lookup: CAM over the lines of the busy entries, then the number of the matching entry ----
-    wire [N-1:0] lk_match;
-    l1d_cam #(.N(N), .KEY_W(LINE_ADDR_W)) u_cam (
-        .stored_keys  (e_line),
-        .stored_valid (e_busy),
-        .search_key   (lookup_line_addr),
-        .match_onehot (lk_match)
-    );
+    // ---- lookup: look-ahead match flops of the busy entries, then the number of the matching entry ----
+    // TIMING OPT (CB-4, 2026-11-26): L6, the MSHR match computed in S1 (the victim-cache V-5 / VC-F idea).
+    // Before: a CAM (l1d_cam u_cam) compared lookup_line_addr (s2_line) with the 58-bit line of every busy
+    // entry IN Stage 2, in front of mshr_hit -> S2 decision. CB-3 ASAP7 run (cell-to-RTL mapping inferred,
+    // the report has no net names): s2_line -> BUF -> XOR2 -> OR5 -> OR4 -> OR3 = 195.8 ps on the worst
+    // paths to the tracker state_q (-342.2 ps) and to the response mergers (-339.9 ps).
+    // Now every entry compares its line with lookup_line_addr_next (s1_line) one cycle EARLY into the flop
+    // lk_addr_q[e]; Stage 2 reads lk_match = lk_addr_q & e_busy (two flops and one AND).
+    // D input of lk_addr_q[e] (written in the g_entry loop below), selected by the FLOP e_busy[e]:
+    //   busy now : (e_line[e]          == lookup_line_addr_next)   the line of a busy entry never changes
+    //   free now : (allocate_line_addr == lookup_line_addr_next)   the line it takes if allocated now
+    // The late S2 decision allocate_valid (m_alloc) is NOT on this D input; it still reaches busy_r only.
+    // WHY IT IS EXACT (lk_match = the old CAM result in every cycle; checked below, "ERROR CB-4"):
+    //   1. line_r of an entry is written only in E_IDLE with its own allocate pulse (allocate_valid &&
+    //      free_g[e], and free_g[e] => entry free), and busy_r == (state != E_IDLE) in every cycle
+    //      (l1d_mshr_entry.v O-7b / P9). So a busy entry keeps its line, and a free entry takes
+    //      allocate_line_addr exactly when it is allocated.
+    //   2. The bank gives lookup_line_addr = s2_line and lookup_line_addr_next = s1_line, and s2_line <=
+    //      s1_line at every edge out of reset, with no enable (l1d_bank_s1.v s1_to_s2_proc), so
+    //      lookup_line_addr(t+1) = lookup_line_addr_next(t).
+    //   3. Old match(t+1)[e] = busy(t+1)[e] & (line_r(t+1)[e] == lookup_line_addr(t+1)). By cases at t:
+    //        busy(t) = 1             line_r(t+1) = line_r(t): equal to the busy branch. If the entry is
+    //                                freed at t (install done, read error), busy(t+1) = 0: both sides 0.
+    //        busy(t) = 0, allocated  line_r(t+1) = allocate_line_addr(t): equal to the free branch (FORWARD).
+    //        busy(t) = 0, not alloc  busy(t+1) = 0: both sides 0 (lk_addr_q[e] is a don't-care then).
+    //   4. Reset: every busy_r is 0 after a reset edge, so the first cycle after reset gives 0 on both
+    //      sides (s2_line is not loaded during reset; the AND with e_busy hides that).
+    // WORKED CYCLE TABLE (FORWARD case; MSHR_ENTRIES = 8, entries 0..2 busy, entry 3 the lowest free one):
+    //   cycle  S2 op (s2_line)                 S1 op (s1_line)  entry 3        lk_addr_q[3] after the edge
+    //   t      A: line L, MSHR and VC miss,    B: line L        free           free branch: L == L -> 1
+    //             allocates entry 3 (m_alloc)
+    //   t+1    B: line L                       C: line K        busy, line L   busy branch: L == K -> 0
+    //          lk_match[3] = 1 & 1 -> mshr_hit = 1, mshr_hid = 3 -> B waits (ACT_WMSHR, act_id 3) as with
+    //          the old CAM. A look-ahead without the free branch would give 0, and B would allocate a
+    //          second entry for L (a double fetch).
+    //   Freed in the same cycle: at t entry 5 (line M) installs (s2_refill, s2_mid = 5, freed pulse) and
+    //   B (line M) is in S1 -> lk_addr_q[5] = 1, but e_busy[5] = 0 at t+1 -> lk_match[5] = 0, as the CAM.
+    //   Token held in S1 at t (refill_token_held_by_s1): entry 5 stays busy with line M -> busy branch.
+    //   A swap allocation (m_swap) takes s2_line like a fetch: the same free branch.
+    reg  [N-1:0] lk_addr_q;                               // CB-4: look-ahead line match per entry, N = 8 bits
+    wire [N-1:0] lk_match;                                // busy entry whose line == lookup line, N = 8 bits
+    assign lk_match = lk_addr_q & e_busy;                 // CB-4: = old CAM (busy && line == lookup line)
     l1d_pri_enc #(.N(N), .IDX_W(MSHR_ID_W)) u_lk (
         .request_bits (lk_match), .lowest_set_index (lookup_entry_id), .any_set (lookup_hit)
     );
@@ -524,6 +563,30 @@ module l1d_mshr #(`L1D_PARAMS) (
                 .entry_freed_pulse       (entry_freed_pulses[g]),
                 .entry_is_prefetch       (e_pf[g])
             );
+            // TIMING OPT (CB-4): the look-ahead match flop of entry g (proof and cycle table at "lookup").
+            // The select e_busy[g] is a flop; each compare reads the S1 line (58 bits, 4 levels).
+            // Worked example: entry 3 free, A (line L) in S2 allocates it, B (line L) in S1 -> D = 1.
+            always @(posedge clk) begin
+                if (rst) begin
+                    lk_addr_q[g] <= 1'b0;                                   // reset: no match (rule S-6)
+                end else if (e_busy[g]) begin                               // busy: its line stays
+                    lk_addr_q[g] <= (e_line[g*LINE_ADDR_W +: LINE_ADDR_W] == lookup_line_addr_next);
+                end else begin                                              // free: the line if allocated now
+                    lk_addr_q[g] <= (allocate_line_addr == lookup_line_addr_next);
+                end // else (e_busy[g])
+            end
+`ifndef SYNTHESIS
+            // CB-4 always-on check (simulation only): the look-ahead match of entry g equals the old CAM
+            // compare (l1d_cam: stored_valid && stored_key == search_key) in every cycle out of reset.
+            always @(posedge clk) begin
+                if (!rst && (lk_match[g] !== (e_busy[g] && (e_line[g*LINE_ADDR_W +: LINE_ADDR_W] == lookup_line_addr)))) begin
+                    $display("[%0t] L1D MSHR %m ERROR CB-4 lookup match of entry %0d is %b, the CAM compare gives %b (line %h)",
+                             $time, g, lk_match[g],
+                             (e_busy[g] && (e_line[g*LINE_ADDR_W +: LINE_ADDR_W] == lookup_line_addr)),
+                             {lookup_line_addr, {OFFSET_W{1'b0}}});
+                end
+            end
+`endif
         end
     endgenerate
 

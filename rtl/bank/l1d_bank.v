@@ -697,7 +697,8 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     l1d_mshr #(`L1D_PARAMS_PASS) u_mshr (
         .clk                      (clk),
         .rst                      (rst),
-        .lookup_line_addr         (s2_line),
+        .lookup_line_addr_next    (s1_line),              // TIMING OPT (CB-4): s1_line becomes s2_line at the next edge (no stall)
+        .lookup_line_addr         (s2_line),              // CB-4: read only by the simulation check in l1d_mshr
         .lookup_hit               (mshr_hit),
         .lookup_entry_id          (mshr_hid),
         .lookup_entry_has_data    (mshr_hasd),

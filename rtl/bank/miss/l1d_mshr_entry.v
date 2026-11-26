@@ -44,7 +44,7 @@
 //
 // WHAT KIND OF STATE MACHINE IS IT?
 //   A Moore machine (outputs depend on the state), except ONE Mealy output: entry_freed_pulse also depends on
-//   response_taken, refill_token_held_by_s1 and install_done_by_s2 of the same cycle.
+//   response_taken and install_done_by_s2 of the same cycle (CB-4b-2: no longer on refill_token_held_by_s1).
 //
 // PORTS (new name, old name, meaning)
 //   allocate_valid                       (was alloc)                    take this entry for a new miss or swap
@@ -492,9 +492,27 @@ module l1d_mshr_entry #(`L1D_PARAMS) (
     assign entry_swap_vc_slot = slot_r;
     assign entry_is_prefetch  = pf_r;                       // cache_v6
     assign response_seat = p_seat;
-    // the entry becomes free in the cycle when (a) it answers a read-error request, or (b) the install is done and was not held
+    // the entry becomes free in the cycle when (a) it answers a read-error request, or (b) the install is done
+    // (CB-4b-2: "and was not held" is implied, see below)
     assign entry_freed_pulse     = (rs_q && response_taken && err_r) ||                       // rs_q = (state == E_RESP)
-                       (inst_q && install_done_by_s2 && !refill_token_held_by_s1);            // inst_q = (state == E_INSTALL)
+                       (inst_q && install_done_by_s2);                                        // inst_q = (state == E_INSTALL)
+    // TIMING OPT (CB-4b-2, 2026-11-26, OPTIONAL; equal in every REACHABLE cycle, NOT Boolean-equal):
+    // "&& !refill_token_held_by_s1" is dropped from the install term, so mshr_freed no longer waits for
+    // S1 r_held (vc_al_ok -> r_held -> freed -> tracker, the CB-2 Vivado chain). Invariant I-1: an entry
+    // has at most one refill token between its grant and S2 (tk_q -> inst_q on the grant; a new request
+    // only after a hold in S1). A token held in S1 at t is in S2 at t+1 with s2_held = 1, so s2_refill = 0
+    // there, and the entry's next token is granted only after the hold, so it reaches S1 after the old
+    // token has left S2. Hence install_done_by_s2 and refill_token_held_by_s1 are never 1 together for one
+    // entry, and both forms give the same pulse. Checked below ("ERROR CB-4b").
+    // Worked example: entry 2's token reaches S1, which finds a victim slot (not held); next cycle S2
+    //   installs it: install_done_by_s2 = 1, refill_token_held_by_s1 = 0 -> pulse 1, as before.
+`ifndef SYNTHESIS
+    always @(posedge clk) begin
+        if (!rst && inst_q && install_done_by_s2 && refill_token_held_by_s1) begin
+            $display("[%0t] L1D MSHR %m ERROR CB-4b install done and token held in the same cycle", $time);
+        end
+    end
+`endif
 
     // response packet: | port | rd_wr | size | master_id | idx | data |   (port added in A2: the top sends the answer to that port)
     // (data is valid while response_request = 1, that is from E_RESP on; it was ld_r = load_data of buf_r, zero for a store)

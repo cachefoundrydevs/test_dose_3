@@ -168,6 +168,14 @@ module l1d_victim_cache #(`L1D_PARAMS) (
     wire [N-1:0]             in_use, is_free, is_clean, is_dirty, is_pend;
     reg  [N-1:0]             use_q;       // in-use flops (VC-G), N = 8 bits
     wire [N-1:0]             excl;        // slot starting a swap or snooped this cycle: not a candidate
+    // TIMING OPT (CB-4b, OPTIONAL): parts of victim_slot_available without the late exclusion bits
+    wire [N-1:0]             slot_takes_victim;   // FREE, or VALID and clean (no exclusion), N = 8 bits
+    wire [N-1:0]             swap_slot_onehot;    // 1 at swap_start_slot, N = 8 bits
+    wire [N-1:0]             snoop_slot_onehot;   // 1 at snoop_hit_slot, N = 8 bits
+    wire                     available_if_none;   // a slot takes a victim when nothing is excluded
+    wire                     available_if_swap;   // ... when only the swap slot is excluded
+    wire                     available_if_snoop;  // ... when only the snooped slot is excluded
+    wire                     available_if_both;   // ... when both are excluded
 
     // one set of summary gates per slot (g_slot[0] .. g_slot[N-1])
     genvar g;
@@ -179,6 +187,9 @@ module l1d_victim_cache #(`L1D_PARAMS) (
             assign is_clean[g] = (st[g] == VC_VALID) && !dty[g] && !excl[g];
             assign is_dirty[g] = (st[g] == VC_VALID) &&  dty[g] && !excl[g];
             assign is_pend[g]  = (st[g] == VC_WBPEND) && !iss[g];
+            assign slot_takes_victim[g] = !use_q[g] || ((st[g] == VC_VALID) && !dty[g]);   // CB-4b
+            assign swap_slot_onehot[g]  = (swap_start_slot == g);                              // CB-4b
+            assign snoop_slot_onehot[g] = (snoop_hit_slot == g);                               // CB-4b
         end
     endgenerate
 
@@ -279,7 +290,30 @@ module l1d_victim_cache #(`L1D_PARAMS) (
     // older-than compare). Equal in every cycle: a slot becomes VALID only by an insert, which allocates it in the age matrix in the same
     // cycle and makes it younger than every other slot, so "older" is a total order on all slots inserted since reset; among the clean
     // VALID slots an oldest one therefore always exists when there is any.
-    assign victim_slot_available   = any_free || (|is_clean);
+    // TIMING OPT (CB-4b, 2026-11-26, OPTIONAL): the late exclusion bits select LAST. swap_start_valid
+    // (vc_swap) and snoop_hit_valid (vc_snp) are S2 decisions (after mshr_hit / vc_hit / s2_kind); before,
+    // they went excl -> is_free / is_clean -> two 8-bit ORs -> OR (about 5 levels) to this pin, then to S1
+    // r_held -> MSHR entry -> mshr_freed -> tracker (the CB-2 Vivado chain, 22 levels).
+    // Exact Shannon split: is_free | is_clean = slot_takes_victim & ~excl (use_q == (st != FREE)), and
+    // excl = (swap_start_valid ? swap_slot_onehot : 0) | (snoop_hit_valid ? snoop_slot_onehot : 0), so
+    //   any_free || |is_clean = |(slot_takes_victim & ~excl) = the outcome picked below, in every cycle.
+    // Worked example: slot 2 is the only FREE slot, no clean slot, a swap starts on slot 2:
+    //   available_if_none = 1, available_if_swap = 0, swap_start_valid = 1 -> 0 (old: is_free[2] = 0 -> 0).
+    assign available_if_none  = |slot_takes_victim;
+    assign available_if_swap  = |(slot_takes_victim & ~swap_slot_onehot);
+    assign available_if_snoop = |(slot_takes_victim & ~snoop_slot_onehot);
+    assign available_if_both  = |(slot_takes_victim & ~swap_slot_onehot & ~snoop_slot_onehot);
+    assign victim_slot_available = swap_start_valid ? (snoop_hit_valid ? available_if_both  : available_if_swap)
+                                                    : (snoop_hit_valid ? available_if_snoop : available_if_none);
+`ifndef SYNTHESIS
+    // CB-4b always-on check: the split equals the old OR of the excluded candidates
+    always @(posedge clk) begin
+        if (!rst && (victim_slot_available !== (any_free || (|is_clean)))) begin
+            $display("[%0t] L1D VC   %m ERROR CB-4b victim_slot_available %b differs from %b",
+                     $time, victim_slot_available, (any_free || (|is_clean)));
+        end
+    end
+`endif
     assign victim_slot_index = any_free ? free_slot : clean_slot;
 
     // ---------------- writeback selection ----------------

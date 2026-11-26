@@ -43,6 +43,10 @@
 //   rsv_sc_match                 in   1      the reservation covers the line in S1 (SC check)
 //   r_held                       out  1      a refill token in S1 has no victim-cache slot: it is held (to the MSHR)
 //   rsv_clear_valid/_line        out  1/58   a snoop or an eviction clears the reservation of this line (to the unit)
+//   reservation_line_addr        in   58     (CB-3) the reservation line (flop of l1d_reservation_unit)
+//   clear_eq_s2_line/_rsv_line   out  1/1    (CB-3) rsv_clear_line == s2_line / == reservation line, combinational
+//   s2_way_onehot_copy           out  48     (CB-3) 12 registered one-hot copies of s2_way (to l1d_bank_s2)
+//   s2_mid_onehot_copy           out  64     (CB-3) 8 registered one-hot copies of s2_mid (to l1d_mshr)
 //   vec_read_slot                out  1      (C-20) data place of the vector store in S1 (to l1d_vec_store_buf)
 //   vec_read_line_data           in   512    (C-20) its line: the store data of a vector store (all 64 byte enables on)
 //   s2_valid ... s2_slot         out  regs   the S2 registers (see their comments)
@@ -70,8 +74,8 @@ module l1d_bank_s1 #(
     tag_words_q, s1_words,
     lock_valid, lock_line,
     q1_state, q1_swap, q1_slot, q1_is_prefetch, vc_al_ok, vc_al_slot,
-    rsv_sc_match,
-    r_held, rsv_clear_valid, rsv_clear_line,
+    rsv_sc_match, reservation_line_addr,
+    r_held, rsv_clear_valid, rsv_clear_line, clear_eq_s2_line, clear_eq_rsv_line,
     vec_read_slot, vec_read_line_data,
     s2_valid, s2_kind, s2_seat, s2_req, s2_mid, s2_line, s2_sinv, s2_sid,
     s2_hit, s2_scfail, s2_snp_hit, s2_hand, s2_way, s2_held, s2_swap, s2_kill,
@@ -80,7 +84,7 @@ module l1d_bank_s1 #(
     s2_raw_hit, s2_pf_hit,
     s2_data_synd, s2_data_fix, s2_data_ce, s2_data_ue,
     s2_tag_synd, s2_tag_fix, s2_tag_ce, s2_tag_ue, s2_tag_blocked,
-    s2_tags
+    s2_tags, s2_way_onehot_copy, s2_mid_onehot_copy
 );
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
@@ -91,6 +95,7 @@ module l1d_bank_s1 #(
     localparam SYND_W   = WAYS * GRANULES * DATA_HAM_W;          // all data syndromes, 4*8*7 = 224 bits
     localparam TSYND_W  = WAYS * TAG_HAM_W;                      // all tag syndromes, 4*6 = 24 bits
     localparam FIX_W    = WAYS * GRANULES;                       // "correctable" per way and granule, 32 bits
+    localparam S2_WAY_COPIES = GRANULES + 4;                     // CB-3: copies of s2_way, 8 granule + 4 = 12 (same value in l1d_bank_s2, l1d_bank)
 
     // ======================================================================
     // Ports
@@ -121,10 +126,13 @@ module l1d_bank_s1 #(
     input  wire                        vc_al_ok;                 // a victim-cache slot is free for a victim
     input  wire [VC_ID_W-1:0]          vc_al_slot;               // its number, 3 bits
     input  wire                        rsv_sc_match;             // the reservation covers the line in S1
+    input  wire [LINE_ADDR_W-1:0]      reservation_line_addr;    // CB-3: the reservation line (flop of u_rsv), 58 bits
     // ---- combinational results of S1 used in this cycle ----
     output wire                        r_held;                   // the refill token in S1 is held (no victim-cache slot)
     output wire                        rsv_clear_valid;          // a snoop or an eviction clears the reservation of rsv_clear_line
     output wire [LINE_ADDR_W-1:0]      rsv_clear_line;           // that line, 58 bits
+    output wire                        clear_eq_s2_line;         // CB-3: rsv_clear_line == s2_line, combinational
+    output wire                        clear_eq_rsv_line;        // CB-3: rsv_clear_line == reservation_line_addr, combinational
     // ---- cache_v5 C-20: the line of a vector store (l1d_vec_store_buf) ----
     output wire [VEC_SLOT_W-1:0]       vec_read_slot;            // data place of the vector store in S1, VEC_SLOT_W = 1 bit
     input  wire [LINE_W-1:0]           vec_read_line_data;       // its line, LINE_W = 512 bits
@@ -167,6 +175,8 @@ module l1d_bank_s1 #(
     output reg  [WAYS-1:0]             s2_tag_ue;                // ECC: tag uncorrectable AND the way is valid, 4 bits
     output reg                         s2_tag_blocked;           // the CPU request in S2 was blocked by a tag error (scrub, re-issue)
     output reg  [WAYS*TAG_W-1:0]       s2_tags;                  // the raw tags of all ways (the tag scrub of S2 corrects one), 200 bits
+    output reg  [S2_WAY_COPIES*WAYS-1:0] s2_way_onehot_copy;     // CB-3: 12 one-hot copies of s2_way, copy c at [c*4 +: 4], 48 bits, registered
+    output reg  [GRANULES*MSHR_ENTRIES-1:0] s2_mid_onehot_copy;  // CB-3: 8 one-hot copies of s2_mid, copy g at [g*8 +: 8], 64 bits, registered
 
     // ======================================================================
     // The coded words split into tags / lines and their check bits
@@ -699,6 +709,88 @@ module l1d_bank_s1 #(
     assign s1_evict        = (RSV_CLR_ON_EVICT != 0) && s1_refill && !r_held && v_valid;
     assign rsv_clear_valid = s1_snp || s1_evict;
     assign rsv_clear_line  = s1_snp ? s1_line : v_line;
+    // TIMING OPT (CB-3, 2026-11-26), part b: the two compares of the clear line for l1d_reservation_unit,
+    // from flops, with the late victim one-hot LAST. Before, u_rsv compared rsv_clear_line, i.e. after the
+    // victim pick v_line (F3: meta read -> victim one-hot -> 50-bit tag pick -> 58-bit compare).
+    // Way w's line is {tag_q of way w, s1_set, BANK_C} (as lock_match). vict_onehot is exactly one-hot
+    // for every input: victim_onehot has one bit v (inv_first when a way is invalid, else the decode of
+    // the PLRU victim); the lock rule keeps it at v (lock_way[v] = 0) or moves it to v ^ 1, all other
+    // bits are 0. So v_line == X is |(vict_onehot & (way w's line == X)). The snoop leg is folded into
+    // the same AND-OR (the way terms are 0 for a snoop):
+    //   (rsv_clear_line == X) = s1_snp ? (s1_line == X) : (v_line == X), X = s2_line or the reservation line.
+    // Worked example: an eviction, vict_onehot = 0100, way 2's line = s2_line and not the reservation
+    //   line -> way_line_eq_s2 = 0100, way_line_eq_rsv = 0000 -> clear_eq_s2_line = 1,
+    //   clear_eq_rsv_line = 0 (old: rsv_clear_line = v_line = s2_line). A snoop on line L: way terms 0,
+    //   clear_eq_s2_line = (L == s2_line).
+    wire [WAYS-1:0] way_line_eq_s2;                              // no snoop, and way w's line == s2_line, WAYS = 4 bits
+    wire [WAYS-1:0] way_line_eq_rsv;                             // no snoop, and way w's line == reservation line, 4 bits
+    wire            snoop_line_eq_s2;                            // a snoop, and s1_line == s2_line
+    wire            snoop_line_eq_rsv;                           // a snoop, and s1_line == reservation line
+    genvar clear_way_idx;                                        // loop variable: way
+    generate
+        for (clear_way_idx = 0; clear_way_idx < WAYS; clear_way_idx = clear_way_idx + 1) begin : g_clear_match
+            assign way_line_eq_s2[clear_way_idx]  = !s1_snp &&
+                   ({tag_q[clear_way_idx*TAG_W +: TAG_W], s1_set, BANK_C} == s2_line);                 // 58-bit compare
+            assign way_line_eq_rsv[clear_way_idx] = !s1_snp &&
+                   ({tag_q[clear_way_idx*TAG_W +: TAG_W], s1_set, BANK_C} == reservation_line_addr);   // 58-bit compare
+        end
+    endgenerate
+    assign snoop_line_eq_s2  = s1_snp && (s1_line == s2_line);
+    assign snoop_line_eq_rsv = s1_snp && (s1_line == reservation_line_addr);
+    assign clear_eq_s2_line  = snoop_line_eq_s2  || |(vict_onehot & way_line_eq_s2);
+    assign clear_eq_rsv_line = snoop_line_eq_rsv || |(vict_onehot & way_line_eq_rsv);
+    // ======================================================================
+    // TIMING OPT (CB-3, 2026-11-26), part c: one-hot flop copies of s2_way and s2_mid (rule T-6)
+    // ======================================================================
+    // s2_way (2 flops) selected the 512-bit lines, syndromes, words, AMO arms and the write way: about
+    // 2300 loads per bit, 7 to 15 BUFx2 in series in the CB-2 report (F2: -352.3 ps into the data macro
+    // b_wdata, -348.8 ps into b_en / b_we). Each consumer group in l1d_bank_s2 now reads its own copy
+    // (copy g < GRANULES: line_q granule g and its write select; then word, ECC, control, AMO). s2_mid
+    // gets one copy per granule for the install line in l1d_mshr.
+    // Exact, cycle by cycle:
+    //   - rst = 0: s2_way <= s1_way and copy <= s1_way_onehot; s1_way_onehot has its one 1 at s1_way for
+    //     EVERY input (hit_onehot: lowest match or way 0, = hit_way; vict_onehot: exactly one-hot,
+    //     = vict_way; mway_hot = decode of s1_mway), also when S1 holds no valid op (same stale value);
+    //   - rst = 1: s2_way holds (enable !rst); the copy loads decode(s2_way), so it still equals it.
+    //   So one edge after ANY state copy = decode(s2_way) (likewise s2_mid). No constant reset on purpose
+    //   (s2_way has none). Before the first edge both are uninitialised (X in simulation).
+    // (* keep *): the copies have equal D inputs; without it opt_merge folds them back into one flop
+    // (same pattern as ar_arb_q / ar_c_q in l1d_mshr_entry, which the CB-2 netlist keeps as separate flops).
+    // Worked example: a load hits way 2: hit_onehot = 0100, kind LSU -> s1_way_onehot = 0100; at the edge
+    //   s2_way = 2 and every copy = 0100. A refill of MSHR entry 5: every s2_mid copy = 0010_0000.
+    //   Reset held with s2_way = 3: every copy = 1000.
+    wire [WAYS-1:0]         s1_way_onehot;                       // 1 at s1_way, WAYS = 4 bits
+    wire [WAYS-1:0]         s2_way_decoded;                      // decode of the s2_way flop (reset leg, check), 4 bits
+    wire [MSHR_ENTRIES-1:0] s1_mid_onehot;                       // decode of s1_mid, MSHR_ENTRIES = 8 bits
+    wire [MSHR_ENTRIES-1:0] s2_mid_decoded;                      // decode of the s2_mid flop (reset leg, check), 8 bits
+    assign s1_way_onehot = (s1_kind == K_REFILL) ? vict_onehot :
+                           (s1_kind == K_MAINT)  ? mway_hot : hit_onehot;   // the kind select of s1_way
+    genvar decode_way_idx;                                       // loop variable: way
+    generate
+        for (decode_way_idx = 0; decode_way_idx < WAYS; decode_way_idx = decode_way_idx + 1) begin : g_way_decode
+            wire [WAY_W-1:0] way_number;                         // way number decode_way_idx, WAY_W = 2 bits
+            assign way_number                     = decode_way_idx;
+            assign s2_way_decoded[decode_way_idx] = (s2_way == way_number);
+        end
+    endgenerate
+    genvar decode_entry_idx;                                     // loop variable: MSHR entry
+    generate
+        for (decode_entry_idx = 0; decode_entry_idx < MSHR_ENTRIES; decode_entry_idx = decode_entry_idx + 1) begin : g_mid_decode
+            wire [MSHR_ID_W-1:0] entry_number;                   // entry number decode_entry_idx, MSHR_ID_W = 3 bits
+            assign entry_number                     = decode_entry_idx;
+            assign s1_mid_onehot[decode_entry_idx]  = (s1_mid == entry_number);
+            assign s2_mid_decoded[decode_entry_idx] = (s2_mid == entry_number);
+        end
+    endgenerate
+    (* keep *) always @(posedge clk) begin : onehot_copy_proc
+        if (rst) begin
+            s2_way_onehot_copy <= {S2_WAY_COPIES{s2_way_decoded}};   // reset: follow the held s2_way
+            s2_mid_onehot_copy <= {GRANULES{s2_mid_decoded}};        // reset: follow the held s2_mid
+        end else begin
+            s2_way_onehot_copy <= {S2_WAY_COPIES{s1_way_onehot}};    // = decode of s2_way after this edge
+            s2_mid_onehot_copy <= {GRANULES{s1_mid_onehot}};         // = decode of s2_mid after this edge
+        end
+    end // always onehot_copy_proc
 
     // ======================================================================
     // S1 -> S2 registers
@@ -756,6 +848,15 @@ module l1d_bank_s1 #(
         end
     end // always s1_to_s2_proc
 
+`ifndef SYNTHESIS
+    // CB-3 always-on check: every one-hot copy equals the decode of its binary flop
+    always @(posedge clk) begin
+        if (!rst && ((s2_way_onehot_copy != {S2_WAY_COPIES{s2_way_decoded}}) ||
+                     (s2_mid_onehot_copy != {GRANULES{s2_mid_decoded}})))
+            $display("[%0t] L1D B%0d S1 ERROR CB-3 one-hot copy differs (way %0d: %h, entry %0d: %h)",
+                     $time, BANK_ID, s2_way, s2_way_onehot_copy, s2_mid, s2_mid_onehot_copy);
+    end
+`endif
 // ---- simulation-only trace (compiled only when L1D_DEBUG is defined): the S1 lookup of each operation ----
 `ifdef L1D_DEBUG
     always @(posedge clk) begin

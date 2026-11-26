@@ -48,7 +48,9 @@
 //   s2_install_valid                     (was inst_valid)               a refill installs a line in Stage 2
 //   s2_install_line_addr                 (was inst_line)                line address of that install
 //   s1_clear_valid                       (was s1_clr)                   Stage 1 snoop or eviction: clear a reservation on s1_clear_line_addr
-//   s1_clear_line_addr                   (was s1_clr_line)              line of that snoop or eviction
+//   s1_clear_line_addr                   (was s1_clr_line)              line of that snoop or eviction (CB-3: debug print and check only)
+//   clear_eq_s2_line                     (new in CB-3)                  s1_clear_line_addr == s2_line_addr, made in l1d_bank_s1 from flops
+//   clear_eq_rsv_line                    (new in CB-3)                  s1_clear_line_addr == reservation_line_addr, made in l1d_bank_s1
 //   maint_clear                          (was maint_clr)                a flush/clean starts: clear the reservation
 //   other_bank_rsv_clear                 (new in A2)                    an LR or SC completed in ANOTHER bank (one cycle late): drop this reservation
 //   reservation_valid                    (was rsv_valid)                an LR reservation is held
@@ -72,7 +74,7 @@ module l1d_reservation_unit #(`L1D_PARAMS) (
     sc_check_line_addr, sc_reservation_matches,
     s2_line_addr, s2_lr_completed, s2_sc_completed, s2_write_completed, s2_amo_read_completed, s2_amo_read_was_hit, s2_amo_write_completed,
     s2_install_valid, s2_install_line_addr,
-    s1_clear_valid, s1_clear_line_addr,
+    s1_clear_valid, s1_clear_line_addr, clear_eq_s2_line, clear_eq_rsv_line,
     maint_clear,
     other_bank_rsv_clear,
     reservation_valid, reservation_line_addr,
@@ -106,7 +108,10 @@ module l1d_reservation_unit #(`L1D_PARAMS) (
     input  wire [LINE_ADDR_W-1:0] s2_install_line_addr;   // line address of that install
     // Stage 1: snoop on a line, or eviction of a line
     input  wire                   s1_clear_valid;         // Stage 1 snoop or eviction: clear a reservation on s1_clear_line_addr
-    input  wire [LINE_ADDR_W-1:0] s1_clear_line_addr;     // line of that snoop or eviction
+    input  wire [LINE_ADDR_W-1:0] s1_clear_line_addr;     // line of that snoop or eviction (CB-3: debug print and check only)
+    // TIMING OPT (CB-3, 2026-11-26), part b: the two compares of the clear line, made in l1d_bank_s1 from flops
+    input  wire                   clear_eq_s2_line;       // s1_clear_line_addr == s2_line_addr, combinational (u_s1)
+    input  wire                   clear_eq_rsv_line;      // s1_clear_line_addr == reservation_line_addr, combinational (u_s1)
     // flush / clean start
     input  wire                   maint_clear;            // a flush/clean starts: clear the reservation
     // A2: one reservation for the whole cache (RISC-V: one reservation per hart), so an LR or SC in another bank ends it here
@@ -142,7 +147,18 @@ module l1d_reservation_unit #(`L1D_PARAMS) (
         end
     end
     // a snoop or eviction in Stage 1 hits the (new) reservation line: clear it
-    wire s1_hit_rsv = s1_clear_valid && v_s2 && (l_s2 == s1_clear_line_addr);
+    // TIMING OPT (CB-3, 2026-11-26), part b: no 58-bit compare behind a late select.
+    // Before: s1_hit_rsv = s1_clear_valid && v_s2 && (l_s2 == s1_clear_line_addr). l_s2 is
+    // s2_lr_completed ? s2_line_addr : reservation_line_addr (block above: only the LR branch writes
+    // l_s2). The late LR bit (S2 decision, about 356 ps) selected 58 bits and a 58-bit compare came
+    // after it (F1, -345.2 ps); the clear line itself is the late S1 victim (F3, -343.7 ps). Now u_s1
+    // compares the clear line with s2_line and with the reservation line from flops (an eviction's
+    // per-way compares picked by the victim one-hot last) and the LR bit picks one result bit:
+    //   (l_s2 == clear) = s2_lr_completed ? (s2_line_addr == clear) : (reservation_line_addr == clear)
+    // Worked example: reservation on line A; an LR on line B completes in S2 (l_s2 = B); S1 evicts
+    //   line B: clear_eq_s2_line = 1, clear_eq_rsv_line = 0 -> s1_hit_rsv = 1 (old: B == B).
+    //   Same cycle without the LR: l_s2 = A -> clear_eq_rsv_line = 0 -> 0 (old: A == B is 0).
+    wire s1_hit_rsv = s1_clear_valid && v_s2 && (s2_lr_completed ? clear_eq_s2_line : clear_eq_rsv_line);
 
     // the reservation registers (also cleared when a flush / clean starts)
     always @(posedge clk) begin
@@ -202,6 +218,16 @@ module l1d_reservation_unit #(`L1D_PARAMS) (
         end
     end
 
+`ifndef SYNTHESIS
+    // CB-3 always-on check (assumption of part b): the compares of u_s1 equal the compares of the clear line
+    always @(posedge clk) begin
+        if (!rst && s1_clear_valid &&
+            ((clear_eq_s2_line  != (s1_clear_line_addr == s2_line_addr)) ||
+             (clear_eq_rsv_line != (s1_clear_line_addr == reservation_line_addr))))
+            $display("[%0t] L1D RSV  %m ERROR CB-3 clear compare (s2 %b rsv %b) wrong for line=%h",
+                     $time, clear_eq_s2_line, clear_eq_rsv_line, {s1_clear_line_addr, {OFFSET_W{1'b0}}});
+    end
+`endif
 // ---- simulation-only trace: reservation and lock changes ----
 `ifdef L1D_DEBUG
     // Debug trace (simulation only): reservation and lock changes.

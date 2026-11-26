@@ -74,7 +74,8 @@
 //   s1_install_state                     (was q1_state)                 MESI state to install
 //   s1_install_is_swap                   (was q1_swap)                  the install is a swap (the victim goes to the reserved slot)
 //   s1_install_vc_slot                   (was q1_slot)                  victim-cache slot of the swap
-//   s2_install_entry_id                  (was q2_id)                    entry being installed (read by Stage 2)
+//   s2_install_entry_id                  (was q2_id)                    entry being installed (read by Stage 2; CB-3: check only)
+//   s2_install_entry_onehot              (new in CB-3)                  GRANULES one-hot copies of that entry (flops of l1d_bank_s1)
 //   s2_install_line_data                 (was q2_data)                  line data to write into the data array
 //   s1_token_held_valid                  (was held_valid)               Stage 1 held the token
 //   s1_token_held_entry_id               (was held_id)                  entry of that token
@@ -103,7 +104,7 @@ module l1d_mshr #(`L1D_PARAMS) (
     response_valid, response_packet, response_seat, response_taken,
     refill_token_valid, refill_token_entry_id, refill_token_line_addr, refill_token_granted,
     s1_install_entry_id, s1_install_state, s1_install_is_swap, s1_install_vc_slot, s1_install_is_prefetch,
-    s2_install_entry_id, s2_install_line_data,
+    s2_install_entry_id, s2_install_entry_onehot, s2_install_line_data,
     s1_token_held_valid, s1_token_held_entry_id, s2_install_done_valid, s2_install_done_entry_id,
     any_entry_busy, entry_freed_pulses
 );
@@ -171,7 +172,8 @@ module l1d_mshr #(`L1D_PARAMS) (
     output wire                        s1_install_is_swap;  // the install is a swap (the victim goes to the reserved slot)
     output wire [VC_ID_W-1:0]          s1_install_vc_slot;  // victim-cache slot of the swap
     output wire                        s1_install_is_prefetch;  // cache_v6: the entry being installed is a prefetch (its line gets the pf_bit)
-    input  wire [MSHR_ID_W-1:0]        s2_install_entry_id;  // entry being installed (read by Stage 2)
+    input  wire [MSHR_ID_W-1:0]        s2_install_entry_id;  // entry being installed (read by Stage 2; CB-3: check only)
+    input  wire [GRANULES*N-1:0]       s2_install_entry_onehot;  // CB-3: 8 one-hot copies of it (u_s1 flops), copy g at [g*8 +: 8], 64 bits
     output wire [LINE_W-1:0]           s2_install_line_data;  // line data to write into the data array
     // install results
     input  wire                        s1_token_held_valid;  // Stage 1 held the token
@@ -406,7 +408,26 @@ module l1d_mshr #(`L1D_PARAMS) (
     assign s1_install_state  = e_ist[2*s1_install_entry_id +: 2];
     assign s1_install_is_swap   = e_swap[s1_install_entry_id];
     assign s1_install_vc_slot   = e_slot[s1_install_entry_id*VC_ID_W +: VC_ID_W];
-    assign s2_install_line_data   = e_data[s2_install_entry_id*LINE_W +: LINE_W];
+    // TIMING OPT (CB-3, 2026-11-26), part c: the install line is an AND-OR by one-hot copies of the S2
+    // entry number, one copy per 64-bit granule (rule T-4), not the binary index (a 3-level mux tree whose
+    // 3 select bits drove 3584 mux cells). Same value: copy g = decode(s2_mid) in every cycle (l1d_bank_s1),
+    // the bank ties s2_install_entry_id = s2_mid, N = 2**MSHR_ID_W so every index names an entry.
+    // Worked example: s2_mid = 5 -> every copy = 0010_0000 -> granule g = e_data[5*512 + g*64 +: 64].
+    reg     [LINE_W-1:0] install_line_pick;                     // the picked line, LINE_W = 512 bits
+    integer              install_granule_idx;                   // loop variable: granule
+    integer              install_entry_idx;                     // loop variable: entry
+    always @* begin
+        install_line_pick = {LINE_W{1'b0}};
+        for (install_granule_idx = 0; install_granule_idx < GRANULES; install_granule_idx = install_granule_idx + 1) begin
+            for (install_entry_idx = 0; install_entry_idx < N; install_entry_idx = install_entry_idx + 1) begin
+                install_line_pick[install_granule_idx*GRAN_BITS +: GRAN_BITS] =
+                    install_line_pick[install_granule_idx*GRAN_BITS +: GRAN_BITS] |
+                    ({GRAN_BITS{s2_install_entry_onehot[install_granule_idx*N + install_entry_idx]}} &
+                     e_data[install_entry_idx*LINE_W + install_granule_idx*GRAN_BITS +: GRAN_BITS]);
+            end
+        end
+    end
+    assign s2_install_line_data = install_line_pick;
 
     assign any_entry_busy  = |e_busy;
     // ---- cache_v6: prefetch entries. The room flag is a flop (rule T-8), conservative by the allocation of this cycle. ----
@@ -419,9 +440,32 @@ module l1d_mshr #(`L1D_PARAMS) (
         for (pf_idx = 0; pf_idx < N; pf_idx = pf_idx + 1)
             pf_busy_cnt = pf_busy_cnt + {{MSHR_ID_W{1'b0}}, (e_busy[pf_idx] & e_pf[pf_idx])};
     end
+    // TIMING OPT (CB-3, 2026-11-26), part a: no adder behind the late allocate bit.
+    // Before: pf_room_q <= (pf_busy_cnt + (allocate_valid & allocate_is_prefetch)) < PF_MSHR_MAX.
+    // allocate_valid (m_alloc, the S2 decision after the 58-bit MSHR CAM) arrives at about 302 to 321 ps
+    // and entered the carry-in of a full-adder chain (FAx1 / HAxp5, about 209 ps more, CB-2 report).
+    // Now both outcomes are compares of the count (a popcount of entry flops, early) with constants and
+    // the late bit only selects (one mux level, Shannon split on allocate_valid; allocate_is_prefetch
+    // is the flop bit s2_pf):
+    //   count + 1 < MAX  <=>  count < MAX - 1   (MAX >= 1; for MAX = 0 both sides are false)
+    //   count + 0 < MAX  <=>  count < MAX
+    // The old compare was 32-bit unsigned (PF_MSHR_MAX is an integer parameter, the sum is sized to 32
+    // bits), count <= N = 8, so count + 1 never wrapped; the new compares are 32-bit unsigned too.
+    // No release term: the old expression has none (an entry freed in this cycle is still counted by
+    // both forms, so the result is the same; adding one would change pf_room_q).
+    // Worked example (PF_MSHR_MAX = 2): count = 1 -> if_alloc = (1 < 1) = 0, if_none = (1 < 2) = 1:
+    //   a prefetch allocation now -> 0 (old 1 + 1 < 2 = 0); a demand allocation or none -> 1 (old 1 < 2).
+    //   count = 0 -> 1 either way (old 1 < 2, 0 < 2); count = 2..8 -> 0 either way (old 0).
+    localparam PF_ROOM_IF_NONE_LIMIT  = PF_MSHR_MAX;                                   // default 2: room if count < 2
+    localparam PF_ROOM_IF_ALLOC_LIMIT = (PF_MSHR_MAX == 0) ? 0 : (PF_MSHR_MAX - 1);   // default 1: room if count + 1 < 2
+    (* keep *) wire pf_room_if_alloc;     // count + 1 < PF_MSHR_MAX: room next cycle after a prefetch allocation now
+    (* keep *) wire pf_room_if_none;      // count < PF_MSHR_MAX: room next cycle without a prefetch allocation now
+    assign pf_room_if_alloc = (pf_busy_cnt < PF_ROOM_IF_ALLOC_LIMIT);   // 4-bit count vs integer: 32-bit unsigned, as before
+    assign pf_room_if_none  = (pf_busy_cnt < PF_ROOM_IF_NONE_LIMIT);    // 32-bit unsigned compare, as before
     always @(posedge clk) begin : pf_room_proc
         if (rst) pf_room_q <= (PF_MSHR_MAX != 0);
-        else     pf_room_q <= ((pf_busy_cnt + {{MSHR_ID_W{1'b0}}, (allocate_valid & allocate_is_prefetch)}) < PF_MSHR_MAX);
+        else     pf_room_q <= allocate_valid ? (allocate_is_prefetch ? pf_room_if_alloc : pf_room_if_none)
+                                             : pf_room_if_none;        // CB-3 a: the late bit selects last
     end // always pf_room_proc
     assign prefetch_can_allocate = pf_room_q;
 
@@ -483,6 +527,14 @@ module l1d_mshr #(`L1D_PARAMS) (
         end
     endgenerate
 
+`ifndef SYNTHESIS
+    // CB-3 always-on check: every one-hot copy of the install entry equals the decode of s2_install_entry_id
+    always @(posedge clk) begin
+        if (!rst && (s2_install_entry_onehot != {GRANULES{({{(N-1){1'b0}}, 1'b1} << s2_install_entry_id)}}))
+            $display("[%0t] L1D MSHR %m ERROR CB-3 install entry copy %h differs from entry %0d",
+                     $time, s2_install_entry_onehot, s2_install_entry_id);
+    end
+`endif
 // ---- simulation-only checks (the entries print their own states): allocation while full, double fetch of a line, R beat for a free entry ----
 `ifdef L1D_DEBUG
     // Debug trace (simulation only): the entries print their own states; here

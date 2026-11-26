@@ -97,6 +97,8 @@
 //   s2_st_wr, s2_write_line           out  1/512  a line is written in way s2_write_way now: merged store line or corrected line
 //   s2_tag_fix_wr, s2_write_tag       out  1/50   a corrected tag is written in way s2_write_way; the tag written (refill or fix)
 //   s2_write_way                      out  2      the way of the S2 write (the hit way, or the erroneous tag's way)
+//   s2_write_way_onehot               out  4      (CB-3) the same way, one-hot (SRAM write enables in l1d_bank_r)
+//   s2_way_onehot_copy                in   48     (CB-3) 12 registered one-hot copies of s2_way (l1d_bank_s1)
 //   s2_uniq, s2_amo1, s2_alloc_is_write  out 1    the request needs E/M; is a one-request AMO; allocates as a write
 //   s2_alloc_no_response              out  1      the MSHR fetches the line WITHOUT answering (AMO, vector or prefetch miss)
 //   s2_alloc_is_prefetch              out  1      the MSHR allocation is a prefetch (counted against PF_MSHR_MAX)
@@ -144,7 +146,7 @@ module l1d_bank_s2 #(
 ) (
     clk, rst,
     s2_valid, s2_kind, s2_seat, s2_req, s2_mid, s2_line, s2_sinv,
-    s2_hit, s2_scfail, s2_snp_hit, s2_hand, s2_way, s2_held, s2_swap, s2_kill,
+    s2_hit, s2_scfail, s2_snp_hit, s2_hand, s2_way, s2_way_onehot_copy, s2_held, s2_swap, s2_kill,
     s2_words, s2_lines, s2_tags, s2_st_be, s2_st_din,
     s2_wbpend, s2_vvalid, s2_vdirty, s2_vshared, s2_vline, s2_slot,
     s2_raw_hit, s2_pf_hit, s2_tag_blocked,
@@ -155,7 +157,7 @@ module l1d_bank_s2 #(
     mshr_hit, mshr_hid, mshr_hasd, mshr_can, mshr_aid, prefetch_can_allocate,
     vc_hit, vc_slot, vc_state, vc_data, vc_dirty,
     nc_can,
-    s2_refill, s2_maint, s2_st_wr, s2_tag_fix_wr, s2_write_way, s2_write_line, s2_write_tag,
+    s2_refill, s2_maint, s2_st_wr, s2_tag_fix_wr, s2_write_way, s2_write_way_onehot, s2_write_line, s2_write_tag,
     s2_uniq, s2_amo1, s2_alloc_is_write, s2_alloc_no_response, s2_alloc_is_prefetch,
     s2_line_answer, vec_release_valid, vec_release_slot,
     line_q, st_merged,
@@ -182,6 +184,12 @@ module l1d_bank_s2 #(
     localparam HSYND_W = GRANULES * DATA_HAM_W;                // the syndromes of one way, 8*7 = 56 bits
     localparam FIX_W   = WAYS * GRANULES;                      // "correctable" per way and granule, 32 bits
     localparam TSYND_W = WAYS * TAG_HAM_W;                     // all tag syndromes, 4*6 = 24 bits
+    // CB-3: the copies of s2_way from l1d_bank_s1; copy c is at s2_way_onehot_copy[c*WAYS +: WAYS]
+    localparam S2_WAY_COPIES = GRANULES + 4;                   // 12 (same value in l1d_bank_s1, l1d_bank)
+    localparam COPY_WORD     = GRANULES;                       // copy 8: the load word (hit_data); copies 0..7: line_q granules
+    localparam COPY_ECC      = GRANULES + 1;                   // copy 9: syndromes and fix flags of the hit way
+    localparam COPY_CTRL     = GRANULES + 2;                   // copy 10: ECC fix / UE decision, write way
+    localparam COPY_AMO      = GRANULES + 3;                   // copy 11: the AMO arms (hit_way_onehot)
 
     // ======================================================================
     // Ports
@@ -200,7 +208,8 @@ module l1d_bank_s2 #(
     input  wire                        s2_scfail;                // an SC whose reservation check failed in S1
     input  wire                        s2_snp_hit;               // snoop: the tags hit
     input  wire                        s2_hand;                  // snoop: the line was M, its data is handed over
-    input  wire [WAY_W-1:0]            s2_way;                   // the way used in S1, WAY_W = 2 bits
+    input  wire [WAY_W-1:0]            s2_way;                   // the way used in S1, WAY_W = 2 bits (CB-3: s3_way and debug only)
+    input  wire [S2_WAY_COPIES*WAYS-1:0] s2_way_onehot_copy;     // CB-3: 12 one-hot copies of s2_way (flops of u_s1, each = its decode), 48 bits
     input  wire                        s2_held;                  // the refill / maintenance token was held in S1
     input  wire                        s2_swap;                  // the refill is a swap back from the victim cache
     input  wire                        s2_kill;                  // the fresh request was cancelled in R (ghost)
@@ -247,6 +256,7 @@ module l1d_bank_s2 #(
     output wire                        s2_st_wr;                 // a line is written now: a store hit's merged line or a corrected line
     output wire                        s2_tag_fix_wr;            // a corrected tag is written now (tag scrub)
     output wire [WAY_W-1:0]            s2_write_way;             // the way of the S2 write: the hit way, or the erroneous tag's way, 2 bits
+    output wire [WAYS-1:0]             s2_write_way_onehot;      // CB-3: the same way, one-hot (= decode of s2_write_way), WAYS = 4 bits
     output wire [LINE_W-1:0]           s2_write_line;            // the line S2 writes: refill line, merged store line or corrected line, 512 bits
     output wire [TAG_W-1:0]            s2_write_tag;             // the tag S2 writes: the refill's tag, or the corrected tag, 50 bits
     output wire                        s2_uniq;                  // the request needs the line in E / M (store, atomic, unique prefetch)
@@ -370,11 +380,21 @@ module l1d_bank_s2 #(
 
     // cache_v2_bank_pipe: the line of the way used in S1 (hit way, victim way or maintenance way), from the registered lines:
     // the victim for the victim cache, the snoop answer data and the line the ECC scrub corrects
+    // TIMING OPT (CB-3, 2026-11-26), part c: granule g is picked by its own copy g of s2_way (64 AND loads
+    // per copy bit instead of 2048 on the two s2_way flops). Copy g = decode(s2_way) in every cycle, so each
+    // granule is the old (s2_way == lw) AND-OR. Worked example: s2_way = 2, copy 5 = 0100 ->
+    // line_q[383:320] = bits 383:320 of way 2's line.
     integer lw;                                                  // loop variable: way
+    integer line_granule_idx;                                    // CB-3: loop variable: granule (= copy number)
     always @* begin
         line_q = {LINE_W{1'b0}};
-        for (lw = 0; lw < WAYS; lw = lw + 1)
-            line_q = line_q | ({LINE_W{s2_way == lw}} & s2_lines[lw*LINE_W +: LINE_W]);
+        for (line_granule_idx = 0; line_granule_idx < GRANULES; line_granule_idx = line_granule_idx + 1) begin
+            for (lw = 0; lw < WAYS; lw = lw + 1) begin
+                line_q[line_granule_idx*GRAN_BITS +: GRAN_BITS] = line_q[line_granule_idx*GRAN_BITS +: GRAN_BITS] |
+                    ({GRAN_BITS{s2_way_onehot_copy[line_granule_idx*WAYS + lw]}} &
+                     s2_lines[lw*LINE_W + line_granule_idx*GRAN_BITS +: GRAN_BITS]);
+            end
+        end
     end
 
     // ---- cache_v2_bank_pipe: STORE READ-MODIFY-WRITE (user decision 2026-11-03: no byte-write-enable memory, for ASIC).
@@ -399,7 +419,9 @@ module l1d_bank_s2 #(
     generate
         genvar hit_way_idx;                                      // loop variable: way
         for (hit_way_idx = 0; hit_way_idx < WAYS; hit_way_idx = hit_way_idx + 1) begin : g_hit_way_onehot
-            assign hit_way_onehot[hit_way_idx] = (s2_way == hit_way_idx);   // decode of one way, 1 bit
+            // TIMING OPT (CB-3, 2026-11-26), part c: the AMO copy of s2_way (= s2_way == hit_way_idx); only
+            // the AMO arms read it now (the ECC decisions read the control copy)
+            assign hit_way_onehot[hit_way_idx] = s2_way_onehot_copy[COPY_AMO*WAYS + hit_way_idx];   // 1 bit
         end
     endgenerate
 
@@ -417,10 +439,11 @@ module l1d_bank_s2 #(
         hit_data_ce = 1'b0;
         hit_data_ue = 1'b0;
         for (ew = 0; ew < WAYS; ew = ew + 1) begin
-            hit_synd    = hit_synd    | ({HSYND_W{s2_way == ew}}  & s2_data_synd[ew*HSYND_W +: HSYND_W]);
-            hit_fix     = hit_fix     | ({GRANULES{s2_way == ew}} & s2_data_fix[ew*GRANULES +: GRANULES]);
-            hit_data_ce = hit_data_ce | ((s2_way == ew) & s2_data_ce[ew]);
-            hit_data_ue = hit_data_ue | ((s2_way == ew) & s2_data_ue[ew]);
+            // CB-3 part c: the ECC copy of s2_way (bit ew = (s2_way == ew))
+            hit_synd    = hit_synd    | ({HSYND_W{s2_way_onehot_copy[COPY_ECC*WAYS + ew]}}  & s2_data_synd[ew*HSYND_W +: HSYND_W]);
+            hit_fix     = hit_fix     | ({GRANULES{s2_way_onehot_copy[COPY_ECC*WAYS + ew]}} & s2_data_fix[ew*GRANULES +: GRANULES]);
+            hit_data_ce = hit_data_ce | (s2_way_onehot_copy[COPY_ECC*WAYS + ew] & s2_data_ce[ew]);
+            hit_data_ue = hit_data_ue | (s2_way_onehot_copy[COPY_ECC*WAYS + ew] & s2_data_ue[ew]);
         end
     end
     // the first way with a correctable tag error (find-first over 4 flops), its tag and its syndrome
@@ -467,8 +490,9 @@ module l1d_bank_s2 #(
     assign way_data_ue_flag   = {WAYS{live_cacheable_hit}} & s2_data_ue;                 // WAYS = 4 bits
     // old form (kept for reference): ecc_data_ue = s2_live && s2_cache && s2_hit && hit_data_ue;
     //                                ecc_data_fix = s2_live && s2_cache && s2_hit && hit_data_ce && !hit_data_ue;
-    assign ecc_data_ue    = |(hit_way_onehot & way_data_ue_flag);
-    assign ecc_data_fix   = |(hit_way_onehot & way_data_fix_flag);
+    // CB-3 part c: the control copy of s2_way (a few loads), not hit_way_onehot (now the AMO copy)
+    assign ecc_data_ue    = |(s2_way_onehot_copy[COPY_CTRL*WAYS +: WAYS] & way_data_ue_flag);
+    assign ecc_data_fix   = |(s2_way_onehot_copy[COPY_CTRL*WAYS +: WAYS] & way_data_fix_flag);
     assign ecc_tag_blk    = s2_live && s2_tag_blocked;
     assign ecc_tag_fix_wr = ecc_tag_blk && tag_fix_valid;
     assign ecc_tag_ue     = ecc_tag_blk && !tag_fix_valid && tag_ue_any;
@@ -509,7 +533,8 @@ module l1d_bank_s2 #(
     always @* begin
         hit_data = {WRITE_DATA_WIDTH{1'b0}};
         for (hw = 0; hw < WAYS; hw = hw + 1)
-            hit_data = hit_data | ({WRITE_DATA_WIDTH{s2_way == hw}} & s2_words[hw*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]);
+            hit_data = hit_data | ({WRITE_DATA_WIDTH{s2_way_onehot_copy[COPY_WORD*WAYS + hw]}} &   // CB-3: word copy
+                                   s2_words[hw*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH]);
     end
     l1d_resp_gen #(.IN_BYTES(LINE_BYTES), .WRITE_DATA_WIDTH(WRITE_DATA_WIDTH),
                    .MEM_SIZE_BITS(MEM_SIZE_BITS), .OFF_W(OFFSET_W)) u_vc_data (
@@ -658,10 +683,32 @@ module l1d_bank_s2 #(
     assign s2_st_wr      = store_hit_wr || ecc_data_fix;
     assign s2_tag_fix_wr = ecc_tag_fix_wr;
     assign s2_write_way  = ecc_tag_fix_wr ? tag_fix_way : s2_way;
-    // one AO level: the three sources never coincide (a refill is its own operation kind; a scrub excludes the store write)
-    assign s2_write_line = ({LINE_W{s2_refill}}     & q2_data)    |
-                           ({LINE_W{ecc_data_fix}}  & fixed_line) |
-                           ({LINE_W{store_hit_wr}}  & st_merged);
+    // TIMING OPT (CB-3, 2026-11-26), part c: the write way one-hot for the SRAM enables (l1d_bank_r: tag_we,
+    // data array b_en / b_we), from the control copy. = decode(s2_write_way): ecc_tag_fix_wr = 1 needs
+    // tag_fix_valid (some s2_tag_ce bit), so tag_fix_onehot is one-hot at tag_fix_way; else the copy = decode(s2_way).
+    // Worked example: a store hit in way 1 -> 0010; a tag fix of way 3 (lowest CE way) -> 1000.
+    assign s2_write_way_onehot = ecc_tag_fix_wr ? tag_fix_onehot : s2_way_onehot_copy[COPY_CTRL*WAYS +: WAYS];
+    // TIMING OPT (CB-3), part c: the 512-bit write-line select per granule from that granule's own copy (64
+    // loads each), so ecc_data_fix / store_hit_wr keep a small fan-out (decision, s2_st_wr -> b_en).
+    // write_fix_by_granule[g] = |(copy g & way_data_fix_flag) = ecc_data_fix; write_store_by_granule[g] = store_hit_wr.
+    // Worked example: a store hit in way 1, no CE: every write_fix_by_granule = 0, every write_store_by_granule = 1
+    //   -> s2_write_line = st_merged; a CE in way 1: 1 / 0 -> fixed_line (as before).
+    wire [GRANULES-1:0] write_fix_by_granule;                    // = ecc_data_fix, one copy per granule, GRANULES = 8 bits
+    wire [GRANULES-1:0] write_store_by_granule;                  // = store_hit_wr, one copy per granule, 8 bits
+    genvar write_granule_idx;                                    // loop variable: granule
+    generate
+        for (write_granule_idx = 0; write_granule_idx < GRANULES; write_granule_idx = write_granule_idx + 1) begin : g_write_granule
+            assign write_fix_by_granule[write_granule_idx]   =
+                   |(s2_way_onehot_copy[write_granule_idx*WAYS +: WAYS] & way_data_fix_flag);
+            assign write_store_by_granule[write_granule_idx] =
+                   s2_live && s2_hit && s2_store && !s2_amo1 && !write_fix_by_granule[write_granule_idx];
+            // one AO level: the three sources never coincide (a refill is its own operation kind; a scrub excludes the store write)
+            assign s2_write_line[write_granule_idx*GRAN_BITS +: GRAN_BITS] =
+                   ({GRAN_BITS{s2_refill}}                                 & q2_data[write_granule_idx*GRAN_BITS +: GRAN_BITS])    |
+                   ({GRAN_BITS{write_fix_by_granule[write_granule_idx]}}   & fixed_line[write_granule_idx*GRAN_BITS +: GRAN_BITS]) |
+                   ({GRAN_BITS{write_store_by_granule[write_granule_idx]}} & st_merged[write_granule_idx*GRAN_BITS +: GRAN_BITS]);
+        end
+    endgenerate
     assign s2_write_tag  = ecc_tag_fix_wr ? fixed_tag : s2_line[LA_TAG_LSB +: TAG_W];
 
     // ---- response packet built in S2: | rd_wr | size | master_id | idx | data |. The data word: 1 for a failed SC, 0 for a store ack,

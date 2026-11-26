@@ -43,6 +43,7 @@
 //   s2_st_wr                     in   1      S2 writes a line in way s2_way: a store's merged line, or an ECC-corrected line
 //   s2_tag_fix_wr                in   1      S2 writes an ECC-corrected tag in way s2_way (cache_v6)
 //   s2_way, s2_line              in   2/58   way and line address of the S2 write
+//   s2_way_onehot                in   4      (CB-3) the same way, one-hot (from u_s2; SRAM write enables)
 //   s2_write_line                in   512    the line S2 writes (refill line, merged store line or corrected line)
 //   s2_write_tag                 in   50     the tag S2 writes (the refill's tag, or the corrected tag)
 //   s3_amo_v, s3_way, s3_line    in   1/2/58 S3 AMO write: way and line
@@ -70,7 +71,7 @@ module l1d_bank_r #(
     any_gnt, g_set,
     r_valid, r_kind, r_seat, r_req, r_fast, r_mid, r_line, r_mway, r_mop, r_sinv, r_sid,
     r_deps,
-    s2_refill, s2_st_wr, s2_tag_fix_wr, s2_way, s2_line, s2_write_line, s2_write_tag,
+    s2_refill, s2_st_wr, s2_tag_fix_wr, s2_way, s2_way_onehot, s2_line, s2_write_line, s2_write_tag,
     s3_amo_v, s3_way, s3_line, s3_merged,
     s1_valid, s1_kind, s1_seat, s1_req, s1_mid, s1_line, s1_mway, s1_mop, s1_sinv, s1_sid, s1_kill,
     tag_words_q, s1_words
@@ -103,7 +104,8 @@ module l1d_bank_r #(
     input  wire                        s2_refill;                // S2 installs a refill (line + tag)
     input  wire                        s2_st_wr;                 // S2 writes a line (store merge or ECC fix)
     input  wire                        s2_tag_fix_wr;            // S2 writes a corrected tag (ECC fix)
-    input  wire [WAY_W-1:0]            s2_way;                   // way of the S2 write, 2 bits
+    input  wire [WAY_W-1:0]            s2_way;                   // way of the S2 write, 2 bits (CB-3: debug / check only)
+    input  wire [WAYS-1:0]             s2_way_onehot;            // CB-3: the same way, one-hot (= decode of s2_way), WAYS = 4 bits
     input  wire [LINE_ADDR_W-1:0]      s2_line;                  // line address of the operation in S2, 58 bits
     input  wire [LINE_W-1:0]           s2_write_line;            // the line S2 writes, LINE_W = 512 bits
     input  wire [TAG_W-1:0]            s2_write_tag;             // the tag S2 writes, TAG_W = 50 bits
@@ -138,13 +140,20 @@ module l1d_bank_r #(
     // Write path: the line (S3 AMO first, else S2) and its check bits; the tag and its check bits
     // ======================================================================
     wire                   data_wr;                              // some line is written this cycle
-    wire [WAY_W-1:0]       data_wr_way;                          // its way, 2 bits
+    wire [WAY_W-1:0]       data_wr_way;                          // its way, 2 bits (CB-3: debug / check only)
+    wire [WAYS-1:0]        data_wr_way_onehot;                   // CB-3: its way, one-hot (= decode of data_wr_way), 4 bits
+    wire [WAYS-1:0]        s3_way_onehot;                        // CB-3: decode of the s3_way flop, 4 bits
     wire [INDEX_W-1:0]     data_wr_set;                          // its set, 6 bits
     wire [LINE_W-1:0]      data_wr_line;                         // the line, 512 bits
     wire [LINE_ECC_W-1:0]  data_wr_check;                        // its check bits, 8 granules x 8 = 64 bits (0 wide without ECC)
     wire [DWORD_W-1:0]     data_wr_word;                         // the coded line, 576 bits
     assign data_wr      = s2_refill || s2_st_wr || s3_amo_v;
     assign data_wr_way  = s3_amo_v ? s3_way : s2_way;
+    // TIMING OPT (CB-3, 2026-11-26), part c: the SRAM write enables use the one-hot way: the S2 way from
+    // u_s2's control copy (not the 2300-load s2_way flops), the S3 way decoded from its own flop.
+    // = decode(data_wr_way) in every cycle. Worked example: AMO in S3, way 3 -> 1000; else a store hit
+    // in way 1 -> s2_way_onehot = 0010.
+    assign data_wr_way_onehot = s3_amo_v ? s3_way_onehot : s2_way_onehot;
     assign data_wr_set  = s3_amo_v ? s3_set : s2_set;
     assign data_wr_line = s3_amo_v ? s3_merged : s2_write_line;  // AMO result, or the S2 line (refill, merged store, ECC fix)
     wire                   tag_wr;                               // a tag is written this cycle
@@ -155,7 +164,10 @@ module l1d_bank_r #(
     genvar gw;                                                   // loop variable: way whose write enable is built
     generate
         for (gw = 0; gw < WAYS; gw = gw + 1) begin : g_tagwe
-            assign tag_we[gw] = tag_wr && (s2_way == gw);
+            wire [WAY_W-1:0] write_way_number;                   // CB-3: way number gw, WAY_W = 2 bits
+            assign write_way_number  = gw;
+            assign s3_way_onehot[gw] = (s3_way == write_way_number);   // CB-3
+            assign tag_we[gw]        = tag_wr && s2_way_onehot[gw];      // CB-3: was tag_wr && (s2_way == gw)
         end
     endgenerate
     generate
@@ -204,6 +216,7 @@ module l1d_bank_r #(
         .read_set_index    (g_set),
         .write_enable      (data_wr),
         .write_way         (data_wr_way),
+        .write_way_onehot  (data_wr_way_onehot),                 // CB-3
         .write_set_index   (data_wr_set),
         .write_word        (data_wr_word),
         .read_words_flat   (line_rd)
@@ -265,6 +278,8 @@ module l1d_bank_r #(
                      $time, BANK_ID, r_seat, deps_hit, wl_hit, amo_hit);
         if (!rst && s3_amo_v && (s2_refill || s2_st_wr))
             $display("[%0t] L1D B%0d R  ERROR S2 and S3 write the data array in one cycle (AMO bubble broken)", $time, BANK_ID);
+        if (!rst && (s2_refill || s2_st_wr || s2_tag_fix_wr) && (s2_way_onehot != ({{(WAYS-1){1'b0}}, 1'b1} << s2_way)))
+            $display("[%0t] L1D B%0d R  ERROR CB-3 one-hot write way %b differs from way %0d", $time, BANK_ID, s2_way_onehot, s2_way);
     end
 `endif
 `ifdef L1D_DEBUG

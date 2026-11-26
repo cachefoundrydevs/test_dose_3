@@ -17,7 +17,8 @@
 //   read_enable        a read of all ways at read_set_index (any grant)
 //   read_set_index     the set of the granted operation
 //   write_enable       a write of way write_way at write_set_index (Stage 2, or the Stage 3 AMO write)
-//   write_way          the way written
+//   write_way          the way written (CB-3: debug print and check only)
+//   write_way_onehot   CB-3: the way written, one-hot (= decode of write_way); it builds the per-way enables
 //   write_set_index    the set of the write
 //   (whole-word writes only: no byte write enables)
 //   write_word         the coded line to write, WORD_W = 576 bits
@@ -38,7 +39,8 @@ module l1d_data_array #(
     input  wire                     read_enable,          // read all ways this cycle
     input  wire [INDEX_W-1:0]       read_set_index,       // INDEX_W = 6 bits
     input  wire                     write_enable,         // write one way this cycle
-    input  wire [WAY_W-1:0]         write_way,            // the way written, 2 bits
+    input  wire [WAY_W-1:0]         write_way,            // the way written, 2 bits (CB-3: debug / check only)
+    input  wire [WAYS-1:0]          write_way_onehot,     // CB-3: the way written, one-hot (= decode of write_way), WAYS = 4 bits
     input  wire [INDEX_W-1:0]       write_set_index,      // INDEX_W = 6 bits
     input  wire [WORD_W-1:0]        write_word,           // the coded line, 576 bits
     output wire [WAYS*WORD_W-1:0]   read_words_flat       // WAYS * 576 = 2304 bits
@@ -47,7 +49,9 @@ module l1d_data_array #(
     generate
         for (w = 0; w < WAYS; w = w + 1) begin : g_way
             wire this_wr;                                 // this way is written
-            assign this_wr = write_enable && (write_way == w);
+            // TIMING OPT (CB-3, 2026-11-26), part c: one-hot bit, no compare of the late binary way.
+            // Same value: write_way_onehot = decode(write_way). Example: way 1 written -> 0010 -> only g_way[1].
+            assign this_wr = write_enable && write_way_onehot[w];
             l1d_sram_tdp #(
                 .DEPTH  (SETS),
                 .COL_W  (WORD_W),          // ONE write column: whole-word writes (no byte enables)
@@ -69,6 +73,13 @@ module l1d_data_array #(
         end
     endgenerate
 
+`ifndef SYNTHESIS
+    // CB-3 always-on check: the one-hot way equals the decode of the binary way
+    always @(posedge clk) begin
+        if (write_enable && (write_way_onehot != ({{(WAYS-1){1'b0}}, 1'b1} << write_way)))
+            $display("[%0t] L1D DATA %m ERROR CB-3 one-hot write way %b differs from way %0d", $time, write_way_onehot, write_way);
+    end
+`endif
 `ifdef L1D_DEBUG
     always @(posedge clk) begin
         if (write_enable)

@@ -125,6 +125,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
 );
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
+    localparam S2_WAY_COPIES = GRANULES + 4;                  // CB-3: one-hot copies of s2_way (u_s1 -> u_s2), 12 (same value in l1d_bank_s1 / _s2)
 
     // ======================================================================
     // Ports
@@ -284,6 +285,10 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire                    r_held;                       // the refill token in S1 is held (no victim-cache slot)
     wire                    rsv_clear_valid;              // a snoop or an eviction clears the reservation of rsv_clear_line
     wire [LINE_ADDR_W-1:0]  rsv_clear_line;               // that line, 58 bits
+    wire                    clear_eq_s2_line;             // CB-3: rsv_clear_line == s2_line (u_s1 -> u_rsv)
+    wire                    clear_eq_rsv_line;            // CB-3: rsv_clear_line == reservation line (u_s1 -> u_rsv)
+    wire [S2_WAY_COPIES*WAYS-1:0]    s2_way_onehot_copy;  // CB-3: 12 registered one-hot copies of s2_way (u_s1 -> u_s2), 48 bits
+    wire [GRANULES*MSHR_ENTRIES-1:0] s2_mid_onehot_copy;  // CB-3: 8 registered one-hot copies of s2_mid (u_s1 -> u_mshr), 64 bits
     wire                    s2_valid;                     // stage S2 holds an operation
     wire [1:0]              s2_kind;                      // its kind
     wire [SEAT_W-1:0]       s2_seat;                      // its tracker entry, 3 bits
@@ -327,6 +332,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire                    s2_st_wr;                     // a line is written now (merged store line or corrected line)
     wire                    s2_tag_fix_wr;                // a corrected tag is written now
     wire [WAY_W-1:0]        s2_write_way;                 // the way of the S2 write, 2 bits
+    wire [WAYS-1:0]         s2_write_way_onehot;          // CB-3: the same way, one-hot (u_s2 -> u_r), 4 bits
     wire [LINE_W-1:0]       s2_write_line;                // the line S2 writes, 512 bits
     wire [TAG_W-1:0]        s2_write_tag;                 // the tag S2 writes, TAG_W = 50 bits
     wire                    s2_uniq;                      // the request needs the line in E / M
@@ -371,6 +377,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire                    rsv_sc_match;                 // the reservation covers the line in S1 (SC check)
     wire                    lock_valid, lock_snp;         // a line is AMO-locked; a snoop to it must wait (never in this version)
     wire [LINE_ADDR_W-1:0]  lock_line;                    // the locked line, 58 bits
+    wire [LINE_ADDR_W-1:0]  reservation_line_addr;        // CB-3: the reservation line (u_rsv flop -> u_s1), 58 bits
     // ---- from the MSHR ----
     wire                    mshr_hit, mshr_can, mshr_hasd;  // lookup of s2_line: hit; an entry can be allocated; the entry holds data
     wire [MSHR_ID_W-1:0]    mshr_hid, mshr_aid;           // the hit entry; the entry an allocation takes, 3 bits
@@ -547,6 +554,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .r_line (r_line), .r_mway (r_mway), .r_mop (r_mop), .r_sinv (r_sinv), .r_sid (r_sid),
         .r_deps (r_deps),
         .s2_refill (s2_refill), .s2_st_wr (s2_st_wr), .s2_tag_fix_wr (s2_tag_fix_wr), .s2_way (s2_write_way),
+        .s2_way_onehot (s2_write_way_onehot),                                                 // CB-3
         .s2_line (s2_line), .s2_write_line (s2_write_line), .s2_write_tag (s2_write_tag),
         .s3_amo_v (s3_amo_v), .s3_way (s3_way), .s3_line (s3_line), .s3_merged (s3_merged),
         .s1_valid (s1_valid), .s1_kind (s1_kind), .s1_seat (s1_seat), .s1_req (s1_req), .s1_mid (s1_mid),
@@ -562,8 +570,9 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .lock_valid (lock_valid), .lock_line (lock_line),
         .q1_state (q1_state), .q1_swap (q1_swap), .q1_slot (q1_slot), .q1_is_prefetch (q1_is_prefetch),
         .vc_al_ok (vc_al_ok), .vc_al_slot (vc_al_slot),
-        .rsv_sc_match (rsv_sc_match),
+        .rsv_sc_match (rsv_sc_match), .reservation_line_addr (reservation_line_addr),          // CB-3
         .r_held (r_held), .rsv_clear_valid (rsv_clear_valid), .rsv_clear_line (rsv_clear_line),
+        .clear_eq_s2_line (clear_eq_s2_line), .clear_eq_rsv_line (clear_eq_rsv_line),          // CB-3
         .vec_read_slot (vec_read_slot), .vec_read_line_data (vec_read_line_data),
         .s2_valid (s2_valid), .s2_kind (s2_kind), .s2_seat (s2_seat), .s2_req (s2_req), .s2_mid (s2_mid),
         .s2_line (s2_line), .s2_sinv (s2_sinv), .s2_sid (s2_sid),
@@ -575,7 +584,8 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s2_raw_hit (s2_raw_hit), .s2_pf_hit (s2_pf_hit),
         .s2_data_synd (s2_data_synd), .s2_data_fix (s2_data_fix), .s2_data_ce (s2_data_ce), .s2_data_ue (s2_data_ue),
         .s2_tag_synd (s2_tag_synd), .s2_tag_fix (), .s2_tag_ce (s2_tag_ce), .s2_tag_ue (s2_tag_ue),
-        .s2_tag_blocked (s2_tag_blocked), .s2_tags (s2_tags)
+        .s2_tag_blocked (s2_tag_blocked), .s2_tags (s2_tags),
+        .s2_way_onehot_copy (s2_way_onehot_copy), .s2_mid_onehot_copy (s2_mid_onehot_copy)   // CB-3
     );
 
     l1d_bank_s2 #(`L1D_PARAMS_PASS, .BANK_ID(BANK_ID)) u_s2 (
@@ -584,6 +594,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s2_line (s2_line), .s2_sinv (s2_sinv),
         .s2_hit (s2_hit), .s2_scfail (s2_scfail), .s2_snp_hit (s2_snp_hit), .s2_hand (s2_hand), .s2_way (s2_way),
         .s2_held (s2_held), .s2_swap (s2_swap), .s2_kill (s2_kill),
+        .s2_way_onehot_copy (s2_way_onehot_copy),                                             // CB-3
         .s2_words (s2_words), .s2_lines (s2_lines), .s2_tags (s2_tags), .s2_st_be (s2_st_be), .s2_st_din (s2_st_din),
         .s2_wbpend (s2_wbpend), .s2_vvalid (s2_vvalid), .s2_vdirty (s2_vdirty), .s2_vshared (s2_vshared),
         .s2_vline (s2_vline), .s2_slot (s2_slot),
@@ -597,7 +608,8 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .vc_hit (vc_hit), .vc_slot (vc_slot), .vc_state (vc_state), .vc_data (vc_data), .vc_dirty (vc_dirty),
         .nc_can (nc_can),
         .s2_refill (s2_refill), .s2_maint (s2_maint), .s2_st_wr (s2_st_wr), .s2_tag_fix_wr (s2_tag_fix_wr),
-        .s2_write_way (s2_write_way), .s2_write_line (s2_write_line), .s2_write_tag (s2_write_tag),
+        .s2_write_way (s2_write_way), .s2_write_way_onehot (s2_write_way_onehot),            // CB-3
+        .s2_write_line (s2_write_line), .s2_write_tag (s2_write_tag),
         .s2_uniq (s2_uniq), .s2_amo1 (s2_amo1), .s2_alloc_is_write (s2_alloc_is_write),
         .s2_alloc_no_response (s2_alloc_no_response), .s2_alloc_is_prefetch (s2_alloc_is_prefetch),
         .s2_line_answer (s2_line_answer), .vec_release_valid (vec_release_valid), .vec_release_slot (vec_release_slot),
@@ -665,11 +677,13 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s2_install_valid       (s2_refill),
         .s2_install_line_addr   (s2_line),
         .s1_clear_valid         (rsv_clear_valid),        // a snoop in S1, or the eviction of a line (computed in u_s1)
-        .s1_clear_line_addr     (rsv_clear_line),
+        .s1_clear_line_addr     (rsv_clear_line),         // CB-3: debug print and check only
+        .clear_eq_s2_line       (clear_eq_s2_line),       // CB-3: the two compares of the clear line, made in u_s1
+        .clear_eq_rsv_line      (clear_eq_rsv_line),
         .maint_clear            (maint_start),
         .other_bank_rsv_clear   (other_bank_rsv_event),   // A2: an LR/SC in another bank ends this reservation
         .reservation_valid      (),
-        .reservation_line_addr  (),
+        .reservation_line_addr  (reservation_line_addr),  // CB-3: to u_s1 (per-way clear compares)
         .amo_lock_valid         (lock_valid),
         .amo_lock_snoop_hold    (lock_snp),
         .amo_lock_line          (lock_line),
@@ -733,6 +747,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s1_install_vc_slot       (q1_slot),
         .s1_install_is_prefetch   (q1_is_prefetch),
         .s2_install_entry_id      (s2_mid),
+        .s2_install_entry_onehot  (s2_mid_onehot_copy),           // CB-3: one-hot copies of s2_mid (u_s1 flops)
         .s2_install_line_data     (q2_data),
         .s1_token_held_valid      (r_held),
         .s1_token_held_entry_id   (s1_mid),

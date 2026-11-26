@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `include "l1d_defines.vh"
-module tb_tracker;
+module tb_tracker_b;
     localparam SETS = `L1D_SETS, WAYS = `L1D_WAYS, LSU_BUF = `L1D_LSU_BUF_DEPTH,
                MSHR = `L1D_MSHR_ENTRIES, NCE = `L1D_MSHR_NC_ENTRIES, VCS = `L1D_VC_SLOTS,
                RFIFO = `L1D_RESP_FIFO_DEPTH;

@@ -82,26 +82,7 @@ module l1d_ecc_enc #(
         end
     endgenerate
     // ---- the overall parity: even parity over data and Hamming bits ----
-    // tm_opt iter 1 (2026-11-19, new constant function parity_mask, no new signal): same value as (^data) ^ (^ham), built
-    // straight from the data in ONE tree. Data bit d enters (^data) once and (^ham) once per Hamming bit that uses it, so it
-    // counts in the parity when 1 + (number of those Hamming bits) is odd. The old form waited for the Hamming trees
-    // (6 XOR2 levels) and then XORed their results (3 more levels); now one DATA_W = 64-input tree, 6 XOR2 levels.
-    function [DATA_W-1:0] parity_mask;
-        input integer dummy;                               // unused: Verilog-2005 functions need an input
-        integer d;                                         // loop variable: data bit
-        integer k;                                         // loop variable: Hamming bit
-        reg     odd;                                       // data bit d counts an odd number of times
-        begin
-            for (d = 0; d < DATA_W; d = d + 1) begin
-                odd = 1'b1;                                // once in ^data
-                for (k = 0; k < HAM_W; k = k + 1)
-                    odd = odd ^ (((data_pos(d) >> k) & 1) ? 1'b1 : 1'b0);   // once in each Hamming bit that uses it
-                parity_mask[d] = odd;
-            end
-        end
-    endfunction
-    localparam [DATA_W-1:0] PARITY_MASK = parity_mask(0); // the data bits of the overall parity, DATA_W = 64 bits
-    assign check = {^(data & PARITY_MASK), ham};
+    assign check = {(^data) ^ (^ham), ham};
 
 endmodule
 

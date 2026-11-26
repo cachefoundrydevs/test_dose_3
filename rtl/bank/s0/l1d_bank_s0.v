@@ -63,7 +63,6 @@
 //   r_valid ... r_sid, r_seat, r_fast  out  regs   the Stage R registers (r_seat = tracker entry, r_fast = fresh issue)
 //   tracker_empty                      out  1      no tracker entry in use (bank idle check)
 //   miss_ok                            out  1      an MSHR / NC answer may be pushed now (credit, used in l1d_bank_s3)
-//   own_response_push_port             in   4      crossbank step 1: this bank pushes an answer for port p this cycle (from l1d_bank, in-bank flops only)
 //   vec_slot_available, vec_write_slot in  1/1    a vector data place is free, and the lowest free one
 //   vec_write_valid                    out  1      a vector store is allocated now: keep its line in place vec_write_slot
 //
@@ -108,7 +107,7 @@ module l1d_bank_s0 #(
     mshr_freed, vc_freed, nc_freed,
     any_gnt, g_set, gnt_refill, gnt_maint,
     r_valid, r_kind, r_seat, r_req, r_fast, r_mid, r_line, r_mway, r_mop, r_sinv, r_sid, r_deps,
-    tracker_empty, miss_ok, own_response_push_port,
+    tracker_empty, miss_ok,
     vec_slot_available, vec_write_slot, vec_write_valid
 );
     `include "l1d_encodings.vh"
@@ -122,8 +121,6 @@ module l1d_bank_s0 #(
     localparam NE          = TRK_ENTRIES;                        // tracker entries, 8
     localparam [RCNT_W:0]  CREDIT_TWO   = 2;                     // the "+1 for the issue, +1 for a push" of the credit rule, 4 bits
     localparam [RCNT_W:0]  CREDIT_THREE = 3;                     // ... with an assumed issue of the same port, 4 bits
-    localparam [RCNT_W:0]  CREDIT_FOUR  = 4;                     // crossbank step 1: two + (R of the port or an own push now) + an issue, 4 bits
-    localparam [RCNT_W:0]  CREDIT_FIVE  = 5;                     // crossbank step 1: two + R + own push + issue (full stream needs RESP_FIFO_DEPTH >= 5), 4 bits
 
     // ======================================================================
     // Ports (declared after the includes so that the derived widths of l1d_fields.vh can be used)
@@ -236,10 +233,6 @@ module l1d_bank_s0 #(
     // ---- status ----
     output wire                        tracker_empty;            // no tracker entry in use
     output wire                        miss_ok;                  // an MSHR / NC answer may be pushed now
-    // CROSSBANK STEP 1 (2026-11-25, see docs/CROSSBANK_CHANGES_v6.md): this bank pushes an answer for port p into its response FIFO THIS cycle.
-    // Comes from l1d_bank (decode of lsu_response_valid and the port field of lsu_response_packet, flops of S2 / MSHR / NC in this bank only).
-    // With it the credit reads only free_slots (a flop) and never free_slots_next (a function of all four banks' pushes and the LSU read pin).
-    input  wire [LSU_PORTS-1:0]        own_response_push_port;   // bit p = 1: an answer for port p is pushed this cycle, LSU_PORTS = 4 bits
     // ---- vector store data places (l1d_vec_store_buf) ----
     input  wire                        vec_slot_available;       // a vector data place is free
     input  wire [VEC_SLOT_W-1:0]       vec_write_slot;           // the lowest free place, VEC_SLOT_W = 1 bit
@@ -317,7 +310,6 @@ module l1d_bank_s0 #(
     wire [INDEX_W-1:0]     oldest_ready_set;                     // its set, 6 bits
     wire [LINE_ADDR_W-1:0] oldest_ready_line;                    // its line address, 58 bits
     wire [PORT_W-1:0]      oldest_ready_port;                    // its port, 2 bits
-    wire                   oldest_ready_credit_ok;               // iter 8: its port has a booking credit next cycle (from the tracker)
     wire                   oldest_ready_is_write;                // it writes
     wire                   oldest_ready_is_line_op;              // whole-line VPU access
     wire                   oldest_ready_is_amo;                  // one-request AMO
@@ -329,19 +321,7 @@ module l1d_bank_s0 #(
     wire                   arrival_book_is_write;                // it writes
     wire                   arrival_book_is_line_op;              // whole-line VPU access
     wire                   arrival_book_is_amo;                  // one-request AMO
-    wire                   arrival_book_credit_ok;               // tm_opt iter 3: its port has a booking credit next cycle (from the tracker)
-    // Vivado iter 5: the arrival fields already gated by the pick (zero unless the arrival is booked now)
-    wire                   book_arrival_allowed;                 // CPU work may book an arrival this cycle (from l1d_book_select)
-    wire                   arrival_book_go;                      // the arrival is booked now (from the tracker pick)
-    wire [NE-1:0]          arrival_booked_entry_onehot;          // its entry, 8 bits
-    wire [LINE_ADDR_W-1:0] arrival_booked_line;                  // its line address, 58 bits
-    wire [PORT_W-1:0]      arrival_booked_port;                  // its port, 2 bits
-    wire                   arrival_booked_is_write;              // it writes
-    wire                   arrival_booked_is_amo;                // one-request AMO
-    // tm_opt iter 3: declaration moved up (it is now also a tracker input); computed in the credit block below
-    reg  [LSU_PORTS-1:0] credit_book_next;                       // credit for the booking (exact, two outcomes selected late), 4 bits
     wire [NE-1:0]          book_entry_onehot;                    // the entry booked this cycle (late), 8 bits
-    wire [NE-1:0]          book_ready_onehot;                    // Vivado iter 1: its oldest-READY leg only (early), 8 bits
     wire [NE-1:0]          issue_entry_onehot;                   // the booked entry that issues now (flops), 8 bits
     wire [NE*REQ_W-1:0]    entry_packet_flat;                    // every entry's packet, 8*148 bits
     wire [NE*PC_W-1:0]     entry_pc_flat;                        // every entry's PC (unused here: the tracker gives s2_seat_pc), 8*64 bits
@@ -373,7 +353,6 @@ module l1d_bank_s0 #(
         .credit_q_1                (credit_q[1]),
         .credit_q_2                (credit_q[2]),
         .credit_q_3                (credit_q[3]),
-        .credit_book_next          (credit_book_next),
         .fresh_issue               (fresh_issue),
         .fresh_port_onehot         (fresh_port_onehot),
         .fresh_entry_onehot        (fresh_entry_onehot),
@@ -388,7 +367,6 @@ module l1d_bank_s0 #(
         .oldest_ready_set          (oldest_ready_set),
         .oldest_ready_line         (oldest_ready_line),
         .oldest_ready_port         (oldest_ready_port),
-        .oldest_ready_credit_ok    (oldest_ready_credit_ok),
         .oldest_ready_is_write     (oldest_ready_is_write),
         .oldest_ready_is_line_op   (oldest_ready_is_line_op),
         .oldest_ready_is_amo       (oldest_ready_is_amo),
@@ -400,16 +378,7 @@ module l1d_bank_s0 #(
         .arrival_book_is_write     (arrival_book_is_write),
         .arrival_book_is_line_op   (arrival_book_is_line_op),
         .arrival_book_is_amo       (arrival_book_is_amo),
-        .arrival_book_credit_ok    (arrival_book_credit_ok),
-        .arrival_book_allowed      (book_arrival_allowed),
-        .arrival_book_go           (arrival_book_go),
-        .arrival_booked_entry_onehot (arrival_booked_entry_onehot),
-        .arrival_booked_line       (arrival_booked_line),
-        .arrival_booked_port       (arrival_booked_port),
-        .arrival_booked_is_write   (arrival_booked_is_write),
-        .arrival_booked_is_amo     (arrival_booked_is_amo),
         .book_entry_onehot         (book_entry_onehot),
-        .book_ready_onehot         (book_ready_onehot),  // oldest-READY booking leg: moves a booked in-use entry from READY to BOOKED, NE = 8 bits
         .issue_entry_onehot        (issue_entry_onehot),
         .entry_packet_flat         (entry_packet_flat),
         .entry_pc_flat             (entry_pc_flat),
@@ -444,12 +413,9 @@ module l1d_bank_s0 #(
     //     deadlocked with a 2-deep response FIFO (fixed 2026-11-10, session 59).
     //   miss_ok (MSHR / NC answer pushed now): free(p) > R_p + S1_p for every port, as before (from flops, used in S3).
     // Example: a back-to-back stream on port 0, free stays 4 (push and pop in every cycle), R = S1 = 1: 4 >= 1 + 1 + 2.
-    // CROSSBANK STEP 1 (2026-11-25): the rule is now free_now >= 2 + r_is + issue + own_push (free_now = the merger FIFO's flop, own_push =
-    //   this bank's answer for the port this cycle). Same stream with RESP_FIFO_DEPTH = 5: free stays 5 (answer bypassed), 5 >= 1 + 1 + 1 + 2.
-    //   With depth 4 the stream would be throttled (4 < 5), hence the depth 5 in l1d_defines.vh.
     // ======================================================================
     wire [LSU_PORTS*RCNT_W-1:0] free_now_flat;                   // free places now, 4*3 bits
-    wire [LSU_PORTS*RCNT_W-1:0] free_next_flat;                  // free places after this cycle, 4*3 bits (UNUSED since crossbank step 1, kept for the port map)
+    wire [LSU_PORTS*RCNT_W-1:0] free_next_flat;                  // free places after this cycle, 4*3 bits
     assign free_now_flat  = {lsu_response_fifo_free_3, lsu_response_fifo_free_2, lsu_response_fifo_free_1, lsu_response_fifo_free_0};
     assign free_next_flat = {lsu_response_fifo_free_next_3, lsu_response_fifo_free_next_2, lsu_response_fifo_free_next_1, lsu_response_fifo_free_next_0};
     wire                 book_entry_issue;                       // the booked tracker entry issues now (flops)
@@ -460,47 +426,27 @@ module l1d_bank_s0 #(
     reg  [LSU_PORTS-1:0] s1_is_port;                             // the tracked op in S1 is of port p, 4 bits
     reg  [LSU_PORTS-1:0] issue_is_port;                          // the op issued now is of port p (late), 4 bits
     reg  [LSU_PORTS-1:0] credit_next;                            // exact credit for the next cycle, 4 bits
+    reg  [LSU_PORTS-1:0] credit_book_next;                       // credit for the booking (exact, two outcomes selected late), 4 bits
     reg  [LSU_PORTS-1:0] credit_book_if_none;                    // booking credit if no op of port p issues now, 4 bits
     reg  [LSU_PORTS-1:0] credit_book_if_issue;                   // booking credit if an op of port p issues now, 4 bits
     reg  [LSU_PORTS-1:0] port_miss_ok;                           // an MSHR / NC answer may be pushed for port p, 4 bits
-    reg  [RCNT_W:0]      free_now_ext;                           // scratch (crossbank step 1, replaces promised_next): free places now of port p, 4 bits
-    reg                  credit_ge_two;                          // scratch: free_now >= 2
-    reg                  credit_ge_three;                        // scratch: free_now >= 3
-    reg                  credit_ge_four;                         // scratch: free_now >= 4
-    reg                  credit_ge_five;                         // scratch: free_now >= 5
+    reg  [RCNT_W:0]      promised_next;                          // scratch: places promised next cycle, 4 bits
     integer cr_port;                                             // loop variable: port
     always @* begin
         for (cr_port = 0; cr_port < LSU_PORTS; cr_port = cr_port + 1) begin
             r_is_port[cr_port]     = r_cpu_q && (r_port == cr_port);
             s1_is_port[cr_port]    = s1_lsu && !s1_pf && (s1_port == cr_port);
             issue_is_port[cr_port] = (book_entry_issue && (book_port_q == cr_port)) || (fresh_issue && fresh_port_onehot[cr_port]);
-            // CROSSBANK STEP 1: the credit reads free_now (a flop of the merger FIFO), never free_next (cross-bank, LSU read pin).
-            // free_next >= free_now - own_push always holds (only this bank pushes into its FIFO; a pop or bypass only adds places),
-            // so the rule "free_next >= promised + 2" becomes "free_now >= promised + 2 + own_push": safe, never above the exact value.
-            // promised_next (an adder) is gone: the same value is selected from four compares of free_now with constants.
-            free_now_ext           = {1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]};   // free places now, 4 bits
-            credit_ge_two          = (free_now_ext >= CREDIT_TWO);
-            credit_ge_three        = (free_now_ext >= CREDIT_THREE);
-            credit_ge_four         = (free_now_ext >= CREDIT_FOUR);
-            credit_ge_five         = (free_now_ext >= CREDIT_FIVE);
-            // exact credit = booking credit rule (see below): free_now >= 2 + r_is + own_push + issue
-            credit_next[cr_port]   = issue_is_port[cr_port]
-                                   ? (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
-                                                                      : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three))
-                                   : (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
-                                                                      : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two));
+            promised_next          = {{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, issue_is_port[cr_port]} + CREDIT_TWO;
+            credit_next[cr_port]   = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >= promised_next);
             // booking credit (fix 2026-11-10, session 59): BOTH outcomes from flops, the late issue bit selects at the
             // end (one 2:1 level). The old form assumed an issue of the same port (free_next >= r_is + 3): with a 2-deep
             // response FIFO (tests with RESP_FIFO_DEPTH = 2) it could never be met and a waiting entry was never booked
             // again (deadlock seen in tb_l1d_coh -d TINY). The value now equals credit_next (the exact rule).
-            // Vivado/ASAP7 iter 6 (C1): no adder on r_is_port. x >= r_is + c is the same as r_is ? (x > c) : (x >= c); the
-            // late r_is_port (R-stage port decode) only selects between two compares of the early free count with constants.
-            // CROSSBANK STEP 1: free_now and the own push of this cycle replace free_next; the own push is the outer select (late),
-            // r_is_port the inner one: threshold = 2 (+1 own push) (+1 r_is_port) (+1 issue in the second form).
-            credit_book_if_none[cr_port]  = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
-                                                                            : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two);
-            credit_book_if_issue[cr_port] = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
-                                                                            : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three);
+            credit_book_if_none[cr_port]  = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >=
+                                             ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + CREDIT_TWO));
+            credit_book_if_issue[cr_port] = ({1'b0, free_next_flat[cr_port*RCNT_W +: RCNT_W]} >=
+                                             ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + CREDIT_THREE));
             credit_book_next[cr_port] = issue_is_port[cr_port] ? credit_book_if_issue[cr_port] : credit_book_if_none[cr_port];
             port_miss_ok[cr_port]  = ({1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]} >
                                       ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, s1_is_port[cr_port]}));
@@ -514,15 +460,8 @@ module l1d_bank_s0 #(
     // the credit of the booking candidates' ports (AND-OR of the booking credits by the port number)
     wire entry_credit_ok;                                        // the oldest READY entry's port has a credit next cycle
     wire arrival_credit_ok;                                      // the arrival candidate's port has a credit next cycle
-    // iter 8 (E1, under assumption A1 of the proof flow): the tracker looks up the credit of every entry's port from its flops and
-    // picks it by the age one-hot, so the 8:1 port select and the 4:1 credit select leave the path. Equal to
-    // credit_book_next[oldest_ready_port] whenever an entry is ready and the age pick is one-hot (l1d_book_select reads it only
-    // together with entry_ready_valid).
-    assign entry_credit_ok   = oldest_ready_credit_ok;
-    // tm_opt iter 3: the tracker looks up the credit of every source port early and ORs it by the pick, so the 4:1 select
-    // by the late arrival_book_port leaves the path. Was credit_book_next[arrival_book_port]: equal whenever
-    // arrival_book_valid = 1, and l1d_book_select reads arrival_credit_ok only together with arrival_ready_valid.
-    assign arrival_credit_ok = arrival_book_credit_ok;
+    assign entry_credit_ok   = credit_book_next[oldest_ready_port];
+    assign arrival_credit_ok = credit_book_next[arrival_book_port];
 
     // ======================================================================
     // Snoop buffer (unchanged l1d_snoop_buf: 2 entries, served oldest first per line) and the snoop credit
@@ -591,10 +530,7 @@ module l1d_bank_s0 #(
     wire book_valid_q;                                           // flop: something is booked for this cycle
     wire [BOOK_KIND_W-1:0] book_kind_q;                          // flop: what, one-hot, 5 bits
     wire book_now_snoop, book_now_refill, book_now_maint;        // this cycle's booking decision (combinational)
-    wire book_now_entry, book_now_prefetch;
-    // Vivado iter 3: the max_fanout copy of iter 2 is removed (it put one more LUT in series, iter 2 routed report)
-    wire book_now_arrival;                                       // this cycle books the arrival (late)
-    wire book_now_prefetch_no_arrival;                           // Vivado iter 2: prefetch booked unless an arrival is (early)
+    wire book_now_entry, book_now_arrival, book_now_prefetch;
     // the two late gates about the next cycle
     wire amo_issued_now;                                         // an AMO enters R next cycle
     wire store_in_flight_next;                                   // a store-class op in R / S1 / S2 next cycle, or an AMO in S3
@@ -616,7 +552,7 @@ module l1d_bank_s0 #(
         .entry_credit_ok      (entry_credit_ok),
         .arrival_ready_valid  (arrival_book_valid),
         .arrival_credit_ok    (arrival_credit_ok),
-        .prefetch_valid       (pf_valid_q && !pf_booked_q),   // BUGS.md B-1: not offered again while booked, so a hint issues once
+        .prefetch_valid       (pf_valid_q),
         .amo_issued_now       (amo_issued_now),
         .store_in_flight_next (store_in_flight_next),
         .amo_write_next       (s2_amo_in_s2),
@@ -628,13 +564,9 @@ module l1d_bank_s0 #(
         .book_now_maint       (book_now_maint),
         .book_now_entry       (book_now_entry),
         .book_now_arrival     (book_now_arrival),
-        .book_now_prefetch    (book_now_prefetch),
-        .book_now_prefetch_no_arrival (book_now_prefetch_no_arrival),
-        .book_arrival_allowed         (book_arrival_allowed)
+        .book_now_prefetch    (book_now_prefetch)
     );
-    assign book_ready_onehot = {NE{book_now_entry}} & oldest_ready_onehot;   // early leg, for the in-use entry states
-    // Vivado iter 5: the arrival leg comes already gated by the tracker pick (was {NE{book_now_arrival}} & arrival_book_entry_onehot)
-    assign book_entry_onehot = book_ready_onehot | arrival_booked_entry_onehot;
+    assign book_entry_onehot = ({NE{book_now_entry}} & oldest_ready_onehot) | ({NE{book_now_arrival}} & arrival_book_entry_onehot);
     // the fields of the booked operation, captured at the booking edge (the address lane reads book_set_q, a flop)
     wire [LINE_ADDR_W-1:0] mt_line;                              // line address of the flush/clean token: {zeros, set, bank}, 58 bits
     assign mt_line = {{TAG_W{1'b0}}, mt_set, BANK_C};
@@ -651,35 +583,28 @@ module l1d_bank_s0 #(
     reg  [PORT_W-1:0]      book_port_next;                       // the port being booked, 2 bits
     reg                    book_is_write_next;                   // the booked op writes
     reg                    book_is_amo_next;                     // the booked op is an AMO
-    // Vivado iter 3: the fields when NO arrival is booked (early terms only), as separate wires; the late book_now_arrival
-    // selects between them and the arrival fields (no keep attribute, user decision 2026-11-17)
-    wire [LINE_ADDR_W-1:0] book_line_no_arrival;   // line address, 58 bits
-    wire [PORT_W-1:0]      book_port_no_arrival;   // port, 2 bits
-    wire                   book_is_write_no_arrival; // writes
-    wire                   book_is_amo_no_arrival;   // one-request AMO
-    assign book_line_no_arrival     = ({LINE_ADDR_W{book_now_snoop}}               & sn_sel_line) |
-                                      ({LINE_ADDR_W{book_now_refill}}              & tok_line) |
-                                      ({LINE_ADDR_W{book_now_maint}}               & mt_line) |
-                                      ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q) |
-                                      ({LINE_ADDR_W{book_now_entry}}               & oldest_ready_line);
-    assign book_port_no_arrival     = {PORT_W{book_now_entry}} & oldest_ready_port;
-    assign book_is_write_no_arrival = book_now_entry & oldest_ready_is_write;
-    assign book_is_amo_no_arrival   = book_now_entry & oldest_ready_is_amo;
     always @* begin
-        // a select by the one-hot decision (at most one book_now_* is set: l1d_book_select makes them exclude each other
-        // for every input). tm_opt iter 1: one AND-OR instead of the last-wins if-chain (one mux level per source); the
-        // late arrival leg (tracker arrival_book_* and book_now_arrival) enters only the last OR.
-        // Vivado iter 2: carry-select on book_now_arrival. When the arrival is booked nothing else is (one-hot), so the field
-        // is the arrival's; when it is not, the prefetch leg uses the early book_now_prefetch_no_arrival. The late
-        // book_now_arrival is the select of the last mux (was: it also gated book_now_prefetch, two LUTs more, iter 1 report).
-        // Vivado iter 3: the late select only (the other leg is the book_*_no_arrival above)
-        // Vivado iter 5: the arrival fields are zero unless booked (tracker pick select), so the late select becomes an OR.
-        // When the arrival is booked, snoop / refill / maint / entry are all off (cpu_go, not entry), so only the prefetch term
-        // of book_line_no_arrival can be set: it is cut by arrival_book_go. Port, write and AMO have no prefetch term.
-        book_line_next     = arrival_booked_line     | (book_line_no_arrival & ~{LINE_ADDR_W{arrival_book_go}});
-        book_port_next     = arrival_booked_port     | book_port_no_arrival;
-        book_is_write_next = arrival_booked_is_write | book_is_write_no_arrival;
-        book_is_amo_next   = arrival_booked_is_amo   | book_is_amo_no_arrival;
+        // a priority select by the one-hot decision (exactly one book_now_* is set when something is booked)
+        book_line_next     = {LINE_ADDR_W{1'b0}};
+        book_port_next     = {PORT_W{1'b0}};
+        book_is_write_next = 1'b0;
+        book_is_amo_next   = 1'b0;
+        if (book_now_snoop)  book_line_next = sn_sel_line;
+        if (book_now_refill) book_line_next = tok_line;
+        if (book_now_maint)  book_line_next = mt_line;
+        if (book_now_prefetch) book_line_next = pf_line_q;
+        if (book_now_entry) begin
+            book_line_next     = oldest_ready_line;
+            book_port_next     = oldest_ready_port;
+            book_is_write_next = oldest_ready_is_write;
+            book_is_amo_next   = oldest_ready_is_amo;
+        end
+        if (book_now_arrival) begin
+            book_line_next     = arrival_book_line;
+            book_port_next     = arrival_book_port;
+            book_is_write_next = arrival_book_is_write;
+            book_is_amo_next   = arrival_book_is_amo;
+        end
     end
     integer cp_idx;                                              // loop variable: copy of the entry select
     always @(posedge clk) begin : book_fields_proc

@@ -59,17 +59,6 @@
 //   store line select) before the 8 encoders of l1d_bank_r; the tag scrub path is a find-first over 4 flops (2) + 50-bit
 //   AND-OR (2) + l1d_ecc_fix decode (3) + XOR (1) + encoder (7 XOR levels) = about 15 levels into the tag SRAM: this path
 //   is OVER the budget by estimate (PLAN_v6 O-6 class); it is a rare path (a tag error) and is listed as a known gap.
-//   TIMING OPT (S2-I1, 5 GHz study): the AMO unit runs once per way on the registered words (s2_words) and the hit way
-//   picks the RESULT (late select); the data ECC decisions pick per-way pre-qualified flags with the one-hot hit way
-//   (hit_way_onehot). Measured before: 502.5 ps into s3_new; expected after: about 335 ps (AMO unit bound, a known gap).
-//   TIMING OPT (S2-I3): the AMO arithmetic is inline per way (one merged signed / unsigned compare, Kogge-Stone carry,
-//   no XOR on a raw old / operand pin pair) and every arm is pre-qualified by the early one-hot way and op decode, so the
-//   late compare result and carry enter one AND level and one OR level before s3_new (see "AMO: S2 computes").
-//   Measured before: 369.8 ps; expected after: about 315 to 335 ps (estimate; still over the 200 ps goal, a known gap).
-//   TIMING OPT (S2-I4): Ling pseudo carries (first stage g(i) | g(i-1), one cell less) for the ADD and the compare
-//   trees, the hit way folded into the last ADD stage, the ADD sum chosen by the late pseudo carry between two early
-//   arms, shared op-qualified operand nets (fewer operand pin loads). Measured before: 329.5 ps; expected after: about
-//   295 to 300 ps, compare bound (estimate, not measured; still over the 200 ps goal, a known gap of about 95 ps).
 //
 // INSTANTIATED BY
 //   l1d_bank, instance u_s2 (one per bank).
@@ -389,21 +378,6 @@ module l1d_bank_s2 #(
     end
 
     // ======================================================================
-    // TIMING OPT (S2-I1): the hit way as a one-hot, decoded once from the S2 register s2_way
-    // ======================================================================
-    // s2_way is the latest and most loaded signal of S2 (it selects 512-bit lines, syndromes and words; post-synthesis its
-    // buffer tree alone is about 169 ps). The paths rebuilt below (AMO result select, ECC flags) take it as the LAST
-    // input: everything that does not need the way is computed per way first, then one AND-OR by this one-hot picks it.
-    // Exactly one bit is set when s2_way names a way (always at WAYS = 4); all zero for a code >= WAYS (WAYS not a power of 2).
-    wire [WAYS-1:0] hit_way_onehot;                              // bit w = (s2_way == w), WAYS = 4 bits
-    generate
-        genvar hit_way_idx;                                      // loop variable: way
-        for (hit_way_idx = 0; hit_way_idx < WAYS; hit_way_idx = hit_way_idx + 1) begin : g_hit_way_onehot
-            assign hit_way_onehot[hit_way_idx] = (s2_way == hit_way_idx);   // decode of one way, 1 bit
-        end
-    endgenerate
-
-    // ======================================================================
     // ECC of the HIT way (data) and of the first erroneous way (tag): flags, syndromes, corrected words
     // ======================================================================
     reg  [HSYND_W-1:0] hit_synd;                                 // the hit way's syndromes, 56 bits
@@ -453,22 +427,8 @@ module l1d_bank_s2 #(
     wire ecc_tag_blk;                                            // the request was blocked by a tag error: re-issue
     wire ecc_tag_fix_wr;                                         // ... and a correctable tag is written now
     wire ecc_tag_ue;                                             // ... and only uncorrectable tag errors exist (sticky flag)
-    // TIMING OPT (S2-I1): the two data ECC decisions with the hit way LAST. Before: the way AND-OR of the CE / UE flags
-    // (hit_data_ce, hit_data_ue), then the AND with the request qualifiers and the NOT of UE: way tree + 2 AO levels + AND.
-    // Now: the qualifiers and "CE and not UE" are formed per way from S2 registers only (early), and the one-hot hit way
-    // picks the result in one AND-OR (AO22 + OR2 at WAYS = 4), saving about 1 to 2 gate levels (about 20 to 30 ps) on the
-    // ecc_correctable / ecc_uncorrectable / s3_amo_v flops and on the decision (s3_load, act_*) and the write select.
-    // Same function: for the selected way k, (q & ce[k] & !ue[k]) = q & hit_data_ce & !hit_data_ue; no way selected -> 0 both.
-    wire            live_cacheable_hit;                          // a live, cacheable, served hit is in S2 (early, 1 bit)
-    wire [WAYS-1:0] way_data_fix_flag;                           // per way: that hit would be scrubbed (CE, no UE), WAYS = 4 bits
-    wire [WAYS-1:0] way_data_ue_flag;                            // per way: that hit has an uncorrectable granule, WAYS = 4 bits
-    assign live_cacheable_hit = s2_live && s2_cache && s2_hit;
-    assign way_data_fix_flag  = {WAYS{live_cacheable_hit}} & s2_data_ce & ~s2_data_ue;   // WAYS = 4 bits
-    assign way_data_ue_flag   = {WAYS{live_cacheable_hit}} & s2_data_ue;                 // WAYS = 4 bits
-    // old form (kept for reference): ecc_data_ue = s2_live && s2_cache && s2_hit && hit_data_ue;
-    //                                ecc_data_fix = s2_live && s2_cache && s2_hit && hit_data_ce && !hit_data_ue;
-    assign ecc_data_ue    = |(hit_way_onehot & way_data_ue_flag);
-    assign ecc_data_fix   = |(hit_way_onehot & way_data_fix_flag);
+    assign ecc_data_ue    = s2_live && s2_cache && s2_hit && hit_data_ue;
+    assign ecc_data_fix   = s2_live && s2_cache && s2_hit && hit_data_ce && !hit_data_ue;
     assign ecc_tag_blk    = s2_live && s2_tag_blocked;
     assign ecc_tag_fix_wr = ecc_tag_blk && tag_fix_valid;
     assign ecc_tag_ue     = ecc_tag_blk && !tag_fix_valid && tag_ue_any;
@@ -705,260 +665,14 @@ module l1d_bank_s2 #(
     //      whole line on the write port. No lock: same-set requests are ordered by the tracker (an AMO is store class) and a fresh
     //      request that read the line before the S3 write is cancelled in R (amo_hit / wl_hit). A CE in the hit way takes the scrub
     //      path instead (no AMO write, the AMO re-issues). ----
-    wire [WRITE_DATA_WIDTH-1:0] amo_new;                  // new = f(old, operand), aligned to bit 0, 64 bits
-    // TIMING OPT (S2-I1): the way select moves from IN FRONT OF the AMO unit to BEHIND it.
-    // Measured before (post-synthesis, ASAP7, 200 ps clock): s2_way[1] -> buffer tree 169 ps -> hit_data way AND-OR
-    // (AO21 + OA21, 39 ps) -> l1d_amo_alu (adder / compare / op select, 294 ps) -> s3_new D at 502.5 ps (slack -322.9).
-    // The AMO unit's inputs other than the old word (op, size, operand) are early S2 registers, and the old word of every
-    // way is already cut per way in S1 (s2_words, 64 bits per way). So the AMO arithmetic runs once per way on
-    // f(word of way w, operand) straight from the S2 registers, in parallel with the s2_way buffer tree, and the one-hot
-    // hit way picks the result. Measured after: 369.8 ps (kept).
-    // Same function: old amo_new = f(hit_data) with hit_data = word of way s2_way (0 for a code >= WAYS);
-    // new amo_new = f(word of the selected way), or f(0, operand) for a code >= WAYS (the extra unit below, only when
-    // WAYS is not a power of 2; none at WAYS = 4).
-    //
-    // TIMING OPT (S2-I3): the AMO arithmetic is written INLINE per way (no l1d_amo_alu instance at WAYS = 4) and every
-    // late signal enters exactly ONE AND level before the final OR.
-    // Measured before (S2-I1, post-synthesis): 369.8 ps, path s2_req[43] (operand) -> INV (fan-out 10, 28 ps) -> HAxp5
-    // (32 ps: Yosys extract_fa paired the compare leaf ~old | operand with the old ^ operand of the ADD / XOR arms) ->
-    // compare tree (AND4 ... AO221, 7 cells) -> lt at 249 ps -> fan-out buffers 39 ps -> ALU output AND-OR (AO21) -> OR4
-    // -> way AND-OR (AO32) -> s3_new D at 350.6 ps (+ setup and uncertainty = 369.8 ps).
-    // Changes (all combined, one cycle, no new flop):
-    //   (1) no 2-input XOR on (old bit, operand bit) is left anywhere: old ^ operand is formed from the QUALIFIED inputs
-    //       ((q & old) ^ (q & operand), q = way hit & (ADD or XOR)), so extract_fa finds no half adder to share with the
-    //       compare leaves and the Kogge-Stone leaves (old & operand, old | operand); the compare leaves are single gates
-    //       ~old & operand and ~old | operand (the inversion on the per-way old word only, the operand pin in true
-    //       polarity, its ideal pin drive feeds all four ways). Expected gain: the INV + HA head (60 ps) becomes about
-    //       20 to 25 ps, about 35 ps.
-    //   (2) ONE compare per way instead of two (signed and unsigned): the sign flip (signed MIN / MAX) and the access
-    //       width (is64) are folded into early terms around two 31-bit balanced trees (bits 62:32 and 30:0, 5 levels each,
-    //       the same depth as the iteration-6 32-bit trees), so the compare result is one AO221 after the trees:
-    //         64-bit: lt = g63' | p63' & G[62:32] | p63' & P[62:32] & (g31 | p31 & G[30:0])
-    //         32-bit: lt = g31' | p31' & G[30:0]
-    //       (g / p primed = bit 63 or 31 with the sign flip for MIN / MAX: g = old & ~operand, p = old | ~operand).
-    //       lt is only read by the MIN / MAX / MINU / MAXU arms, so a signed compare for MIN / MAX and an unsigned one for
-    //       MINU / MAXU gives the same result bit for bit; for every other code the arms are zero.
-    //       Each bit now has 2 compare AND terms per way (lt & pick, ~lt & pick) instead of 4 (lt_s and lt_u).
-    //   (3) the ADD sum as (sum for carry 0) & ~carry | (sum for carry 1) & carry, with the hit way's carry picked first
-    //       (the carry tree is about 100 ps earlier than the compare): one AO22 per bit on the late carry, not XOR then AND.
-    //   (4) all arms are pre-qualified with the early one-hot hit way and op decode (way_min, way_max, way_and, way_or,
-    //       way_logic): per bit the final logic is 8 compare terms + 2 ADD terms + 1 early term, one AND level (AO22 /
-    //       AO222) and one OR level (OR4), instead of AO21 -> OR4 -> AO32 (3 levels, 62 ps). Expected gain 10 to 20 ps.
-    // Expected after: lt about 210 ps, buffers about 39 ps, final 2 levels about 45 ps -> about 295 ps at the D pin,
-    // about 315 to 335 ps with setup and uncertainty (estimate, not measured; ABC may restructure).
-    // Same function: per way w the arms are those of l1d_amo_alu (iteration 6) ANDed with (s2_way == w); exactly one way
-    // is selected at WAYS = 4, so the OR over the ways is the old AND-OR of the per-way results. SWAP / any other code
-    // gives the operand for every way and for the no-way case alike, so its arm needs no way qualifier.
-    // Written for WRITE_DATA_WIDTH = 64 (bit numbers 63 / 62:32 / 31 / 30:0 and 6 carry stages), like l1d_amo_alu.
-    // TIMING OPT (S2-I4): Ling pseudo carries (one leaf level less) for the ADD and the compare, the hit way folded into
-    // the last carry stage, the ADD sum chosen by the pseudo carry between two early arms, fewer operand pin loads.
-    // Measured before (S2-I3, post-synthesis): 329.5 ps. Worst path s2_req[2] (operand bit 2) -> BUFx2 + BUFx3 (operand
-    // fan-out, 39 ps) -> AO21, AO221, MAJx2, OA221, OA31, AO21, AO221 (the Kogge-Stone carry, 7 cells, 162 ps; the MAJ is
-    // Yosys / ABC seeing g | p & g' with g = old & operand, p = old | operand as a full-adder carry) -> AND2, AND3, OR5
-    // (the hit way's carry pick and the ADD qualifier, 62 ps) -> XOR2 (ABC merges ~c & x | c & ~x into c ^ x, because
-    // amo_add_hit_way equals amo_op_add at WAYS = 4) -> AO221 -> s3_new[53] D at 304.2 ps. Second family (-121 ps):
-    // s2_words (old word) -> BUF + INV -> compare tree (9 cells) -> lt at 237 ps -> BUFx6f -> AO221 -> OR4 -> s3_new.
-    // Changes (all combined, one cycle, no new flop):
-    //   (1) Ling pseudo carry instead of the carry, for the ADD and for the compare. With OR-propagate t = a | b and
-    //       g = a & b (g implies t) the carry out of bits i..0 is C(i) = t(i) & H(i), where H(i) is the prefix of the pairs
-    //       (g(i), t(i-1)): the propagate of every bit is SHIFTED by one. The first stage then simplifies:
-    //         H over bits (i, i-1) = g(i) | t(i-1) & g(i-1) = g(i) | g(i-1)     (one AO22 straight from the pins)
-    //         propagate over (i, i-1) = t(i-1) & t(i-2)                          (one OA22 straight from the pins)
-    //       instead of g(i) | p(i) & g(i-1) = MAJ(a(i), b(i), g(i-1)) behind g(i-1) = a & b (2 cells). One cell less on the
-    //       whole tree, and no 3-input cut is a full-adder carry any more (no MAJ chain).
-    //       ADD: 5 stages (2, 4, 8, 16, 32 bits) per way, the 6th (64 bits) folded with the way (2). The sum needs no
-    //       AND with t(i-1) behind the tree: sum(i) = x(i) ^ (t(i-1) & H(i-1)) = H(i-1) ? (x(i) ^ t(i-1)) : x(i), and both
-    //       arms are early (x = old ^ operand), so the late H(i-1) meets one AO22-type level.
-    //       Compare: the two 31-bit trees (bits 62:32, 30:0) are Ling trees of 16 pair leaves (4 levels behind the pair
-    //       leaf instead of 5 behind the bit leaf); the t of bit 63 (or 31) that C = t & H needs is early and goes into
-    //       the early factors:
-    //         64-bit: lt = g63' | (t63' & t62) & U | t63' & P[62:32] & g31 | (t63' & P[62:30]) & L
-    //         32-bit: lt = g31' | (t31' & t30) & L
-    //       (U = H over bits 62:32, L = H over bits 30:0, primed = with the sign flip of MIN / MAX, P = AND of the t).
-    //   (2) the hit way is folded into the last ADD stage: per way onehot & X32 | onehot & Y32 & X32(-32) (AO32 type),
-    //       and the OR over the ways, instead of the 6th stage AO21 then AND2 / AND3 / OR5. About 2 cells less.
-    //   (3) the ADD sum: carry 1 arm = way-qualified x ^ (t << 1), carry 0 arm = way-qualified x, both early; the last
-    //       level is the pseudo carry choosing between them (pc & arm1 | ~pc & arm0) inside the final AND-OR.
-    //   (4) operand pin loads (fan-out) cut from about 29 to about 20 per bit: old ^ operand is formed per way from
-    //       (op & old) ^ (op & operand) with ONE shared op & operand net (amo_logic_operand) instead of four way-qualified
-    //       copies (the way is applied after the XOR, still no XOR on a raw pin pair); the MIN / MAX arms use two shared
-    //       nets op & operand (amo_min_operand, amo_max_operand) instead of eight way-qualified ones; the AND / OR arms
-    //       reuse the ADD leaves old & operand and old | operand.
-    // Expected after (estimate, not measured; ABC may restructure): ADD about 39 + 20 + 4 x 22 + 2 x 23 + 22 + 22 =
-    // about 237 ps at the D pin (about 260 to 280 ps with setup and uncertainty); compare one leaf level less (about
-    // 22 ps) and the operand side unchanged, about 295 to 300 ps: the compare (s2_words -> lt -> s3_new) is the next
-    // family. Still over the 200 ps goal: a known gap (GR-1), about 95 to 100 ps.
-    // Same function: (1) H is an exact rewrite of the carry (C = t & H because g implies t); (2), (3), (4) only move the
-    // way and op qualifiers: exactly one way is selected at WAYS = 4 and every per-way arm is zero for the other ways;
-    // for a code >= WAYS (WAYS not a power of 2) every per-way arm is zero and amo_new_no_way gives f(0, operand), as
-    // before. The upper bits of a 32-bit ADD / AND / OR / XOR / SWAP and the MIN / MAX pick of whole 64-bit words are
-    // those of l1d_amo_alu (iteration 6), bit for bit.
-    // ---- early decodes (S2 register bits only) ----
-    wire [AMOOP_W-1:0] amo_op_code;                        // the AMO operation, AMOOP_W = 4 bits
-    wire               amo_size_is64;                      // a 64-bit access (size 3); else the compare uses 32 bits
-    wire               amo_op_add;                         // AMO_ADD
-    wire               amo_op_xor;                         // AMO_XOR
-    wire               amo_op_and;                         // AMO_AND
-    wire               amo_op_or;                          // AMO_OR
-    wire               amo_op_min_any;                     // AMO_MIN or AMO_MINU: new = the smaller value
-    wire               amo_op_max_any;                     // AMO_MAX or AMO_MAXU: new = the larger value
-    wire               amo_op_signed;                      // AMO_MIN or AMO_MAX: the compare is signed
-    wire               amo_op_swap_other;                  // AMO_SWAP and every code that is none of the 8 others: new = operand
-    wire               amo_op_logic;                       // TIMING OPT (S2-I4): AMO_ADD or AMO_XOR (both need old ^ operand)
-    wire [WRITE_DATA_WIDTH-1:0] amo_logic_operand;        // TIMING OPT (S2-I4): operand if ADD or XOR, else 0; shared by the ways, 64 bits
-    wire [WRITE_DATA_WIDTH-1:0] amo_min_operand;          // TIMING OPT (S2-I4): operand if MIN or MINU, else 0; shared by the ways, 64 bits
-    wire [WRITE_DATA_WIDTH-1:0] amo_max_operand;          // TIMING OPT (S2-I4): operand if MAX or MAXU, else 0; shared by the ways, 64 bits
-    assign amo_op_code       = s2_req[REQ_AMOOP_LSB +: AMOOP_W];                           // AMOOP_W = 4 bits
-    assign amo_size_is64     = (s2_size == 2'd3);
-    assign amo_op_add        = (amo_op_code == AMO_ADD);
-    assign amo_op_xor        = (amo_op_code == AMO_XOR);
-    assign amo_op_and        = (amo_op_code == AMO_AND);
-    assign amo_op_or         = (amo_op_code == AMO_OR);
-    assign amo_op_min_any    = (amo_op_code == AMO_MIN) | (amo_op_code == AMO_MINU);
-    assign amo_op_max_any    = (amo_op_code == AMO_MAX) | (amo_op_code == AMO_MAXU);
-    assign amo_op_signed     = (amo_op_code == AMO_MIN) | (amo_op_code == AMO_MAX);
-    assign amo_op_swap_other = ~(amo_op_add | amo_op_xor | amo_op_and | amo_op_or | amo_op_min_any | amo_op_max_any);
-    assign amo_op_logic      = amo_op_add | amo_op_xor;
-    assign amo_logic_operand = {WRITE_DATA_WIDTH{amo_op_logic}}   & s2_wdata;                // 64 bits
-    assign amo_min_operand   = {WRITE_DATA_WIDTH{amo_op_min_any}} & s2_wdata;                // 64 bits
-    assign amo_max_operand   = {WRITE_DATA_WIDTH{amo_op_max_any}} & s2_wdata;                // 64 bits
-    // ---- per way: compare, pseudo-carry tree and the pre-qualified arms ----
-    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_new_way;         // way w: its compare and AND / OR arms, already qualified by way and op, at [w*64 +: 64], 256 bits
-    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_xor_way;         // way w: (old ^ operand) qualified by way & (ADD or XOR), 256 bits
-    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_sum_if_carry_way; // TIMING OPT (S2-I4): way w: the ADD sum bit if the carry into it is 1, (old ^ operand) ^ (t << 1), qualified by the way (by ADD in the final), 256 bits
-    wire [WAYS*WRITE_DATA_WIDTH-1:0] amo_carry_way;       // way w: the Ling pseudo carry of the bits below every bit (H(i-1)), qualified by the way, 256 bits
-    wire [WRITE_DATA_WIDTH-1:0]      amo_new_no_way;      // f(0, operand): the result when s2_way names no way, 64 bits
-    wire                             hit_way_none;        // s2_way names no way (a code >= WAYS; constant 0 at WAYS = 4)
-    generate
-        genvar amo_way_idx;                               // loop variable: way
-        for (amo_way_idx = 0; amo_way_idx < WAYS; amo_way_idx = amo_way_idx + 1) begin : g_amo_way
-            wire [WRITE_DATA_WIDTH-1:0] old_word;         // the registered old word of this way (no way select in front), 64 bits
-            wire way_and;                                 // this way hits and the op is AND
-            wire way_or;                                  // this way hits and the op is OR
-            wire way_min;                                 // this way hits and the op is MIN or MINU
-            wire way_max;                                 // this way hits and the op is MAX or MAXU
-            assign old_word  = s2_words[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];   // 64 bits
-            assign way_and   = hit_way_onehot[amo_way_idx] & amo_op_and;
-            assign way_or    = hit_way_onehot[amo_way_idx] & amo_op_or;
-            assign way_min   = hit_way_onehot[amo_way_idx] & amo_op_min_any;
-            assign way_max   = hit_way_onehot[amo_way_idx] & amo_op_max_any;
-            // ---- compare old < operand: carry of operand + ~old, unsigned leaves g = ~old & operand, p = ~old | operand ----
-            wire [WRITE_DATA_WIDTH-1:0] cmp_gen;          // per bit: old 0, operand 1 (this bit decides "less"), 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] cmp_prop;         // per bit: old 0 or operand 1 (a lower decision passes), 64 bits
-            wire cmp_gen_top;                             // bit 63 leaf g with the sign flip of MIN / MAX (old 1, operand 0)
-            wire cmp_prop_top;                            // bit 63 leaf p with the sign flip of MIN / MAX
-            wire cmp_gen_half;                            // bit 31 leaf g with the sign flip (the sign bit of a 32-bit access)
-            wire cmp_prop_half;                           // bit 31 leaf p with the sign flip
-            wire cmp_upper_gen;                           // TIMING OPT (S2-I4): Ling U = H over bits 62:32 (pair leaves g(i) | g(i-1), 4 levels)
-            wire cmp_upper_prop;                          // P[62:32]: bits 62:32 are all "pass"
-            wire cmp_lower_gen;                           // TIMING OPT (S2-I4): Ling L = H over bits 30:0 (pair leaves g(i) | g(i-1), 4 levels)
-            wire cmp_early_gen;                           // the early terms of lt that need no tree output
-            wire cmp_early_upper;                         // the early factor of U in lt
-            wire cmp_early_lower;                         // the early factor of L in lt
-            wire old_less;                                // old < operand (signed for MIN / MAX, unsigned else; 32 or 64 bits)
-            assign cmp_gen         = ~old_word & s2_wdata;                                   // 64 bits
-            assign cmp_prop        = ~old_word | s2_wdata;                                   // 64 bits
-            assign cmp_gen_top     = (amo_op_signed & old_word[63] & ~s2_wdata[63]) | (~amo_op_signed & cmp_gen[63]);
-            assign cmp_prop_top    = (amo_op_signed & (old_word[63] | ~s2_wdata[63])) | (~amo_op_signed & cmp_prop[63]);
-            assign cmp_gen_half    = (amo_op_signed & old_word[31] & ~s2_wdata[31]) | (~amo_op_signed & cmp_gen[31]);
-            assign cmp_prop_half   = (amo_op_signed & (old_word[31] | ~s2_wdata[31])) | (~amo_op_signed & cmp_prop[31]);
-            // Ling trees: H[hi:lo] = H[hi:mid] | (t(hi-1) & ... & t(mid-1)) & H[mid-1:lo], pair leaf H[i:i-1] = g(i) | g(i-1)
-            assign cmp_upper_gen   = ((((cmp_gen[62] | cmp_prop[61] & (cmp_gen[61] | cmp_gen[60])) | &cmp_prop[61:59] & ((cmp_gen[59] | cmp_gen[58]) | &cmp_prop[58:57] & (cmp_gen[57] | cmp_gen[56]))) | &cmp_prop[61:55] & (((cmp_gen[55] | cmp_gen[54]) | &cmp_prop[54:53] & (cmp_gen[53] | cmp_gen[52])) | &cmp_prop[54:51] & ((cmp_gen[51] | cmp_gen[50]) | &cmp_prop[50:49] & (cmp_gen[49] | cmp_gen[48])))) | &cmp_prop[61:47] & ((((cmp_gen[47] | cmp_gen[46]) | &cmp_prop[46:45] & (cmp_gen[45] | cmp_gen[44])) | &cmp_prop[46:43] & ((cmp_gen[43] | cmp_gen[42]) | &cmp_prop[42:41] & (cmp_gen[41] | cmp_gen[40]))) | &cmp_prop[46:39] & (((cmp_gen[39] | cmp_gen[38]) | &cmp_prop[38:37] & (cmp_gen[37] | cmp_gen[36])) | &cmp_prop[38:35] & ((cmp_gen[35] | cmp_gen[34]) | &cmp_prop[34:33] & (cmp_gen[33] | cmp_gen[32])))));
-            assign cmp_upper_prop  = &cmp_prop[62:32];
-            assign cmp_lower_gen   = ((((cmp_gen[30] | cmp_prop[29] & (cmp_gen[29] | cmp_gen[28])) | &cmp_prop[29:27] & ((cmp_gen[27] | cmp_gen[26]) | &cmp_prop[26:25] & (cmp_gen[25] | cmp_gen[24]))) | &cmp_prop[29:23] & (((cmp_gen[23] | cmp_gen[22]) | &cmp_prop[22:21] & (cmp_gen[21] | cmp_gen[20])) | &cmp_prop[22:19] & ((cmp_gen[19] | cmp_gen[18]) | &cmp_prop[18:17] & (cmp_gen[17] | cmp_gen[16])))) | &cmp_prop[29:15] & ((((cmp_gen[15] | cmp_gen[14]) | &cmp_prop[14:13] & (cmp_gen[13] | cmp_gen[12])) | &cmp_prop[14:11] & ((cmp_gen[11] | cmp_gen[10]) | &cmp_prop[10:9] & (cmp_gen[9] | cmp_gen[8]))) | &cmp_prop[14:7] & (((cmp_gen[7] | cmp_gen[6]) | &cmp_prop[6:5] & (cmp_gen[5] | cmp_gen[4])) | &cmp_prop[6:3] & ((cmp_gen[3] | cmp_gen[2]) | &cmp_prop[2:1] & (cmp_gen[1] | cmp_gen[0])))));
-            // 64-bit: lt = g63' | (t63' & t62) & U | t63' & P[62:32] & g31 | (t63' & P[62:30]) & L (bits 62:0 unflipped)
-            // 32-bit: lt = g31' | (t31' & t30) & L (bit 31 flipped for a signed compare)
-            assign cmp_early_gen   = (amo_size_is64 & cmp_gen_top) | (amo_size_is64 & cmp_prop_top & cmp_upper_prop & cmp_gen[31]) |
-                                     (~amo_size_is64 & cmp_gen_half);
-            assign cmp_early_upper = amo_size_is64 & cmp_prop_top & cmp_prop[62];
-            assign cmp_early_lower = (amo_size_is64 & cmp_prop_top & (&cmp_prop[62:30])) | (~amo_size_is64 & cmp_prop_half & cmp_prop[30]);
-            assign old_less        = cmp_early_gen | (cmp_early_upper & cmp_upper_gen) | (cmp_early_lower & cmp_lower_gen);
-            // ---- old + operand: Ling pseudo-carry tree (Kogge-Stone form), OR-propagate, from the pins ----
-            // TIMING OPT (S2-I4): span N gen = H over the N bits ending at bit i, span N prop = t(i-1) & ... & t(i-N)
-            wire [WRITE_DATA_WIDTH-1:0] add_bit_gen;      // per bit: old & operand (also the AND arm), 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_bit_prop;     // per bit: old | operand (also the OR arm), 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span2_gen;    // pseudo carry of the 2 bits ending at bit i: g(i) | g(i-1), 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span2_prop;   // t(i-1) & t(i-2), 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span4_gen;    // ... 4 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span4_prop;   // ... 4 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span8_gen;    // ... 8 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span8_prop;   // ... 8 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span16_gen;   // ... 16 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span16_prop;  // ... 16 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span32_gen;   // ... 32 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] add_span32_prop;  // ... 32 bits, 64 bits
-            wire [WRITE_DATA_WIDTH-1:0] old_xor_operand;  // TIMING OPT (S2-I4): old ^ operand if ADD or XOR, else 0, 64 bits
-            assign add_bit_gen     = old_word & s2_wdata;                                    // 64 bits
-            assign add_bit_prop    = old_word | s2_wdata;                                    // 64 bits
-            assign add_span2_gen   = add_bit_gen     | (add_bit_gen      << 1);              // g(i) | t(i-1) & g(i-1) = g(i) | g(i-1)
-            assign add_span2_prop  = (add_bit_prop   << 1) & (add_bit_prop << 2);
-            assign add_span4_gen   = add_span2_gen   | (add_span2_prop   & (add_span2_gen   << 2));
-            assign add_span4_prop  = add_span2_prop  & (add_span2_prop   << 2);
-            assign add_span8_gen   = add_span4_gen   | (add_span4_prop   & (add_span4_gen   << 4));
-            assign add_span8_prop  = add_span4_prop  & (add_span4_prop   << 4);
-            assign add_span16_gen  = add_span8_gen   | (add_span8_prop   & (add_span8_gen   << 8));
-            assign add_span16_prop = add_span8_prop  & (add_span8_prop   << 8);
-            assign add_span32_gen  = add_span16_gen  | (add_span16_prop  & (add_span16_gen  << 16));
-            assign add_span32_prop = add_span16_prop & (add_span16_prop  << 16);
-            // old ^ operand from op-qualified inputs (no XOR on the raw pin pair; one shared operand net, see (4))
-            assign old_xor_operand = ({WRITE_DATA_WIDTH{amo_op_logic}} & old_word) ^ amo_logic_operand;    // 64 bits
-            // ---- outputs of the way (all qualified by this way) ----
-            // compare and AND / OR arms, pre-qualified (old_less is the only late signal: one AND level per bit)
-            assign amo_new_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =                                   // 64 bits
-                       ({WRITE_DATA_WIDTH{ old_less}} & (({WRITE_DATA_WIDTH{way_min}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_max_operand)))
-                     | ({WRITE_DATA_WIDTH{~old_less}} & (({WRITE_DATA_WIDTH{way_max}} & old_word) | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & amo_min_operand)))
-                     | ({WRITE_DATA_WIDTH{way_and}} & add_bit_gen)
-                     | ({WRITE_DATA_WIDTH{way_or}}  & add_bit_prop);
-            assign amo_xor_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =                                   // 64 bits
-                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & old_xor_operand;
-            assign amo_sum_if_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =                          // 64 bits
-                       {WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (old_xor_operand ^ (add_bit_prop << 1));
-            // the 6th (64-bit) stage with the way folded in: H(i-1) = X32(i-1) | Y32(i-1) & X32(i-33), each term AND the way
-            assign amo_carry_way[amo_way_idx*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH] =                                 // 64 bits
-                       ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_gen << 1))
-                     | ({WRITE_DATA_WIDTH{hit_way_onehot[amo_way_idx]}} & (add_span32_prop << 1) & (add_span32_gen << 33));
-        end
-        if (WAYS < (1 << WAY_W)) begin : g_amo_no_way
-            // WAYS not a power of 2: a code >= WAYS selects no word, the old unit then saw old value 0
-            l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo_zero (
-                .amo_op      (s2_req[REQ_AMOOP_LSB +: AMOOP_W]),                                    // AMOOP_W = 4 bits
-                .access_size (s2_size),                                                             // MEM_SIZE_BITS = 2 bits
-                .old_value   ({WRITE_DATA_WIDTH{1'b0}}),                                            // 64 bits
-                .operand     (s2_wdata),                                                            // 64 bits
-                .new_value   (amo_new_no_way)                                                       // 64 bits
-            );
-            assign hit_way_none = ~|hit_way_onehot;
-        end else begin : g_amo_all_ways
-            // WAYS a power of 2 (the default 4): every code names a way
-            assign amo_new_no_way = {WRITE_DATA_WIDTH{1'b0}};
-            assign hit_way_none   = 1'b0;
-        end
-    endgenerate
-    // ---- the OR over the ways (every term is already qualified by its way) ----
-    reg  [WRITE_DATA_WIDTH-1:0] amo_new_hit_way;          // OR of the ways' compare / AND / OR arms (and f(0, operand) for no way), 64 bits
-    reg  [WRITE_DATA_WIDTH-1:0] amo_xor_hit_way;          // old ^ operand of the hit way (zero unless ADD or XOR), 64 bits
-    reg  [WRITE_DATA_WIDTH-1:0] amo_sum_if_carry_hit_way; // TIMING OPT (S2-I4): the hit way's ADD sum if the carry into the bit is 1, 64 bits
-    reg  [WRITE_DATA_WIDTH-1:0] amo_carry_hit_way;        // TIMING OPT (S2-I4): the hit way's Ling pseudo carry H(i-1) of every bit, 64 bits
-    integer amo_sel_way;                                  // loop variable: way
-    always @* begin
-        amo_new_hit_way          = {WRITE_DATA_WIDTH{hit_way_none}} & amo_new_no_way;
-        amo_xor_hit_way          = {WRITE_DATA_WIDTH{1'b0}};
-        amo_sum_if_carry_hit_way = {WRITE_DATA_WIDTH{1'b0}};
-        amo_carry_hit_way        = {WRITE_DATA_WIDTH{1'b0}};
-        for (amo_sel_way = 0; amo_sel_way < WAYS; amo_sel_way = amo_sel_way + 1) begin
-            amo_new_hit_way          = amo_new_hit_way          | amo_new_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            amo_xor_hit_way          = amo_xor_hit_way          | amo_xor_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            amo_sum_if_carry_hit_way = amo_sum_if_carry_hit_way | amo_sum_if_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-            amo_carry_hit_way        = amo_carry_hit_way        | amo_carry_way[amo_sel_way*WRITE_DATA_WIDTH +: WRITE_DATA_WIDTH];
-        end
-    end
-    // final: early arms (XOR, SWAP / other), the ADD sum as pc ? arm1 : arm0 on the late pseudo carry pc (sum(i) =
-    // x(i) ^ (t(i-1) & H(i-1)) = H(i-1) ? x(i) ^ t(i-1) : x(i)), the ways' compare / AND / OR arms
-    assign amo_new = ({WRITE_DATA_WIDTH{amo_op_xor}}        & amo_xor_hit_way)                            // XOR
-                   | ({WRITE_DATA_WIDTH{amo_op_swap_other}} & s2_wdata)                                   // SWAP and other codes
-                   | (~amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_op_add}} & amo_xor_hit_way))            // ADD, carry 0
-                   | ( amo_carry_hit_way & ({WRITE_DATA_WIDTH{amo_op_add}} & amo_sum_if_carry_hit_way))   // ADD, carry 1
-                   | amo_new_hit_way;                                                                     // MIN / MAX / AND / OR
+    wire [WRITE_DATA_WIDTH-1:0] amo_new;                  // new = f(old, operand), aligned to bit 0
+    l1d_amo_alu #(.W(WRITE_DATA_WIDTH), .MEM_SIZE_BITS(MEM_SIZE_BITS)) u_amo (
+        .amo_op      (s2_req[REQ_AMOOP_LSB +: AMOOP_W]),
+        .access_size (s2_size),
+        .old_value   (hit_data),
+        .operand     (s2_wdata),
+        .new_value   (amo_new)
+    );
 
     always @(posedge clk) begin : s2_to_s3_proc
         if (rst) s3_amo_v <= 1'b0;

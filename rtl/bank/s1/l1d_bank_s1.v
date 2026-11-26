@@ -229,44 +229,24 @@ module l1d_bank_s1 #(
     wire              pf_we;                                     // write a pf bit
     wire              pf_val;                                    // ... this value
     wire [WAY_W-1:0]  s1_way;                                    // the way the operation in S1 uses (declared below)
-    // tm_opt s1 iter 3/4 (new signals): u_meta reads with a one-hot set (READ_ONEHOT) and gives the valid bits of the set
-    // (m_valid, made before the read); the state and pf writes go to u_meta with one enable and one value PER WAY
-    // (WRITE_ONEHOT), so no way number is encoded here and decoded again in u_meta. The v6 write ports keep their values
-    // (the simulation trace of u_meta reads them).
-    wire [WAYS-1:0]   m_valid;                                   // way w of the set holds a line (state != I), WAYS = 4 bits
-    wire [WAYS-1:0]   st_we_way;                                 // write the state of way w, WAYS = 4 bits
-    wire [2*WAYS-1:0] st_val_way;                                // ... with this value at [2*w +: 2], 2 x WAYS = 8 bits
-    wire [WAYS-1:0]   pf_we_way;                                 // write pf_val to the pf bit of way w, WAYS = 4 bits
-    // tm_opt s1 iter 14 (new signal): the PLRU write per way too: way w's enable writes plru_cand of way w (PLRU_ONEHOT)
-    wire [WAYS-1:0]   pl_we_way;                                 // write the PLRU bits of an access of way w, WAYS = 4 bits
-    // tm_opt s1 iter 23: u_meta WRITE_BEHIND = 1: the per-way writes of this cycle go into u_meta's pending register (~50
-    // flops) instead of the 64-set storage; the storage takes them one cycle later from flops, and every read sees them
-    // (forwarding after the read). Same values on every read and in u_meta.states / plru / pf_bit, cycle by cycle.
-    l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W),
-                     .READ_ONEHOT(1), .WRITE_ONEHOT(1), .PLRU_ONEHOT(1), .WRITE_BEHIND(1)) u_meta (
-        .clk                    (clk),
-        .rst                    (rst),
-        .read_set               (s1_set),
-        .read_way_states_flat   (m_states),
-        .read_way_valid         (m_valid),
-        .read_plru_bits         (m_plru),
-        .read_pf_bits           (m_pf_bits),
-        .state_write_enable     (st_we),
-        .state_write_set        (s1_set),
-        .state_write_way        (st_way),
-        .state_write_value      (st_val),
-        .state_write_way_enable (st_we_way),
-        .state_write_way_value  (st_val_way),
-        .plru_write_enable      (pl_we),
-        .plru_write_set         (s1_set),
-        .plru_write_value       (plru_new),
-        .plru_write_way_enable  (pl_we_way),
-        .plru_write_way_value   (plru_cand),
-        .pf_write_enable        (pf_we),
-        .pf_write_set           (s1_set),
-        .pf_write_way           (s1_way),
-        .pf_write_value         (pf_val),
-        .pf_write_way_enable    (pf_we_way)
+    l1d_meta_flops #(.SETS(SETS), .WAYS(WAYS), .INDEX_W(INDEX_W), .WAY_W(WAY_W)) u_meta (
+        .clk                  (clk),
+        .rst                  (rst),
+        .read_set             (s1_set),
+        .read_way_states_flat (m_states),
+        .read_plru_bits       (m_plru),
+        .read_pf_bits         (m_pf_bits),
+        .state_write_enable   (st_we),
+        .state_write_set      (s1_set),
+        .state_write_way      (st_way),
+        .state_write_value    (st_val),
+        .plru_write_enable    (pl_we),
+        .plru_write_set       (s1_set),
+        .plru_write_value     (plru_new),
+        .pf_write_enable      (pf_we),
+        .pf_write_set         (s1_set),
+        .pf_write_way         (s1_way),
+        .pf_write_value       (pf_val)
     );
 
     // ======================================================================
@@ -325,7 +305,7 @@ module l1d_bank_s1 #(
     genvar vw;                                                   // loop variable: way
     generate
         for (vw = 0; vw < WAYS; vw = vw + 1) begin : g_way_valid
-            assign way_valid[vw] = m_valid[vw];                  // tm_opt s1 iter 3: = (m_states[2*vw +: 2] != ST_I), made before the read
+            assign way_valid[vw] = (m_states[2*vw +: 2] != ST_I);
             assign tag_ce[vw]    = tag_fix[vw] & way_valid[vw];
             assign tag_ue[vw]    = tag_ue_raw[vw] & way_valid[vw];
         end
@@ -339,93 +319,19 @@ module l1d_bank_s1 #(
     wire [WAY_W-1:0] hit_way, victim_way, vict_way;              // hit way; PLRU victim; victim with the lock rule, 2 bits each
     wire [WAY_W-1:0] acc_way;                                    // the way the PLRU update is about, 2 bits
     assign acc_way = (s1_kind == K_LSU) ? hit_way : vict_way;
-    wire [WAYS-2:0]  plru_next_lookup;                           // u_lookup's PLRU bits after the access (tm_opt s1 iter 2: unused), WAYS-1 = 3 bits
-    wire             hit_lookup;                                 // u_lookup's hit (tm_opt s1 iter 3: unused; hit = |way_tag_match, same value)
-    wire [WAY_W-1:0] hit_way_lookup;                             // u_lookup's hit way (tm_opt s1 iter 13: unused; hit_way from hit_onehot)
     l1d_s1_lookup #(.WAYS(WAYS), .TAG_W(TAG_W), .WAY_W(WAY_W)) u_lookup (
         .way_tags_flat   (tag_q),
         .way_states_flat (m_states),
         .plru_bits       (m_plru),
         .lookup_tag      (s1_tag),
         .accessed_way    (acc_way),
-        .hit             (hit_lookup),
-        .hit_way         (hit_way_lookup),
+        .hit             (hit),
+        .hit_way         (hit_way),
         .victim_way      (victim_way),
-        .plru_bits_next  (plru_next_lookup)
+        .plru_bits_next  (plru_new)
     );
-
-    // ---- tm_opt s1 iter 2: the hit way as a ONE-HOT vector, and the PLRU update of every way in parallel ----
-    // Before: match -> l1d_pri_enc (binary hit_way) -> acc_way mux -> l1d_plru update -> plru_new, and every "value of the hit
-    // way" (state, next state, pf bit) a binary-indexed mux after hit_way. Now hit_onehot is built from the per-way match in one
-    // parallel level (the lowest matching way, as l1d_pri_enc picks it; way 0 when no way matches, as l1d_pri_enc gives 0), so
-    // every select by the hit way is one AND-OR. The PLRU bits after an access are computed for all WAYS accessed ways at once
-    // from the PLRU bits read (u_plru_way, early), and the one-hot accessed way picks one at the end. Same values for all inputs:
-    // hit_onehot has its 1 exactly at hit_way, acc_onehot exactly at acc_way. u_lookup keeps acc_way, so its own PLRU output
-    // (plru_next_lookup) equals plru_new; it is not used any more.
-    wire [WAYS-1:0]   way_tag_match;                             // way w is valid and its tag is the lookup tag, WAYS = 4 bits
-    wire [WAYS-1:0]   hit_onehot;                                // 1 at hit_way: the lowest matching way, or way 0, WAYS = 4 bits
-    wire [WAYS-1:0]   vict_onehot;                               // 1 at vict_way, WAYS = 4 bits
-    wire [WAYS-1:0]   acc_onehot;                                // 1 at acc_way, WAYS = 4 bits
-    wire [WAYS*(WAYS-1)-1:0] plru_cand;                          // PLRU bits after an access of way w, WAYS x (WAYS-1) = 12 bits
-    // tm_opt s1 iter 4: hit_first = hit_onehot without the "no match -> way 0" default (used where a hit is required anyway)
-    wire [WAYS-1:0]   hit_first;                                 // 1 at the lowest matching way, all 0 without a match, WAYS = 4 bits
-    // tm_opt s1 iter 6: the victim as a one-hot vector, every way in parallel (was: valid -> l1d_pri_enc -> victim_way ->
-    // lock compare select -> vict_way -> vict_onehot compare)
-    wire [WAYS*WAY_W-1:0] plru_vict_way;                         // PLRU victim from every u_plru_way (all equal), WAYS x WAY_W = 8 bits
-    wire [WAYS-1:0]   inv_first;                                 // way w is the lowest invalid way, WAYS = 4 bits
-    wire              any_invalid;                               // some way of the set is invalid
-    wire [WAYS-1:0]   plru_vict_hot;                             // 1 at the PLRU victim, WAYS = 4 bits
-    wire [WAYS-1:0]   victim_onehot;                             // 1 at victim_way (before the lock rule), WAYS = 4 bits
-    wire [WAYS-1:0]   lock_way;                                  // way w holds the locked line (lock_valid and lock_match[w]), WAYS = 4 bits
-    wire [WAYS-1:0]   partner_valid;                             // way w ^ 1 (the lock rule's other way) is valid, WAYS = 4 bits
-    assign any_invalid = !(&way_valid);
-    genvar hw;                                                   // loop variable: way
-    generate
-        for (hw = 0; hw < WAYS; hw = hw + 1) begin : g_hit_onehot
-            wire [WAY_W-1:0] cand_way;                           // way number hw, WAY_W = 2 bits
-            assign cand_way           = hw;
-            assign way_tag_match[hw]  = way_valid[hw] && (tag_q[hw*TAG_W +: TAG_W] == s1_tag);
-            if (hw == 0) begin : g_first
-                assign hit_onehot[hw] = way_tag_match[hw] || !(|way_tag_match);   // lowest match, or no match at all
-                assign hit_first[hw]  = way_tag_match[hw];
-                assign inv_first[hw]  = !way_valid[hw];
-            end else begin : g_rest
-                assign hit_onehot[hw] = way_tag_match[hw] && !(|way_tag_match[hw-1:0]);
-                assign hit_first[hw]  = hit_onehot[hw];
-                assign inv_first[hw]  = !way_valid[hw] && (&way_valid[hw-1:0]);
-            end
-            assign acc_onehot[hw]     = (s1_kind == K_LSU) ? hit_onehot[hw] : vict_onehot[hw];
-            l1d_plru #(.WAYS(WAYS), .WAY_W(WAY_W), .NB(WAYS-1)) u_plru_way (
-                .plru_bits      (m_plru),
-                .accessed_way   (cand_way),
-                .victim_way     (plru_vict_way[hw*WAY_W +: WAY_W]),
-                .plru_bits_next (plru_cand[hw*(WAYS-1) +: WAYS-1])
-            );
-        end
-    endgenerate
-    // one AND-OR per bit by a one-hot select (exactly one bit of the select is 1)
-    assign hit = |way_tag_match;                                 // tm_opt s1 iter 3: from the valid bits made before the read
-    reg  [WAYS-2:0] plru_pick;                                   // the PLRU bits of the accessed way, WAYS-1 = 3 bits
-    reg  [1:0]      hit_st_pick;                                 // the state of the hit way
-    reg  [WAY_W-1:0] hit_way_pick;                               // tm_opt s1 iter 13: = l1d_pri_enc of the match (0 without a match), 2 bits
-    integer         pk;                                          // loop variable: way
-    always @* begin
-        plru_pick   = {(WAYS-1){1'b0}};
-        hit_st_pick = 2'b00;
-        hit_way_pick = {WAY_W{1'b0}};
-        for (pk = 0; pk < WAYS; pk = pk + 1) begin
-            hit_way_pick = hit_way_pick | ({WAY_W{hit_onehot[pk]}} & pk[WAY_W-1:0]);
-            plru_pick   = plru_pick   | ({(WAYS-1){acc_onehot[pk]}} & plru_cand[pk*(WAYS-1) +: WAYS-1]);
-            hit_st_pick = hit_st_pick | ({2{hit_onehot[pk]}} & m_states[2*pk +: 2]);
-        end
-    end
-    assign plru_new = plru_pick;
     wire [1:0] hit_st;                                           // MESI state of the hit way
-    assign hit_st = hit_st_pick;                                 // = m_states[2*hit_way +: 2]
-    // tm_opt s1 iter 13: hit_onehot has its 1 exactly at the lowest matching way (way 0 without a match), so its number is
-    // u_lookup's hit_way; nothing reads u_lookup any more (synthesis removes it), its read-side copy of valid / match /
-    // victim no longer loads the meta read
-    assign hit_way = hit_way_pick;
+    assign hit_st = m_states[2*hit_way +: 2];
 
     // ---- SC check: the reservation must cover the line, and no LR / SC may be completing in S2 this cycle ----
     wire s2_lrsc;                                                // an LR / SC completes in S2 now
@@ -438,14 +344,6 @@ module l1d_bank_s1 #(
     assign s1_live   = s1_lsu && !s1_kill && !s1_pf && !tag_err_any;
     assign s1_scfail = s1_live && s1_cache && s1_is_sc && !sc_ok;
     assign s1_lsu_th = s1_live && s1_cache && hit && !s1_scfail;
-    // tm_opt s1 iter 1 (new signal): the same served-or-upgraded CPU tag hit WITHOUT the tag-error gate. Equal to s1_lsu_th
-    // whenever tag_err_any = 0 (s1_lsu_th = s1_lsu_th_early && !tag_err_any). The late tag syndrome (4 x l1d_ecc_syn on
-    // tag_words_q, then the valid-way mask) now enters only the last AND of the state write / hit terms below.
-    wire s1_lsu_th_early;                                        // cacheable tag hit, served or upgraded, before the tag-error gate
-    // tm_opt s1 iter 4 (new signal): the same without the hit (the per-way writes AND it with the way's own first match)
-    wire s1_lsu_go;                                              // a cacheable CPU request that is served or upgraded if it hits
-    assign s1_lsu_go       = s1_lsu && !s1_kill && !s1_pf && s1_cache && !(s1_is_sc && !sc_ok);
-    assign s1_lsu_th_early = s1_lsu_go && hit;
 
     // ---- refill: victim way and its line; the AMO-locked line is never evicted ----
     wire [LINE_ADDR_W-1:0] v0_line;                              // line of the PLRU victim, 58 bits
@@ -455,57 +353,12 @@ module l1d_bank_s1 #(
     wire [LINE_ADDR_W-1:0] v_line;                               // line of the victim way, 58 bits
     wire [VC_ID_W-1:0]     r_slot;                               // victim-cache slot the victim takes, 3 bits
     assign v0_line  = {tag_q[victim_way*TAG_W +: TAG_W], s1_set, BANK_C};
-    // tm_opt s1 iter 1 (new signal): the 58-bit compare with the locked line runs for EVERY way in parallel with the PLRU
-    // victim choice; the late victim_way only selects one compare result (was: select the victim's tag, then compare).
-    // Same value: lock_match[victim_way] == (v0_line == lock_line).
-    wire [WAYS-1:0] lock_match;                                  // way w's line is the locked line, WAYS = 4 bits
-    genvar lw;                                                   // loop variable: way
-    generate
-        for (lw = 0; lw < WAYS; lw = lw + 1) begin : g_lock_match
-            assign lock_match[lw] = ({tag_q[lw*TAG_W +: TAG_W], s1_set, BANK_C} == lock_line);
-        end
-    endgenerate
-    // tm_opt s1 iter 6: victim_way = the lowest invalid way if there is one, otherwise the PLRU victim (as u_lookup); the lock
-    // rule moves the victim to way ^ 1 when the victim holds the locked line. So way vh is the final victim when it is the
-    // victim and not locked, or when its partner vh ^ 1 is the victim and locked: one AND-OR, no binary way number.
-    // Same value as (vict_way == cand_way).
-    genvar vh;                                                   // loop variable: way
-    generate
-        for (vh = 0; vh < WAYS; vh = vh + 1) begin : g_vict_onehot
-            wire [WAY_W-1:0] vict_cand;                          // way number vh, WAY_W = 2 bits
-            assign vict_cand          = vh;
-            assign plru_vict_hot[vh]  = (plru_vict_way[WAY_W-1:0] == vict_cand);
-            assign victim_onehot[vh]  = any_invalid ? inv_first[vh] : plru_vict_hot[vh];
-            assign lock_way[vh]       = lock_valid && lock_match[vh];
-            assign partner_valid[vh]  = way_valid[vh ^ 1];
-            assign vict_onehot[vh]    = (victim_onehot[vh] && !lock_way[vh]) || (victim_onehot[vh ^ 1] && lock_way[vh ^ 1]);
-        end
-    endgenerate
-    assign v_locked = |(victim_onehot & lock_way);               // tm_opt s1 iter 6: = lock_valid && lock_match[victim_way]
-    // tm_opt s1 iter 10: the victim's way number, state and tag are picked by the one-hot vict_onehot (one AND-OR each)
-    // instead of a 4:1 select by the binary vict_way (was: u_lookup's binary victim_way, then the lock flip, then the select).
-    // Same values: vict_onehot has its 1 exactly at v_locked ? victim_way ^ 1 : victim_way.
-    reg  [WAY_W-1:0] vict_way_pick;                              // = vict_way, WAY_W = 2 bits
-    reg  [1:0]       vict_st_pick;                               // = m_states[2*vict_way +: 2]
-    reg  [TAG_W-1:0] vict_tag_pick;                              // = tag_q[vict_way*TAG_W +: TAG_W], TAG_W = 50 bits
-    integer          vp;                                         // loop variable: way
-    always @* begin
-        vict_way_pick = {WAY_W{1'b0}};
-        vict_st_pick  = 2'b00;
-        vict_tag_pick = {TAG_W{1'b0}};
-        for (vp = 0; vp < WAYS; vp = vp + 1) begin
-            vict_way_pick = vict_way_pick | ({WAY_W{vict_onehot[vp]}} & vp[WAY_W-1:0]);
-            vict_st_pick  = vict_st_pick  | ({2{vict_onehot[vp]}}     & m_states[2*vp +: 2]);
-            vict_tag_pick = vict_tag_pick | ({TAG_W{vict_onehot[vp]}} & tag_q[vp*TAG_W +: TAG_W]);
-        end
-    end
-    assign vict_way = vict_way_pick;
-    assign v_st     = vict_st_pick;
-    // tm_opt s1 iter 6: = (v_st != ST_I) without the victim select: with every way valid the victim is valid whatever the
-    // lock rule picks; otherwise the victim is the lowest invalid way, valid only when the lock rule moves it to its partner
-    assign v_valid  = !any_invalid || |(inv_first & lock_way & partner_valid);
+    assign v_locked = lock_valid && (v0_line == lock_line);
+    assign vict_way = v_locked ? (victim_way ^ {{(WAY_W-1){1'b0}}, 1'b1}) : victim_way;
+    assign v_st     = m_states[2*vict_way +: 2];
+    assign v_valid  = (v_st != ST_I);
     assign v_dirty  = (v_st == ST_M);
-    assign v_line   = {vict_tag_pick, s1_set, BANK_C};          // tm_opt s1 iter 10: one-hot tag pick
+    assign v_line   = {tag_q[vict_way*TAG_W +: TAG_W], s1_set, BANK_C};
     assign r_slot   = q1_swap ? q1_slot : vc_al_slot;
     assign r_held   = s1_refill && v_valid && !q1_swap && !vc_al_ok;
 
@@ -539,86 +392,17 @@ module l1d_bank_s1 #(
         end else if (s1_snp && hit)
             m_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
     end
-    // tm_opt s1 iter 1: m_ev / m_cur above are kept for the debug print only. The next state is no longer computed AFTER the
-    // tag compare (hit_way -> hit_st -> m_ev -> l1d_mesi_next) but in parallel with it:
-    //   - hit-type events (CPU hit, snoop hit) apply to the hit way: one l1d_mesi_next per way (u_mesi_way) runs on the
-    //     way's own state with the event of the request kind (early: from the S1 registers only), and hit_way selects;
-    //   - the flush / clean walk applies to way s1_mway (a flop): u_mesi runs on mt_st;
-    //   - the install writes q1_state.
-    // The case of the old priority chain (s1_lsu_th, refill and not held, maint and not held, snoop hit, none) then selects.
-    // The kinds exclude each other (s1_kind), so at most one case is open. Every output is the same as before for all inputs.
-    reg  [3:0] hit_ev;                                           // the event a hit of this request kind would make (EV_*)
-    always @* begin
-        if (s1_snp)
-            hit_ev = s1_sinv ? EV_SNP_INV : EV_SNP_READ;
-        else
-            hit_ev = s1_store ? EV_WRITE_HIT : (s1_amo ? EV_UNIQ_HIT : EV_LOAD_HIT);
-    end
-    wire [2*WAYS-1:0] way_nxt;                                   // next state of every way for hit_ev, 2 x WAYS = 8 bits
-    wire [WAYS-1:0]   way_we, way_upg, way_hand;                 // ... write, upgrade, hand over data, WAYS = 4 bits each
-    genvar mw;                                                   // loop variable: way
-    generate
-        for (mw = 0; mw < WAYS; mw = mw + 1) begin : g_mesi_way
-            l1d_mesi_next u_mesi_way (
-                .event_code            (hit_ev),
-                .current_state         (m_states[2*mw +: 2]),
-                .install_state         (q1_state),
-                .next_state            (way_nxt[2*mw +: 2]),
-                .state_write_enable    (way_we[mw]),
-                .upgrade_needed        (way_upg[mw]),
-                .snoop_hands_over_data (way_hand[mw])
-            );
-        end
-    endgenerate
-    wire [1:0] hit_nxt;                                          // next state of the hit way
-    wire       hit_we, hit_upg, hit_hand;                        // ... write, upgrade, hand over data
-    // tm_opt s1 iter 2: selected by the one-hot hit way (one AND-OR), same values as the binary-indexed selects by hit_way
-    reg  [1:0] hit_nxt_pick;                                     // next state of the hit way
-    reg        hit_we_pick, hit_upg_pick, hit_hand_pick;         // ... write, upgrade, hand over data
-    integer    hp;                                               // loop variable: way
-    always @* begin
-        hit_nxt_pick  = 2'b00;
-        hit_we_pick   = 1'b0;
-        hit_upg_pick  = 1'b0;
-        hit_hand_pick = 1'b0;
-        for (hp = 0; hp < WAYS; hp = hp + 1) begin
-            hit_nxt_pick  = hit_nxt_pick  | ({2{hit_onehot[hp]}} & way_nxt[2*hp +: 2]);
-            hit_we_pick   = hit_we_pick   | (hit_onehot[hp] & way_we[hp]);
-            hit_upg_pick  = hit_upg_pick  | (hit_onehot[hp] & way_upg[hp]);
-            hit_hand_pick = hit_hand_pick | (hit_onehot[hp] & way_hand[hp]);
-        end
-    end
-    assign hit_nxt  = hit_nxt_pick;
-    assign hit_we   = hit_we_pick;
-    assign hit_upg  = hit_upg_pick;
-    assign hit_hand = hit_hand_pick;
-    wire [1:0] mt_nxt;                                           // next state of the walked way (flush / clean)
-    wire       mt_we, mt_upg_unused, mt_hand_unused;             // ... write; upgrade and hand-over are always 0 for a walk
     l1d_mesi_next u_mesi (
-        .event_code            ((s1_mop == MAINT_FLUSH) ? EV_FLUSH : EV_CLEAN),
-        .current_state         (mt_st),
+        .event_code            (m_ev),
+        .current_state         (m_cur),
         .install_state         (q1_state),
-        .next_state            (mt_nxt),
-        .state_write_enable    (mt_we),
-        .upgrade_needed        (mt_upg_unused),
-        .snoop_hands_over_data (mt_hand_unused)
+        .next_state            (m_nxt),
+        .state_write_enable    (m_we),
+        .upgrade_needed        (m_upg),
+        .snoop_hands_over_data (m_hand)
     );
-    wire case_cpu, case_inst, case_walk, case_snp;               // which event of the old priority chain is open
-    assign case_cpu  = s1_lsu_th;                                // (kinds exclude each other: at most one is 1)
-    assign case_inst = s1_refill && !r_held;
-    assign case_walk = s1_maint && !m_held;
-    assign case_snp  = s1_snp && hit;
-    // the tag-error gate (inside s1_lsu_th) is the last term of the CPU leg
-    assign m_we   = (s1_lsu_th_early && hit_we && !tag_err_any) || case_inst || (case_walk && mt_we) || (case_snp && hit_we);
-    assign m_upg  = s1_lsu_th_early && hit_upg && !tag_err_any;  // only a CPU hit can need an upgrade
-    assign m_hand = case_snp && hit_hand;                        // only a snoop hit hands data over
-    assign m_nxt  = (case_cpu || case_snp) ? hit_nxt :
-                    case_inst              ? q1_state :
-                    case_walk              ? mt_nxt : hit_st;    // no event: the state is unchanged (m_cur = hit_st)
     wire s1_hit;                                                 // a served CPU hit (an upgrade is not a hit)
-    // tm_opt s1 iter 5: = s1_lsu_th_early && !hit_upg && !tag_err_any (= s1_lsu_th && !m_upg), as an OR over the ways of
-    // (first match AND no upgrade): the per-way upgrade flag no longer waits for the select by the hit way
-    assign s1_hit = s1_lsu_go && !tag_err_any && |(hit_first & ~way_upg);
+    assign s1_hit = s1_lsu_th && !m_upg;
     assign s1_way = (s1_kind == K_REFILL) ? vict_way :
                     (s1_kind == K_MAINT)  ? s1_mway : hit_way;
     assign st_we  = m_we;
@@ -628,42 +412,10 @@ module l1d_bank_s1 #(
 
     // ---- the pf bit: set at a prefetch install; cleared at the first demand hit, a demand install, a snoop invalidate, a flush ----
     wire pf_demand_hit;                                          // a demand hit used a prefetched line (its first use)
-    assign pf_demand_hit = s1_hit && |(hit_onehot & m_pf_bits);   // tm_opt s1 iter 2: = m_pf_bits[hit_way], one-hot select
+    assign pf_demand_hit = s1_hit && m_pf_bits[hit_way];
     assign pf_we  = pf_demand_hit || (s1_refill && !r_held) || (s1_snp && hit && s1_sinv) ||
                     (s1_maint && !m_held && (s1_mop == MAINT_FLUSH));
     assign pf_val = s1_refill && q1_is_prefetch;
-
-    // ---- tm_opt s1 iter 4: the state and pf writes PER WAY, every way in parallel (u_meta WRITE_ONEHOT) ----
-    // Before: the legs were ORed into one enable (m_we, pf_we), the way number s1_way was chosen by the kind (binary hit_way
-    // from l1d_pri_enc, vict_way or s1_mway), the value m_nxt was selected by the hit way, and u_meta decoded the way number
-    // again. Now way pw gets its own enable from its own first match, victim bit or walk bit, and its own next state:
-    //   CPU hit or snoop hit : (s1_lsu_go and no tag error, or a snoop) and hit_first[pw] and way_we[pw]  -> way_nxt of way pw
-    //   refill install       : s1_refill and vict_onehot[pw] and not held (victim invalid, or swap / free slot) -> q1_state
-    //   flush / clean walk   : case_walk and mt_we and s1_mway == pw                                         -> mt_nxt
-    // The kinds exclude each other, so at most one leg is open and it names exactly the way and the value of the v6 write
-    // (st_we, st_way, st_val; pf_we, s1_way). For the pf bit the legs are those of pf_we, at the same ways.
-    wire       refill_ok;                                        // a valid victim may leave: swap, or a free victim-cache slot
-    wire [WAYS-1:0] inst_way;                                    // the refill installs into way w now (case_inst at vict_way), WAYS = 4 bits
-    wire [WAYS-1:0] mway_hot;                                    // 1 at s1_mway (the walked way), WAYS = 4 bits
-    assign refill_ok = q1_swap || vc_al_ok;
-    genvar pw;                                                   // loop variable: way
-    generate
-        for (pw = 0; pw < WAYS; pw = pw + 1) begin : g_write_way
-            wire [WAY_W-1:0] write_cand;                         // way number pw, WAY_W = 2 bits
-            assign write_cand    = pw;
-            assign mway_hot[pw]  = (s1_mway == write_cand);
-            assign inst_way[pw]  = s1_refill && vict_onehot[pw] && (!way_valid[pw] || refill_ok);   // = case_inst at way pw
-            assign st_we_way[pw] = (((s1_lsu_go && !tag_err_any) || s1_snp) && hit_first[pw] && way_we[pw]) ||
-                                   inst_way[pw] || (case_walk && mt_we && mway_hot[pw]);
-            assign st_val_way[2*pw +: 2] = (s1_kind == K_REFILL) ? q1_state :
-                                           (s1_kind == K_MAINT)  ? mt_nxt : way_nxt[2*pw +: 2];
-            // iter 14: = pl_we at way acc_way: a served CPU hit (s1_hit) at its first match, or the refill install at its way
-            assign pl_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw]) || inst_way[pw];
-            assign pf_we_way[pw] = (s1_lsu_go && !tag_err_any && hit_first[pw] && !way_upg[pw] && m_pf_bits[pw]) ||
-                                   inst_way[pw] || (s1_snp && s1_sinv && hit_first[pw]) ||
-                                   (case_walk && (s1_mop == MAINT_FLUSH) && mway_hot[pw]);
-        end
-    endgenerate
 
     // ======================================================================
     // Store bytes and per-way load words

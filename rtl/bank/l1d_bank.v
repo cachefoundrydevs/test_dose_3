@@ -60,7 +60,7 @@
 //
 // CREDITS (why no response or snoop answer is ever lost)
 //   A CPU request issues only if its port's response FIFO (in l1d_resp_merge) has a free place left after counting the
-//   operations already promised (credit_q per port in l1d_bank_s0, from the FIFO's free_slots and this bank's own push, crossbank step 1). MSHR / NC responses
+//   operations already promised (credit_q per port in l1d_bank_s0, from the FIFO's free_slots_next). MSHR / NC responses
 //   need a place beyond those in R / S1 (miss_ok). A snoop is booked only if the snoop-answer FIFO has a free place.
 //
 // PORTS (name, meaning)                                                        N = 0..3: the request port
@@ -260,15 +260,6 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire [TRK_ENTRIES-1:0]  r_deps;                       // dependency bits of the entry in R (tracker flops), 8 bits
     wire                    tracker_empty;                // no tracker entry in use (bank idle check)
     wire                    miss_ok;                      // an MSHR / NC answer may be pushed now
-    // CROSSBANK STEP 1 (2026-11-25): this bank pushes an answer for port p this cycle = lsu_response_valid and the port field of the packet.
-    // Only this bank pushes into its own FIFO of port p in the merger, so the credit in l1d_bank_s0 can use free_slots (flop) instead of free_slots_next.
-    wire [LSU_PORTS-1:0]    own_response_push_port;       // bit p: an answer for port p is pushed now, LSU_PORTS = 4 bits
-    genvar                  push_port;                    // loop variable: port
-    generate
-        for (push_port = 0; push_port < LSU_PORTS; push_port = push_port + 1) begin : g_own_push
-            assign own_response_push_port[push_port] = lsu_response_valid && (lsu_response_packet[RESP_PORT_LSB +: PORT_W] == push_port);
-        end
-    endgenerate
     wire                    s2_seat_trained;              // the entry in S2 already sent its training record
     wire [PC_W-1:0]         s2_seat_pc;                   // its PC, 64 bits
     // ---- from u_r (stage R) ----
@@ -541,7 +532,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .any_gnt (any_gnt), .g_set (g_set), .gnt_refill (gnt_refill), .gnt_maint (gnt_maint),
         .r_valid (r_valid), .r_kind (r_kind), .r_seat (r_seat), .r_req (r_req), .r_fast (r_fast), .r_mid (r_mid),
         .r_line (r_line), .r_mway (r_mway), .r_mop (r_mop), .r_sinv (r_sinv), .r_sid (r_sid), .r_deps (r_deps),
-        .tracker_empty (tracker_empty), .miss_ok (miss_ok), .own_response_push_port (own_response_push_port),
+        .tracker_empty (tracker_empty), .miss_ok (miss_ok),
         .vec_slot_available (vec_slot_free), .vec_write_slot (vec_write_slot), .vec_write_valid (vec_write_valid)
     );
 

@@ -97,14 +97,7 @@ module l1d_book_select #(
     output wire                   book_now_maint,         // ... the flush/clean token
     output wire                   book_now_entry,         // ... the oldest READY entry
     output wire                   book_now_arrival,       // ... the arrival of this cycle
-    output wire                   book_now_prefetch,      // ... the prefetch hint
-    // Vivado iter 2 (new port): the prefetch decision as if no arrival is booked (early: no arrival_ready_valid in it);
-    // book_now_prefetch = book_now_prefetch_no_arrival && !book_now_arrival. l1d_bank_s0 builds its field selects for
-    // "arrival booked" and "not booked" side by side and lets the late book_now_arrival pick in the last gate.
-    output wire                   book_now_prefetch_no_arrival, // the prefetch hint is booked unless an arrival is
-    // Vivado iter 5 (new port): CPU work may book an arrival (door open, no line reader, and not the oldest READY entry); the
-    // tracker ANDs it into its pick select so the fields of the booked arrival leave it already gated
-    output wire                   book_arrival_allowed          // cpu_go and not book_now_entry (early: no arrival signal in it)
+    output wire                   book_now_prefetch       // ... the prefetch hint
 );
     // ---- local constants (value at the defaults) ----
     localparam SKIP_W   = (REFILL_SKIP > 0) ? $clog2(REFILL_SKIP + 1) : 1;   // skip counter, 2 bits at REFILL_SKIP = 3
@@ -149,29 +142,10 @@ module l1d_book_select #(
     assign book_now_refill   = door_open_next && refill_ok;
     assign book_now_maint    = door_open_next && maint_ok;
     assign book_now_entry    = cpu_go && entry_ready_valid && entry_credit_ok;
-    assign book_arrival_allowed = cpu_go && !book_now_entry;
-    assign book_now_arrival  = book_arrival_allowed && arrival_ready_valid && arrival_credit_ok;
-    // Vivado iter 2: carry-select on the late book_now_arrival (from the tracker set compares). Everything that does not
-    // wait for the arrival is built first, the arrival enters last. Same values as before: at most one book_now_* is set.
-    assign book_now_prefetch_no_arrival = cpu_go && !book_now_entry && prefetch_valid;
-    // T7: the two late offers as plain AND terms (no cpu_go, no priority): the entry offer (age matrix pick) and the
-    // arrival offer (tracker pick) are now parallel inputs of each flop term below instead of a chain entry -> arrival
-    wire entry_offer_bookable;                            // the oldest READY entry could be booked if CPU work may go
-    wire arrival_offer_bookable;                          // the arrival could be booked if CPU work may go and no entry is
-    assign entry_offer_bookable   = entry_ready_valid && entry_credit_ok;
-    assign arrival_offer_bookable = arrival_ready_valid && arrival_credit_ok;
-    // T7: = book_now_prefetch_no_arrival && !book_now_arrival = cpu_go && !E && P && !(cpu_go && !E && A)
-    //     = cpu_go && !E && !A && P (E, A, P = entry / arrival offer, prefetch_valid): the late A enters once
-    assign book_now_prefetch = cpu_go && !entry_offer_bookable && !arrival_offer_bookable && prefetch_valid;
-    wire book_now_any_no_arrival;                         // something other than an arrival is booked (early)
-    assign book_now_any_no_arrival = book_now_snoop || book_now_refill || book_now_maint || book_now_entry ||
-                                     book_now_prefetch_no_arrival;
+    assign book_now_arrival  = cpu_go && !book_now_entry && arrival_ready_valid && arrival_credit_ok;
+    assign book_now_prefetch = cpu_go && !book_now_entry && !book_now_arrival && prefetch_valid;
     wire book_now_any;                                    // something is booked this cycle
-    // T7: old = snoop | refill | maint | entry | arrival | prefetch with entry = cpu_go&E, arrival = cpu_go&!E&A,
-    // prefetch = cpu_go&!E&!A&P; the cpu_go terms absorb to cpu_go&(E|A|P) (X | !X&Y = X | Y): no priority chain, E and A
-    // are parallel OR inputs of one gate
-    assign book_now_any = book_now_snoop || book_now_refill || book_now_maint ||
-                          (cpu_go && (entry_offer_bookable || arrival_offer_bookable || prefetch_valid));
+    assign book_now_any = book_now_snoop || book_now_refill || book_now_maint || book_now_entry || book_now_arrival || book_now_prefetch;
 
     // ---- the flops ----
     always @(posedge clk) begin : book_proc
@@ -184,14 +158,11 @@ module l1d_book_select #(
             book_kind_q[BOOK_SNOOP_B]   <= book_now_snoop;
             book_kind_q[BOOK_REFILL_B]  <= book_now_refill;
             book_kind_q[BOOK_MAINT_B]   <= book_now_maint;
-            // T7: entry || arrival = cpu_go&E | cpu_go&!E&A = cpu_go&(E|A): E and A in parallel
-            book_kind_q[BOOK_ENTRY_B]   <= cpu_go && (entry_offer_bookable || arrival_offer_bookable);
+            book_kind_q[BOOK_ENTRY_B]   <= book_now_entry || book_now_arrival;
             book_kind_q[BOOK_PF_B]      <= book_now_prefetch;
             // an arrival may issue fresh next cycle only when nothing is booked and CPU work is allowed (door open, no line
             // reader offered or waiting)
-            // T7: cpu_go && !book_now_any; cpu_go excludes snoop / refill / maint (cpu_go has !snoop_ok, !refill_token_valid,
-            // !maint_token_valid), so = cpu_go && !(E|A|P): one NOR of the parallel offers
-            fresh_allowed_q             <= cpu_go && !(entry_offer_bookable || arrival_offer_bookable || prefetch_valid);
+            fresh_allowed_q             <= cpu_go && !book_now_any;
         end
     end // always book_proc
 

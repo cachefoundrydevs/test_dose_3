@@ -57,26 +57,12 @@ module l1d_ecc_fix #(
         end
     endfunction
 
-    // tm_opt iter 3 (new signals): the syndrome is decoded in two halves in parallel (LO_W low bits, HAM_W - LO_W high bits) into
-    // one-hot vectors; each data bit then needs one AND of one bit of each (same value as fix_enable & (syndrome == POS)).
-    localparam LO_W = HAM_W / 2;                           // low half of the syndrome, LO_W = 3 bits
-    wire [(1 << LO_W)-1:0]           lo_hot;               // low half decoded, 2**LO_W = 8 bits
-    wire [(1 << (HAM_W - LO_W))-1:0] hi_hot;               // high half decoded, 2**(HAM_W-LO_W) = 16 bits
-    genvar lv, hv;                                         // loop variables: decoded values
-    generate
-        for (lv = 0; lv < (1 << LO_W); lv = lv + 1) begin : g_lo
-            assign lo_hot[lv] = (syndrome[LO_W-1:0] == lv);
-        end
-        for (hv = 0; hv < (1 << (HAM_W - LO_W)); hv = hv + 1) begin : g_hi
-            assign hi_hot[hv] = (syndrome[HAM_W-1:LO_W] == hv);
-        end
-    endgenerate
     wire [DATA_W-1:0] flip;                                // one-hot (or zero): the data bit to put back, 64 bits
     genvar d;                                              // loop variable: data bit
     generate
         for (d = 0; d < DATA_W; d = d + 1) begin : g_flip
             localparam [HAM_W-1:0] POS = data_pos(d);      // the code word position of data bit d
-            assign flip[d] = fix_enable & lo_hot[POS[LO_W-1:0]] & hi_hot[POS[HAM_W-1:LO_W]];
+            assign flip[d] = fix_enable & (syndrome == POS);
         end
     endgenerate
     assign fixed = data ^ flip;

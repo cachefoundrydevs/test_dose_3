@@ -64,15 +64,15 @@
 //   The LSU sends at most one request in the cycle it sees port_stop_N = 1 (BUG-7), then none while it stays 1.
 //   The front's room rule equals the tracker's allocation (bank_arrival_allocated_N / bank_drain_allocated).
 // ============================================================================
-// NOTE: body below = optimised, proven-equal version (port_front 5 iterations, kept: iteration 5 = 299.7 ps; comments in the body are partly missing, see CHAT_LOG)
 `ifndef L1D_PORT_FRONT_V
 `define L1D_PORT_FRONT_V
 `default_nettype none
 `include "l1d_defines.vh"
+
 module l1d_port_front #(
-    `L1D_PARAMS,
-    parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH,
-    parameter LINE_PORT_ON     = 0
+    `L1D_PARAMS,                                           // all cache parameters (l1d_defines.vh); LSU_PORTS must be 4
+    parameter PORT_QUEUE_DEPTH = `L1D_PORT_QUEUE_DEPTH,    // default 2: skid places per port
+    parameter LINE_PORT_ON     = 0                         // default 0: 1 = port 3 brings a 512-bit line (VPU, C-20)
 ) (
     clk, rst,
     port_request_valid_0, port_request_valid_1, port_request_valid_2, port_request_valid_3,
@@ -87,73 +87,81 @@ module l1d_port_front #(
 );
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
-    localparam SKID_CNT_W  = $clog2(PORT_QUEUE_DEPTH + 1);
-    localparam STOP_MARGIN = 2;
-    localparam SKID_POP_LAST = 1;
-    localparam SKID_W      = REQ_W + PC_W;
-    localparam NB          = NUM_BANKS;
-    localparam NP          = LSU_PORTS;
-    localparam RANK_W      = 3;
-    localparam NA          = (TRK_ALLOC_MAX < NP) ? TRK_ALLOC_MAX : NP;
-    input  wire                         clk;
-    input  wire                         rst;
-    input  wire                         port_request_valid_0;
-    input  wire                         port_request_valid_1;
-    input  wire                         port_request_valid_2;
-    input  wire                         port_request_valid_3;
-    input  wire [REQ_W-1:0]             port_request_packet_0;
-    input  wire [REQ_W-1:0]             port_request_packet_1;
-    input  wire [REQ_W-1:0]             port_request_packet_2;
-    input  wire [REQ_W-1:0]             port_request_packet_3;
-    input  wire [PC_W-1:0]              port_request_pc_0;
-    input  wire [PC_W-1:0]              port_request_pc_1;
-    input  wire [PC_W-1:0]              port_request_pc_2;
-    input  wire [PC_W-1:0]              port_request_pc_3;
-    output reg                          port_stop_0;
-    output reg                          port_stop_1;
-    output reg                          port_stop_2;
-    output reg                          port_stop_3;
-    input  wire [LINE_W-1:0]            port_request_line_3;
-    input  wire [NB*TRK_CNT_W-1:0]      bank_tracker_free_count;
-    input  wire [NB-1:0]                bank_vec_slot_available;
-    output wire [NB-1:0]                bank_arrival_request_0;
-    output wire [NB-1:0]                bank_arrival_request_1;
-    output wire [NB-1:0]                bank_arrival_request_2;
-    output wire [NB-1:0]                bank_arrival_request_3;
-    output wire [NB-1:0]                bank_drain_request;
-    output wire [NB*REQ_W-1:0]          bank_drain_packet;
-    output wire [NB*PC_W-1:0]           bank_drain_pc;
-    output wire [NB*LINE_W-1:0]         bank_arrival_line_data;
-    input  wire [NB-1:0]                bank_arrival_allocated_0;
-    input  wire [NB-1:0]                bank_arrival_allocated_1;
-    input  wire [NB-1:0]                bank_arrival_allocated_2;
-    input  wire [NB-1:0]                bank_arrival_allocated_3;
-    input  wire [NB-1:0]                bank_drain_allocated;
-    wire [NP-1:0]       port_valid;
-    wire [NP*REQ_W-1:0] port_packet;
-    wire [NP*PC_W-1:0]  port_pc;
-    wire [NP-1:0]       skid_push;
-    wire [NP-1:0]       skid_pop;
-    wire [NP-1:0]       skid_empty;
-    wire [NP-1:0]       skid_full;
-    wire [NP*SKID_W-1:0] skid_head;
-    wire [NP*SKID_CNT_W-1:0] skid_used;
-    wire [LINE_W-1:0]   skid_head_line_3;
+
+    // ---- local constants (value at the defaults) ----
+    localparam SKID_CNT_W  = $clog2(PORT_QUEUE_DEPTH + 1);      // skid fill count 0..2, 2 bits
+    localparam STOP_MARGIN = 2;                                 // stop when fewer than 2 skid places would be free
+    localparam SKID_W      = REQ_W + PC_W;                      // a skid entry: {pc, packet}, 148 + 64 = 212 bits
+    localparam NB          = NUM_BANKS;                         // banks, 4
+    localparam NP          = LSU_PORTS;                         // ports, 4
+    localparam RANK_W      = 3;                                 // rank among this cycle's arrivals for one bank, 0..3, 3 bits
+    localparam NA          = (TRK_ALLOC_MAX < NP) ? TRK_ALLOC_MAX : NP;   // most allocations per bank per cycle, 4
+
+    // ---- ports ----
+    input  wire                         clk;                    // clock: all registers change on its rising edge
+    input  wire                         rst;                    // synchronous reset, active high
+    input  wire                         port_request_valid_0;   // port 0 (load / LR): a request this cycle
+    input  wire                         port_request_valid_1;   // port 1 (load / LR)
+    input  wire                         port_request_valid_2;   // port 2 (store / SC / AMO)
+    input  wire                         port_request_valid_3;   // port 3 (VPU)
+    input  wire [REQ_W-1:0]             port_request_packet_0;  // port 0 request packet, REQ_W = 148 bits
+    input  wire [REQ_W-1:0]             port_request_packet_1;  // port 1 packet, 148 bits
+    input  wire [REQ_W-1:0]             port_request_packet_2;  // port 2 packet, 148 bits
+    input  wire [REQ_W-1:0]             port_request_packet_3;  // port 3 packet, 148 bits
+    input  wire [PC_W-1:0]              port_request_pc_0;      // port 0 instruction PC, PC_W = 64 bits
+    input  wire [PC_W-1:0]              port_request_pc_1;      // port 1 PC, 64 bits
+    input  wire [PC_W-1:0]              port_request_pc_2;      // port 2 PC, 64 bits
+    input  wire [PC_W-1:0]              port_request_pc_3;      // port 3 PC, 64 bits
+    output reg                          port_stop_0;            // port 0: do not send (registered)
+    output reg                          port_stop_1;            // port 1: do not send (registered)
+    output reg                          port_stop_2;            // port 2: do not send (registered)
+    output reg                          port_stop_3;            // port 3: do not send (registered)
+    input  wire [LINE_W-1:0]            port_request_line_3;    // C-20: the line of the VPU request, LINE_W = 512 bits
+    input  wire [NB*TRK_CNT_W-1:0]      bank_tracker_free_count;  // per bank: free tracker entries, 4*4 = 16 bits
+    input  wire [NB-1:0]                bank_vec_slot_available;  // per bank: a vector data place is free, 4 bits
+    output wire [NB-1:0]                bank_arrival_request_0; // per bank: port 0's pins request is for it (ring empty), 4 bits
+    output wire [NB-1:0]                bank_arrival_request_1; // ... port 1
+    output wire [NB-1:0]                bank_arrival_request_2; // ... port 2
+    output wire [NB-1:0]                bank_arrival_request_3; // ... port 3
+    output wire [NB-1:0]                bank_drain_request;     // per bank: its oldest skidded request asks for an entry, 4 bits
+    output wire [NB*REQ_W-1:0]          bank_drain_packet;      // per bank: that request's packet, 4*148 bits
+    output wire [NB*PC_W-1:0]           bank_drain_pc;          // per bank: its PC, 4*64 bits
+    output wire [NB*LINE_W-1:0]         bank_arrival_line_data; // C-20: per bank: the line of an arriving vector store, 4*512 bits
+    input  wire [NB-1:0]                bank_arrival_allocated_0;  // per bank: the tracker took port 0's arrival (check only)
+    input  wire [NB-1:0]                bank_arrival_allocated_1;  // ... port 1 (check only)
+    input  wire [NB-1:0]                bank_arrival_allocated_2;  // ... port 2 (check only)
+    input  wire [NB-1:0]                bank_arrival_allocated_3;  // ... port 3 (check only)
+    input  wire [NB-1:0]                bank_drain_allocated;   // per bank: the tracker took the drained request (check only)
+
+    // ======================================================================
+    // THE SKIDS: one l1d_fifo per port holding {pc, packet} (first-word fall-through), plus the VPU line FIFO beside skid 3
+    // ======================================================================
+    wire [NP-1:0]       port_valid;                             // pins requests, 4 bits
+    wire [NP*REQ_W-1:0] port_packet;                            // pins packets, 4*148 bits
+    wire [NP*PC_W-1:0]  port_pc;                                // pins PCs, 4*64 bits
+    wire [NP-1:0]       skid_push;                              // the pins request was not taken: keep it, 4 bits
+    wire [NP-1:0]       skid_pop;                               // the skid head was drained into its bank, 4 bits
+    wire [NP-1:0]       skid_empty;                             // the skid is empty, 4 bits
+    wire [NP-1:0]       skid_full;                              // the skid is full (check only), 4 bits
+    wire [NP*SKID_W-1:0] skid_head;                             // skid heads {pc, packet}, 4*212 bits
+    wire [NP*SKID_CNT_W-1:0] skid_used;                         // skid places in use, 4*2 bits
+    wire [LINE_W-1:0]   skid_head_line_3;                       // the line of the VPU skid head, 512 bits
     assign port_valid  = {port_request_valid_3, port_request_valid_2, port_request_valid_1, port_request_valid_0};
     assign port_packet = {port_request_packet_3, port_request_packet_2, port_request_packet_1, port_request_packet_0};
     assign port_pc     = {port_request_pc_3, port_request_pc_2, port_request_pc_1, port_request_pc_0};
-    genvar sk;
+    genvar sk;                                                  // loop variable: port whose skid is built
     generate
         for (sk = 0; sk < NP; sk = sk + 1) begin : g_skid
-            wire [SKID_W-1:0] skid_in;
+            wire [SKID_W-1:0] skid_in;                          // {pc, packet} of the pins request, 212 bits
             assign skid_in = {port_pc[sk*PC_W +: PC_W], port_packet[sk*REQ_W +: REQ_W]};
-            l1d_fifo #(.WIDTH(SKID_W), .DEPTH(PORT_QUEUE_DEPTH), .CNT_W(SKID_CNT_W), .POP_LAST(SKID_POP_LAST)) u_skid (
+            l1d_fifo #(.WIDTH(SKID_W), .DEPTH(PORT_QUEUE_DEPTH), .CNT_W(SKID_CNT_W)) u_skid (
                 .clk (clk), .rst (rst), .push (skid_push[sk]), .push_data (skid_in), .pop (skid_pop[sk]),
                 .front_data (skid_head[sk*SKID_W +: SKID_W]), .empty (skid_empty[sk]), .full (skid_full[sk]),
                 .used_slots (skid_used[sk*SKID_CNT_W +: SKID_CNT_W]), .free_slots (), .free_slots_next ()
             );
         end
     endgenerate
+    // C-20: the VPU line waits in a second FIFO that moves exactly with the port 3 skid
     generate
         if (LINE_PORT_ON != 0) begin : g_skid_line
             l1d_fifo #(.WIDTH(LINE_W), .DEPTH(PORT_QUEUE_DEPTH), .CNT_W(SKID_CNT_W)) u_skid_line_3 (
@@ -164,11 +172,13 @@ module l1d_port_front #(
             assign skid_head_line_3 = {LINE_W{1'b0}};
         end
     endgenerate
-    wire [NP*BANK_W-1:0] pin_bank;
-    wire [NP*BANK_W-1:0] head_bank;
-    wire [NP-1:0]        pin_line_store;
-    wire [NP-1:0]        head_line_store;
-    genvar bk_p;
+
+    // ---- the bank of every pins request and every skid head: the bank bits of the address (address[7:6]) ----
+    wire [NP*BANK_W-1:0] pin_bank;                              // 4*2 bits
+    wire [NP*BANK_W-1:0] head_bank;                             // 4*2 bits
+    wire [NP-1:0]        pin_line_store;                        // the pins request is a vector store (needs a data place), 4 bits
+    wire [NP-1:0]        head_line_store;                       // the skid head is a vector store, 4 bits
+    genvar bk_p;                                                // loop variable: port
     generate
         for (bk_p = 0; bk_p < NP; bk_p = bk_p + 1) begin : g_bank_of
             assign pin_bank[bk_p*BANK_W +: BANK_W]  = port_packet[bk_p*REQ_W + REQ_ADDR_LSB + BANK_LSB +: BANK_W];
@@ -177,125 +187,49 @@ module l1d_port_front #(
             assign head_line_store[bk_p] = skid_head[bk_p*SKID_W + REQ_LINE_BIT] & skid_head[bk_p*SKID_W + REQ_RDWR_BIT];
         end
     endgenerate
-    wire [NB*NP-1:0] pin_for_bank;
-    wire [NB*NP-1:0] arrival_request;
-    wire [NB*NP-1:0] alloc_pred;
-    wire [NB*NP-1:0] head_port;
-    wire [NB-1:0]    ring_empty_q;
-    wire [NB-1:0]    drain_alloc_pred;
-    // drain decided per port before the ring-head select (head_port_onehot is one-hot or zero, so the head select is the last AND-OR)
-    wire [NB*NP-1:0] drain_port_ready; // NB*NP = 16 bits: port p's skid head could be drained into bank b now (head select not applied)
-    wire [NB*NP-1:0] drain_alloc_port; // NB*NP = 16 bits: bank b drains port p this cycle (ring head AND ready)
-    wire [NB*NP-1:0] alloc_if_ring_empty; // NB*NP = 16 bits: port p gets an entry of bank b if b's ring is empty
-    // number of ones of a constant port pattern (elaboration only: builds the 'at least k lower ports' threshold terms)
-    function integer ones_in_pattern;
-        input integer pattern_value;
-        integer       pattern_bit;
-        begin
-            ones_in_pattern = 0;
-            for (pattern_bit = 0; pattern_bit < NP; pattern_bit = pattern_bit + 1)
-                ones_in_pattern = ones_in_pattern + ((pattern_value >> pattern_bit) & 1);
-        end
-    endfunction
-    genvar b;
+
+    // ======================================================================
+    // PER BANK: the room rule (the same as the tracker's), the ring, the drain
+    // ======================================================================
+    wire [NB*NP-1:0] pin_for_bank;                              // [b*NP + p]: port p's pins request is for bank b, 16 bits
+    wire [NB*NP-1:0] arrival_request;                           // ... and bank b's ring is empty, 16 bits
+    wire [NB*NP-1:0] alloc_pred;                                // ... and the tracker takes it (the front's copy of the room rule), 16 bits
+    wire [NB*NP-1:0] head_port;                                 // [b*NP + p]: port p's skid head is bank b's ring head, 16 bits
+    wire [NB-1:0]    ring_empty_q;                              // per bank: nothing waits, 4 bits
+    wire [NB-1:0]    drain_alloc_pred;                          // per bank: the drained request is taken this cycle, 4 bits
+    genvar b;                                                   // loop variable: bank
     generate
         for (b = 0; b < NB; b = b + 1) begin : g_bank
-            wire [TRK_CNT_W-1:0] free_count;
-            wire                 vec_ok;
-            wire [NP-1:0]        eligible_if_empty; // NP = 4 bits: port p may take an entry if the ring is empty (pin for bank, vec ok)
-            wire                 free_nonzero;      // at least one tracker entry free
-            reg  [NP:1]          free_at_least;
-            reg  [NP-1:0]        alloc_here;
-            reg  [NP-1:0]        alloc_if_empty;    // NP = 4 bits: the room rule without ring_empty_q (alloc_here = this AND ring_empty_q)
-            wire [NP-1:0]        join_here;
-            wire [NP-1:0]        head_port_onehot_b;
+            // ---- arrivals of this bank: which ports, their ranks, the room rule ----
+            wire [TRK_CNT_W-1:0] free_count;                    // free tracker entries of this bank, 4 bits
+            wire                 vec_ok;                        // a vector data place is free in this bank
+            wire [NP-1:0]        eligible;                      // pins requests for this bank that may take an entry (place ok), 4 bits
+            reg  [RANK_W-1:0]    rank [0:NP-1];                 // rank of each port among the eligible ones, 4 x 3 bits
+            reg  [NP-1:0]        alloc_here;                    // the tracker takes the port's request, 4 bits
+            wire [NP-1:0]        join_here;                     // the port's request waits (joins the ring), 4 bits
+            wire [NP-1:0]        head_port_onehot_b;            // port of the oldest waiting request of this bank, one-hot, 4 bits
             assign free_count = bank_tracker_free_count[b*TRK_CNT_W +: TRK_CNT_W];
             assign vec_ok     = bank_vec_slot_available[b];
-            assign free_nonzero = (free_count != {TRK_CNT_W{1'b0}});
-            genvar p;
+            genvar p;                                           // loop variable: port
             for (p = 0; p < NP; p = p + 1) begin : g_port
                 assign pin_for_bank[b*NP + p]    = port_valid[p] && (pin_bank[p*BANK_W +: BANK_W] == b);
                 assign arrival_request[b*NP + p] = pin_for_bank[b*NP + p] && ring_empty_q[b];
-                assign eligible_if_empty[p]      = pin_for_bank[b*NP + p] && (!pin_line_store[p] || vec_ok);
-                // ready to drain: head present, for this bank, a free entry, and a vec slot for a line store (flops and early pins only)
-                assign drain_port_ready[b*NP + p] = !skid_empty[p] && (head_bank[p*BANK_W +: BANK_W] == b) && free_nonzero &&
-                                                    (!head_line_store[p] || vec_ok);
+                assign eligible[p]               = arrival_request[b*NP + p] && (!pin_line_store[p] || vec_ok);
                 assign alloc_pred[b*NP + p]      = alloc_here[p];
-                assign alloc_if_ring_empty[b*NP + p] = alloc_if_empty[p];
                 assign join_here[p]              = pin_for_bank[b*NP + p] && !alloc_here[p];
                 assign head_port[b*NP + p]       = head_port_onehot_b[p];
-                assign drain_alloc_port[b*NP + p] = head_port[b*NP + p] && drain_port_ready[b*NP + p]; // ring head is the last AND
             end
-            // Join thresholds for the ring, straight from the pins and the room rule (not from join_here):
-            // in the ports 0 .. k-1, P pins are for this bank, L of them are eligible_if_empty and min(L, G) of those
-            // get an entry (G = min(free_count, NA)), so with an empty ring joins = P - min(L, G), else joins = P.
-            // joins >= m  <=>  OR over a of (P >= m + a) AND (L < a+1 OR G < a+1): monotone AND/OR, no exact count,
-            // and ring_empty_q is the last select.
-            reg  [NP*NP-1:0] join_prefix_at_least; // NP*NP = 16 bits: bit (k-1)*NP + (m-1): at least m of the ports 0 .. k-1 join
-            reg              pins_at_least;        // at least jp_m + jp_a of the ports 0 .. jp_k-1 have a pin for this bank
-            reg              pins_at_least_m;      // at least jp_m of the ports 0 .. jp_k-1 have a pin for this bank
-            reg              eligible_at_least;    // at least jp_a + 1 of the ports 0 .. jp_k-1 are eligible_if_empty
-            reg              joins_if_empty;       // at least jp_m of the ports 0 .. jp_k-1 join when the ring is empty
-            integer          jp_k;
-            integer          jp_m;
-            integer          jp_a;
-            integer          jp_pattern;
-            integer rk_p;
-            integer rk_k;
-            integer rk_pattern;
-            reg     lower_at_least; // at least rk_k of the lower ports 0 .. rk_p-1 are eligible_if_empty (monotone AND-OR)
-            // port p is allocated when the ring is empty, it is eligible, at least one entry is free, and for every k >= 1:
-            // (at least k lower ports eligible) implies (at least k+1 entries free, and k < NA).
-            // Threshold implications only (no exact-count decode, no XOR). When the ring is not empty no port is eligible
-            // and alloc_here is 0, so the rule is built as alloc_if_empty and ring_empty_q is ANDed last.
+            integer rk_p;                                       // loop variable: port whose rank is built
+            integer rk_l;                                       // loop variable: a lower port
             always @* begin
-                for (rk_k = 1; rk_k <= NP; rk_k = rk_k + 1)
-                    free_at_least[rk_k] = (free_count >= rk_k);
-                lower_at_least = 1'b0;
                 for (rk_p = 0; rk_p < NP; rk_p = rk_p + 1) begin
-                    alloc_if_empty[rk_p] = eligible_if_empty[rk_p] & free_at_least[1] & (NA > 0);
-                    for (rk_k = 1; rk_k < NP; rk_k = rk_k + 1)
-                        if (rk_k <= rk_p) begin
-                            lower_at_least = 1'b0;
-                            for (rk_pattern = 0; rk_pattern < (1 << NP); rk_pattern = rk_pattern + 1)
-                                if ((rk_pattern >> rk_p) == 0 && ones_in_pattern(rk_pattern) == rk_k)
-                                    lower_at_least = lower_at_least | ((eligible_if_empty & rk_pattern) == rk_pattern);
-                            alloc_if_empty[rk_p] = alloc_if_empty[rk_p] & (!lower_at_least | (free_at_least[rk_k + 1] & (rk_k < NA)));
-                        end
-                    alloc_here[rk_p] = alloc_if_empty[rk_p] & ring_empty_q[b];
+                    rank[rk_p] = {RANK_W{1'b0}};
+                    for (rk_l = 0; rk_l < rk_p; rk_l = rk_l + 1)
+                        rank[rk_p] = rank[rk_p] + {{(RANK_W-1){1'b0}}, eligible[rk_l]};
+                    alloc_here[rk_p] = eligible[rk_p] && ({{(TRK_CNT_W-RANK_W){1'b0}}, rank[rk_p]} < free_count) && (rank[rk_p] < NA);
                 end
-                // join thresholds of every port prefix (see above)
-                join_prefix_at_least = {(NP*NP){1'b0}};
-                pins_at_least     = 1'b0;
-                pins_at_least_m   = 1'b0;
-                eligible_at_least = 1'b0;
-                joins_if_empty    = 1'b0;
-                for (jp_k = 1; jp_k <= NP; jp_k = jp_k + 1)
-                    for (jp_m = 1; jp_m <= NP; jp_m = jp_m + 1)
-                        if (jp_m <= jp_k) begin
-                            pins_at_least_m = 1'b0;
-                            for (jp_pattern = 0; jp_pattern < (1 << NP); jp_pattern = jp_pattern + 1)
-                                if ((jp_pattern >> jp_k) == 0 && ones_in_pattern(jp_pattern) == jp_m)
-                                    pins_at_least_m = pins_at_least_m |
-                                        ((pin_for_bank[b*NP +: NP] & jp_pattern) == jp_pattern);
-                            joins_if_empty = 1'b0;
-                            for (jp_a = 0; jp_a <= jp_k - jp_m; jp_a = jp_a + 1) begin
-                                pins_at_least     = 1'b0;
-                                eligible_at_least = 1'b0;
-                                for (jp_pattern = 0; jp_pattern < (1 << NP); jp_pattern = jp_pattern + 1)
-                                    if ((jp_pattern >> jp_k) == 0) begin
-                                        if (ones_in_pattern(jp_pattern) == jp_m + jp_a)
-                                            pins_at_least = pins_at_least |
-                                                ((pin_for_bank[b*NP +: NP] & jp_pattern) == jp_pattern);
-                                        if (ones_in_pattern(jp_pattern) == jp_a + 1)
-                                            eligible_at_least = eligible_at_least | ((eligible_if_empty & jp_pattern) == jp_pattern);
-                                    end
-                                joins_if_empty = joins_if_empty | (pins_at_least &
-                                    (!eligible_at_least | !(free_at_least[jp_a + 1] & (jp_a + 1 <= NA))));
-                            end
-                            join_prefix_at_least[(jp_k-1)*NP + jp_m - 1] = ring_empty_q[b] ? joins_if_empty : pins_at_least_m;
-                        end
             end
+            // ---- the ring of skidded requests ----
             l1d_bank_order #(`L1D_PARAMS_PASS, .BANK_ID(b), .PORT_QUEUE_DEPTH(PORT_QUEUE_DEPTH)) u_order (
                 .clk              (clk),
                 .rst              (rst),
@@ -303,33 +237,35 @@ module l1d_port_front #(
                 .join_1           (join_here[1]),
                 .join_2           (join_here[2]),
                 .join_3           (join_here[3]),
-                .join_prefix_at_least (join_prefix_at_least),
                 .pop              (drain_alloc_pred[b]),
-                .drain_ready_port (drain_port_ready[b*NP +: NP]),
                 .head_port_onehot (head_port_onehot_b),
                 .ring_empty_q     (ring_empty_q[b])
             );
-            reg  [SKID_W-1:0] drain_entry;
-            reg               drain_head_ok;
-            integer dr_p;
+            // ---- the drain: the ring head's skid head, when it is for this bank (it may still be behind an older request of the
+            //      same port for another bank) and the bank has room (a vector store also needs a data place) ----
+            reg  [SKID_W-1:0] drain_entry;                      // the skid head of the ring-head port, 212 bits
+            reg               drain_head_ok;                    // that skid head exists and is for this bank
+            reg               drain_line_store;                 // it is a vector store
+            integer dr_p;                                       // loop variable: port
             always @* begin
                 drain_entry      = {SKID_W{1'b0}};
                 drain_head_ok    = 1'b0;
+                drain_line_store = 1'b0;
                 for (dr_p = 0; dr_p < NP; dr_p = dr_p + 1) begin
                     drain_entry      = drain_entry | ({SKID_W{head_port_onehot_b[dr_p]}} & skid_head[dr_p*SKID_W +: SKID_W]);
                     drain_head_ok    = drain_head_ok | (head_port_onehot_b[dr_p] && !skid_empty[dr_p] && (head_bank[dr_p*BANK_W +: BANK_W] == b));
+                    drain_line_store = drain_line_store | (head_port_onehot_b[dr_p] & head_line_store[dr_p]);
                 end
             end
             assign bank_drain_request[b] = !ring_empty_q[b] && drain_head_ok;
-            // = bank_drain_request && free entry && (!line store of the head || vec_ok): head_port_onehot_b is one-hot or zero
-            // and already holds !ring_empty_q, so the per-port ready flags are ORed after the head select
-            assign drain_alloc_pred[b]   = |drain_alloc_port[b*NP +: NP];
+            assign drain_alloc_pred[b]   = bank_drain_request[b] && (free_count != {TRK_CNT_W{1'b0}}) && (!drain_line_store || vec_ok);
             assign bank_drain_packet[b*REQ_W +: REQ_W] = drain_entry[0 +: REQ_W];
             assign bank_drain_pc[b*PC_W +: PC_W]       = drain_entry[REQ_W +: PC_W];
+            // only the VPU port (3) has a line: the pins line while the ring is empty, else the line of the VPU skid head
             assign bank_arrival_line_data[b*LINE_W +: LINE_W] = ring_empty_q[b] ? port_request_line_3 : skid_head_line_3;
         end
     endgenerate
-    genvar out_b;
+    genvar out_b;                                               // loop variable: bank
     generate
         for (out_b = 0; out_b < NB; out_b = out_b + 1) begin : g_out
             assign bank_arrival_request_0[out_b] = arrival_request[out_b*NP + 0];
@@ -338,45 +274,38 @@ module l1d_port_front #(
             assign bank_arrival_request_3[out_b] = arrival_request[out_b*NP + 3];
         end
     endgenerate
-    reg  [NP-1:0] port_allocated;
-    reg  [NP-1:0] port_drained;
-    integer pp;
-    integer pb;
+
+    // ======================================================================
+    // PER PORT: push / pop of the skid (OR over the banks: a port's request goes to exactly one bank) and the stop
+    // ======================================================================
+    reg  [NP-1:0] port_allocated;                               // the pins request was taken by its bank, 4 bits
+    reg  [NP-1:0] port_drained;                                 // the skid head was drained into its bank, 4 bits
+    integer pp;                                                 // loop variable: port
+    integer pb;                                                 // loop variable: bank
     always @* begin
         for (pp = 0; pp < NP; pp = pp + 1) begin
             port_allocated[pp] = 1'b0;
             port_drained[pp]   = 1'b0;
             for (pb = 0; pb < NB; pb = pb + 1) begin
-                port_allocated[pp] = port_allocated[pp] | alloc_if_ring_empty[pb*NP + pp];
-                port_drained[pp]   = port_drained[pp]   | drain_alloc_port[pb*NP + pp]; // = drain_alloc_pred & head_port (one-hot head)
+                port_allocated[pp] = port_allocated[pp] | alloc_pred[pb*NP + pp];
+                port_drained[pp]   = port_drained[pp]   | (drain_alloc_pred[pb] & head_port[pb*NP + pp]);
             end
-            // = OR over banks of alloc_here: a pin is for one bank only, so the ring_empty_q of that bank (picked by the pin's
-            // bank bits, in parallel with the room rule) is the last AND before the skid push
-            port_allocated[pp] = port_allocated[pp] & ring_empty_q[pin_bank[pp*BANK_W +: BANK_W]];
         end
     end
-    assign skid_push = port_valid & ~port_allocated;
-    assign skid_pop  = port_drained;
+    assign skid_push = port_valid & ~port_allocated;            // a pins request that was not taken waits in its skid
+    assign skid_pop  = port_drained;                            // a drained skid head leaves
+
+    // stop: fewer than STOP_MARGIN places would be free after this cycle (used + push - pop > DEPTH - STOP_MARGIN). Both push and
+    // pop come from flops and pins (no late grant any more): one small add and a compare into the stop flop.
+    // Example: skid empty, pins request not taken: 0 + 1 - 0 = 1, 1 + 2 > 2 -> stop. Taken: no stop.
     function stop_after;
-        input [SKID_CNT_W-1:0] used_now;
-        input                  push_now;
-        input                  pop_now;
-        reg   [SKID_CNT_W:0]   used_next;
-        reg   [SKID_CNT_W:0]   used_if_push;
-        reg   [SKID_CNT_W:0]   used_if_pop;
-        reg                    stop_if_hold;
-        reg                    stop_if_push;
-        reg                    stop_if_pop;
+        input [SKID_CNT_W-1:0] used_now;                        // skid places in use now, 2 bits
+        input                  push_now;                        // a pins request enters the skid
+        input                  pop_now;                         // the skid head leaves
+        reg   [SKID_CNT_W:0]   used_next;                       // skid places in use after this cycle, 3 bits
         begin
-            used_next    = {1'b0, used_now};
-            used_if_push = used_next + {{SKID_CNT_W{1'b0}}, 1'b1};
-            used_if_pop  = used_next - {{SKID_CNT_W{1'b0}}, 1'b1};
-            stop_if_hold = (used_next    + STOP_MARGIN > PORT_QUEUE_DEPTH);
-            stop_if_push = (used_if_push + STOP_MARGIN > PORT_QUEUE_DEPTH);
-            stop_if_pop  = (used_if_pop  + STOP_MARGIN > PORT_QUEUE_DEPTH);
-            // pop is the last select (no push == pop compare): hold if both or neither
-            if (pop_now) stop_after = push_now ? stop_if_hold : stop_if_pop;
-            else         stop_after = push_now ? stop_if_push : stop_if_hold;
+            used_next  = {1'b0, used_now} + {{SKID_CNT_W{1'b0}}, push_now} - {{SKID_CNT_W{1'b0}}, pop_now};
+            stop_after = (used_next + STOP_MARGIN > PORT_QUEUE_DEPTH);
         end
     endfunction
     always @(posedge clk) begin : stop_proc
@@ -391,17 +320,21 @@ module l1d_port_front #(
             port_stop_2 <= stop_after(skid_used[2*SKID_CNT_W +: SKID_CNT_W], skid_push[2], skid_pop[2]);
             port_stop_3 <= stop_after(skid_used[3*SKID_CNT_W +: SKID_CNT_W], skid_push[3], skid_pop[3]);
         end
-    end
+    end // always stop_proc
+
+    // ======================================================================
+    // SIMULATION CHECKS (always on): exactly 4 ports; the stop rule (BUG-7); the front's room rule equals the trackers'
+    // ======================================================================
 `ifndef SYNTHESIS
-    wire [NB*NP-1:0] bank_allocated_flat;
-    genvar ck_b;
+    wire [NB*NP-1:0] bank_allocated_flat;                       // the trackers' answers, 16 bits
+    genvar ck_b;                                                // loop variable: bank
     generate
         for (ck_b = 0; ck_b < NB; ck_b = ck_b + 1) begin : g_ck
             assign bank_allocated_flat[ck_b*NP +: NP] = {bank_arrival_allocated_3[ck_b], bank_arrival_allocated_2[ck_b],
                                                          bank_arrival_allocated_1[ck_b], bank_arrival_allocated_0[ck_b]};
         end
     endgenerate
-    integer ck_p;
+    integer ck_p;                                               // loop variable: port
     initial if (LSU_PORTS != 4)
         $display("L1D FRONT ERROR: LSU_PORTS = %0d, the named ports _0 .. _3 need LSU_PORTS = 4", LSU_PORTS);
     always @(posedge clk) begin
@@ -417,5 +350,6 @@ module l1d_port_front #(
     end
 `endif
 endmodule
+
 `default_nettype wire
 `endif

@@ -53,11 +53,7 @@ module l1d_ecc_syn #(
     assign syndrome_nonzero = |syndrome;
     // the overall parity of the stored word: the recomputed parity (over data and recomputed Hamming bits) against the stored one,
     // plus the Hamming bits' own disagreement (a flipped stored Hamming bit shows in the syndrome and in the parity)
-    // tm_opt iter 1 (2026-11-19): same value, written as the parity of all DATA_W + HAM_W + 1 = 72 stored bits. The old form
-    // recomputed[HAM_W] ^ check[HAM_W] ^ (^syndrome) holds ^recomputed[HAM_W-1:0] twice (once inside recomputed[HAM_W],
-    // once inside ^syndrome); the two copies cancel, but synthesis kept them, so the path ran data -> Hamming bits ->
-    // parity (18 XOR levels in series, 401 ps). A direct 72-input tree is ceil(log2 72) = 7 XOR2 levels.
-    assign parity_odd    = (^data) ^ (^check);              // parity of all 72 stored bits (data and check bits)
+    assign parity_odd    = recomputed[HAM_W] ^ check[HAM_W] ^ (^syndrome);
     assign correctable   = parity_odd;                     // one flipped bit (data, Hamming bit or the parity bit itself)
     assign uncorrectable = syndrome_nonzero & ~parity_odd; // two flipped bits
 

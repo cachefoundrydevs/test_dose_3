@@ -99,6 +99,9 @@
 //   s2_write_way                      out  2      the way of the S2 write (the hit way, or the erroneous tag's way)
 //   s2_write_way_onehot               out  4      (CB-3) the same way, one-hot (SRAM write enables in l1d_bank_r)
 //   s2_way_onehot_copy                in   48     (CB-3) 12 registered one-hot copies of s2_way (l1d_bank_s1)
+//   s2_kind_onehot_copy               in   4      (CB-4c) registered: bit k = (s2_valid && s2_kind == k) (l1d_bank_s1)
+//   s2_live_copy                      in   10     (CB-4c) registered copies of s2_live: 0..7 granule write select,
+//                                                 8 decision and data ECC flags, 9 tag fix / store write / AMO / training
 //   s2_uniq, s2_amo1, s2_alloc_is_write  out 1    the request needs E/M; is a one-request AMO; allocates as a write
 //   s2_alloc_no_response              out  1      the MSHR fetches the line WITHOUT answering (AMO, vector or prefetch miss)
 //   s2_alloc_is_prefetch              out  1      the MSHR allocation is a prefetch (counted against PF_MSHR_MAX)
@@ -147,6 +150,7 @@ module l1d_bank_s2 #(
     clk, rst,
     s2_valid, s2_kind, s2_seat, s2_req, s2_mid, s2_line, s2_sinv,
     s2_hit, s2_scfail, s2_snp_hit, s2_hand, s2_way, s2_way_onehot_copy, s2_held, s2_swap, s2_kill,
+    s2_kind_onehot_copy, s2_live_copy,
     s2_words, s2_lines, s2_tags, s2_st_be, s2_st_din,
     s2_wbpend, s2_vvalid, s2_vdirty, s2_vshared, s2_vline, s2_slot,
     s2_raw_hit, s2_pf_hit, s2_tag_blocked,
@@ -190,6 +194,9 @@ module l1d_bank_s2 #(
     localparam COPY_ECC      = GRANULES + 1;                   // copy 9: syndromes and fix flags of the hit way
     localparam COPY_CTRL     = GRANULES + 2;                   // copy 10: ECC fix / UE decision, write way
     localparam COPY_AMO      = GRANULES + 3;                   // copy 11: the AMO arms (hit_way_onehot)
+    // CB-4c: the copies of s2_live from l1d_bank_s1 (each = s2_live in every cycle): copy g < GRANULES = the
+    // write select of granule g; copy GRANULES (8) = decision tree and data ECC flags; GRANULES + 1 (9) = the rest
+    localparam S2_LIVE_COPIES = GRANULES + 2;                  // 10 (same value in l1d_bank_s1, l1d_bank)
 
     // ======================================================================
     // Ports
@@ -197,8 +204,8 @@ module l1d_bank_s2 #(
     input  wire                        clk;                      // clock: all registers change on its rising edge
     input  wire                        rst;                      // synchronous reset, active high
     // ---- S2 registers (from l1d_bank_s1) ----
-    input  wire                        s2_valid;                 // stage S2 holds an operation
-    input  wire [1:0]                  s2_kind;                  // its kind (K_LSU, K_REFILL, K_MAINT, K_SNOOP)
+    input  wire                        s2_valid;                 // stage S2 holds an operation (CB-4c: debug and check only)
+    input  wire [1:0]                  s2_kind;                  // its kind (K_LSU, K_REFILL, K_MAINT, K_SNOOP) (CB-4c: debug and check only)
     input  wire [SEAT_W-1:0]           s2_seat;                  // its tracker entry, SEAT_W = 3 bits
     input  wire [REQ_W-1:0]            s2_req;                   // its request packet, REQ_W = 148 bits
     input  wire [MSHR_ID_W-1:0]        s2_mid;                   // MSHR entry of the refill token (debug messages only), 3 bits
@@ -213,6 +220,8 @@ module l1d_bank_s2 #(
     input  wire                        s2_held;                  // the refill / maintenance token was held in S1
     input  wire                        s2_swap;                  // the refill is a swap back from the victim cache
     input  wire                        s2_kill;                  // the fresh request was cancelled in R (ghost)
+    input  wire [K_SNOOP:K_LSU]        s2_kind_onehot_copy;      // CB-4c: bit k = (s2_valid && s2_kind == k), flops of u_s1, K_SNOOP:K_LSU = 4 bits
+    input  wire [S2_LIVE_COPIES-1:0]   s2_live_copy;             // CB-4c: each bit = s2_live (flops of u_s1), S2_LIVE_COPIES = 10 bits
     input  wire [WAYS*WRITE_DATA_WIDTH-1:0] s2_words;            // the load word of every way, WAYS*64 = 256 bits
     input  wire [WAYS*LINE_W-1:0]      s2_lines;                 // the lines of all ways, WAYS*LINE_W = 2048 bits
     input  wire [WAYS*TAG_W-1:0]       s2_tags;                  // the raw tags of all ways, WAYS*TAG_W = 200 bits
@@ -344,12 +353,25 @@ module l1d_bank_s2 #(
     wire [IDX_BITS-1:0]         s2_idx;                          // ROB index, 3 bits
     wire [PORT_W-1:0]           s2_port;                         // request port, PORT_W = 2 bits (goes into the answer)
     wire [WRITE_DATA_WIDTH-1:0] s2_wdata;                        // store data / AMO operand, 64 bits
-    assign s2_lsu     = s2_valid && (s2_kind == K_LSU);
+    // TIMING OPT (CB-4c, 2026-11-26): s2_lsu and s2_live come from flop copies made in l1d_bank_s1, not from a
+    // decode of the binary s2_valid / s2_kind flops. CB-3 ASAP7 run: s2_kind[0] (fan-out 7) -> INV -> OR5 (the
+    // "not live" decode, 108.1 ps) -> OR5 (142.5 ps) -> decision -> lsu_response_valid -> merger FIFO, l1d_top
+    // -343.4 ps; the same decode fed the store write select (l1d_bank -319.3 ps).
+    // Same values in every cycle (proof at onehot_copy_proc in l1d_bank_s1; checked below, "ERROR CB-4c"):
+    //   s2_kind_onehot_copy[k] = s2_valid && (s2_kind == k)
+    //   s2_live_copy[c]        = s2_valid && (s2_kind == K_LSU) && !s2_pf && !s2_kill   (the old s2_live)
+    // Copy use: s2_live (this wire) = copy GRANULES (8): decision tree and data ECC flags (live_cacheable_hit);
+    // copy GRANULES + 1 (9): ecc_tag_blk, store_hit_wr, s3_amo_v, train_now; copy g < GRANULES: granule g's
+    // write select. s2_lsu (kind bit K_LSU): s2_pf_op, the ghost branch, s2_cpu.
+    // Worked example: a load of port 1 in S2, not a prefetch, not cancelled: kind copy = 0001, every live copy = 1
+    //   -> s2_lsu = 1, s2_cpu = 1, s2_live = 1. The same load as a ghost (s2_kill = 1): kind copy 0001, live
+    //   copies 0 -> s2_lsu = 1, s2_cpu = 1, s2_live = 0 (old: 1 && !0 && !1 = 0).
+    assign s2_lsu     = s2_kind_onehot_copy[K_LSU];           // CB-4c: was s2_valid && (s2_kind == K_LSU)
     assign s2_pf      = s2_req[REQ_PF_BIT];
     assign s2_pfu     = s2_req[REQ_PFU_BIT];
     assign s2_pf_op   = s2_lsu && s2_pf;
     assign s2_cpu     = s2_lsu && !s2_pf;
-    assign s2_live    = s2_cpu && !s2_kill;
+    assign s2_live    = s2_live_copy[GRANULES];              // CB-4c: decision copy (8); was s2_cpu && !s2_kill
     assign s2_line_op = s2_req[REQ_LINE_BIT];
     assign s2_cache   = s2_req[REQ_CACHE_BIT];
     assign s2_store   = (s2_req[REQ_RDWR_BIT] == OP_WRITE);
@@ -374,9 +396,13 @@ module l1d_bank_s2 #(
 
     // the operation in S2 is a refill that really installs (a held token does not)
     wire s2_snp;                                                 // a snoop is in S2
-    assign s2_refill = s2_valid && (s2_kind == K_REFILL) && !s2_held;
-    assign s2_maint  = s2_valid && (s2_kind == K_MAINT);
-    assign s2_snp    = s2_valid && (s2_kind == K_SNOOP);
+    // TIMING OPT (CB-4c, 2026-11-26): from the one-hot kind copy (bit k = s2_valid && s2_kind == k), no decode.
+    // !s2_held stays a separate AND: its D input (r_held <- vc_al_ok of the victim cache) is late, so it is
+    // not folded into a copy. Worked example: a refill token that was not held: copy = 0010, s2_held = 0 ->
+    // s2_refill = 1, s2_maint = 0, s2_snp = 0 (old: 1 && (1 == 1) && 1).
+    assign s2_refill = s2_kind_onehot_copy[K_REFILL] && !s2_held;   // was s2_valid && (s2_kind == K_REFILL) && !s2_held
+    assign s2_maint  = s2_kind_onehot_copy[K_MAINT];                // was s2_valid && (s2_kind == K_MAINT)
+    assign s2_snp    = s2_kind_onehot_copy[K_SNOOP];                // was s2_valid && (s2_kind == K_SNOOP)
 
     // cache_v2_bank_pipe: the line of the way used in S1 (hit way, victim way or maintenance way), from the registered lines:
     // the victim for the victim cache, the snoop answer data and the line the ECC scrub corrects
@@ -493,7 +519,9 @@ module l1d_bank_s2 #(
     // CB-3 part c: the control copy of s2_way (a few loads), not hit_way_onehot (now the AMO copy)
     assign ecc_data_ue    = |(s2_way_onehot_copy[COPY_CTRL*WAYS +: WAYS] & way_data_ue_flag);
     assign ecc_data_fix   = |(s2_way_onehot_copy[COPY_CTRL*WAYS +: WAYS] & way_data_fix_flag);
-    assign ecc_tag_blk    = s2_live && s2_tag_blocked;
+    // TIMING OPT (CB-4c): copy GRANULES + 1 (9) of s2_live (= s2_live in every cycle), so the decision copy keeps 2
+    // loads. Example: a live load blocked by a tag CE in S1: copy 9 = 1, s2_tag_blocked = 1 -> 1 (as before).
+    assign ecc_tag_blk    = s2_live_copy[GRANULES + 1] && s2_tag_blocked;
     assign ecc_tag_fix_wr = ecc_tag_blk && tag_fix_valid;
     assign ecc_tag_ue     = ecc_tag_blk && !tag_fix_valid && tag_ue_any;
     // the corrected line (8 x l1d_ecc_fix on the hit way's line) and the corrected tag
@@ -584,7 +612,12 @@ module l1d_bank_s2 #(
             // back to READY (ACT_NONE with s2_kill, read by the tracker) and is booked again by the normal rules (rule F-0)
             act_valid = 1'b1;
             act_code  = ACT_NONE;
-        end else if (s2_lsu) begin
+        end else if (s2_live) begin
+            // TIMING OPT (CB-4c, 2026-11-26): was "else if (s2_lsu)". The two branches above were not taken, so
+            // !(s2_lsu && s2_pf) and !(s2_lsu && s2_kill): here s2_lsu = s2_lsu && !s2_pf && !s2_kill = s2_live,
+            // and s2_live is the decision flop copy (8): no decode in front of the tree.
+            // Example: a cacheable load hit, not a ghost, not a prefetch: s2_live = 1 -> this branch (as before);
+            //   a prefetch takes the first branch, a ghost the second (s2_live = 0 for both).
             if (s2_tag_blocked) begin
                 // cache_v6: a tag ECC error in a valid way of the set made the hit / miss decision unreliable: S1 blocked the
                 // request; the tag is corrected and written now (ecc_tag_fix_wr) and the request is re-issued from its entry
@@ -679,7 +712,9 @@ module l1d_bank_s2 #(
     // The S2 write port: a store hit's merged line, the ECC-corrected line, the refill line; the tag (refill or fix)
     // ======================================================================
     wire store_hit_wr;                                           // a served store-class hit (not an AMO, not scrubbed) writes its line
-    assign store_hit_wr  = s2_live && s2_hit && s2_store && !s2_amo1 && !ecc_data_fix;
+    // TIMING OPT (CB-4c): copy GRANULES + 1 (9) of s2_live (= s2_live in every cycle). Example: a store hit in
+    // way 1 without CE: copy 9 = 1, ecc_data_fix = 0 -> store_hit_wr = 1, s2_st_wr = 1 (as before).
+    assign store_hit_wr  = s2_live_copy[GRANULES + 1] && s2_hit && s2_store && !s2_amo1 && !ecc_data_fix;
     assign s2_st_wr      = store_hit_wr || ecc_data_fix;
     assign s2_tag_fix_wr = ecc_tag_fix_wr;
     assign s2_write_way  = ecc_tag_fix_wr ? tag_fix_way : s2_way;
@@ -698,10 +733,20 @@ module l1d_bank_s2 #(
     genvar write_granule_idx;                                    // loop variable: granule
     generate
         for (write_granule_idx = 0; write_granule_idx < GRANULES; write_granule_idx = write_granule_idx + 1) begin : g_write_granule
+            // TIMING OPT (CB-4c, 2026-11-26): granule g reads its own live copy g (fan-out 2) in BOTH terms, so the
+            // fix leg and the store leg of granule g start at the same flop (synthesis can share the live && hit
+            // part) and no granule waits for the decode or the buffer tree of s2_live. Old fix term:
+            // |(copy g & way_data_fix_flag) with way_data_fix_flag = {WAYS{s2_live && s2_cache && s2_hit}} &
+            // s2_data_ce & ~s2_data_ue; the live && cache && hit factor is common to every way, so it moves out of
+            // the AND-OR, and live copy g (= s2_live) replaces s2_live: the same value in every cycle.
+            // Worked example: a store hit in way 1 with a CE in way 1: live copy g = 1, s2_cache = 1, s2_hit = 1,
+            //   copy g & ce & ~ue = 0010 -> write_fix_by_granule[g] = 1, write_store_by_granule[g] = 0 -> fixed_line.
+            //   Without the CE: 0 and 1 -> st_merged. A ghost: live copy g = 0 -> 0 and 0.
             assign write_fix_by_granule[write_granule_idx]   =
-                   |(s2_way_onehot_copy[write_granule_idx*WAYS +: WAYS] & way_data_fix_flag);
+                   s2_live_copy[write_granule_idx] && s2_cache && s2_hit &&
+                   (|(s2_way_onehot_copy[write_granule_idx*WAYS +: WAYS] & s2_data_ce & ~s2_data_ue));   // WAYS = 4 bits
             assign write_store_by_granule[write_granule_idx] =
-                   s2_live && s2_hit && s2_store && !s2_amo1 && !write_fix_by_granule[write_granule_idx];
+                   s2_live_copy[write_granule_idx] && s2_hit && s2_store && !s2_amo1 && !write_fix_by_granule[write_granule_idx];
             // one AO level: the three sources never coincide (a refill is its own operation kind; a scrub excludes the store write)
             assign s2_write_line[write_granule_idx*GRAN_BITS +: GRAN_BITS] =
                    ({GRAN_BITS{s2_refill}}                                 & q2_data[write_granule_idx*GRAN_BITS +: GRAN_BITS])    |
@@ -1009,7 +1054,7 @@ module l1d_bank_s2 #(
 
     always @(posedge clk) begin : s2_to_s3_proc
         if (rst) s3_amo_v <= 1'b0;
-        else     s3_amo_v <= s2_live && s2_hit && s2_amo1 && !ecc_data_fix;   // served AMO hit (not cancelled, not an upgrade, not scrubbed)
+        else     s3_amo_v <= s2_live_copy[GRANULES + 1] && s2_hit && s2_amo1 && !ecc_data_fix;   // served AMO hit (not cancelled, not an upgrade, not scrubbed); CB-4c: copy 9 of s2_live
         s3_line <= s2_line;
         s3_way  <= s2_way;
         s3_old  <= line_q;                                // the hit way's line, read at the AMO's grant
@@ -1026,7 +1071,9 @@ module l1d_bank_s2 #(
     wire train_now;                                              // the record of the entry in S2 goes now
     wire evict_now;                                              // a line leaves the array now
     wire [LINE_ADDR_W-1:0] evict_line_now;                       // its line address, 58 bits
-    assign train_now      = s2_live && !s2_tag_blocked && !s2_seat_trained;
+    // TIMING OPT (CB-4c): copy GRANULES + 1 (9) of s2_live (= s2_live in every cycle). Example: the first live pass
+    // of a load, not tag-blocked, not trained yet: copy 9 = 1 -> train_now = 1 (as before); a ghost: 0.
+    assign train_now      = s2_live_copy[GRANULES + 1] && !s2_tag_blocked && !s2_seat_trained;
     assign s2_train_sent  = train_now;
     assign evict_now      = (s2_refill && s2_vvalid) || (s2_snp && s2_snp_hit && s2_sinv) || (s2_maint && !s2_held && s2_vvalid);
     assign evict_line_now = s2_snp ? s2_line : s2_vline;
@@ -1120,6 +1167,19 @@ module l1d_bank_s2 #(
     // a swap that installed into an empty way leaves its MOVING slot empty
     assign vc_rel = s2_refill && s2_swap && !s2_vvalid;
 
+`ifndef SYNTHESIS
+    // CB-4c always-on check: every copy, as this stage sees it on its ports, equals the decode of the binary S2
+    // flops in every cycle out of reset. 0 && X = 0, so the s2_kind held as X before its first load is safe.
+    always @(posedge clk) begin
+        if (!rst && ((s2_kind_onehot_copy[K_LSU]    !== (s2_valid && (s2_kind == K_LSU)))    ||
+                     (s2_kind_onehot_copy[K_REFILL] !== (s2_valid && (s2_kind == K_REFILL))) ||
+                     (s2_kind_onehot_copy[K_MAINT]  !== (s2_valid && (s2_kind == K_MAINT)))  ||
+                     (s2_kind_onehot_copy[K_SNOOP]  !== (s2_valid && (s2_kind == K_SNOOP)))  ||
+                     (s2_live_copy !== {S2_LIVE_COPIES{s2_valid && (s2_kind == K_LSU) && !s2_pf && !s2_kill}})))
+            $display("[%0t] L1D B%0d S2 ERROR CB-4c kind / live copy differs (valid %b kind %0d pf %b kill %b: kind copy %b, live copies %b)",
+                     $time, BANK_ID, s2_valid, s2_kind, s2_pf, s2_kill, s2_kind_onehot_copy, s2_live_copy);
+    end
+`endif
 // ---- simulation-only trace (compiled only when L1D_DEBUG is defined): the S2 result of each operation ----
 `ifdef L1D_DEBUG
     function [8*4-1:0] dbg_cls;                           // request class name

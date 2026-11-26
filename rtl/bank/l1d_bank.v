@@ -126,6 +126,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
     localparam S2_WAY_COPIES = GRANULES + 4;                  // CB-3: one-hot copies of s2_way (u_s1 -> u_s2), 12 (same value in l1d_bank_s1 / _s2)
+    localparam S2_LIVE_COPIES = GRANULES + 2;                 // CB-4c: copies of s2_live (u_s1 -> u_s2), 10 (same value in l1d_bank_s1 / _s2)
 
     // ======================================================================
     // Ports
@@ -289,6 +290,8 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     wire                    clear_eq_rsv_line;            // CB-3: rsv_clear_line == reservation line (u_s1 -> u_rsv)
     wire [S2_WAY_COPIES*WAYS-1:0]    s2_way_onehot_copy;  // CB-3: 12 registered one-hot copies of s2_way (u_s1 -> u_s2), 48 bits
     wire [GRANULES*MSHR_ENTRIES-1:0] s2_mid_onehot_copy;  // CB-3: 8 registered one-hot copies of s2_mid (u_s1 -> u_mshr), 64 bits
+    wire [K_SNOOP:K_LSU]             s2_kind_onehot_copy; // CB-4c: bit k = (s2_valid && s2_kind == k), registered (u_s1 -> u_s2), 4 bits
+    wire [S2_LIVE_COPIES-1:0]        s2_live_copy;        // CB-4c: 10 registered copies of s2_live (u_s1 -> u_s2), 10 bits
     wire                    s2_valid;                     // stage S2 holds an operation
     wire [1:0]              s2_kind;                      // its kind
     wire [SEAT_W-1:0]       s2_seat;                      // its tracker entry, 3 bits
@@ -585,7 +588,8 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s2_data_synd (s2_data_synd), .s2_data_fix (s2_data_fix), .s2_data_ce (s2_data_ce), .s2_data_ue (s2_data_ue),
         .s2_tag_synd (s2_tag_synd), .s2_tag_fix (), .s2_tag_ce (s2_tag_ce), .s2_tag_ue (s2_tag_ue),
         .s2_tag_blocked (s2_tag_blocked), .s2_tags (s2_tags),
-        .s2_way_onehot_copy (s2_way_onehot_copy), .s2_mid_onehot_copy (s2_mid_onehot_copy)   // CB-3
+        .s2_way_onehot_copy (s2_way_onehot_copy), .s2_mid_onehot_copy (s2_mid_onehot_copy),  // CB-3
+        .s2_kind_onehot_copy (s2_kind_onehot_copy), .s2_live_copy (s2_live_copy)             // CB-4c
     );
 
     l1d_bank_s2 #(`L1D_PARAMS_PASS, .BANK_ID(BANK_ID)) u_s2 (
@@ -595,6 +599,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .s2_hit (s2_hit), .s2_scfail (s2_scfail), .s2_snp_hit (s2_snp_hit), .s2_hand (s2_hand), .s2_way (s2_way),
         .s2_held (s2_held), .s2_swap (s2_swap), .s2_kill (s2_kill),
         .s2_way_onehot_copy (s2_way_onehot_copy),                                             // CB-3
+        .s2_kind_onehot_copy (s2_kind_onehot_copy), .s2_live_copy (s2_live_copy),             // CB-4c
         .s2_words (s2_words), .s2_lines (s2_lines), .s2_tags (s2_tags), .s2_st_be (s2_st_be), .s2_st_din (s2_st_din),
         .s2_wbpend (s2_wbpend), .s2_vvalid (s2_vvalid), .s2_vdirty (s2_vdirty), .s2_vshared (s2_vshared),
         .s2_vline (s2_vline), .s2_slot (s2_slot),

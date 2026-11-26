@@ -47,6 +47,8 @@
 //   clear_eq_s2_line/_rsv_line   out  1/1    (CB-3) rsv_clear_line == s2_line / == reservation line, combinational
 //   s2_way_onehot_copy           out  48     (CB-3) 12 registered one-hot copies of s2_way (to l1d_bank_s2)
 //   s2_mid_onehot_copy           out  64     (CB-3) 8 registered one-hot copies of s2_mid (to l1d_mshr)
+//   s2_kind_onehot_copy          out  4      (CB-4c) registered: bit k = (s2_valid && s2_kind == k) (to l1d_bank_s2)
+//   s2_live_copy                 out  10     (CB-4c) 10 registered copies of s2_live (valid CPU op, not PF, not a ghost)
 //   vec_read_slot                out  1      (C-20) data place of the vector store in S1 (to l1d_vec_store_buf)
 //   vec_read_line_data           in   512    (C-20) its line: the store data of a vector store (all 64 byte enables on)
 //   s2_valid ... s2_slot         out  regs   the S2 registers (see their comments)
@@ -84,7 +86,8 @@ module l1d_bank_s1 #(
     s2_raw_hit, s2_pf_hit,
     s2_data_synd, s2_data_fix, s2_data_ce, s2_data_ue,
     s2_tag_synd, s2_tag_fix, s2_tag_ce, s2_tag_ue, s2_tag_blocked,
-    s2_tags, s2_way_onehot_copy, s2_mid_onehot_copy
+    s2_tags, s2_way_onehot_copy, s2_mid_onehot_copy,
+    s2_kind_onehot_copy, s2_live_copy
 );
     `include "l1d_encodings.vh"
     `include "l1d_fields.vh"
@@ -96,6 +99,7 @@ module l1d_bank_s1 #(
     localparam TSYND_W  = WAYS * TAG_HAM_W;                      // all tag syndromes, 4*6 = 24 bits
     localparam FIX_W    = WAYS * GRANULES;                       // "correctable" per way and granule, 32 bits
     localparam S2_WAY_COPIES = GRANULES + 4;                     // CB-3: copies of s2_way, 8 granule + 4 = 12 (same value in l1d_bank_s2, l1d_bank)
+    localparam S2_LIVE_COPIES = GRANULES + 2;                    // CB-4c: copies of s2_live, 8 granule + decision + write port = 10 (same value in l1d_bank_s2, l1d_bank)
 
     // ======================================================================
     // Ports
@@ -177,6 +181,10 @@ module l1d_bank_s1 #(
     output reg  [WAYS*TAG_W-1:0]       s2_tags;                  // the raw tags of all ways (the tag scrub of S2 corrects one), 200 bits
     output reg  [S2_WAY_COPIES*WAYS-1:0] s2_way_onehot_copy;     // CB-3: 12 one-hot copies of s2_way, copy c at [c*4 +: 4], 48 bits, registered
     output reg  [GRANULES*MSHR_ENTRIES-1:0] s2_mid_onehot_copy;  // CB-3: 8 one-hot copies of s2_mid, copy g at [g*8 +: 8], 64 bits, registered
+    // CB-4c: (* keep = "true" *) on the declarations too (CB-3 review: keep on the always block alone may not stop a
+    // tool from merging flops with equal D inputs; all 10 live copies have the same D)
+    (* keep = "true" *) output reg [K_SNOOP:K_LSU] s2_kind_onehot_copy;      // CB-4c: bit k = (s2_valid && s2_kind == k), K_SNOOP:K_LSU = 4 bits, registered
+    (* keep = "true" *) output reg [S2_LIVE_COPIES-1:0] s2_live_copy;        // CB-4c: each bit = s2_live of l1d_bank_s2, S2_LIVE_COPIES = 10 bits, registered
 
     // ======================================================================
     // The coded words split into tags / lines and their check bits
@@ -782,13 +790,52 @@ module l1d_bank_s1 #(
             assign s2_mid_decoded[decode_entry_idx] = (s2_mid == entry_number);
         end
     endgenerate
+    // ======================================================================
+    // TIMING OPT (CB-4c, 2026-11-26): flop copies of the S2 kind decode and of s2_live (rule T-6)
+    // ======================================================================
+    // CB-3 ASAP7 run (200 ps): s2_kind[0] QN (fan-out 7, 47.3 ps) -> INV -> OR5 ("not live", 108.1 ps) -> OR5
+    // (142.5 ps) -> S2 decision -> s3_load -> lsu_response_valid -> merger FIFO: l1d_top -343.4 ps. In l1d_bank
+    // alone the same decode (98.0 ps) and a 2-level buffer tree (138.3 ps) feed the store write select -> S3 AMO
+    // mux -> l1d_ecc_enc -> data macro b_wdata: -319.3 ps. l1d_bank_s2 now reads these flops instead:
+    //   s2_kind_onehot_copy[k] = s2_valid && (s2_kind == k)                                  (4 bits, k = K_*)
+    //   s2_live_copy[c]        = s2_valid && (s2_kind == K_LSU) && !s2_req[REQ_PF_BIT] && !s2_kill  (= s2_live)
+    //   live copy c < GRANULES: write select of granule c; c = GRANULES: decision tree and data ECC flags;
+    //   c = GRANULES + 1: ecc_tag_blk, store_hit_wr, s3_amo_v, train_now (fan-out 2 to 4 each).
+    // Exact, cycle by cycle (s1_to_s2_proc below: s2_valid resets to 0; every other S2 flop holds in reset and
+    // loads its S1 flop at every edge out of reset, with no enable):
+    //   - rst = 0: s2_valid <= s1_valid, s2_kind <= s1_kind, s2_req <= s1_req, s2_kill <= s1_kill, and the copies
+    //     load the same functions of the same S1 flops (s1_lsu = s1_valid && s1_kind == K_LSU, s1_refill,
+    //     s1_maint, s1_snp likewise; s1_pf = s1_req[REQ_PF_BIT]). S1 without a valid op: s1_valid = 0 -> every
+    //     copy loads 0, and s2_valid = 0 makes every old decode 0;
+    //   - rst = 1: s2_valid <= 0 and every copy <= 0; s2_kind / s2_req / s2_kill hold (X before their first load),
+    //     but every old decode is ANDed with s2_valid = 0 (0 && X = 0), so it is 0 as well;
+    //   - ghost (s1_kill = 1): kind bit K_LSU = 1 (as s2_lsu), live copies 0 (as s2_live); prefetch: the same.
+    //   Before the first clock edge both sides are X; the check in l1d_bank_s2 runs only out of reset.
+    // Only flops enter the D inputs: s1_valid, s1_kind, s1_req, s1_kill are registers of l1d_bank_r (s1_kill <=
+    // r_kill, not late); one decode level and one AND. No S1 decision (s1_hit, r_held) is folded in.
+    // Worked example: a load of port 1 in S1 (valid, K_LSU, not a prefetch, not cancelled): at the edge
+    //   s2_kind_onehot_copy = 0001 and all 10 live copies = 1. The same load cancelled in R (s1_kill = 1): 0001
+    //   and all live copies 0. A refill token: 0010 and 0. A snoop: 1000 and 0. Reset: 0000 and 0.
     (* keep *) always @(posedge clk) begin : onehot_copy_proc
         if (rst) begin
             s2_way_onehot_copy <= {S2_WAY_COPIES{s2_way_decoded}};   // reset: follow the held s2_way
             s2_mid_onehot_copy <= {GRANULES{s2_mid_decoded}};        // reset: follow the held s2_mid
+            // CB-4c: s2_valid resets to 0, so every decode of it is 0
+            s2_kind_onehot_copy[K_LSU]    <= 1'b0;
+            s2_kind_onehot_copy[K_REFILL] <= 1'b0;
+            s2_kind_onehot_copy[K_MAINT]  <= 1'b0;
+            s2_kind_onehot_copy[K_SNOOP]  <= 1'b0;
+            s2_live_copy                  <= {S2_LIVE_COPIES{1'b0}};   // S2_LIVE_COPIES = 10 bits
         end else begin
             s2_way_onehot_copy <= {S2_WAY_COPIES{s1_way_onehot}};    // = decode of s2_way after this edge
             s2_mid_onehot_copy <= {GRANULES{s1_mid_onehot}};         // = decode of s2_mid after this edge
+            // CB-4c: bit k = s1_valid && (s1_kind == k) = s2_valid && (s2_kind == k) after this edge
+            s2_kind_onehot_copy[K_LSU]    <= s1_lsu;                 // s1_valid && (s1_kind == K_LSU)
+            s2_kind_onehot_copy[K_REFILL] <= s1_refill;              // s1_valid && (s1_kind == K_REFILL)
+            s2_kind_onehot_copy[K_MAINT]  <= s1_maint;               // s1_valid && (s1_kind == K_MAINT)
+            s2_kind_onehot_copy[K_SNOOP]  <= s1_snp;                 // s1_valid && (s1_kind == K_SNOOP)
+            // CB-4c: = s2_valid && s2_kind == K_LSU && !s2_req[REQ_PF_BIT] && !s2_kill (s2_live) after this edge
+            s2_live_copy                  <= {S2_LIVE_COPIES{s1_lsu && !s1_pf && !s1_kill}};
         end
     end // always onehot_copy_proc
 

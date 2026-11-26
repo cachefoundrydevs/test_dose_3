@@ -55,7 +55,7 @@
 //   lock_valid, lock_snp, lock_line, ev_amor  in  the AMO lock (never set in this version)
 //   tok_valid/_id/_line                in   1/3/58 the MSHR refill token
 //   mt_valid/_set/_way/_op             in   1/6/2/1 the flush/clean token
-//   m_resp_valid, n_resp_valid         in   1/1    an MSHR / NC answer waits to be pushed
+//   m_resp_valid, n_resp_valid         in   1/1    an MSHR / NC answer waits to be pushed (CB-2a: part of the push bound own_push_bound)
 //   mshr_freed, vc_freed, nc_freed     in   8/8/1  wake-up pulses
 //   any_gnt                            out  1      the SRAMs read set g_set this cycle (booked, or some arrival: read enable)
 //   g_set                              out  6      the set they read
@@ -63,7 +63,7 @@
 //   r_valid ... r_sid, r_seat, r_fast  out  regs   the Stage R registers (r_seat = tracker entry, r_fast = fresh issue)
 //   tracker_empty                      out  1      no tracker entry in use (bank idle check)
 //   miss_ok                            out  1      an MSHR / NC answer may be pushed now (credit, used in l1d_bank_s3)
-//   own_response_push_port             in   4      crossbank step 1: this bank pushes an answer for port p this cycle (from l1d_bank, in-bank flops only)
+//   own_response_push_port             in   4      this bank pushes an answer for port p this cycle (exact, late: made of the S2 decision); since CB-2a only the simulation check reads it
 //   vec_slot_available, vec_write_slot in  1/1    a vector data place is free, and the lowest free one
 //   vec_write_valid                    out  1      a vector store is allocated now: keep its line in place vec_write_slot
 //
@@ -75,6 +75,8 @@
 //
 // ESTIMATED LOGIC LEVELS (PLAN_v6 4.6; not measured): address lane 6 from the pins / 2 from the book flops; decision lane 6;
 //   data lane 4 from the entry flops; credits into flops 5; booking into flops 9 to 10.
+//   CB-2a (2026-11-26): the push bound own_push_bound is about 4 levels from flops (S2 registers, MSHR / NC answer flops, merger free count);
+//   the S2 decision (s3_load) and miss_ok are no longer in the credit cone (estimate, not measured).
 // ============================================================================
 `ifndef L1D_BANK_S0_V
 `define L1D_BANK_S0_V
@@ -240,7 +242,9 @@ module l1d_bank_s0 #(
     // CROSSBANK STEP 1 (2026-11-25, see docs/CROSSBANK_CHANGES_v6.md): this bank pushes an answer for port p into its response FIFO THIS cycle.
     // Comes from l1d_bank (decode of lsu_response_valid and the port field of lsu_response_packet, flops of S2 / MSHR / NC in this bank only).
     // With it the credit reads only free_slots (a flop) and never free_slots_next (a function of all four banks' pushes and the LSU read pin).
-    input  wire [LSU_PORTS-1:0]        own_response_push_port;   // bit p = 1: an answer for port p is pushed this cycle, LSU_PORTS = 4 bits
+    // TIMING OPT (CB-2a, 2026-11-26): the credits no longer read this exact value (it carries s3_load, the S2 decision, and miss_ok);
+    // they use own_push_bound (flops only, credit block below). It stays as the reference of the always-on check own_response_push_port <= own_push_bound.
+    input  wire [LSU_PORTS-1:0]        own_response_push_port;   // bit p = 1: an answer for port p is pushed this cycle (exact, late), LSU_PORTS = 4 bits
     // ---- vector store data places (l1d_vec_store_buf) ----
     input  wire                        vec_slot_available;       // a vector data place is free
     input  wire [VEC_SLOT_W-1:0]       vec_write_slot;           // the lowest free place, VEC_SLOT_W = 1 bit
@@ -256,6 +260,7 @@ module l1d_bank_s0 #(
     wire               s2_cpu;                                   // a tracked CPU request (not a prefetch) is in S2
     wire [PORT_W-1:0]  r_port;                                   // port of the op in R, PORT_W = 2 bits
     wire [PORT_W-1:0]  s1_port;                                  // port of the op in S1, 2 bits
+    wire [PORT_W-1:0]  s2_port;                                  // CB-2a: port of the op in S2 (S1 -> S2 flops), PORT_W = 2 bits
     wire               r_wr;                                     // the op in R writes
     wire               s1_wr;                                    // the op in S1 writes
     wire               s1_pf;                                    // the op in S1 is a prefetch
@@ -265,6 +270,7 @@ module l1d_bank_s0 #(
     assign s1_pf   = s1_req[REQ_PF_BIT];
     assign r_port  = r_req[REQ_PORT_LSB +: PORT_W];
     assign s1_port = s1_req[REQ_PORT_LSB +: PORT_W];
+    assign s2_port = s2_req[REQ_PORT_LSB +: PORT_W];
     assign r_wr    = r_req[REQ_RDWR_BIT];
     assign s1_wr   = s1_req[REQ_RDWR_BIT];
 
@@ -448,6 +454,10 @@ module l1d_bank_s0 #(
     // CROSSBANK STEP 1 (2026-11-25): the rule is now free_now >= 2 + r_is + issue + own_push (free_now = the merger FIFO's flop, own_push =
     //   this bank's answer for the port this cycle). Same stream with RESP_FIFO_DEPTH = 5: free stays 5 (answer bypassed), 5 >= 1 + 1 + 1 + 2.
     //   With depth 4 the stream would be throttled (4 < 5), hence the depth 5 in l1d_defines.vh.
+    // TIMING OPT (CB-2a, 2026-11-26): own_response_push_port (exact, made of the S2 decision s3_load and of miss_ok) is replaced by
+    //   own_push_bound, an UPPER BOUND from flops: a live CPU op of port p in S2, or an MSHR / NC answer waiting while every FIFO has
+    //   a place. bound >= push, so free_now - bound <= free_next: never more permissive than the exact rule (the RM-3 drop never hits).
+    //   Same stream, depth 5: 5 >= 2 + 1 + 1 + 1 (bound = push for a hit). With an empty FIFO the credit is always 1 at depth 5.
     // ======================================================================
     wire [LSU_PORTS*RCNT_W-1:0] free_now_flat;                   // free places now, 4*3 bits
     wire [LSU_PORTS*RCNT_W-1:0] free_next_flat;                  // free places after this cycle, 4*3 bits (UNUSED since crossbank step 1, kept for the port map)
@@ -470,12 +480,28 @@ module l1d_bank_s0 #(
     reg                  credit_ge_three;                        // scratch: free_now >= 3
     reg                  credit_ge_four;                         // scratch: free_now >= 4
     reg                  credit_ge_five;                         // scratch: free_now >= 5
+    reg  [LSU_PORTS-1:0] own_push_bound;                         // CB-2a: this bank MAY push an answer for port p now (flops only), 4 bits
+    reg  [LSU_PORTS-1:0] resp_fifo_has_room;                     // CB-2a: free_now(p) >= 1 per port (merger flops), 4 bits
+    reg                  miss_push_possible;                     // CB-2a: an MSHR / NC answer waits and every FIFO has a place
+    integer room_port;                                           // loop variable: port (CB-2a room flags)
+    // TIMING OPT (CB-2a): room of all ports first (the bound of each port needs the AND over all). miss_ok (the gate of an MSHR / NC
+    // push in l1d_bank_s3) implies a place in EVERY FIFO, so this is an upper bound of "a miss answer is pushed now" without the
+    // late S1 decodes of miss_ok and without !s2_push. Example: m_resp_valid = 1, free = {5,5,0,5} -> 0 (no miss push possible).
+    always @* begin
+        for (room_port = 0; room_port < LSU_PORTS; room_port = room_port + 1)
+            resp_fifo_has_room[room_port] = (free_now_flat[room_port*RCNT_W +: RCNT_W] != {RCNT_W{1'b0}});   // RCNT_W = 3 bits
+        miss_push_possible = (m_resp_valid || n_resp_valid) && (&resp_fifo_has_room);
+    end
     integer cr_port;                                             // loop variable: port
     always @* begin
         for (cr_port = 0; cr_port < LSU_PORTS; cr_port = cr_port + 1) begin
             r_is_port[cr_port]     = r_cpu_q && (r_port == cr_port);
             s1_is_port[cr_port]    = s1_lsu && !s1_pf && (s1_port == cr_port);
             issue_is_port[cr_port] = (book_entry_issue && (book_port_q == cr_port)) || (fresh_issue && fresh_port_onehot[cr_port]);
+            // TIMING OPT (CB-2a): own push bound. s3_load is only set for a live CPU request (l1d_bank_s2 decision tree) whose answer
+            // carries s2_req's port; a miss push needs miss_push_possible. Example: S2 holds a load MISS of port 2, no answer waits:
+            // bound = 0100 (exact push 0000): one credit less only when the FIFO holds an answer (free <= 4).
+            own_push_bound[cr_port] = (s2_cpu && !s2_kill && (s2_port == cr_port)) || miss_push_possible;
             // CROSSBANK STEP 1: the credit reads free_now (a flop of the merger FIFO), never free_next (cross-bank, LSU read pin).
             // free_next >= free_now - own_push always holds (only this bank pushes into its FIFO; a pop or bypass only adds places),
             // so the rule "free_next >= promised + 2" becomes "free_now >= promised + 2 + own_push": safe, never above the exact value.
@@ -485,11 +511,11 @@ module l1d_bank_s0 #(
             credit_ge_three        = (free_now_ext >= CREDIT_THREE);
             credit_ge_four         = (free_now_ext >= CREDIT_FOUR);
             credit_ge_five         = (free_now_ext >= CREDIT_FIVE);
-            // exact credit = booking credit rule (see below): free_now >= 2 + r_is + own_push + issue
+            // credit = booking credit rule (see below): free_now >= 2 + r_is + own_push_bound + issue (CB-2a)
             credit_next[cr_port]   = issue_is_port[cr_port]
-                                   ? (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
+                                   ? (own_push_bound[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
                                                                       : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three))
-                                   : (own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
+                                   : (own_push_bound[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
                                                                       : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two));
             // booking credit (fix 2026-11-10, session 59): BOTH outcomes from flops, the late issue bit selects at the
             // end (one 2:1 level). The old form assumed an issue of the same port (free_next >= r_is + 3): with a 2-deep
@@ -498,10 +524,11 @@ module l1d_bank_s0 #(
             // Vivado/ASAP7 iter 6 (C1): no adder on r_is_port. x >= r_is + c is the same as r_is ? (x > c) : (x >= c); the
             // late r_is_port (R-stage port decode) only selects between two compares of the early free count with constants.
             // CROSSBANK STEP 1: free_now and the own push of this cycle replace free_next; the own push is the outer select (late),
-            // r_is_port the inner one: threshold = 2 (+1 own push) (+1 r_is_port) (+1 issue in the second form).
-            credit_book_if_none[cr_port]  = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
+            // r_is_port the inner one: threshold = 2 (+1 own push bound, CB-2a: early) (+1 r_is_port) (+1 issue in the second form);
+            // the only late select left is issue_is_port (last 2:1).
+            credit_book_if_none[cr_port]  = own_push_bound[cr_port] ? (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three)
                                                                             : (r_is_port[cr_port] ? credit_ge_three : credit_ge_two);
-            credit_book_if_issue[cr_port] = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
+            credit_book_if_issue[cr_port] = own_push_bound[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
                                                                             : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three);
             credit_book_next[cr_port] = issue_is_port[cr_port] ? credit_book_if_issue[cr_port] : credit_book_if_none[cr_port];
             // TIMING OPT (CB-1, 2026-11-26): free > r_is + s1_is without the adder. r_is + s1_is is 0, 1 or 2, so the answer is one of three
@@ -820,6 +847,10 @@ module l1d_bank_s0 #(
                          r_line[LA_SET_LSB +: INDEX_W], g_set_q);
             if (fresh_issue && book_valid_q)
                 $display("[%0t] L1D B%0d S0 ERROR: fresh issue while an operation is booked", $time, BANK_ID);
+            // CB-2a invariant (rule S-4): the flop-only bound covers the real push (else a push could meet a full FIFO: RM-3 drop)
+            if (|(own_response_push_port & ~own_push_bound))
+                $display("[%0t] L1D B%0d S0 CREDIT ERROR: push for ports %b outside the bound %b (CB-2a broken)", $time, BANK_ID,
+                         own_response_push_port, own_push_bound);
             if (book_valid_q && !book_issue)
                 $display("[%0t] L1D B%0d S0 NOTE: booked %b cancelled (source offer changed): bubble", $time, BANK_ID, book_kind_q);
         end

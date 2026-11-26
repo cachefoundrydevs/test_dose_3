@@ -543,7 +543,12 @@ module l1d_req_tracker #(
     integer dp_entry;                                            // loop variable: entry
     integer dp_lower;                                            // loop variable: a lower source
     // tm_opt iter 6 (new signals, user approved): the two parts of deps_new kept apart for deps_load
-    reg  [NE-1:0] deps_old [0:NS-1];                             // deps on older valid entries, 5 x 8 bits
+    // TIMING OPT (CB-2b, 2026-11-26): deps_old WITHOUT ~freed_now (pins and flops only). Was: S2 decision -> freed_now -> deps_old
+    //   -> == 0 -> cand_nofresh -> arrival_pick -> arrival_booked_* -> book_line_q in one cycle. The exact mask is applied LAST in
+    //   deps_load (deps_q bit-identical) and deps_new (same value). cand_nofresh reads the unmasked value: conservative.
+    // Example: entry 3 (store, set 5) answers in S2 now; port 1 sends a load of set 5 beside a fresh port 0: deps_old = 0000_1000 ->
+    //   not booked now; deps_q = 0 -> READY -> booked c+1, issued c+2 (was c+1; dependent case only).
+    reg  [NE-1:0] deps_old [0:NS-1];                             // deps on older valid entries, S2 free NOT applied (CB-2b), 5 x 8 bits
     reg  [NS-1:0] lower_pair [0:NS-1];                           // lower_pair[s][l]: s waits for lower arrival l, 5 x 5 bits
     always @* begin
         for (dp_src = 0; dp_src < NS; dp_src = dp_src + 1) begin
@@ -552,9 +557,9 @@ module l1d_req_tracker #(
                 // write_q is no longer a separate level in front of the set compare
                 deps_old[dp_src][dp_entry] = (src_write[dp_src] ? valid_q[dp_entry]
                                                                 : (valid_q[dp_entry] & write_q[dp_entry])) &
-                                             ~freed_now[dp_entry] &
+                                             // CB-2b: no ~freed_now here (applied last in deps_load and deps_new)
                                              (set_q[dp_entry] == src_set[dp_src*INDEX_W +: INDEX_W]);
-            deps_new[dp_src]   = deps_old[dp_src];
+            deps_new[dp_src]   = deps_old[dp_src] & ~freed_now;   // CB-2b: S2 free applied last (debug / testbench view, value unchanged)
             lower_pair[dp_src] = {NS{1'b0}};
             for (dp_lower = 0; dp_lower < dp_src; dp_lower = dp_lower + 1) begin
                 same_set_pair = alloc[dp_lower] &&
@@ -580,6 +585,8 @@ module l1d_req_tracker #(
     reg  [NE-1:0] rank_deps_old [0:NA-1];                        // old-entry deps of the rank-k arrival, 4 x 8 bits
     reg  [NA-1:0] rank_pair [0:NA-1];                            // rank_pair[k][j]: rank-k arrival waits for rank j, 4 x 4 bits
     reg  [NE-1:0] deps_load [0:NE-1];                            // deps entry e loads when allocated, 8 x 8 bits
+    reg  [NE-1:0] deps_load_older [0:NE-1];                      // CB-2b: old-entry part of deps_load, before the S2 free mask, 8 x 8 bits
+    reg  [NE-1:0] deps_load_lower [0:NE-1];                      // CB-2b: lower-arrival part (free entries, never masked), 8 x 8 bits
     integer rd_rank;                                             // loop variable: rank of the arrival
     integer rd_src;                                              // loop variable: source
     integer rd_lower;                                            // loop variable: a lower source
@@ -602,14 +609,17 @@ module l1d_req_tracker #(
             end
         end
         for (dl_entry = 0; dl_entry < NE; dl_entry = dl_entry + 1) begin
-            deps_load[dl_entry] = {NE{1'b0}};
+            deps_load_older[dl_entry] = {NE{1'b0}};
+            deps_load_lower[dl_entry] = {NE{1'b0}};
             for (dl_rank = 0; dl_rank < NA; dl_rank = dl_rank + 1) begin
                 if (free_pick[dl_rank*NE + dl_entry])
-                    deps_load[dl_entry] = deps_load[dl_entry] | rank_deps_old[dl_rank];
+                    deps_load_older[dl_entry] = deps_load_older[dl_entry] | rank_deps_old[dl_rank];
                 for (dl_lower = 0; dl_lower < NA; dl_lower = dl_lower + 1)
                     if (free_pick[dl_rank*NE + dl_entry] && rank_pair[dl_rank][dl_lower])
-                        deps_load[dl_entry] = deps_load[dl_entry] | free_pick[dl_lower*NE +: NE];
+                        deps_load_lower[dl_entry] = deps_load_lower[dl_entry] | free_pick[dl_lower*NE +: NE];
             end
+            // CB-2b: the S2 free LAST, on the old-entry part only: OR_k (x_k & ~f) = (OR_k x_k) & ~f, so exactly the old deps_load
+            deps_load[dl_entry] = (deps_load_older[dl_entry] & ~freed_now) | deps_load_lower[dl_entry];
         end
     end
 
@@ -619,7 +629,7 @@ module l1d_req_tracker #(
     reg           arrival_seen;                                  // a lower candidate was found
     integer ab_src;                                              // loop variable: source
     // tm_opt iter 15 (B1, B2; new signals, user approved):
-    // B2: deps_new == 0 is the same as "no old dependency (deps_old == 0) and no waited-for lower
+    // B2 (CB-2b: deps_old is unmasked, so deps_old == 0 implies the masked test: conservative): deps_new == 0 is the same as "no old dependency (deps_old == 0) and no waited-for lower
     //   arrival that gets an entry". A waited-for lower arrival l (lower_pair) of an allocated s
     //   is allocated, and its entry is free_pick[rank of l]; that is nonzero exactly when the
     //   flop row free_pick[k] has a bit (pick_any, early). So the late 8-bit deps_new compare and
@@ -921,8 +931,14 @@ module l1d_req_tracker #(
     localparam GE_W = 2 * NA + 1;                                // thermometer width, 0 .. 2*NA, 9 bits
     reg  [GE_W-1:0]  free_ge [0:NE-1];                           // free entries below e, at least j, 8 x 9 bits
     reg  [2*NA*NE-1:0] free_rank;                                // one-hot k-th free entry now, k < 2*NA, 8 x 8 bits
-    reg  [GE_W-1:0]  freed_ge;                                   // free_ge of the entry S2 frees (0 when none), 9 bits
-    reg              freed_any;                                  // S2 frees an entry this cycle
+    // TIMING OPT (CB-2c, 2026-11-26): carry-select on s2_free_entry. WHICH entry S2 would free is known from flops; only WHETHER is
+    //   late. Both picks are built early, s2_free_entry selects last (was about 8 levels after the S2 decision). Exact (Shannon expansion).
+    // Example: free = {1,3,4,6}, n = 2, S2 entry 2: if_freed = {2,4,6,-}, if_kept = {4,6,-,-}; S2 answers -> {2,4,6,-}.
+    reg  [NE-1:0]    s2_freeable_onehot;                         // CB-2c: the valid entry in S2 (freed IF S2 decides so), 8 bits
+    reg  [GE_W-1:0]  s2_freeable_ge;                             // CB-2c: its free_ge (0 when none), flops only, 9 bits
+    reg              s2_freeable_any;                            // CB-2c: such an entry exists
+    reg  [NA*NE-1:0] free_pick_if_freed;                         // CB-2c: free_pick_next if S2 frees it, 4 x 8 bits
+    reg  [NA*NE-1:0] free_pick_if_kept;                          // CB-2c: free_pick_next if not, 4 x 8 bits
     reg  [NA:0]      alloc_n_onehot;                             // n allocated this cycle as one-hot, 0 .. NA, 5 bits
     reg  [NA*NE-1:0] free_pick_next;                             // the pick of the next free set, 4 x 8 bits
     integer fg_entry;                                            // loop variable: entry
@@ -973,35 +989,44 @@ module l1d_req_tracker #(
                 free_rank[fr_rank*NE + fg_entry] = !valid_dup_q[fg_entry] && free_ge[fg_entry][fr_rank] &&
                                                    !free_ge[fg_entry][fr_rank+1];
         end
-        // the freed entry: its thermometer count (freed_now is one-hot or zero). Only a VALID entry
-        // is really freed (tracker_proc clears valid_q only when it is set), so freed_now is masked
-        // with valid_q: an S2 free of an already free entry changes nothing, as in tracker_proc
-        freed_any = |(freed_now & valid_q);
-        freed_ge  = {GE_W{1'b0}};
+        // the entry S2 frees IF it decides so (CB-2c: from flops only, s2_entry_onehot is the seat decode): its thermometer count.
+        // Only a VALID entry is really freed (tracker_proc clears valid_q only when it is set), so it is masked with valid_q:
+        // an S2 free of an already free entry changes nothing, as in tracker_proc
+        s2_freeable_onehot = s2_entry_onehot & valid_q;
+        s2_freeable_any    = |s2_freeable_onehot;
+        s2_freeable_ge     = {GE_W{1'b0}};
         for (fg_entry = 0; fg_entry < NE; fg_entry = fg_entry + 1)
-            if (freed_now[fg_entry] && valid_q[fg_entry])
-                freed_ge = freed_ge | free_ge[fg_entry];
+            if (s2_freeable_onehot[fg_entry])
+                s2_freeable_ge = s2_freeable_ge | free_ge[fg_entry];
         // n as one-hot from the thermometer rank_alloc (rank k taken <=> n > k)
         for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
             alloc_n_onehot[fn_count] = ((fn_count == 0) || rank_alloc[(fn_count > 0) ? fn_count - 1 : 0]) &&
                                        ((fn_count == NA) || !rank_alloc[(fn_count < NA) ? fn_count : 0]);
-        // the pick of the next free set, one AND-OR over n (the late select, last)
-        free_pick_next = {NA*NE{1'b0}};
+        // the pick of the next free set, one AND-OR over n, built twice (CB-2c): if S2 frees its entry, and if it does not;
+        // s2_free_entry (the late S2 decision) picks between the two last
+        free_pick_if_freed = {NA*NE{1'b0}};
+        free_pick_if_kept  = {NA*NE{1'b0}};
         for (fn_pick = 0; fn_pick < NA; fn_pick = fn_pick + 1)
             for (fn_count = 0; fn_count <= NA; fn_count = fn_count + 1)
                 if (alloc_n_onehot[fn_count]) begin
-                    if (freed_any && ((fn_pick == 0) || freed_ge[fn_pick+fn_count]) && !freed_ge[fn_pick+fn_count+1])
+                    // S2 frees its entry: the three cases of the iter 11 comment
+                    if (s2_freeable_any && ((fn_pick == 0) || s2_freeable_ge[fn_pick+fn_count]) && !s2_freeable_ge[fn_pick+fn_count+1])
                         // c == k: the freed entry
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] | (freed_now & valid_q);
-                    else if (freed_any && (fn_pick > 0) && !freed_ge[fn_pick+fn_count])
+                        free_pick_if_freed[fn_pick*NE +: NE] = free_pick_if_freed[fn_pick*NE +: NE] | s2_freeable_onehot;
+                    else if (s2_freeable_any && (fn_pick > 0) && !s2_freeable_ge[fn_pick+fn_count])
                         // c < k: the freed entry lies below, the pick moves down one rank
                         // (the index is held at fn_count for k = 0, where this branch is never taken)
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                        free_pick_if_freed[fn_pick*NE +: NE] = free_pick_if_freed[fn_pick*NE +: NE] |
                             free_rank[(((fn_pick > 0) ? fn_pick - 1 : 0) + fn_count)*NE +: NE];
                     else if (fn_pick + fn_count < 2 * NA)
-                        free_pick_next[fn_pick*NE +: NE] = free_pick_next[fn_pick*NE +: NE] |
+                        free_pick_if_freed[fn_pick*NE +: NE] = free_pick_if_freed[fn_pick*NE +: NE] |
+                            free_rank[(fn_pick+fn_count)*NE +: NE];
+                    // S2 keeps it (nothing freed): only the third case
+                    if (fn_pick + fn_count < 2 * NA)
+                        free_pick_if_kept[fn_pick*NE +: NE] = free_pick_if_kept[fn_pick*NE +: NE] |
                             free_rank[(fn_pick+fn_count)*NE +: NE];
                 end
+        free_pick_next = s2_free_entry ? free_pick_if_freed : free_pick_if_kept;   // the late S2 decision, last 2:1
     end
     // the registered pick; at reset no entry is valid, so pick k is entry k
     integer fq_pick;                                             // loop variable: rank k

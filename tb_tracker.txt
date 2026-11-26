@@ -1,0 +1,31 @@
+FAIL tb_tracker (no TEST PASSED / ERROR / timeout after 3601 s)  [tb_tracker]
+ERROR: B: the store answers after both older loads of its set (deps at allocation)
+=== C: misses flood bank 2 from three ports until the tracker is full ===
+  skid pushes 11, cycles with bank 2's tracker full 104
+  ok: C: coverage: bank 2's tracker reached 8 entries
+  ok: C: coverage: requests spilled into the port skids and drained in order
+=== D: P2 store, then P0 and P1 load the same bytes one cycle later ===
+  store 4 cycles, loads 9 and 8 cycles (data checked by the reference model: deadbeef01234567)
+  ok: D: both loads return the stored value
+=== E: random traffic to two hot banks (3000 requests) ===
+SLOW 11745000: port 2 idx 2 kind 1 @0000000000010300 took 490 cycles (sent at cycle 684)
+SLOW 12125000: port 1 idx 7 kind 0 @00000000000140e8 took 403 cycles (sent at cycle 809)
+SLOW 12335000: port 2 idx 6 kind 1 @00000000000083d0 took 540 cycles (sent at cycle 693)
+SLOW 12425000: port 1 idx 0 kind 0 @00000000000083f8 took 529 cycles (sent at cycle 713)
+SLOW 12435000: port 1 idx 3 kind 0 @00000000000083e0 took 452 cycles (sent at cycle 791)
+SLOW 13095000: port 0 idx 7 kind 0 @00000000000142f0 took 615 cycles (sent at cycle 694)
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B3 S0 NOTE: booked 00010 cancelled (source offer changed): bubble
+[0] L1D B0 S0 NOTE: booked 00010 cancelled (source offer changed): bubble

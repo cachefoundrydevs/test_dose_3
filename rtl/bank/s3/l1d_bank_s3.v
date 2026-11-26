@@ -67,7 +67,7 @@ module l1d_bank_s3 #(
     m_resp_valid, m_resp_pkt, m_resp_seat, m_resp_ack,
     n_resp_valid, n_resp_pkt, n_resp_seat, n_resp_ack,
     miss_ok, lsu_response_fifo_free_0, lsu_response_fifo_free_1, lsu_response_fifo_free_2, lsu_response_fifo_free_3,
-    lsu_response_valid, lsu_response_packet, done_valid, done_seat,
+    lsu_response_valid, lsu_response_packet, own_response_push_port, done_valid, done_seat,
     m_rd_valid, m_rd_ready, m_rd_line, m_rd_sub, m_rd_unique,
     n_rd_valid, n_rd_ready, n_rd_addr, n_rd_size,
     vc_wr_valid, vc_wr_ready, vc_wr_line, vc_wr_sub, vc_wr_data,
@@ -117,6 +117,7 @@ module l1d_bank_s3 #(
     // ---- the push into this bank's response FIFO ----
     output wire                        lsu_response_valid;       // a response leaves the bank this cycle
     output wire [RESP_W-1:0]           lsu_response_packet;      // its packet, 74 bits
+    output wire [LSU_PORTS-1:0]        own_response_push_port;   // bit p: the push of this cycle is an answer for port p, LSU_PORTS = 4 bits
     output reg                         done_valid;               // a response left: its seat is freed
     output reg  [SEAT_W-1:0]           done_seat;                // that seat, 3 bits
     // ---- read requests of the MSHR and the NC queue ----
@@ -187,6 +188,29 @@ module l1d_bank_s3 #(
     // the response push of this bank: the S2 answer, or an MSHR / NC response
     assign lsu_response_valid  = s2_push || miss_push;
     assign lsu_response_packet = s2_push ? s2_pkt : (m_take ? m_resp_pkt : n_resp_pkt);
+
+    // TIMING OPT (crossbank iteration CB-1, 2026-11-26): the one-hot port of this cycle's push, built WITHOUT the packet mux.
+    //   Before: own_response_push_port[p] = lsu_response_valid && (lsu_response_packet[port field] == p), i.e. the decision (s2_push,
+    //   m_take, n_take, with the late credit miss_ok) selected a 74-bit packet and the port field of that packet was decoded again.
+    //   Now: the port field of each source is decoded from flops of that source (early), and the late signals only gate it:
+    //     own_push_s2[p]   = s2_push && (port field of s2_pkt == p)                       (no miss_ok in it)
+    //     own_push_miss[p] = the port p answer that WOULD be taken if miss_ok = 1: !s2_push && (MSHR answer of port p, or
+    //                        no MSHR answer and an NC answer of port p)                    (no miss_ok in it)
+    //     own_response_push_port = own_push_s2 | (own_push_miss & miss_ok)                 (miss_ok enters at the last AND-OR)
+    //   Exact: m_take = !s2_push && m_resp_valid && miss_ok and n_take = !s2_push && !m_resp_valid && n_resp_valid && miss_ok exclude
+    //   each other, and the packet select has the same priority (s2_push, then m_take, then n_take), so the value is bit-for-bit the same.
+    // Example: s2_push = 0, MSHR answer for port 2 waiting, miss_ok = 1 -> own_push_s2 = 0000, own_push_miss = 0100, result 0100.
+    reg [LSU_PORTS-1:0] own_push_s2;                      // the S2 answer of this cycle, one-hot by port (early), 4 bits
+    reg [LSU_PORTS-1:0] own_push_miss;                    // the MSHR / NC answer that miss_ok would let through, one-hot by port (early), 4 bits
+    integer             push_port_idx;                    // loop variable: port
+    always @* begin
+        for (push_port_idx = 0; push_port_idx < LSU_PORTS; push_port_idx = push_port_idx + 1) begin
+            own_push_s2[push_port_idx]   = s2_push && (s2_pkt[RESP_PORT_LSB +: PORT_W] == push_port_idx);
+            own_push_miss[push_port_idx] = !s2_push && (m_resp_valid ? (m_resp_pkt[RESP_PORT_LSB +: PORT_W] == push_port_idx)
+                                                                      : (n_resp_valid && (n_resp_pkt[RESP_PORT_LSB +: PORT_W] == push_port_idx)));
+        end
+    end
+    assign own_response_push_port = own_push_s2 | (own_push_miss & {LSU_PORTS{miss_ok}});
 
     // the seat to free is that of the response that leaves: S2's, or the MSHR's, or the NC's
     always @* begin

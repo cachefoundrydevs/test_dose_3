@@ -263,12 +263,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
     // CROSSBANK STEP 1 (2026-11-25): this bank pushes an answer for port p this cycle = lsu_response_valid and the port field of the packet.
     // Only this bank pushes into its own FIFO of port p in the merger, so the credit in l1d_bank_s0 can use free_slots (flop) instead of free_slots_next.
     wire [LSU_PORTS-1:0]    own_response_push_port;       // bit p: an answer for port p is pushed now, LSU_PORTS = 4 bits
-    genvar                  push_port;                    // loop variable: port
-    generate
-        for (push_port = 0; push_port < LSU_PORTS; push_port = push_port + 1) begin : g_own_push
-            assign own_response_push_port[push_port] = lsu_response_valid && (lsu_response_packet[RESP_PORT_LSB +: PORT_W] == push_port);
-        end
-    endgenerate
+    // TIMING OPT (CB-1): the one-hot port of the push now comes from l1d_bank_s3 (own_response_push_port), decoded per source, not from the packet mux.
     wire                    s2_seat_trained;              // the entry in S2 already sent its training record
     wire [PC_W-1:0]         s2_seat_pc;                   // its PC, 64 bits
     // ---- from u_r (stage R) ----
@@ -633,7 +628,7 @@ module l1d_bank #(`L1D_PARAMS, parameter BANK_ID = 0) (
         .n_resp_valid (n_resp_valid), .n_resp_pkt (n_resp_pkt), .n_resp_seat (n_resp_seat), .n_resp_ack (n_resp_ack),
         .miss_ok (miss_ok), .lsu_response_fifo_free_0 (lsu_response_fifo_free_0), .lsu_response_fifo_free_1 (lsu_response_fifo_free_1),
         .lsu_response_fifo_free_2 (lsu_response_fifo_free_2), .lsu_response_fifo_free_3 (lsu_response_fifo_free_3),
-        .lsu_response_valid (lsu_response_valid), .lsu_response_packet (lsu_response_packet),
+        .lsu_response_valid (lsu_response_valid), .lsu_response_packet (lsu_response_packet), .own_response_push_port (own_response_push_port),
         .done_valid (done_valid), .done_seat (done_seat),
         .m_rd_valid (m_rd_valid), .m_rd_ready (m_rd_ready), .m_rd_line (m_rd_line), .m_rd_sub (m_rd_sub), .m_rd_unique (m_rd_unique),
         .n_rd_valid (n_rd_valid), .n_rd_ready (n_rd_ready), .n_rd_addr (n_rd_addr), .n_rd_size (n_rd_size),

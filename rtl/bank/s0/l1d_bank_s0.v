@@ -120,6 +120,7 @@ module l1d_bank_s0 #(
     localparam SET_IN_REQ  = REQ_ADDR_LSB + OFFSET_W + LA_SET_LSB;   // lowest bit of the set number in a request packet
     localparam LINE_IN_REQ = REQ_ADDR_LSB + OFFSET_W;                // lowest bit of the line address in a request packet
     localparam NE          = TRK_ENTRIES;                        // tracker entries, 8
+    localparam [RCNT_W:0]  CREDIT_ONE   = 1;                     // CB-1: free > 0, the first threshold of port_miss_ok, 4 bits
     localparam [RCNT_W:0]  CREDIT_TWO   = 2;                     // the "+1 for the issue, +1 for a push" of the credit rule, 4 bits
     localparam [RCNT_W:0]  CREDIT_THREE = 3;                     // ... with an assumed issue of the same port, 4 bits
     localparam [RCNT_W:0]  CREDIT_FOUR  = 4;                     // crossbank step 1: two + (R of the port or an own push now) + an issue, 4 bits
@@ -464,6 +465,7 @@ module l1d_bank_s0 #(
     reg  [LSU_PORTS-1:0] credit_book_if_issue;                   // booking credit if an op of port p issues now, 4 bits
     reg  [LSU_PORTS-1:0] port_miss_ok;                           // an MSHR / NC answer may be pushed for port p, 4 bits
     reg  [RCNT_W:0]      free_now_ext;                           // scratch (crossbank step 1, replaces promised_next): free places now of port p, 4 bits
+    reg                  credit_ge_one;                          // scratch: free_now >= 1 (CB-1)
     reg                  credit_ge_two;                          // scratch: free_now >= 2
     reg                  credit_ge_three;                        // scratch: free_now >= 3
     reg                  credit_ge_four;                         // scratch: free_now >= 4
@@ -502,8 +504,13 @@ module l1d_bank_s0 #(
             credit_book_if_issue[cr_port] = own_response_push_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_five  : credit_ge_four)
                                                                             : (r_is_port[cr_port] ? credit_ge_four  : credit_ge_three);
             credit_book_next[cr_port] = issue_is_port[cr_port] ? credit_book_if_issue[cr_port] : credit_book_if_none[cr_port];
-            port_miss_ok[cr_port]  = ({1'b0, free_now_flat[cr_port*RCNT_W +: RCNT_W]} >
-                                      ({{RCNT_W{1'b0}}, r_is_port[cr_port]} + {{RCNT_W{1'b0}}, s1_is_port[cr_port]}));
+            // TIMING OPT (CB-1, 2026-11-26): free > r_is + s1_is without the adder. r_is + s1_is is 0, 1 or 2, so the answer is one of three
+            // compares of the early free count (a merger flop) with constants; the late S1 port decode (s1_valid ... == port) is the LAST select,
+            // the R decode the one before. free > 0 is the same as free >= 1 (credit_ge_one), free > 1 = credit_ge_two, free > 2 = credit_ge_three.
+            // Example: free = 2, R is of port p, S1 is not: free > 1 is true -> port_miss_ok[p] = 1.
+            credit_ge_one          = (free_now_ext >= CREDIT_ONE);
+            port_miss_ok[cr_port]  = s1_is_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_three : credit_ge_two)
+                                                         : (r_is_port[cr_port] ? credit_ge_two   : credit_ge_one);
         end
     end
     assign miss_ok = &port_miss_ok;

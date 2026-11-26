@@ -47,6 +47,11 @@ module tb_tracker_b;
         check(lat0 == 4 && lat1 == 5 && lat2 == 6, "A: three requests to one bank in one cycle answer at 4, 5, 6 (port order)");
         check(cov_skid_push == push_before, "A: all three got a tracker entry in the arrival cycle (no skid push)");
         repeat (10) tick;
+`ifdef B_WARM
+        send(0, K_LD, 1'b0, 2'd3, line_addr(1, 0, 1), 0, OP_ADD, e0); tick; wait_entry(e0);
+        send(0, K_LD, 1'b0, 2'd3, line_addr(2, 0, 1), 0, OP_ADD, e0); tick; wait_entry(e0);
+        repeat (10) tick;
+`endif
         $display("=== B: three ports, ONE set of bank 1 (P0 load line X, P1 load line Y, P2 store line Z) ===");
         send(0, K_LD, 1'b0, 2'd3, line_addr(0, 0, 1) + 16, 0, OP_ADD, e0);
         send(1, K_LD, 1'b0, 2'd3, line_addr(1, 0, 1) + 16, 0, OP_ADD, e1);

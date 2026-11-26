@@ -1,0 +1,3418 @@
+
+##### CROSSBANK bank0 -> bank1 (slack -166.832) #####
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     4   24.206  195.790 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  216.560 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+    10   22.997  239.558 ^ _1445221_/Y (BUFx2_ASAP7_75t_R)
+     2   17.128  256.686 ^ _1964695_/Y (AND2x2_ASAP7_75t_R)
+    10   22.137  278.823 ^ _1964696_/Y (BUFx2_ASAP7_75t_R)
+     4   25.501  304.324 ^ _1964697_/Y (AND3x1_ASAP7_75t_R)
+     1   15.637  319.961 ^ _1964698_/Y (AO21x1_ASAP7_75t_R)
+     1   21.460  341.421 ^ _1964699_/Y (AND4x1_ASAP7_75t_R)
+          0.000  341.421 ^ g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 341.421   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.411  174.589   library setup time
+                 174.589   data required time
+-----------------------------------------------------------------
+                 174.589   data required time
+                -341.421   data arrival time
+-----------------------------------------------------------------
+                -166.832   slack (VIOLATED)
+
+
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     4   24.206  195.790 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  216.560 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+    10   22.997  239.558 ^ _1445221_/Y (BUFx2_ASAP7_75t_R)
+     2   17.128  256.686 ^ _1964695_/Y (AND2x2_ASAP7_75t_R)
+    10   22.137  278.823 ^ _1964696_/Y (BUFx2_ASAP7_75t_R)
+     4   25.501  304.324 ^ _1964697_/Y (AND3x1_ASAP7_75t_R)
+     1   18.450  322.774 ^ _1964700_/Y (AND3x1_ASAP7_75t_R)
+     1   18.126  340.900 ^ _1964702_/Y (OA211x2_ASAP7_75t_R)
+          0.000  340.900 ^ g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 340.900   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.191  174.809   library setup time
+                 174.809   data required time
+-----------------------------------------------------------------
+                 174.809   data required time
+                -340.900   data arrival time
+-----------------------------------------------------------------
+                -166.090   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank0 -> bank2 (slack -166.813) #####
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_vc.iss[3]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     4   24.206  195.790 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  216.560 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+    10   22.997  239.558 ^ _1445221_/Y (BUFx2_ASAP7_75t_R)
+     2   17.128  256.686 ^ _1964695_/Y (AND2x2_ASAP7_75t_R)
+    10   22.137  278.823 ^ _1964696_/Y (BUFx2_ASAP7_75t_R)
+     4   25.501  304.324 ^ _1972983_/Y (AND3x1_ASAP7_75t_R)
+     1   15.639  319.962 ^ _1972984_/Y (AO21x1_ASAP7_75t_R)
+     1   21.460  341.423 ^ _1972985_/Y (AND4x1_ASAP7_75t_R)
+          0.000  341.423 ^ g_bank[2].u_bank.u_vc.iss[3]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 341.423   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_vc.iss[3]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.390  174.610   library setup time
+                 174.610   data required time
+-----------------------------------------------------------------
+                 174.610   data required time
+                -341.423   data arrival time
+-----------------------------------------------------------------
+                -166.813   slack (VIOLATED)
+
+
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     1   16.960  188.543 ^ _1445163_/Y (AO32x1_ASAP7_75t_R)
+     7   19.724  208.267 ^ _1445164_/Y (BUFx2_ASAP7_75t_R)
+     4   20.404  228.671 ^ _1789288_/Y (AND2x2_ASAP7_75t_R)
+     9   17.868  246.539 v _1789289_/Y (NAND2x1_ASAP7_75t_R)
+     8   24.369  270.908 ^ _1935454_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.175  299.083 ^ _1973925_/Y (AND3x1_ASAP7_75t_R)
+     3   14.713  313.796 v _1973926_/Y (INVx1_ASAP7_75t_R)
+     1   10.392  324.187 ^ _1993800_/Y (OAI22x1_ASAP7_75t_R)
+     1   17.033  341.220 ^ _1993801_/Y (AND2x2_ASAP7_75t_R)
+          0.000  341.220 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 341.220   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.029  174.971   library setup time
+                 174.971   data required time
+-----------------------------------------------------------------
+                 174.971   data required time
+                -341.220   data arrival time
+-----------------------------------------------------------------
+                -166.250   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank0 -> bank3 (slack -181.249) #####
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     4   24.206  195.790 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  222.148 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  245.660 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  262.449 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  286.281 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  314.394 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  329.104 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  339.495 ^ _1993625_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.727  356.222 ^ _1993626_/Y (AND2x2_ASAP7_75t_R)
+          0.000  356.222 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 356.222   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -356.222   data arrival time
+-----------------------------------------------------------------
+                -181.249   slack (VIOLATED)
+
+
+Startpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.497   54.010 ^ _1444495_/Y (BUFx2_ASAP7_75t_R)
+     4   33.075   87.085 ^ _1444496_/Y (AND4x1_ASAP7_75t_R)
+     6   35.184  122.269 ^ _1444497_/Y (AND4x1_ASAP7_75t_R)
+     8   29.912  152.181 ^ _1444498_/Y (AND2x2_ASAP7_75t_R)
+     2   19.402  171.583 ^ _1445161_/Y (OA21x2_ASAP7_75t_R)
+     4   24.206  195.790 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  222.148 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  245.660 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  262.449 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  286.281 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  314.394 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  329.104 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  339.495 ^ _1989974_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.412  355.907 ^ _1989975_/Y (AND2x2_ASAP7_75t_R)
+          0.000  355.907 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 355.907   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -355.907   data arrival time
+-----------------------------------------------------------------
+                -180.934   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank1 -> bank0 (slack -178.538) #####
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     3   15.138  190.698 ^ _1445153_/Y (OR2x2_ASAP7_75t_R)
+     1   19.008  209.706 ^ _1445156_/Y (OA211x2_ASAP7_75t_R)
+     8   20.183  229.889 ^ _1445157_/Y (BUFx2_ASAP7_75t_R)
+     5   22.249  252.138 ^ _1816042_/Y (AND2x2_ASAP7_75t_R)
+     6   14.659  266.797 v _1816043_/Y (NAND2x1_ASAP7_75t_R)
+    10   30.424  297.220 v _1816044_/Y (BUFx2_ASAP7_75t_R)
+     2   28.800  326.021 v _1958593_/Y (OR3x1_ASAP7_75t_R)
+     1   11.112  337.133 ^ _1994414_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.379  353.512 ^ _1994415_/Y (AND2x2_ASAP7_75t_R)
+          0.000  353.512 ^ g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 353.512   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -353.512   data arrival time
+-----------------------------------------------------------------
+                -178.538   slack (VIOLATED)
+
+
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     3   15.138  190.698 ^ _1445153_/Y (OR2x2_ASAP7_75t_R)
+     1   19.008  209.706 ^ _1445156_/Y (OA211x2_ASAP7_75t_R)
+     8   20.183  229.889 ^ _1445157_/Y (BUFx2_ASAP7_75t_R)
+     5   22.249  252.138 ^ _1816042_/Y (AND2x2_ASAP7_75t_R)
+     6   14.659  266.797 v _1816043_/Y (NAND2x1_ASAP7_75t_R)
+    10   30.424  297.220 v _1816044_/Y (BUFx2_ASAP7_75t_R)
+     2   28.800  326.021 v _1958215_/Y (OR3x1_ASAP7_75t_R)
+     1   11.098  337.118 ^ _1958216_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.379  353.497 ^ _1958217_/Y (AND2x2_ASAP7_75t_R)
+          0.000  353.497 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 353.497   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -353.497   data arrival time
+-----------------------------------------------------------------
+                -178.524   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank1 -> bank2 (slack -185.775) #####
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     3   15.138  190.698 ^ _1445153_/Y (OR2x2_ASAP7_75t_R)
+     1   17.371  208.069 ^ _1445163_/Y (AO32x1_ASAP7_75t_R)
+     7   19.724  227.793 ^ _1445164_/Y (BUFx2_ASAP7_75t_R)
+     4   20.404  248.197 ^ _1789288_/Y (AND2x2_ASAP7_75t_R)
+     9   17.868  266.065 v _1789289_/Y (NAND2x1_ASAP7_75t_R)
+     8   24.369  290.434 ^ _1935454_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.175  318.609 ^ _1973925_/Y (AND3x1_ASAP7_75t_R)
+     3   14.713  333.322 v _1973926_/Y (INVx1_ASAP7_75t_R)
+     1   10.392  343.713 ^ _1993800_/Y (OAI22x1_ASAP7_75t_R)
+     1   17.033  360.746 ^ _1993801_/Y (AND2x2_ASAP7_75t_R)
+          0.000  360.746 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 360.746   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.029  174.971   library setup time
+                 174.971   data required time
+-----------------------------------------------------------------
+                 174.971   data required time
+                -360.746   data arrival time
+-----------------------------------------------------------------
+                -185.775   slack (VIOLATED)
+
+
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     3   15.138  190.698 ^ _1445153_/Y (OR2x2_ASAP7_75t_R)
+     1   17.371  208.069 ^ _1445163_/Y (AO32x1_ASAP7_75t_R)
+     7   19.724  227.793 ^ _1445164_/Y (BUFx2_ASAP7_75t_R)
+     4   20.404  248.197 ^ _1789288_/Y (AND2x2_ASAP7_75t_R)
+     9   17.868  266.065 v _1789289_/Y (NAND2x1_ASAP7_75t_R)
+     8   24.369  290.434 ^ _1935454_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.175  318.609 ^ _1973925_/Y (AND3x1_ASAP7_75t_R)
+     3   14.713  333.322 v _1973926_/Y (INVx1_ASAP7_75t_R)
+     1   10.392  343.713 ^ _1976897_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.412  360.125 ^ _1976898_/Y (AND2x2_ASAP7_75t_R)
+          0.000  360.125 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 360.125   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -360.125   data arrival time
+-----------------------------------------------------------------
+                -185.152   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank1 -> bank3 (slack -185.966) #####
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     4   24.947  200.506 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  226.865 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  250.377 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  267.166 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  290.998 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  319.111 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  333.821 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  344.212 ^ _1993625_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.727  360.939 ^ _1993626_/Y (AND2x2_ASAP7_75t_R)
+          0.000  360.939 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 360.939   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -360.939   data arrival time
+-----------------------------------------------------------------
+                -185.966   slack (VIOLATED)
+
+
+Startpoint: g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     8   21.287   52.799 ^ _1444501_/Y (BUFx2_ASAP7_75t_R)
+     3   35.313   88.113 ^ _1444503_/Y (AND5x1_ASAP7_75t_R)
+     1   18.877  106.989 ^ _1444504_/Y (AND3x1_ASAP7_75t_R)
+     9   20.437  127.426 ^ _1444505_/Y (BUFx2_ASAP7_75t_R)
+     8   27.962  155.388 ^ _1444506_/Y (AND2x2_ASAP7_75t_R)
+     3   20.172  175.560 ^ _1445152_/Y (OA21x2_ASAP7_75t_R)
+     4   24.947  200.506 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  226.865 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  250.377 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  267.166 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  290.998 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  319.111 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  333.821 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  344.212 ^ _1989974_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.412  360.624 ^ _1989975_/Y (AND2x2_ASAP7_75t_R)
+          0.000  360.624 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 360.624   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -360.624   data arrival time
+-----------------------------------------------------------------
+                -185.651   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank2 -> bank0 (slack -168.919) #####
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_vc.iss[6]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  219.670 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+     6   22.033  241.703 ^ _1445225_/Y (AND2x2_ASAP7_75t_R)
+     4   11.091  252.794 v _1842335_/Y (NAND2x1_ASAP7_75t_R)
+     4   22.621  275.415 v _1842338_/Y (OR2x2_ASAP7_75t_R)
+     4   33.019  308.434 v _1954925_/Y (OR3x1_ASAP7_75t_R)
+     1   12.802  321.236 ^ _1954930_/Y (OAI21x1_ASAP7_75t_R)
+     1   22.249  343.486 ^ _1954931_/Y (AND4x1_ASAP7_75t_R)
+          0.000  343.486 ^ g_bank[0].u_bank.u_vc.iss[6]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 343.486   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_vc.iss[6]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.433  174.567   library setup time
+                 174.567   data required time
+-----------------------------------------------------------------
+                 174.567   data required time
+                -343.486   data arrival time
+-----------------------------------------------------------------
+                -168.919   slack (VIOLATED)
+
+
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_vc.iss[7]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  219.670 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+     6   22.033  241.703 ^ _1445225_/Y (AND2x2_ASAP7_75t_R)
+     4   11.091  252.794 v _1842335_/Y (NAND2x1_ASAP7_75t_R)
+     4   22.621  275.415 v _1842338_/Y (OR2x2_ASAP7_75t_R)
+     4   33.019  308.434 v _1954925_/Y (OR3x1_ASAP7_75t_R)
+     1   12.802  321.236 ^ _1954927_/Y (OAI21x1_ASAP7_75t_R)
+     1   22.249  343.486 ^ _1954928_/Y (AND4x1_ASAP7_75t_R)
+          0.000  343.486 ^ g_bank[0].u_bank.u_vc.iss[7]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 343.486   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_vc.iss[7]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.433  174.567   library setup time
+                 174.567   data required time
+-----------------------------------------------------------------
+                 174.567   data required time
+                -343.486   data arrival time
+-----------------------------------------------------------------
+                -168.919   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank2 -> bank1 (slack -169.941) #####
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  219.670 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+    10   22.997  242.668 ^ _1445221_/Y (BUFx2_ASAP7_75t_R)
+     2   17.128  259.796 ^ _1964695_/Y (AND2x2_ASAP7_75t_R)
+    10   22.137  281.933 ^ _1964696_/Y (BUFx2_ASAP7_75t_R)
+     4   25.501  307.433 ^ _1964697_/Y (AND3x1_ASAP7_75t_R)
+     1   15.637  323.070 ^ _1964698_/Y (AO21x1_ASAP7_75t_R)
+     1   21.460  344.531 ^ _1964699_/Y (AND4x1_ASAP7_75t_R)
+          0.000  344.531 ^ g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 344.531   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_vc.iss[3]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.411  174.589   library setup time
+                 174.589   data required time
+-----------------------------------------------------------------
+                 174.589   data required time
+                -344.531   data arrival time
+-----------------------------------------------------------------
+                -169.941   slack (VIOLATED)
+
+
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     3   20.771  219.670 ^ _1445220_/Y (AO21x1_ASAP7_75t_R)
+    10   22.997  242.668 ^ _1445221_/Y (BUFx2_ASAP7_75t_R)
+     2   17.128  259.796 ^ _1964695_/Y (AND2x2_ASAP7_75t_R)
+    10   22.137  281.933 ^ _1964696_/Y (BUFx2_ASAP7_75t_R)
+     4   25.501  307.433 ^ _1964697_/Y (AND3x1_ASAP7_75t_R)
+     1   18.450  325.884 ^ _1964700_/Y (AND3x1_ASAP7_75t_R)
+     1   18.126  344.010 ^ _1964702_/Y (OA211x2_ASAP7_75t_R)
+          0.000  344.010 ^ g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 344.010   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_vc.iss[2]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.191  174.809   library setup time
+                 174.809   data required time
+-----------------------------------------------------------------
+                 174.809   data required time
+                -344.010   data arrival time
+-----------------------------------------------------------------
+                -169.200   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank2 -> bank3 (slack -184.359) #####
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  225.258 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  248.770 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  265.559 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  289.391 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  317.503 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  332.214 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  342.605 ^ _1993625_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.727  359.332 ^ _1993626_/Y (AND2x2_ASAP7_75t_R)
+          0.000  359.332 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 359.332   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -359.332   data arrival time
+-----------------------------------------------------------------
+                -184.359   slack (VIOLATED)
+
+
+Startpoint: g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_mshr.g_entry[2].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   21.897   53.410 ^ _1444510_/Y (BUFx2_ASAP7_75t_R)
+     2   27.366   80.776 ^ _1444511_/Y (AND4x1_ASAP7_75t_R)
+     1   22.282  103.058 ^ _1444512_/Y (AND4x1_ASAP7_75t_R)
+    10   21.930  124.987 ^ _1444513_/Y (BUFx2_ASAP7_75t_R)
+     7   27.551  152.538 ^ _1444514_/Y (AND2x2_ASAP7_75t_R)
+     3   21.065  173.604 ^ _1445151_/Y (OA21x2_ASAP7_75t_R)
+     4   25.296  198.899 ^ _1445170_/Y (AND3x1_ASAP7_75t_R)
+     7   26.358  225.258 ^ _1445171_/Y (AO21x1_ASAP7_75t_R)
+     4   23.512  248.770 ^ _1788927_/Y (AND2x2_ASAP7_75t_R)
+     8   16.789  265.559 v _1788930_/Y (NAND2x1_ASAP7_75t_R)
+     8   23.832  289.391 ^ _1941214_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.113  317.503 ^ _1986972_/Y (AND3x1_ASAP7_75t_R)
+     3   14.710  332.214 v _1986973_/Y (INVx1_ASAP7_75t_R)
+     1   10.391  342.605 ^ _1989974_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.412  359.017 ^ _1989975_/Y (AND2x2_ASAP7_75t_R)
+          0.000  359.017 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 359.017   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -359.017   data arrival time
+-----------------------------------------------------------------
+                -184.044   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank3 -> bank0 (slack -154.975) #####
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1   19.339  186.143 ^ _1445156_/Y (OA211x2_ASAP7_75t_R)
+     8   20.183  206.326 ^ _1445157_/Y (BUFx2_ASAP7_75t_R)
+     5   22.249  228.574 ^ _1816042_/Y (AND2x2_ASAP7_75t_R)
+     6   14.659  243.234 v _1816043_/Y (NAND2x1_ASAP7_75t_R)
+    10   30.424  273.657 v _1816044_/Y (BUFx2_ASAP7_75t_R)
+     2   28.800  302.458 v _1958593_/Y (OR3x1_ASAP7_75t_R)
+     1   11.112  313.570 ^ _1994414_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.379  329.948 ^ _1994415_/Y (AND2x2_ASAP7_75t_R)
+          0.000  329.948 ^ g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 329.948   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_mshr.g_entry[3].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -329.948   data arrival time
+-----------------------------------------------------------------
+                -154.975   slack (VIOLATED)
+
+
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1   19.339  186.143 ^ _1445156_/Y (OA211x2_ASAP7_75t_R)
+     8   20.183  206.326 ^ _1445157_/Y (BUFx2_ASAP7_75t_R)
+     5   22.249  228.574 ^ _1816042_/Y (AND2x2_ASAP7_75t_R)
+     6   14.659  243.234 v _1816043_/Y (NAND2x1_ASAP7_75t_R)
+    10   30.424  273.657 v _1816044_/Y (BUFx2_ASAP7_75t_R)
+     2   28.800  302.458 v _1958215_/Y (OR3x1_ASAP7_75t_R)
+     1   11.098  313.555 ^ _1958216_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.379  329.934 ^ _1958217_/Y (AND2x2_ASAP7_75t_R)
+          0.000  329.934 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 329.934   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_mshr.g_entry[2].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -329.934   data arrival time
+-----------------------------------------------------------------
+                -154.961   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank3 -> bank1 (slack -145.041) #####
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1    8.730  175.534 v _1445175_/Y (OAI21x1_ASAP7_75t_R)
+     6   19.111  194.644 ^ _1445176_/Y (OAI21x1_ASAP7_75t_R)
+     6   26.924  221.568 ^ _1445256_/Y (AND2x2_ASAP7_75t_R)
+     6   14.321  235.889 v _1800923_/Y (NAND2x1_ASAP7_75t_R)
+    10   28.595  264.484 v _1800924_/Y (BUFx2_ASAP7_75t_R)
+     2   28.278  292.763 v _1968591_/Y (OR3x1_ASAP7_75t_R)
+     1   11.075  303.838 ^ _1968592_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.177  320.014 ^ _1968593_/Y (AND2x2_ASAP7_75t_R)
+          0.000  320.014 ^ g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 320.014   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -320.014   data arrival time
+-----------------------------------------------------------------
+                -145.041   slack (VIOLATED)
+
+
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1    8.730  175.534 v _1445175_/Y (OAI21x1_ASAP7_75t_R)
+     6   19.111  194.644 ^ _1445176_/Y (OAI21x1_ASAP7_75t_R)
+     6   26.924  221.568 ^ _1445256_/Y (AND2x2_ASAP7_75t_R)
+     6   14.321  235.889 v _1800923_/Y (NAND2x1_ASAP7_75t_R)
+    10   28.595  264.484 v _1800924_/Y (BUFx2_ASAP7_75t_R)
+     2   28.278  292.763 v _1968591_/Y (OR3x1_ASAP7_75t_R)
+     1   11.075  303.838 ^ _1993647_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.177  320.014 ^ _1993648_/Y (AND2x2_ASAP7_75t_R)
+          0.000  320.014 ^ g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 320.014   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -320.014   data arrival time
+-----------------------------------------------------------------
+                -145.041   slack (VIOLATED)
+
+
+
+
+##### CROSSBANK bank3 -> bank2 (slack -161.937) #####
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1   17.426  184.230 ^ _1445163_/Y (AO32x1_ASAP7_75t_R)
+     7   19.724  203.954 ^ _1445164_/Y (BUFx2_ASAP7_75t_R)
+     4   20.404  224.358 ^ _1789288_/Y (AND2x2_ASAP7_75t_R)
+     9   17.868  242.226 v _1789289_/Y (NAND2x1_ASAP7_75t_R)
+     8   24.369  266.595 ^ _1935454_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.175  294.770 ^ _1973925_/Y (AND3x1_ASAP7_75t_R)
+     3   14.713  309.483 v _1973926_/Y (INVx1_ASAP7_75t_R)
+     1   10.392  319.875 ^ _1993800_/Y (OAI22x1_ASAP7_75t_R)
+     1   17.033  336.908 ^ _1993801_/Y (AND2x2_ASAP7_75t_R)
+          0.000  336.908 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 336.908   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.state[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.029  174.971   library setup time
+                 174.971   data required time
+-----------------------------------------------------------------
+                 174.971   data required time
+                -336.908   data arrival time
+-----------------------------------------------------------------
+                -161.937   slack (VIOLATED)
+
+
+Startpoint: g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[3].u_bank.u_mshr.g_entry[1].u_entry.ar_arb_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.102   53.615 ^ _1444489_/Y (BUFx2_ASAP7_75t_R)
+     5   34.288   87.903 ^ _1444491_/Y (AND4x1_ASAP7_75t_R)
+     4   39.833  127.736 ^ _1444492_/Y (AND5x1_ASAP7_75t_R)
+     3   22.007  149.742 ^ _1445154_/Y (OA21x2_ASAP7_75t_R)
+     3   17.062  166.804 ^ _1445155_/Y (OR2x2_ASAP7_75t_R)
+     1   17.426  184.230 ^ _1445163_/Y (AO32x1_ASAP7_75t_R)
+     7   19.724  203.954 ^ _1445164_/Y (BUFx2_ASAP7_75t_R)
+     4   20.404  224.358 ^ _1789288_/Y (AND2x2_ASAP7_75t_R)
+     9   17.868  242.226 v _1789289_/Y (NAND2x1_ASAP7_75t_R)
+     8   24.369  266.595 ^ _1935454_/Y (NOR2x1_ASAP7_75t_R)
+     3   28.175  294.770 ^ _1973925_/Y (AND3x1_ASAP7_75t_R)
+     3   14.713  309.483 v _1973926_/Y (INVx1_ASAP7_75t_R)
+     1   10.392  319.875 ^ _1976897_/Y (OAI22x1_ASAP7_75t_R)
+     1   16.412  336.287 ^ _1976898_/Y (AND2x2_ASAP7_75t_R)
+          0.000  336.287 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+                 336.287   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_mshr.g_entry[7].u_entry.dat_q$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.027  174.973   library setup time
+                 174.973   data required time
+-----------------------------------------------------------------
+                 174.973   data required time
+                -336.287   data arrival time
+-----------------------------------------------------------------
+                -161.314   slack (VIOLATED)
+
+
+
+
+##### INSIDE bank0 #####
+Startpoint: g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.473   63.306 ^ _1267547_/Y (BUFx2_ASAP7_75t_R)
+    10   30.275   93.581 ^ _1267562_/Y (BUFx2_ASAP7_75t_R)
+     4   26.665  120.246 ^ _1276619_/Y (OA22x2_ASAP7_75t_R)
+     7   33.940  154.185 ^ _1276685_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.181 ^ _1276747_/Y (BUFx2_ASAP7_75t_R)
+     1   24.880  205.061 ^ _1277021_/Y (AND4x1_ASAP7_75t_R)
+     1   19.494  224.555 v _1277022_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.728  251.283 v _1277023_/Y (AO222x2_ASAP7_75t_R)
+     1   13.990  265.274 v _1277024_/Y (AND2x2_ASAP7_75t_R)
+     5   26.157  291.431 v _1277025_/Y (AO21x1_ASAP7_75t_R)
+     1   28.193  319.624 ^ _2001752_/Y (XOR2x2_ASAP7_75t_R)
+     1   24.353  343.977 v _2001753_/Y (XNOR2x2_ASAP7_75t_R)
+     2   22.095  366.072 ^ _2001754_/Y (XNOR2x2_ASAP7_75t_R)
+     2   27.378  393.450 v _2001760_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  414.749 ^ _2001804_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  444.200 v _2001805_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  444.200 v g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[521] (l1d_macro_data_tdp)
+                 444.200   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -444.200   data arrival time
+-----------------------------------------------------------------
+                -304.200   slack (VIOLATED)
+
+
+Startpoint: g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.473   63.306 ^ _1267547_/Y (BUFx2_ASAP7_75t_R)
+    10   30.275   93.581 ^ _1267562_/Y (BUFx2_ASAP7_75t_R)
+     4   26.665  120.246 ^ _1276619_/Y (OA22x2_ASAP7_75t_R)
+     7   33.940  154.185 ^ _1276685_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.181 ^ _1276747_/Y (BUFx2_ASAP7_75t_R)
+     1   24.880  205.061 ^ _1277021_/Y (AND4x1_ASAP7_75t_R)
+     1   19.494  224.555 v _1277022_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.728  251.283 v _1277023_/Y (AO222x2_ASAP7_75t_R)
+     1   13.990  265.274 v _1277024_/Y (AND2x2_ASAP7_75t_R)
+     5   26.157  291.431 v _1277025_/Y (AO21x1_ASAP7_75t_R)
+     1   28.193  319.624 ^ _2001752_/Y (XOR2x2_ASAP7_75t_R)
+     1   24.353  343.977 v _2001753_/Y (XNOR2x2_ASAP7_75t_R)
+     2   22.095  366.072 ^ _2001754_/Y (XNOR2x2_ASAP7_75t_R)
+     2   27.378  393.450 v _2001760_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  414.749 ^ _2001770_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  444.200 v _2001771_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  444.200 v g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[527] (l1d_macro_data_tdp)
+                 444.200   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -444.200   data arrival time
+-----------------------------------------------------------------
+                -304.200   slack (VIOLATED)
+
+
+Startpoint: g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[0].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[0].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.473   63.306 ^ _1267547_/Y (BUFx2_ASAP7_75t_R)
+    10   30.275   93.581 ^ _1267562_/Y (BUFx2_ASAP7_75t_R)
+     4   26.665  120.246 ^ _1276619_/Y (OA22x2_ASAP7_75t_R)
+     7   33.940  154.185 ^ _1276685_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.181 ^ _1276747_/Y (BUFx2_ASAP7_75t_R)
+     1   24.880  205.061 ^ _1277021_/Y (AND4x1_ASAP7_75t_R)
+     1   19.494  224.555 v _1277022_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.728  251.283 v _1277023_/Y (AO222x2_ASAP7_75t_R)
+     1   13.990  265.274 v _1277024_/Y (AND2x2_ASAP7_75t_R)
+     5   26.157  291.431 v _1277025_/Y (AO21x1_ASAP7_75t_R)
+     1   28.193  319.624 ^ _2001752_/Y (XOR2x2_ASAP7_75t_R)
+     1   24.353  343.977 v _2001753_/Y (XNOR2x2_ASAP7_75t_R)
+     2   22.095  366.072 ^ _2001754_/Y (XNOR2x2_ASAP7_75t_R)
+     2   27.378  393.450 v _2001760_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  414.749 ^ _2001804_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  444.200 v _2001805_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  444.200 v g_bank[0].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/b_wdata[521] (l1d_macro_data_tdp)
+                 444.200   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[0].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -444.200   data arrival time
+-----------------------------------------------------------------
+                -304.200   slack (VIOLATED)
+
+
+
+
+##### INSIDE bank1 #####
+Startpoint: g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     5   41.238   41.238 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.296   66.534 ^ _1216243_/Y (BUFx2_ASAP7_75t_R)
+    10   29.410   95.944 ^ _1216379_/Y (BUFx2_ASAP7_75t_R)
+     4   26.247  122.191 ^ _1219778_/Y (OA22x2_ASAP7_75t_R)
+     8   30.971  153.162 v _1220003_/Y (AOI211x1_ASAP7_75t_R)
+     8   33.886  187.047 v _1220004_/Y (AND2x2_ASAP7_75t_R)
+     1   11.565  198.613 ^ _1220804_/Y (NAND2x1_ASAP7_75t_R)
+     1   24.996  223.608 v _1220805_/Y (XNOR2x2_ASAP7_75t_R)
+     1   26.894  250.502 v _1220806_/Y (AO222x2_ASAP7_75t_R)
+     1   16.639  267.141 v _1220809_/Y (OA21x2_ASAP7_75t_R)
+     6   20.065  287.206 v _1220810_/Y (BUFx2_ASAP7_75t_R)
+     1   22.913  310.119 ^ _2010283_/Y (XNOR2x2_ASAP7_75t_R)
+     2   25.917  336.036 ^ _2010284_/Y (XOR2x2_ASAP7_75t_R)
+     2   27.297  363.333 v _2010287_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.406  384.738 ^ _2010303_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.037  408.776 ^ _2010304_/Y (XOR2x2_ASAP7_75t_R)
+     4   29.484  438.260 v _2010312_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  438.260 v g_bank[1].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[553] (l1d_macro_data_tdp)
+                 438.260   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -438.260   data arrival time
+-----------------------------------------------------------------
+                -298.260   slack (VIOLATED)
+
+
+Startpoint: g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     5   41.238   41.238 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.296   66.534 ^ _1216243_/Y (BUFx2_ASAP7_75t_R)
+    10   29.410   95.944 ^ _1216379_/Y (BUFx2_ASAP7_75t_R)
+     4   26.247  122.191 ^ _1219778_/Y (OA22x2_ASAP7_75t_R)
+     8   30.971  153.162 v _1220003_/Y (AOI211x1_ASAP7_75t_R)
+     8   33.886  187.047 v _1220004_/Y (AND2x2_ASAP7_75t_R)
+     1   11.565  198.613 ^ _1220804_/Y (NAND2x1_ASAP7_75t_R)
+     1   24.996  223.608 v _1220805_/Y (XNOR2x2_ASAP7_75t_R)
+     1   26.894  250.502 v _1220806_/Y (AO222x2_ASAP7_75t_R)
+     1   16.639  267.141 v _1220809_/Y (OA21x2_ASAP7_75t_R)
+     6   20.065  287.206 v _1220810_/Y (BUFx2_ASAP7_75t_R)
+     1   22.913  310.119 ^ _2010283_/Y (XNOR2x2_ASAP7_75t_R)
+     2   25.917  336.036 ^ _2010284_/Y (XOR2x2_ASAP7_75t_R)
+     2   27.297  363.333 v _2010287_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.406  384.738 ^ _2010303_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.037  408.776 ^ _2010304_/Y (XOR2x2_ASAP7_75t_R)
+     4   29.484  438.260 v _2010312_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  438.260 v g_bank[1].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/b_wdata[553] (l1d_macro_data_tdp)
+                 438.260   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -438.260   data arrival time
+-----------------------------------------------------------------
+                -298.260   slack (VIOLATED)
+
+
+Startpoint: g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[1].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     5   41.238   41.238 ^ g_bank[1].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.296   66.534 ^ _1216243_/Y (BUFx2_ASAP7_75t_R)
+    10   29.410   95.944 ^ _1216379_/Y (BUFx2_ASAP7_75t_R)
+     4   26.247  122.191 ^ _1219778_/Y (OA22x2_ASAP7_75t_R)
+     8   30.971  153.162 v _1220003_/Y (AOI211x1_ASAP7_75t_R)
+     8   33.886  187.047 v _1220004_/Y (AND2x2_ASAP7_75t_R)
+     1   11.565  198.613 ^ _1220804_/Y (NAND2x1_ASAP7_75t_R)
+     1   24.996  223.608 v _1220805_/Y (XNOR2x2_ASAP7_75t_R)
+     1   26.894  250.502 v _1220806_/Y (AO222x2_ASAP7_75t_R)
+     1   16.639  267.141 v _1220809_/Y (OA21x2_ASAP7_75t_R)
+     6   20.065  287.206 v _1220810_/Y (BUFx2_ASAP7_75t_R)
+     1   22.913  310.119 ^ _2010283_/Y (XNOR2x2_ASAP7_75t_R)
+     2   25.917  336.036 ^ _2010284_/Y (XOR2x2_ASAP7_75t_R)
+     2   27.297  363.333 v _2010287_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.406  384.738 ^ _2010303_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.037  408.776 ^ _2010304_/Y (XOR2x2_ASAP7_75t_R)
+     4   29.484  438.260 v _2010312_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  438.260 v g_bank[1].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro/b_wdata[553] (l1d_macro_data_tdp)
+                 438.260   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[1].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -438.260   data arrival time
+-----------------------------------------------------------------
+                -298.260   slack (VIOLATED)
+
+
+
+
+##### INSIDE bank2 #####
+Startpoint: g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     5   17.139   48.652 ^ _1162824_/Y (BUFx2_ASAP7_75t_R)
+    10   21.957   70.609 ^ _1162825_/Y (BUFx2_ASAP7_75t_R)
+    10   26.617   97.226 ^ _1162835_/Y (BUFx2_ASAP7_75t_R)
+     4   24.720  121.946 ^ _1162864_/Y (OA22x2_ASAP7_75t_R)
+     7   32.976  154.922 ^ _1162988_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.918 ^ _1163086_/Y (BUFx2_ASAP7_75t_R)
+     1   25.019  205.937 ^ _1163801_/Y (AND4x1_ASAP7_75t_R)
+     1   19.469  225.405 v _1163802_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.883  252.288 v _1163803_/Y (AO222x2_ASAP7_75t_R)
+     1   16.599  268.887 v _1163820_/Y (OA21x2_ASAP7_75t_R)
+     6   20.258  289.146 v _1163821_/Y (BUFx2_ASAP7_75t_R)
+     2   29.012  318.158 ^ _2018638_/Y (XOR2x2_ASAP7_75t_R)
+     1   25.487  343.645 v _2018640_/Y (XNOR2x2_ASAP7_75t_R)
+     1   20.690  364.335 ^ _2018644_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.510  390.845 v _2018645_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  412.145 ^ _2018700_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  441.595 v _2018701_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  441.595 v g_bank[2].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[569] (l1d_macro_data_tdp)
+                 441.595   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -441.595   data arrival time
+-----------------------------------------------------------------
+                -301.595   slack (VIOLATED)
+
+
+Startpoint: g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     5   17.139   48.652 ^ _1162824_/Y (BUFx2_ASAP7_75t_R)
+    10   21.957   70.609 ^ _1162825_/Y (BUFx2_ASAP7_75t_R)
+    10   26.617   97.226 ^ _1162835_/Y (BUFx2_ASAP7_75t_R)
+     4   24.720  121.946 ^ _1162864_/Y (OA22x2_ASAP7_75t_R)
+     7   32.976  154.922 ^ _1162988_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.918 ^ _1163086_/Y (BUFx2_ASAP7_75t_R)
+     1   25.019  205.937 ^ _1163801_/Y (AND4x1_ASAP7_75t_R)
+     1   19.469  225.405 v _1163802_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.883  252.288 v _1163803_/Y (AO222x2_ASAP7_75t_R)
+     1   16.599  268.887 v _1163820_/Y (OA21x2_ASAP7_75t_R)
+     6   20.258  289.146 v _1163821_/Y (BUFx2_ASAP7_75t_R)
+     2   29.012  318.158 ^ _2018638_/Y (XOR2x2_ASAP7_75t_R)
+     1   25.487  343.645 v _2018640_/Y (XNOR2x2_ASAP7_75t_R)
+     1   20.690  364.335 ^ _2018644_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.510  390.845 v _2018645_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  412.145 ^ _2018700_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  441.595 v _2018701_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  441.595 v g_bank[2].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/b_wdata[569] (l1d_macro_data_tdp)
+                 441.595   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -441.595   data arrival time
+-----------------------------------------------------------------
+                -301.595   slack (VIOLATED)
+
+
+Startpoint: g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[2].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_s1.s2_way_onehot_copy[37]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     5   17.139   48.652 ^ _1162824_/Y (BUFx2_ASAP7_75t_R)
+    10   21.957   70.609 ^ _1162825_/Y (BUFx2_ASAP7_75t_R)
+    10   26.617   97.226 ^ _1162835_/Y (BUFx2_ASAP7_75t_R)
+     4   24.720  121.946 ^ _1162864_/Y (OA22x2_ASAP7_75t_R)
+     7   32.976  154.922 ^ _1162988_/Y (AND4x1_ASAP7_75t_R)
+    10   25.996  180.918 ^ _1163086_/Y (BUFx2_ASAP7_75t_R)
+     1   25.019  205.937 ^ _1163801_/Y (AND4x1_ASAP7_75t_R)
+     1   19.469  225.405 v _1163802_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.883  252.288 v _1163803_/Y (AO222x2_ASAP7_75t_R)
+     1   16.599  268.887 v _1163820_/Y (OA21x2_ASAP7_75t_R)
+     6   20.258  289.146 v _1163821_/Y (BUFx2_ASAP7_75t_R)
+     2   29.012  318.158 ^ _2018638_/Y (XOR2x2_ASAP7_75t_R)
+     1   25.487  343.645 v _2018640_/Y (XNOR2x2_ASAP7_75t_R)
+     1   20.690  364.335 ^ _2018644_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.510  390.845 v _2018645_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  412.145 ^ _2018700_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  441.595 v _2018701_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  441.595 v g_bank[2].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro/b_wdata[569] (l1d_macro_data_tdp)
+                 441.595   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[2].u_bank.u_r.u_data.g_way[2].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -441.595   data arrival time
+-----------------------------------------------------------------
+                -301.595   slack (VIOLATED)
+
+
+
+
+##### INSIDE bank3 #####
+Startpoint: g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.571   63.404 ^ _1107929_/Y (BUFx2_ASAP7_75t_R)
+    10   30.315   93.719 ^ _1107964_/Y (BUFx2_ASAP7_75t_R)
+     4   26.666  120.385 ^ _1114468_/Y (OA22x2_ASAP7_75t_R)
+     9   37.512  157.896 ^ _1114525_/Y (AND4x1_ASAP7_75t_R)
+    10   27.435  185.331 ^ _1114554_/Y (BUFx2_ASAP7_75t_R)
+     1   24.949  210.281 ^ _1115161_/Y (AND4x1_ASAP7_75t_R)
+     1   19.470  229.750 v _1115162_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.849  256.599 v _1115163_/Y (AO222x2_ASAP7_75t_R)
+     5   25.479  282.078 v _1115167_/Y (AO21x1_ASAP7_75t_R)
+     1   25.055  307.133 ^ _2026328_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.659  333.792 v _2026330_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.728  358.520 ^ _2026331_/Y (XOR2x2_ASAP7_75t_R)
+     2   26.533  385.053 v _2026332_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  406.352 ^ _2026364_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  435.803 v _2026365_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  435.803 v g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[536] (l1d_macro_data_tdp)
+                 435.803   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -435.803   data arrival time
+-----------------------------------------------------------------
+                -295.803   slack (VIOLATED)
+
+
+Startpoint: g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.571   63.404 ^ _1107929_/Y (BUFx2_ASAP7_75t_R)
+    10   30.315   93.719 ^ _1107964_/Y (BUFx2_ASAP7_75t_R)
+     4   26.666  120.385 ^ _1114468_/Y (OA22x2_ASAP7_75t_R)
+     9   37.512  157.896 ^ _1114525_/Y (AND4x1_ASAP7_75t_R)
+    10   27.435  185.331 ^ _1114554_/Y (BUFx2_ASAP7_75t_R)
+     1   24.949  210.281 ^ _1115161_/Y (AND4x1_ASAP7_75t_R)
+     1   19.470  229.750 v _1115162_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.849  256.599 v _1115163_/Y (AO222x2_ASAP7_75t_R)
+     5   25.479  282.078 v _1115167_/Y (AO21x1_ASAP7_75t_R)
+     1   25.055  307.133 ^ _2026328_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.659  333.792 v _2026330_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.728  358.520 ^ _2026331_/Y (XOR2x2_ASAP7_75t_R)
+     2   26.533  385.053 v _2026332_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  406.352 ^ _2026345_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  435.803 v _2026346_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  435.803 v g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/b_wdata[543] (l1d_macro_data_tdp)
+                 435.803   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_r.u_data.g_way[0].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -435.803   data arrival time
+-----------------------------------------------------------------
+                -295.803   slack (VIOLATED)
+
+
+Startpoint: g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_bank[3].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   38.833   38.833 ^ g_bank[3].u_bank.u_s1.s2_way_onehot_copy[39]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.571   63.404 ^ _1107929_/Y (BUFx2_ASAP7_75t_R)
+    10   30.315   93.719 ^ _1107964_/Y (BUFx2_ASAP7_75t_R)
+     4   26.666  120.385 ^ _1114468_/Y (OA22x2_ASAP7_75t_R)
+     9   37.512  157.896 ^ _1114525_/Y (AND4x1_ASAP7_75t_R)
+    10   27.435  185.331 ^ _1114554_/Y (BUFx2_ASAP7_75t_R)
+     1   24.949  210.281 ^ _1115161_/Y (AND4x1_ASAP7_75t_R)
+     1   19.470  229.750 v _1115162_/Y (XOR2x2_ASAP7_75t_R)
+     1   26.849  256.599 v _1115163_/Y (AO222x2_ASAP7_75t_R)
+     5   25.479  282.078 v _1115167_/Y (AO21x1_ASAP7_75t_R)
+     1   25.055  307.133 ^ _2026328_/Y (XNOR2x2_ASAP7_75t_R)
+     2   26.659  333.792 v _2026330_/Y (XNOR2x2_ASAP7_75t_R)
+     1   24.728  358.520 ^ _2026331_/Y (XOR2x2_ASAP7_75t_R)
+     2   26.533  385.053 v _2026332_/Y (XNOR2x2_ASAP7_75t_R)
+     1   21.299  406.352 ^ _2026364_/Y (XNOR2x2_ASAP7_75t_R)
+     4   29.451  435.803 v _2026365_/Y (XNOR2x2_ASAP7_75t_R)
+          0.000  435.803 v g_bank[3].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/b_wdata[536] (l1d_macro_data_tdp)
+                 435.803   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_bank[3].u_bank.u_r.u_data.g_way[1].u_ram.g_data.u_macro/clk (l1d_macro_data_tdp)
+        -50.000  140.000   library setup time
+                 140.000   data required time
+-----------------------------------------------------------------
+                 140.000   data required time
+                -435.803   data arrival time
+-----------------------------------------------------------------
+                -295.803   slack (VIOLATED)
+
+
+
+
+##### INSIDE front #####
+Startpoint: u_front.g_bank[2].u_order.ring_empty_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_front.g_bank[2].u_order.order_count[2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_front.g_bank[2].u_order.ring_empty_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3   37.268   37.268 ^ u_front.g_bank[2].u_order.ring_empty_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.788   61.056 ^ _1090532_/Y (BUFx2_ASAP7_75t_R)
+    10   25.246   86.303 ^ _1090533_/Y (BUFx2_ASAP7_75t_R)
+     3   20.459  106.761 ^ _1318340_/Y (AO21x1_ASAP7_75t_R)
+    10   26.168  132.930 ^ _1318341_/Y (BUFx2_ASAP7_75t_R)
+     3   13.477  146.407 v _1318819_/Y (AOI21x1_ASAP7_75t_R)
+     1   29.955  176.361 v _1318829_/Y (OA33x2_ASAP7_75t_R)
+     7   20.852  197.213 v _1318830_/Y (BUFx2_ASAP7_75t_R)
+     6   26.811  224.025 v _1318831_/Y (AO21x1_ASAP7_75t_R)
+     1   25.967  249.992 v _1318840_/Y (OA211x2_ASAP7_75t_R)
+     1   27.798  277.790 v _1318845_/Y (OA33x2_ASAP7_75t_R)
+     1   25.355  303.145 v _1318852_/Y (OA211x2_ASAP7_75t_R)
+     2   18.784  321.929 v _1318873_/Y (OA21x2_ASAP7_75t_R)
+     1   25.730  347.659 v _1318886_/Y (OR4x1_ASAP7_75t_R)
+     1   17.590  365.249 v _1318895_/Y (AO21x1_ASAP7_75t_R)
+     1    5.636  370.884 ^ _1318896_/Y (OAI21x1_ASAP7_75t_R)
+          0.000  370.884 ^ u_front.g_bank[2].u_order.order_count[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 370.884   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_front.g_bank[2].u_order.order_count[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.316  174.684   library setup time
+                 174.684   data required time
+-----------------------------------------------------------------
+                 174.684   data required time
+                -370.884   data arrival time
+-----------------------------------------------------------------
+                -196.201   slack (VIOLATED)
+
+
+Startpoint: u_front.g_bank[1].u_order.order_read_onehot[2]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_front.g_skid_line.u_skid_line_3.lvl[0]$_SDFFE_PP1P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_front.g_bank[1].u_order.order_read_onehot[2]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ u_front.g_bank[1].u_order.order_read_onehot[2]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+     6   21.459   52.971 ^ _1090488_/Y (BUFx2_ASAP7_75t_R)
+    10   20.965   73.936 v _1090494_/Y (OAI22x1_ASAP7_75t_R)
+     7   41.750  115.687 v _1090497_/Y (OR4x1_ASAP7_75t_R)
+    10   27.031  142.717 v _1090498_/Y (BUFx2_ASAP7_75t_R)
+     4   20.803  163.521 v _1090499_/Y (AND3x1_ASAP7_75t_R)
+     5   23.147  186.668 v _1090504_/Y (AND4x1_ASAP7_75t_R)
+     1   22.837  209.505 v _1090559_/Y (OR3x1_ASAP7_75t_R)
+     7   19.687  229.192 v _1090560_/Y (BUFx2_ASAP7_75t_R)
+     4   20.859  250.051 v _1090561_/Y (AND2x2_ASAP7_75t_R)
+     4   33.843  283.894 ^ _2048281_/SN (HAxp5_ASAP7_75t_R)
+     3   14.898  298.792 v _1353706_/Y (INVx1_ASAP7_75t_R)
+     1   20.632  319.424 v _1353712_/Y (OR3x1_ASAP7_75t_R)
+     1   26.350  345.775 v _1353713_/Y (OA211x2_ASAP7_75t_R)
+     1    6.128  351.903 ^ _1353714_/Y (INVx1_ASAP7_75t_R)
+          0.000  351.903 ^ u_front.g_skid_line.u_skid_line_3.lvl[0]$_SDFFE_PP1P_/D (DFFHQNx1_ASAP7_75t_R)
+                 351.903   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_front.g_skid_line.u_skid_line_3.lvl[0]$_SDFFE_PP1P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.090  174.910   library setup time
+                 174.910   data required time
+-----------------------------------------------------------------
+                 174.910   data required time
+                -351.903   data arrival time
+-----------------------------------------------------------------
+                -176.993   slack (VIOLATED)
+
+
+Startpoint: u_front.g_bank[0].u_order.ring_empty_q$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_front.g_bank[0].u_order.order_port[0][1]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_front.g_bank[0].u_order.ring_empty_q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ u_front.g_bank[0].u_order.ring_empty_q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   19.252   50.764 ^ _1090447_/Y (BUFx2_ASAP7_75t_R)
+     9   20.040   70.804 v _1266734_/Y (INVx1_ASAP7_75t_R)
+     7   29.793  100.597 v _1266735_/Y (AND4x1_ASAP7_75t_R)
+     4   30.406  131.002 v _1318675_/Y (OR3x1_ASAP7_75t_R)
+     3   21.316  152.319 v _1318701_/Y (OR2x2_ASAP7_75t_R)
+    10   28.790  181.109 v _1318702_/Y (BUFx2_ASAP7_75t_R)
+     4   18.873  199.982 ^ _1318703_/Y (NAND2x1_ASAP7_75t_R)
+     1   18.679  218.660 ^ _1318704_/Y (OA21x2_ASAP7_75t_R)
+     2    7.382  226.043 v _1318705_/Y (NOR2x1_ASAP7_75t_R)
+    10   21.668  247.711 v _1318706_/Y (BUFx2_ASAP7_75t_R)
+     1   23.522  271.233 v _1952603_/Y (AO221x1_ASAP7_75t_R)
+     8   19.611  290.845 v _1952604_/Y (BUFx2_ASAP7_75t_R)
+     1   18.296  309.140 v _1952626_/Y (OA21x2_ASAP7_75t_R)
+     1   25.408  334.549 v _1952627_/Y (OA211x2_ASAP7_75t_R)
+     1    8.946  343.494 ^ _1952628_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  343.494 ^ u_front.g_bank[0].u_order.order_port[0][1]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 343.494   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_front.g_bank[0].u_order.order_port[0][1]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.022  174.978   library setup time
+                 174.978   data required time
+-----------------------------------------------------------------
+                 174.978   data required time
+                -343.494   data arrival time
+-----------------------------------------------------------------
+                -168.516   slack (VIOLATED)
+
+
+
+
+##### INSIDE l2port #####
+Startpoint: u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_l2_port.req_reg_pkt[18]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   20.571   52.084 ^ _1094560_/Y (BUFx2_ASAP7_75t_R)
+     4   31.668   83.752 ^ _1317183_/Y (AND4x1_ASAP7_75t_R)
+     3   20.645  104.397 ^ _1317187_/Y (AND2x2_ASAP7_75t_R)
+     3   10.914  115.311 v _1317188_/Y (INVx1_ASAP7_75t_R)
+     3   14.510  129.820 ^ _1444477_/Y (NOR2x1_ASAP7_75t_R)
+     4   13.528  143.349 v _1444478_/Y (INVx1_ASAP7_75t_R)
+     4   22.695  166.043 v _1788928_/Y (OA21x2_ASAP7_75t_R)
+     6   19.089  185.132 v _1816369_/Y (AND2x2_ASAP7_75t_R)
+    10   21.773  206.905 v _1816370_/Y (BUFx2_ASAP7_75t_R)
+    10   22.978  229.884 v _1820896_/Y (BUFx2_ASAP7_75t_R)
+    10   24.948  254.832 v _1820897_/Y (BUFx2_ASAP7_75t_R)
+    10   30.440  285.272 v _1829742_/Y (BUFx2_ASAP7_75t_R)
+     1   11.553  296.825 ^ _1841825_/Y (OAI21x1_ASAP7_75t_R)
+          0.000  296.825 ^ u_l2_port.req_reg_pkt[18]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 296.825   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_l2_port.req_reg_pkt[18]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.437  175.563   library setup time
+                 175.563   data required time
+-----------------------------------------------------------------
+                 175.563   data required time
+                -296.825   data arrival time
+-----------------------------------------------------------------
+                -121.262   slack (VIOLATED)
+
+
+Startpoint: u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_l2_port.req_reg_pkt[20]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   20.571   52.084 ^ _1094560_/Y (BUFx2_ASAP7_75t_R)
+     4   31.668   83.752 ^ _1317183_/Y (AND4x1_ASAP7_75t_R)
+     3   20.645  104.397 ^ _1317187_/Y (AND2x2_ASAP7_75t_R)
+     3   10.914  115.311 v _1317188_/Y (INVx1_ASAP7_75t_R)
+     3   14.510  129.820 ^ _1444477_/Y (NOR2x1_ASAP7_75t_R)
+     4   13.528  143.349 v _1444478_/Y (INVx1_ASAP7_75t_R)
+     4   22.695  166.043 v _1788928_/Y (OA21x2_ASAP7_75t_R)
+     6   19.089  185.132 v _1816369_/Y (AND2x2_ASAP7_75t_R)
+    10   21.773  206.905 v _1816370_/Y (BUFx2_ASAP7_75t_R)
+    10   22.978  229.884 v _1820896_/Y (BUFx2_ASAP7_75t_R)
+    10   24.948  254.832 v _1820897_/Y (BUFx2_ASAP7_75t_R)
+    10   30.440  285.272 v _1829742_/Y (BUFx2_ASAP7_75t_R)
+     1   11.553  296.825 ^ _1841769_/Y (OAI21x1_ASAP7_75t_R)
+          0.000  296.825 ^ u_l2_port.req_reg_pkt[20]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 296.825   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_l2_port.req_reg_pkt[20]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.437  175.563   library setup time
+                 175.563   data required time
+-----------------------------------------------------------------
+                 175.563   data required time
+                -296.825   data arrival time
+-----------------------------------------------------------------
+                -121.262   slack (VIOLATED)
+
+
+Startpoint: u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_l2_port.req_reg_pkt[400]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ u_l2_port.tid_quad_free_q[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   20.571   52.084 ^ _1094560_/Y (BUFx2_ASAP7_75t_R)
+     4   31.668   83.752 ^ _1317183_/Y (AND4x1_ASAP7_75t_R)
+     3   20.645  104.397 ^ _1317187_/Y (AND2x2_ASAP7_75t_R)
+     3   10.914  115.311 v _1317188_/Y (INVx1_ASAP7_75t_R)
+     3   14.510  129.820 ^ _1444477_/Y (NOR2x1_ASAP7_75t_R)
+     4   13.528  143.349 v _1444478_/Y (INVx1_ASAP7_75t_R)
+     4   22.695  166.043 v _1788928_/Y (OA21x2_ASAP7_75t_R)
+     6   19.089  185.132 v _1816369_/Y (AND2x2_ASAP7_75t_R)
+    10   21.773  206.905 v _1816370_/Y (BUFx2_ASAP7_75t_R)
+    10   22.978  229.884 v _1820896_/Y (BUFx2_ASAP7_75t_R)
+    10   24.948  254.832 v _1820897_/Y (BUFx2_ASAP7_75t_R)
+    10   30.440  285.272 v _1829742_/Y (BUFx2_ASAP7_75t_R)
+     1   11.553  296.825 ^ _1830024_/Y (OAI21x1_ASAP7_75t_R)
+          0.000  296.825 ^ u_l2_port.req_reg_pkt[400]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 296.825   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_l2_port.req_reg_pkt[400]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.437  175.563   library setup time
+                 175.563   data required time
+-----------------------------------------------------------------
+                 175.563   data required time
+                -296.825   data arrival time
+-----------------------------------------------------------------
+                -121.262   slack (VIOLATED)
+
+
+
+
+##### INSIDE merge0 #####
+Startpoint: u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2   33.221   33.221 v u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.413   56.634 v _1089520_/Y (BUFx2_ASAP7_75t_R)
+     3   31.605   88.239 v _1089521_/Y (AO33x2_ASAP7_75t_R)
+     1   16.965  105.204 v _1089526_/Y (OA21x2_ASAP7_75t_R)
+     2   36.383  141.587 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.552 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  193.239 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.914 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     3   21.091  242.005 ^ _1317806_/Y (NAND3x1_ASAP7_75t_R)
+     4   15.617  257.622 v _1317810_/Y (AOI22x1_ASAP7_75t_R)
+     8   28.799  286.421 v _1317811_/Y (AND4x1_ASAP7_75t_R)
+     7   26.226  312.647 v _1317819_/Y (OR2x2_ASAP7_75t_R)
+     1   21.109  333.756 v _1431861_/Y (OR3x1_ASAP7_75t_R)
+     9   19.645  353.400 v _1431862_/Y (BUFx2_ASAP7_75t_R)
+    10   28.341  381.742 v _1431863_/Y (BUFx2_ASAP7_75t_R)
+    10   32.430  414.172 v _1431864_/Y (BUFx2_ASAP7_75t_R)
+     1   11.522  425.694 ^ _1431920_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  425.694 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 425.694   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.549  175.451   library setup time
+                 175.451   data required time
+-----------------------------------------------------------------
+                 175.451   data required time
+                -425.694   data arrival time
+-----------------------------------------------------------------
+                -250.243   slack (VIOLATED)
+
+
+Startpoint: u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2   33.221   33.221 v u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.413   56.634 v _1089520_/Y (BUFx2_ASAP7_75t_R)
+     3   31.605   88.239 v _1089521_/Y (AO33x2_ASAP7_75t_R)
+     1   16.965  105.204 v _1089526_/Y (OA21x2_ASAP7_75t_R)
+     2   36.383  141.587 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.552 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  193.239 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.914 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     3   21.091  242.005 ^ _1317806_/Y (NAND3x1_ASAP7_75t_R)
+     4   15.617  257.622 v _1317810_/Y (AOI22x1_ASAP7_75t_R)
+     8   28.799  286.421 v _1317811_/Y (AND4x1_ASAP7_75t_R)
+     7   26.226  312.647 v _1317819_/Y (OR2x2_ASAP7_75t_R)
+     1   21.109  333.756 v _1431861_/Y (OR3x1_ASAP7_75t_R)
+     9   19.645  353.400 v _1431862_/Y (BUFx2_ASAP7_75t_R)
+    10   28.341  381.742 v _1431863_/Y (BUFx2_ASAP7_75t_R)
+    10   32.430  414.172 v _1431864_/Y (BUFx2_ASAP7_75t_R)
+     1   11.522  425.694 ^ _1431916_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  425.694 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 425.694   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.549  175.451   library setup time
+                 175.451   data required time
+-----------------------------------------------------------------
+                 175.451   data required time
+                -425.694   data arrival time
+-----------------------------------------------------------------
+                -250.243   slack (VIOLATED)
+
+
+Startpoint: u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2   33.221   33.221 v u_merge_0.g_fifo[3].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.413   56.634 v _1089520_/Y (BUFx2_ASAP7_75t_R)
+     3   31.605   88.239 v _1089521_/Y (AO33x2_ASAP7_75t_R)
+     1   16.965  105.204 v _1089526_/Y (OA21x2_ASAP7_75t_R)
+     2   36.383  141.587 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.552 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  193.239 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.914 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     3   21.091  242.005 ^ _1317806_/Y (NAND3x1_ASAP7_75t_R)
+     4   15.617  257.622 v _1317810_/Y (AOI22x1_ASAP7_75t_R)
+     8   28.799  286.421 v _1317811_/Y (AND4x1_ASAP7_75t_R)
+     7   26.226  312.647 v _1317819_/Y (OR2x2_ASAP7_75t_R)
+     1   21.109  333.756 v _1431861_/Y (OR3x1_ASAP7_75t_R)
+     9   19.645  353.400 v _1431862_/Y (BUFx2_ASAP7_75t_R)
+    10   28.341  381.742 v _1431863_/Y (BUFx2_ASAP7_75t_R)
+    10   32.430  414.172 v _1431864_/Y (BUFx2_ASAP7_75t_R)
+     1   11.522  425.694 ^ _1431914_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  425.694 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 425.694   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.549  175.451   library setup time
+                 175.451   data required time
+-----------------------------------------------------------------
+                 175.451   data required time
+                -425.694   data arrival time
+-----------------------------------------------------------------
+                -250.243   slack (VIOLATED)
+
+
+
+
+##### INSIDE merge1 #####
+Startpoint: u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   21.043   51.029 v _1089515_/Y (BUFx2_ASAP7_75t_R)
+     2   17.288   68.317 v _1089528_/Y (AND2x2_ASAP7_75t_R)
+     2   16.839   85.157 v _1089529_/Y (AO21x1_ASAP7_75t_R)
+     1   19.045  104.201 v _1089530_/Y (AND5x1_ASAP7_75t_R)
+     2   36.910  141.111 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.076 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  192.763 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.438 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     2   18.562  238.999 ^ _1317689_/Y (AOI221x1_ASAP7_75t_R)
+     5   27.336  266.335 ^ _1317690_/Y (AO211x2_ASAP7_75t_R)
+     8   28.496  294.832 ^ _1317696_/Y (OA31x2_ASAP7_75t_R)
+     7   18.778  313.610 v _1436519_/Y (NAND2x1_ASAP7_75t_R)
+     1   20.972  334.582 v _1436835_/Y (OR2x2_ASAP7_75t_R)
+     9   19.269  353.852 v _1436836_/Y (BUFx2_ASAP7_75t_R)
+    10   23.813  377.664 v _1436837_/Y (BUFx3_ASAP7_75t_R)
+    10   30.349  408.013 v _1436838_/Y (BUFx2_ASAP7_75t_R)
+     1   11.496  419.509 ^ _1436894_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  419.509 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 419.509   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][39]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.558  175.442   library setup time
+                 175.442   data required time
+-----------------------------------------------------------------
+                 175.442   data required time
+                -419.509   data arrival time
+-----------------------------------------------------------------
+                -244.067   slack (VIOLATED)
+
+
+Startpoint: u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   21.043   51.029 v _1089515_/Y (BUFx2_ASAP7_75t_R)
+     2   17.288   68.317 v _1089528_/Y (AND2x2_ASAP7_75t_R)
+     2   16.839   85.157 v _1089529_/Y (AO21x1_ASAP7_75t_R)
+     1   19.045  104.201 v _1089530_/Y (AND5x1_ASAP7_75t_R)
+     2   36.910  141.111 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.076 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  192.763 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.438 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     2   18.562  238.999 ^ _1317689_/Y (AOI221x1_ASAP7_75t_R)
+     5   27.336  266.335 ^ _1317690_/Y (AO211x2_ASAP7_75t_R)
+     8   28.496  294.832 ^ _1317696_/Y (OA31x2_ASAP7_75t_R)
+     7   18.778  313.610 v _1436519_/Y (NAND2x1_ASAP7_75t_R)
+     1   20.972  334.582 v _1436835_/Y (OR2x2_ASAP7_75t_R)
+     9   19.269  353.852 v _1436836_/Y (BUFx2_ASAP7_75t_R)
+    10   23.813  377.664 v _1436837_/Y (BUFx3_ASAP7_75t_R)
+    10   30.349  408.013 v _1436838_/Y (BUFx2_ASAP7_75t_R)
+     1   11.496  419.509 ^ _1436890_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  419.509 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 419.509   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][41]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.558  175.442   library setup time
+                 175.442   data required time
+-----------------------------------------------------------------
+                 175.442   data required time
+                -419.509   data arrival time
+-----------------------------------------------------------------
+                -244.067   slack (VIOLATED)
+
+
+Startpoint: u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v u_merge_1.g_fifo[3].u_fifo.lvl[4]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     7   21.043   51.029 v _1089515_/Y (BUFx2_ASAP7_75t_R)
+     2   17.288   68.317 v _1089528_/Y (AND2x2_ASAP7_75t_R)
+     2   16.839   85.157 v _1089529_/Y (AO21x1_ASAP7_75t_R)
+     1   19.045  104.201 v _1089530_/Y (AND5x1_ASAP7_75t_R)
+     2   36.910  141.111 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  166.076 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  192.763 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  220.438 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     2   18.562  238.999 ^ _1317689_/Y (AOI221x1_ASAP7_75t_R)
+     5   27.336  266.335 ^ _1317690_/Y (AO211x2_ASAP7_75t_R)
+     8   28.496  294.832 ^ _1317696_/Y (OA31x2_ASAP7_75t_R)
+     7   18.778  313.610 v _1436519_/Y (NAND2x1_ASAP7_75t_R)
+     1   20.972  334.582 v _1436835_/Y (OR2x2_ASAP7_75t_R)
+     9   19.269  353.852 v _1436836_/Y (BUFx2_ASAP7_75t_R)
+    10   23.813  377.664 v _1436837_/Y (BUFx3_ASAP7_75t_R)
+    10   30.349  408.013 v _1436838_/Y (BUFx2_ASAP7_75t_R)
+     1   11.496  419.509 ^ _1436888_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  419.509 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 419.509   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[0].u_fifo.mem[0][42]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.558  175.442   library setup time
+                 175.442   data required time
+-----------------------------------------------------------------
+                 175.442   data required time
+                -419.509   data arrival time
+-----------------------------------------------------------------
+                -244.067   slack (VIOLATED)
+
+
+
+
+##### INSIDE merge2 #####
+Startpoint: u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[2].u_fifo.mem[1][53]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     8   46.796   46.796 v u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     3   20.351   67.147 v _1089494_/Y (AND3x1_ASAP7_75t_R)
+     1   27.171   94.318 v _1089495_/Y (OA211x2_ASAP7_75t_R)
+     2   30.840  125.158 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  150.122 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  176.809 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  204.484 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     1   31.662  236.147 v _1317540_/Y (OA211x2_ASAP7_75t_R)
+     5   16.962  253.108 v _1317541_/Y (BUFx3_ASAP7_75t_R)
+     5   17.559  270.668 ^ _1317587_/Y (OAI21x1_ASAP7_75t_R)
+     1   22.477  293.145 ^ _1317615_/Y (AO32x1_ASAP7_75t_R)
+    10   19.679  312.824 ^ _1317616_/Y (BUFx3_ASAP7_75t_R)
+     6   26.643  339.467 ^ _1317622_/Y (AO31x2_ASAP7_75t_R)
+     6   22.944  362.411 v _1440191_/Y (NOR3x1_ASAP7_75t_R)
+    10   26.604  389.015 v _1440192_/Y (BUFx2_ASAP7_75t_R)
+    10   20.686  409.702 v _1440220_/Y (BUFx3_ASAP7_75t_R)
+     1   16.215  425.916 v _1440234_/Y (AND2x2_ASAP7_75t_R)
+     1    8.009  433.925 ^ _1440235_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  433.925 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][53]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 433.925   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][53]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.931  175.069   library setup time
+                 175.069   data required time
+-----------------------------------------------------------------
+                 175.069   data required time
+                -433.925   data arrival time
+-----------------------------------------------------------------
+                -258.856   slack (VIOLATED)
+
+
+Startpoint: u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[2].u_fifo.mem[1][59]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     8   46.796   46.796 v u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     3   20.351   67.147 v _1089494_/Y (AND3x1_ASAP7_75t_R)
+     1   27.171   94.318 v _1089495_/Y (OA211x2_ASAP7_75t_R)
+     2   30.840  125.158 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  150.122 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  176.809 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  204.484 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     1   31.662  236.147 v _1317540_/Y (OA211x2_ASAP7_75t_R)
+     5   16.962  253.108 v _1317541_/Y (BUFx3_ASAP7_75t_R)
+     5   17.559  270.668 ^ _1317587_/Y (OAI21x1_ASAP7_75t_R)
+     1   22.477  293.145 ^ _1317615_/Y (AO32x1_ASAP7_75t_R)
+    10   19.679  312.824 ^ _1317616_/Y (BUFx3_ASAP7_75t_R)
+     6   26.643  339.467 ^ _1317622_/Y (AO31x2_ASAP7_75t_R)
+     6   22.944  362.411 v _1440191_/Y (NOR3x1_ASAP7_75t_R)
+    10   26.604  389.015 v _1440192_/Y (BUFx2_ASAP7_75t_R)
+    10   20.686  409.702 v _1440220_/Y (BUFx3_ASAP7_75t_R)
+     1   16.215  425.916 v _1440221_/Y (AND2x2_ASAP7_75t_R)
+     1    7.994  433.910 ^ _1440222_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  433.910 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][59]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 433.910   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][59]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.931  175.069   library setup time
+                 175.069   data required time
+-----------------------------------------------------------------
+                 175.069   data required time
+                -433.910   data arrival time
+-----------------------------------------------------------------
+                -258.841   slack (VIOLATED)
+
+
+Startpoint: u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[2].u_fifo.mem[1][56]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     8   46.796   46.796 v u_merge_2.g_fifo[3].u_fifo.lvl[1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     3   20.351   67.147 v _1089494_/Y (AND3x1_ASAP7_75t_R)
+     1   27.171   94.318 v _1089495_/Y (OA211x2_ASAP7_75t_R)
+     2   30.840  125.158 v _1089531_/Y (OR5x1_ASAP7_75t_R)
+    10   24.965  150.122 v _1089532_/Y (BUFx2_ASAP7_75t_R)
+     3   26.687  176.809 v _1122243_/Y (OR3x1_ASAP7_75t_R)
+     8   27.675  204.484 v _1122268_/Y (OA31x2_ASAP7_75t_R)
+     1   31.662  236.147 v _1317540_/Y (OA211x2_ASAP7_75t_R)
+     5   16.962  253.108 v _1317541_/Y (BUFx3_ASAP7_75t_R)
+     5   17.559  270.668 ^ _1317587_/Y (OAI21x1_ASAP7_75t_R)
+     1   22.477  293.145 ^ _1317615_/Y (AO32x1_ASAP7_75t_R)
+    10   19.679  312.824 ^ _1317616_/Y (BUFx3_ASAP7_75t_R)
+     6   26.643  339.467 ^ _1317622_/Y (AO31x2_ASAP7_75t_R)
+     6   22.944  362.411 v _1440191_/Y (NOR3x1_ASAP7_75t_R)
+    10   26.604  389.015 v _1440192_/Y (BUFx2_ASAP7_75t_R)
+    10   20.686  409.702 v _1440220_/Y (BUFx3_ASAP7_75t_R)
+     1   16.215  425.916 v _1440227_/Y (AND2x2_ASAP7_75t_R)
+     1    7.991  433.908 ^ _1440228_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  433.908 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][56]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 433.908   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[2].u_fifo.mem[1][56]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.931  175.069   library setup time
+                 175.069   data required time
+-----------------------------------------------------------------
+                 175.069   data required time
+                -433.908   data arrival time
+-----------------------------------------------------------------
+                -258.839   slack (VIOLATED)
+
+
+
+
+##### INSIDE other #####
+Startpoint: g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.325   55.311 v _1090315_/Y (BUFx2_ASAP7_75t_R)
+     4   21.134   76.446 ^ _1090316_/Y (NAND3x1_ASAP7_75t_R)
+     2   14.982   91.427 v _1090334_/Y (NOR2x1_ASAP7_75t_R)
+     1   15.365  106.792 v _1090335_/Y (AND4x1_ASAP7_75t_R)
+     2   27.454  134.247 v _1090336_/Y (OR4x1_ASAP7_75t_R)
+     1   22.106  156.352 v _1122384_/Y (AO221x1_ASAP7_75t_R)
+    10   23.570  179.922 v _1122385_/Y (BUFx2_ASAP7_75t_R)
+     2   14.025  193.947 ^ _1122386_/Y (NOR3x1_ASAP7_75t_R)
+     6   32.432  226.379 v _1122439_/Y (AOI211x1_ASAP7_75t_R)
+     6   30.876  257.254 v _1122501_/Y (OA31x2_ASAP7_75t_R)
+     1   24.965  282.220 v _1122526_/Y (AO32x1_ASAP7_75t_R)
+     7   17.285  299.505 v _1122527_/Y (BUFx3_ASAP7_75t_R)
+     5   23.499  323.004 v _1122532_/Y (AO21x2_ASAP7_75t_R)
+    10   18.442  341.445 v _1122533_/Y (BUFx6f_ASAP7_75t_R)
+     1   20.511  361.956 v _1795087_/Y (OR3x1_ASAP7_75t_R)
+     3   15.082  377.038 v _1795088_/Y (BUFx2_ASAP7_75t_R)
+    10   18.522  395.560 v _1795089_/Y (BUFx3_ASAP7_75t_R)
+    10   18.914  414.474 v _1795619_/Y (BUFx4f_ASAP7_75t_R)
+    10   23.036  437.509 v _1796042_/Y (BUFx3_ASAP7_75t_R)
+     1   10.384  447.894 ^ _1796092_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  447.894 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 447.894   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.935  175.065   library setup time
+                 175.065   data required time
+-----------------------------------------------------------------
+                 175.065   data required time
+                -447.894   data arrival time
+-----------------------------------------------------------------
+                -272.828   slack (VIOLATED)
+
+
+Startpoint: g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][363]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.325   55.311 v _1090315_/Y (BUFx2_ASAP7_75t_R)
+     4   21.134   76.446 ^ _1090316_/Y (NAND3x1_ASAP7_75t_R)
+     2   14.982   91.427 v _1090334_/Y (NOR2x1_ASAP7_75t_R)
+     1   15.365  106.792 v _1090335_/Y (AND4x1_ASAP7_75t_R)
+     2   27.454  134.247 v _1090336_/Y (OR4x1_ASAP7_75t_R)
+     1   22.106  156.352 v _1122384_/Y (AO221x1_ASAP7_75t_R)
+    10   23.570  179.922 v _1122385_/Y (BUFx2_ASAP7_75t_R)
+     2   14.025  193.947 ^ _1122386_/Y (NOR3x1_ASAP7_75t_R)
+     6   32.432  226.379 v _1122439_/Y (AOI211x1_ASAP7_75t_R)
+     6   30.876  257.254 v _1122501_/Y (OA31x2_ASAP7_75t_R)
+     1   24.965  282.220 v _1122526_/Y (AO32x1_ASAP7_75t_R)
+     7   17.285  299.505 v _1122527_/Y (BUFx3_ASAP7_75t_R)
+     5   23.499  323.004 v _1122532_/Y (AO21x2_ASAP7_75t_R)
+    10   18.442  341.445 v _1122533_/Y (BUFx6f_ASAP7_75t_R)
+     1   20.511  361.956 v _1795087_/Y (OR3x1_ASAP7_75t_R)
+     3   15.082  377.038 v _1795088_/Y (BUFx2_ASAP7_75t_R)
+    10   18.522  395.560 v _1795089_/Y (BUFx3_ASAP7_75t_R)
+    10   18.914  414.474 v _1795619_/Y (BUFx4f_ASAP7_75t_R)
+    10   23.036  437.509 v _1796042_/Y (BUFx3_ASAP7_75t_R)
+     1   10.384  447.894 ^ _1796088_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  447.894 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][363]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 447.894   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][363]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.935  175.065   library setup time
+                 175.065   data required time
+-----------------------------------------------------------------
+                 175.065   data required time
+                -447.894   data arrival time
+-----------------------------------------------------------------
+                -272.828   slack (VIOLATED)
+
+
+Startpoint: g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][364]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   29.987   29.987 v g_vpu_out.u_merge_3.g_fifo[0].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.325   55.311 v _1090315_/Y (BUFx2_ASAP7_75t_R)
+     4   21.134   76.446 ^ _1090316_/Y (NAND3x1_ASAP7_75t_R)
+     2   14.982   91.427 v _1090334_/Y (NOR2x1_ASAP7_75t_R)
+     1   15.365  106.792 v _1090335_/Y (AND4x1_ASAP7_75t_R)
+     2   27.454  134.247 v _1090336_/Y (OR4x1_ASAP7_75t_R)
+     1   22.106  156.352 v _1122384_/Y (AO221x1_ASAP7_75t_R)
+    10   23.570  179.922 v _1122385_/Y (BUFx2_ASAP7_75t_R)
+     2   14.025  193.947 ^ _1122386_/Y (NOR3x1_ASAP7_75t_R)
+     6   32.432  226.379 v _1122439_/Y (AOI211x1_ASAP7_75t_R)
+     6   30.876  257.254 v _1122501_/Y (OA31x2_ASAP7_75t_R)
+     1   24.965  282.220 v _1122526_/Y (AO32x1_ASAP7_75t_R)
+     7   17.285  299.505 v _1122527_/Y (BUFx3_ASAP7_75t_R)
+     5   23.499  323.004 v _1122532_/Y (AO21x2_ASAP7_75t_R)
+    10   18.442  341.445 v _1122533_/Y (BUFx6f_ASAP7_75t_R)
+     1   20.511  361.956 v _1795087_/Y (OR3x1_ASAP7_75t_R)
+     3   15.082  377.038 v _1795088_/Y (BUFx2_ASAP7_75t_R)
+    10   18.522  395.560 v _1795089_/Y (BUFx3_ASAP7_75t_R)
+    10   18.914  414.474 v _1795619_/Y (BUFx4f_ASAP7_75t_R)
+    10   23.036  437.509 v _1796042_/Y (BUFx3_ASAP7_75t_R)
+     1   10.384  447.894 ^ _1796083_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  447.894 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][364]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 447.894   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][364]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.935  175.065   library setup time
+                 175.065   data required time
+-----------------------------------------------------------------
+                 175.065   data required time
+                -447.894   data arrival time
+-----------------------------------------------------------------
+                -272.828   slack (VIOLATED)
+
+
+
+
+##### INSIDE prefetch #####
+Startpoint: g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_prefetch.u_prefetch.u_stream.d_lp1_q[5]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     6   21.075   52.588 ^ _1107074_/Y (BUFx2_ASAP7_75t_R)
+    10   25.759   78.347 ^ _1107075_/Y (BUFx2_ASAP7_75t_R)
+    10   27.551  105.898 ^ _1107076_/Y (BUFx2_ASAP7_75t_R)
+     9   29.945  135.843 v _1139018_/Y (INVx1_ASAP7_75t_R)
+     2   37.053  172.896 v _2048207_/SN (HAxp5_ASAP7_75t_R)
+     1   19.898  192.795 v _1107525_/Y (OR2x2_ASAP7_75t_R)
+     1   13.620  206.414 v _1107526_/Y (AO21x1_ASAP7_75t_R)
+     1   13.236  219.651 v _1107527_/Y (AO21x1_ASAP7_75t_R)
+     1   24.913  244.563 v _1107528_/Y (OA211x2_ASAP7_75t_R)
+     1   18.171  262.734 v _1107529_/Y (XNOR2x2_ASAP7_75t_R)
+     3   31.212  293.946 v _1107530_/Y (OR4x1_ASAP7_75t_R)
+     9   25.186  319.132 v _1107533_/Y (AND2x2_ASAP7_75t_R)
+     1   17.953  337.085 v _1107559_/Y (OR2x2_ASAP7_75t_R)
+     1   34.313  371.398 v _1107609_/Y (OR5x1_ASAP7_75t_R)
+     3   13.784  385.182 ^ _1107778_/Y (NOR3x1_ASAP7_75t_R)
+     5   14.357  399.539 v _1107779_/Y (NAND2x1_ASAP7_75t_R)
+    10   29.127  428.666 v _1125482_/Y (BUFx2_ASAP7_75t_R)
+     1   26.700  455.366 v _2031597_/Y (OR4x1_ASAP7_75t_R)
+     1   14.957  470.323 v _2031601_/Y (AND2x2_ASAP7_75t_R)
+          0.000  470.323 v g_prefetch.u_prefetch.u_stream.d_lp1_q[5]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 470.323   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_prefetch.u_prefetch.u_stream.d_lp1_q[5]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+         -6.180  183.820   library setup time
+                 183.820   data required time
+-----------------------------------------------------------------
+                 183.820   data required time
+                -470.323   data arrival time
+-----------------------------------------------------------------
+                -286.503   slack (VIOLATED)
+
+
+Startpoint: g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_prefetch.u_prefetch.u_stream.d_line_q[4]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     6   21.075   52.588 ^ _1107074_/Y (BUFx2_ASAP7_75t_R)
+    10   25.759   78.347 ^ _1107075_/Y (BUFx2_ASAP7_75t_R)
+    10   27.551  105.898 ^ _1107076_/Y (BUFx2_ASAP7_75t_R)
+     9   29.945  135.843 v _1139018_/Y (INVx1_ASAP7_75t_R)
+     2   37.053  172.896 v _2048207_/SN (HAxp5_ASAP7_75t_R)
+     1   19.898  192.795 v _1107525_/Y (OR2x2_ASAP7_75t_R)
+     1   13.620  206.414 v _1107526_/Y (AO21x1_ASAP7_75t_R)
+     1   13.236  219.651 v _1107527_/Y (AO21x1_ASAP7_75t_R)
+     1   24.913  244.563 v _1107528_/Y (OA211x2_ASAP7_75t_R)
+     1   18.171  262.734 v _1107529_/Y (XNOR2x2_ASAP7_75t_R)
+     3   31.212  293.946 v _1107530_/Y (OR4x1_ASAP7_75t_R)
+     9   25.186  319.132 v _1107533_/Y (AND2x2_ASAP7_75t_R)
+     1   17.953  337.085 v _1107559_/Y (OR2x2_ASAP7_75t_R)
+     1   34.313  371.398 v _1107609_/Y (OR5x1_ASAP7_75t_R)
+     3   13.784  385.182 ^ _1107778_/Y (NOR3x1_ASAP7_75t_R)
+     5   14.357  399.539 v _1107779_/Y (NAND2x1_ASAP7_75t_R)
+    10   29.127  428.666 v _1125482_/Y (BUFx2_ASAP7_75t_R)
+     1   13.633  442.299 ^ _1275244_/Y (NAND2x1_ASAP7_75t_R)
+     1   16.408  458.706 ^ _1275245_/Y (OA21x2_ASAP7_75t_R)
+          0.000  458.706 ^ g_prefetch.u_prefetch.u_stream.d_line_q[4]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 458.706   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_prefetch.u_prefetch.u_stream.d_line_q[4]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.088  174.912   library setup time
+                 174.912   data required time
+-----------------------------------------------------------------
+                 174.912   data required time
+                -458.706   data arrival time
+-----------------------------------------------------------------
+                -283.794   slack (VIOLATED)
+
+
+Startpoint: g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_prefetch.u_prefetch.u_stream.d_lm1_q[3]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_prefetch.u_prefetch.u_stream.g_card[9].u_card.ahead_q[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     6   21.075   52.588 ^ _1107074_/Y (BUFx2_ASAP7_75t_R)
+    10   25.759   78.347 ^ _1107075_/Y (BUFx2_ASAP7_75t_R)
+    10   27.551  105.898 ^ _1107076_/Y (BUFx2_ASAP7_75t_R)
+     9   29.945  135.843 v _1139018_/Y (INVx1_ASAP7_75t_R)
+     2   37.053  172.896 v _2048207_/SN (HAxp5_ASAP7_75t_R)
+     1   19.898  192.795 v _1107525_/Y (OR2x2_ASAP7_75t_R)
+     1   13.620  206.414 v _1107526_/Y (AO21x1_ASAP7_75t_R)
+     1   13.236  219.651 v _1107527_/Y (AO21x1_ASAP7_75t_R)
+     1   24.913  244.563 v _1107528_/Y (OA211x2_ASAP7_75t_R)
+     1   18.171  262.734 v _1107529_/Y (XNOR2x2_ASAP7_75t_R)
+     3   31.212  293.946 v _1107530_/Y (OR4x1_ASAP7_75t_R)
+     9   25.186  319.132 v _1107533_/Y (AND2x2_ASAP7_75t_R)
+     1   17.953  337.085 v _1107559_/Y (OR2x2_ASAP7_75t_R)
+     1   34.313  371.398 v _1107609_/Y (OR5x1_ASAP7_75t_R)
+     3   13.784  385.182 ^ _1107778_/Y (NOR3x1_ASAP7_75t_R)
+     5   14.357  399.539 v _1107779_/Y (NAND2x1_ASAP7_75t_R)
+    10   29.127  428.666 v _1125482_/Y (BUFx2_ASAP7_75t_R)
+     1   13.633  442.299 ^ _1182255_/Y (NAND2x1_ASAP7_75t_R)
+     1   16.408  458.706 ^ _1182256_/Y (OA21x2_ASAP7_75t_R)
+          0.000  458.706 ^ g_prefetch.u_prefetch.u_stream.d_lm1_q[3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                 458.706   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_prefetch.u_prefetch.u_stream.d_lm1_q[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.088  174.912   library setup time
+                 174.912   data required time
+-----------------------------------------------------------------
+                 174.912   data required time
+                -458.706   data arrival time
+-----------------------------------------------------------------
+                -283.794   slack (VIOLATED)
+
+
+
+
+##### INSIDE snoop #####
+Startpoint: u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_snoop.out_pkt[100]$_SDFFE_PP0P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     6   47.247   47.247 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     4   15.185   62.432 v _1318008_/Y (INVx1_ASAP7_75t_R)
+     1   28.153   90.585 v _1375005_/Y (OA211x2_ASAP7_75t_R)
+     1   21.642  112.227 v _1375006_/Y (OA211x2_ASAP7_75t_R)
+     8   19.223  131.450 v _1375007_/Y (BUFx2_ASAP7_75t_R)
+    10   22.469  153.919 v _1404548_/Y (BUFx2_ASAP7_75t_R)
+    10   23.143  177.063 v _1404656_/Y (BUFx2_ASAP7_75t_R)
+     1   31.422  208.484 v _1404696_/Y (AO222x2_ASAP7_75t_R)
+     1   15.458  223.943 v _1404697_/Y (AO21x1_ASAP7_75t_R)
+     1   21.115  245.058 v _1404699_/Y (OA211x2_ASAP7_75t_R)
+          0.000  245.058 v u_snoop.out_pkt[100]$_SDFFE_PP0P_/D (DFFHQNx1_ASAP7_75t_R)
+                 245.058   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_snoop.out_pkt[100]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -10.095  179.905   library setup time
+                 179.905   data required time
+-----------------------------------------------------------------
+                 179.905   data required time
+                -245.058   data arrival time
+-----------------------------------------------------------------
+                 -65.153   slack (VIOLATED)
+
+
+Startpoint: u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_snoop.out_pkt[101]$_SDFFE_PP0P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     6   47.247   47.247 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     4   15.185   62.432 v _1318008_/Y (INVx1_ASAP7_75t_R)
+     1   28.153   90.585 v _1375005_/Y (OA211x2_ASAP7_75t_R)
+     1   21.642  112.227 v _1375006_/Y (OA211x2_ASAP7_75t_R)
+     8   19.223  131.450 v _1375007_/Y (BUFx2_ASAP7_75t_R)
+    10   22.469  153.919 v _1404548_/Y (BUFx2_ASAP7_75t_R)
+    10   23.143  177.063 v _1404656_/Y (BUFx2_ASAP7_75t_R)
+     1   31.422  208.484 v _1404686_/Y (AO222x2_ASAP7_75t_R)
+     1   15.458  223.943 v _1404687_/Y (AO21x1_ASAP7_75t_R)
+     1   21.115  245.058 v _1404689_/Y (OA211x2_ASAP7_75t_R)
+          0.000  245.058 v u_snoop.out_pkt[101]$_SDFFE_PP0P_/D (DFFHQNx1_ASAP7_75t_R)
+                 245.058   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_snoop.out_pkt[101]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -10.095  179.905   library setup time
+                 179.905   data required time
+-----------------------------------------------------------------
+                 179.905   data required time
+                -245.058   data arrival time
+-----------------------------------------------------------------
+                 -65.153   slack (VIOLATED)
+
+
+Startpoint: u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_snoop.out_pkt[102]$_SDFFE_PP0P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/CLK (DFFHQNx1_ASAP7_75t_R)
+     6   47.247   47.247 ^ u_snoop.g_fifo[1].u_fifo.lvl[0]$_SDFF_PP1_/QN (DFFHQNx1_ASAP7_75t_R)
+     4   15.185   62.432 v _1318008_/Y (INVx1_ASAP7_75t_R)
+     1   28.153   90.585 v _1375005_/Y (OA211x2_ASAP7_75t_R)
+     1   21.642  112.227 v _1375006_/Y (OA211x2_ASAP7_75t_R)
+     8   19.223  131.450 v _1375007_/Y (BUFx2_ASAP7_75t_R)
+    10   22.469  153.919 v _1404548_/Y (BUFx2_ASAP7_75t_R)
+    10   23.143  177.063 v _1404656_/Y (BUFx2_ASAP7_75t_R)
+     1   31.422  208.484 v _1404674_/Y (AO222x2_ASAP7_75t_R)
+     1   15.458  223.943 v _1404675_/Y (AO21x1_ASAP7_75t_R)
+     1   21.115  245.058 v _1404679_/Y (OA211x2_ASAP7_75t_R)
+          0.000  245.058 v u_snoop.out_pkt[102]$_SDFFE_PP0P_/D (DFFHQNx1_ASAP7_75t_R)
+                 245.058   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_snoop.out_pkt[102]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -10.095  179.905   library setup time
+                 179.905   data required time
+-----------------------------------------------------------------
+                 179.905   data required time
+                -245.058   data arrival time
+-----------------------------------------------------------------
+                 -65.153   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank2 -> merge2 (slack -288.501) #####
+Startpoint: g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[0].u_fifo.mem[3][71]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   32.057   32.057 ^ g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   19.785   51.843 ^ _1089766_/Y (BUFx3_ASAP7_75t_R)
+    10   22.565   74.408 v _1089769_/Y (OAI22x1_ASAP7_75t_R)
+     1   29.486  103.893 v _1089770_/Y (OR4x1_ASAP7_75t_R)
+     8   18.341  122.235 v _1089771_/Y (BUFx3_ASAP7_75t_R)
+     1   24.091  146.326 v _1089777_/Y (OA221x2_ASAP7_75t_R)
+    10   16.721  163.047 v _1089778_/Y (BUFx6f_ASAP7_75t_R)
+     9   26.883  189.930 v _1089818_/Y (AO211x2_ASAP7_75t_R)
+     1   18.761  208.691 v _1122373_/Y (AO211x2_ASAP7_75t_R)
+     1   19.106  227.797 v _1122374_/Y (OA31x2_ASAP7_75t_R)
+     9   16.118  243.915 v _1122375_/Y (BUFx6f_ASAP7_75t_R)
+     1   27.384  271.299 v _1317525_/Y (OA211x2_ASAP7_75t_R)
+     6   16.753  288.052 v _1317526_/Y (BUFx3_ASAP7_75t_R)
+     7   23.551  311.603 v _1317528_/Y (OA21x2_ASAP7_75t_R)
+     4   34.733  346.336 v _1317559_/Y (OR4x1_ASAP7_75t_R)
+     5   18.749  365.084 ^ _1317570_/Y (OAI21x1_ASAP7_75t_R)
+    10   24.588  389.672 ^ _1317571_/Y (BUFx3_ASAP7_75t_R)
+     2   18.346  408.019 ^ _1441489_/Y (OR3x1_ASAP7_75t_R)
+    10   17.040  425.058 ^ _1441490_/Y (BUFx6f_ASAP7_75t_R)
+    10   20.124  445.182 ^ _1441587_/Y (BUFx4f_ASAP7_75t_R)
+     1   18.265  463.448 ^ _1954255_/Y (OA21x2_ASAP7_75t_R)
+          0.000  463.448 ^ u_merge_2.g_fifo[0].u_fifo.mem[3][71]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 463.448   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[0].u_fifo.mem[3][71]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.053  174.947   library setup time
+                 174.947   data required time
+-----------------------------------------------------------------
+                 174.947   data required time
+                -463.448   data arrival time
+-----------------------------------------------------------------
+                -288.501   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank2 -> other (slack -287.817) #####
+Startpoint: g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[0].u_fifo.mem[2][408]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   32.057   32.057 ^ g_bank[2].u_bank.u_vc.use_c[0][7]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   19.785   51.843 ^ _1089766_/Y (BUFx3_ASAP7_75t_R)
+    10   22.565   74.408 v _1089769_/Y (OAI22x1_ASAP7_75t_R)
+     1   29.486  103.893 v _1089770_/Y (OR4x1_ASAP7_75t_R)
+     8   18.341  122.235 v _1089771_/Y (BUFx3_ASAP7_75t_R)
+     1   24.091  146.326 v _1089777_/Y (OA221x2_ASAP7_75t_R)
+    10   16.721  163.047 v _1089778_/Y (BUFx6f_ASAP7_75t_R)
+     9   26.883  189.930 v _1089818_/Y (AO211x2_ASAP7_75t_R)
+     3   15.496  205.427 ^ _1089840_/Y (AOI21x1_ASAP7_75t_R)
+     1   26.119  231.546 ^ _1122374_/Y (OA31x2_ASAP7_75t_R)
+     9   15.757  247.303 ^ _1122375_/Y (BUFx6f_ASAP7_75t_R)
+     3   19.181  266.484 ^ _1122376_/Y (AO31x2_ASAP7_75t_R)
+     6   16.174  282.659 v _1122378_/Y (AOI22x1_ASAP7_75t_R)
+     2   22.101  304.760 v _1122379_/Y (AND4x1_ASAP7_75t_R)
+     6   30.073  334.833 v _1122470_/Y (OR3x1_ASAP7_75t_R)
+     1   22.255  357.088 v _1805579_/Y (OR3x1_ASAP7_75t_R)
+     4   15.897  372.985 v _1805580_/Y (BUFx2_ASAP7_75t_R)
+    10   18.433  391.419 v _1805581_/Y (BUFx3_ASAP7_75t_R)
+    10   25.483  416.901 v _1805764_/Y (BUFx3_ASAP7_75t_R)
+    10   21.586  438.487 v _1805964_/Y (BUFx6f_ASAP7_75t_R)
+     1    8.217  446.704 ^ _1805973_/Y (NAND2x1_ASAP7_75t_R)
+     1   16.028  462.732 ^ _1805974_/Y (OA21x2_ASAP7_75t_R)
+          0.000  462.732 ^ g_vpu_out.u_merge_3.g_fifo[0].u_fifo.mem[2][408]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 462.732   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[0].u_fifo.mem[2][408]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -15.085  174.915   library setup time
+                 174.915   data required time
+-----------------------------------------------------------------
+                 174.915   data required time
+                -462.732   data arrival time
+-----------------------------------------------------------------
+                -287.817   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank3 -> merge0 (slack -285.901) #####
+Startpoint: g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   41.683   41.683 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   27.489   69.172 ^ _1089587_/Y (BUFx2_ASAP7_75t_R)
+     4   17.913   87.085 v _1089588_/Y (NOR2x1_ASAP7_75t_R)
+    10   24.514  111.598 v _1355611_/Y (BUFx2_ASAP7_75t_R)
+    10   23.540  135.139 v _1355998_/Y (BUFx2_ASAP7_75t_R)
+    10   23.723  158.862 v _1355999_/Y (BUFx2_ASAP7_75t_R)
+    10   23.828  182.689 v _1356000_/Y (BUFx2_ASAP7_75t_R)
+     1   14.126  196.816 v _1364591_/Y (AND3x1_ASAP7_75t_R)
+     1   20.104  216.920 v _1364592_/Y (AO221x1_ASAP7_75t_R)
+     1   24.649  241.569 v _1364593_/Y (OA211x2_ASAP7_75t_R)
+     7   19.705  261.275 v _1364594_/Y (BUFx2_ASAP7_75t_R)
+     8   23.048  284.323 ^ _1364595_/Y (NOR2x1_ASAP7_75t_R)
+     1   19.459  303.781 v _1410497_/Y (AOI211x1_ASAP7_75t_R)
+     1   21.818  325.599 v _1410500_/Y (OR3x1_ASAP7_75t_R)
+     1   24.645  350.244 v _1410503_/Y (OA211x2_ASAP7_75t_R)
+     1   25.469  375.713 v _1410505_/Y (OR4x1_ASAP7_75t_R)
+     1   16.701  392.414 v _1410538_/Y (OA21x2_ASAP7_75t_R)
+     9   19.627  412.041 v _1410539_/Y (BUFx2_ASAP7_75t_R)
+    10   22.964  435.005 v _1411795_/Y (BUFx2_ASAP7_75t_R)
+     1   18.463  453.468 v _1411974_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  461.340 ^ _1411975_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  461.340 ^ u_merge_0.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 461.340   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.561  175.439   library setup time
+                 175.439   data required time
+-----------------------------------------------------------------
+                 175.439   data required time
+                -461.340   data arrival time
+-----------------------------------------------------------------
+                -285.901   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank3 -> merge1 (slack -285.901) #####
+Startpoint: g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   41.683   41.683 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   27.489   69.172 ^ _1089587_/Y (BUFx2_ASAP7_75t_R)
+     4   17.913   87.085 v _1089588_/Y (NOR2x1_ASAP7_75t_R)
+    10   24.514  111.598 v _1355611_/Y (BUFx2_ASAP7_75t_R)
+    10   23.540  135.139 v _1355998_/Y (BUFx2_ASAP7_75t_R)
+    10   23.723  158.862 v _1355999_/Y (BUFx2_ASAP7_75t_R)
+    10   23.828  182.689 v _1356000_/Y (BUFx2_ASAP7_75t_R)
+     1   14.126  196.816 v _1364591_/Y (AND3x1_ASAP7_75t_R)
+     1   20.104  216.920 v _1364592_/Y (AO221x1_ASAP7_75t_R)
+     1   24.649  241.569 v _1364593_/Y (OA211x2_ASAP7_75t_R)
+     7   19.705  261.275 v _1364594_/Y (BUFx2_ASAP7_75t_R)
+     8   23.048  284.323 ^ _1364595_/Y (NOR2x1_ASAP7_75t_R)
+     1   19.459  303.781 v _1410497_/Y (AOI211x1_ASAP7_75t_R)
+     1   21.818  325.599 v _1410500_/Y (OR3x1_ASAP7_75t_R)
+     1   24.645  350.244 v _1410503_/Y (OA211x2_ASAP7_75t_R)
+     1   25.469  375.713 v _1410505_/Y (OR4x1_ASAP7_75t_R)
+     1   16.701  392.414 v _1410538_/Y (OA21x2_ASAP7_75t_R)
+     9   19.627  412.041 v _1410539_/Y (BUFx2_ASAP7_75t_R)
+    10   22.964  435.005 v _1411795_/Y (BUFx2_ASAP7_75t_R)
+     1   18.463  453.468 v _1434753_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  461.340 ^ _1434754_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  461.340 ^ u_merge_1.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 461.340   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[3].u_fifo.mem[0][20]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.561  175.439   library setup time
+                 175.439   data required time
+-----------------------------------------------------------------
+                 175.439   data required time
+                -461.340   data arrival time
+-----------------------------------------------------------------
+                -285.901   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank3 -> merge2 (slack -285.901) #####
+Startpoint: g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[3].u_fifo.mem[3][20]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4   41.683   41.683 ^ g_bank[3].u_bank.u_vc.use_c[0][1]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   27.489   69.172 ^ _1089587_/Y (BUFx2_ASAP7_75t_R)
+     4   17.913   87.085 v _1089588_/Y (NOR2x1_ASAP7_75t_R)
+    10   24.514  111.598 v _1355611_/Y (BUFx2_ASAP7_75t_R)
+    10   23.540  135.139 v _1355998_/Y (BUFx2_ASAP7_75t_R)
+    10   23.723  158.862 v _1355999_/Y (BUFx2_ASAP7_75t_R)
+    10   23.828  182.689 v _1356000_/Y (BUFx2_ASAP7_75t_R)
+     1   14.126  196.816 v _1364591_/Y (AND3x1_ASAP7_75t_R)
+     1   20.104  216.920 v _1364592_/Y (AO221x1_ASAP7_75t_R)
+     1   24.649  241.569 v _1364593_/Y (OA211x2_ASAP7_75t_R)
+     7   19.705  261.275 v _1364594_/Y (BUFx2_ASAP7_75t_R)
+     8   23.048  284.323 ^ _1364595_/Y (NOR2x1_ASAP7_75t_R)
+     1   19.459  303.781 v _1410497_/Y (AOI211x1_ASAP7_75t_R)
+     1   21.818  325.599 v _1410500_/Y (OR3x1_ASAP7_75t_R)
+     1   24.645  350.244 v _1410503_/Y (OA211x2_ASAP7_75t_R)
+     1   25.469  375.713 v _1410505_/Y (OR4x1_ASAP7_75t_R)
+     1   16.701  392.414 v _1410538_/Y (OA21x2_ASAP7_75t_R)
+     9   19.627  412.041 v _1410539_/Y (BUFx2_ASAP7_75t_R)
+    10   22.964  435.005 v _1411795_/Y (BUFx2_ASAP7_75t_R)
+     1   18.463  453.468 v _1439433_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  461.340 ^ _1439434_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  461.340 ^ u_merge_2.g_fifo[3].u_fifo.mem[3][20]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 461.340   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[3].u_fifo.mem[3][20]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.561  175.439   library setup time
+                 175.439   data required time
+-----------------------------------------------------------------
+                 175.439   data required time
+                -461.340   data arrival time
+-----------------------------------------------------------------
+                -285.901   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank0 -> other (slack -283.976) #####
+Startpoint: g_bank[0].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[0].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     2   33.011   33.011 v g_bank[0].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   24.524   57.535 v _1090221_/Y (BUFx2_ASAP7_75t_R)
+     8   22.585   80.119 ^ _1090260_/Y (OAI22x1_ASAP7_75t_R)
+     8   31.840  111.960 ^ _1090261_/Y (OR4x1_ASAP7_75t_R)
+     4   15.468  127.427 v _1090262_/Y (NAND2x1_ASAP7_75t_R)
+     2   26.399  153.826 v _1090271_/Y (OR3x1_ASAP7_75t_R)
+     6   30.354  184.180 ^ _1090272_/Y (AOI211x1_ASAP7_75t_R)
+     2   34.637  218.817 ^ _1122438_/Y (OA31x2_ASAP7_75t_R)
+     6   18.710  237.527 v _1122439_/Y (AOI211x1_ASAP7_75t_R)
+     6   30.876  268.403 v _1122501_/Y (OA31x2_ASAP7_75t_R)
+     1   24.965  293.368 v _1122526_/Y (AO32x1_ASAP7_75t_R)
+     7   17.285  310.653 v _1122527_/Y (BUFx3_ASAP7_75t_R)
+     5   23.499  334.152 v _1122532_/Y (AO21x2_ASAP7_75t_R)
+    10   18.442  352.594 v _1122533_/Y (BUFx6f_ASAP7_75t_R)
+     1   20.511  373.105 v _1795087_/Y (OR3x1_ASAP7_75t_R)
+     3   15.082  388.187 v _1795088_/Y (BUFx2_ASAP7_75t_R)
+    10   18.522  406.708 v _1795089_/Y (BUFx3_ASAP7_75t_R)
+    10   18.914  425.622 v _1795619_/Y (BUFx4f_ASAP7_75t_R)
+    10   23.036  448.657 v _1796042_/Y (BUFx3_ASAP7_75t_R)
+     1   10.384  459.042 ^ _1796092_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  459.042 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 459.042   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.935  175.065   library setup time
+                 175.065   data required time
+-----------------------------------------------------------------
+                 175.065   data required time
+                -459.042   data arrival time
+-----------------------------------------------------------------
+                -283.976   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank2 -> merge0 (slack -280.668) #####
+Startpoint: g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.549   55.061 ^ _1089750_/Y (BUFx2_ASAP7_75t_R)
+     1   17.378   72.439 ^ _1365240_/Y (OR2x2_ASAP7_75t_R)
+     5   16.374   88.813 ^ _1365241_/Y (BUFx2_ASAP7_75t_R)
+     5   12.033  100.846 v _1365247_/Y (NAND2x1_ASAP7_75t_R)
+    10   23.205  124.051 v _1365499_/Y (BUFx2_ASAP7_75t_R)
+    10   23.288  147.339 v _1365633_/Y (BUFx2_ASAP7_75t_R)
+    10   23.254  170.594 v _1365634_/Y (BUFx2_ASAP7_75t_R)
+    10   24.500  195.093 v _1365635_/Y (BUFx2_ASAP7_75t_R)
+     1   16.946  212.039 v _1366789_/Y (AO21x1_ASAP7_75t_R)
+     1   28.949  240.988 v _1366793_/Y (AO222x2_ASAP7_75t_R)
+     9   21.348  262.336 v _1366794_/Y (BUFx2_ASAP7_75t_R)
+     1   19.437  281.774 v _1415828_/Y (OA21x2_ASAP7_75t_R)
+     2   27.532  309.306 v _1415830_/Y (OR4x1_ASAP7_75t_R)
+     1   17.781  327.087 v _1415831_/Y (OA21x2_ASAP7_75t_R)
+     1   15.671  342.759 v _1415836_/Y (OA21x2_ASAP7_75t_R)
+     1   30.790  373.549 v _1415849_/Y (OR5x1_ASAP7_75t_R)
+     1   12.959  386.508 v _1415850_/Y (AND3x1_ASAP7_75t_R)
+     9   19.989  406.497 v _1415851_/Y (BUFx2_ASAP7_75t_R)
+    10   23.275  429.772 v _1418267_/Y (BUFx2_ASAP7_75t_R)
+     1   18.468  448.240 v _1418466_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  456.112 ^ _1418467_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  456.112 ^ u_merge_0.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 456.112   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.555  175.445   library setup time
+                 175.445   data required time
+-----------------------------------------------------------------
+                 175.445   data required time
+                -456.112   data arrival time
+-----------------------------------------------------------------
+                -280.668   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank2 -> merge1 (slack -280.668) #####
+Startpoint: g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[2].u_bank.u_vc.lka_c[3][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   23.549   55.061 ^ _1089750_/Y (BUFx2_ASAP7_75t_R)
+     1   17.378   72.439 ^ _1365240_/Y (OR2x2_ASAP7_75t_R)
+     5   16.374   88.813 ^ _1365241_/Y (BUFx2_ASAP7_75t_R)
+     5   12.033  100.846 v _1365247_/Y (NAND2x1_ASAP7_75t_R)
+    10   23.205  124.051 v _1365499_/Y (BUFx2_ASAP7_75t_R)
+    10   23.288  147.339 v _1365633_/Y (BUFx2_ASAP7_75t_R)
+    10   23.254  170.594 v _1365634_/Y (BUFx2_ASAP7_75t_R)
+    10   24.500  195.093 v _1365635_/Y (BUFx2_ASAP7_75t_R)
+     1   16.946  212.039 v _1366789_/Y (AO21x1_ASAP7_75t_R)
+     1   28.949  240.988 v _1366793_/Y (AO222x2_ASAP7_75t_R)
+     9   21.348  262.336 v _1366794_/Y (BUFx2_ASAP7_75t_R)
+     1   19.437  281.774 v _1415828_/Y (OA21x2_ASAP7_75t_R)
+     2   27.532  309.306 v _1415830_/Y (OR4x1_ASAP7_75t_R)
+     1   17.781  327.087 v _1415831_/Y (OA21x2_ASAP7_75t_R)
+     1   15.671  342.759 v _1415836_/Y (OA21x2_ASAP7_75t_R)
+     1   30.790  373.549 v _1415849_/Y (OR5x1_ASAP7_75t_R)
+     1   12.959  386.508 v _1415850_/Y (AND3x1_ASAP7_75t_R)
+     9   19.989  406.497 v _1415851_/Y (BUFx2_ASAP7_75t_R)
+    10   23.275  429.772 v _1418267_/Y (BUFx2_ASAP7_75t_R)
+     1   18.468  448.240 v _1435426_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  456.112 ^ _1435427_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  456.112 ^ u_merge_1.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 456.112   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[2].u_fifo.mem[0][38]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.555  175.445   library setup time
+                 175.445   data required time
+-----------------------------------------------------------------
+                 175.445   data required time
+                -456.112   data arrival time
+-----------------------------------------------------------------
+                -280.668   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank1 -> other (slack -279.773) #####
+Startpoint: g_bank[1].u_bank.u_vc.use_c[0][3]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_vc.use_c[0][3]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   31.513   31.513 ^ g_bank[1].u_bank.u_vc.use_c[0][3]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+     9   22.433   53.945 ^ _1089989_/Y (BUFx2_ASAP7_75t_R)
+    10   23.164   77.110 v _1090040_/Y (OAI22x1_ASAP7_75t_R)
+     4   39.888  116.998 v _1090042_/Y (OR4x1_ASAP7_75t_R)
+     1   16.207  133.205 v _1090043_/Y (AND3x1_ASAP7_75t_R)
+     5   23.833  157.039 v _1090044_/Y (OA31x2_ASAP7_75t_R)
+    10   20.626  177.665 v _1122171_/Y (BUFx3_ASAP7_75t_R)
+     2   25.704  203.369 v _1122172_/Y (OA211x2_ASAP7_75t_R)
+     4   18.969  222.338 ^ _1122173_/Y (AOI21x1_ASAP7_75t_R)
+     6   18.002  240.340 v _1122174_/Y (NAND3x1_ASAP7_75t_R)
+     5   24.802  265.142 v _1122175_/Y (AO21x1_ASAP7_75t_R)
+     1   24.023  289.164 v _1122526_/Y (AO32x1_ASAP7_75t_R)
+     7   17.285  306.450 v _1122527_/Y (BUFx3_ASAP7_75t_R)
+     5   23.499  329.948 v _1122532_/Y (AO21x2_ASAP7_75t_R)
+    10   18.442  348.390 v _1122533_/Y (BUFx6f_ASAP7_75t_R)
+     1   20.511  368.901 v _1795087_/Y (OR3x1_ASAP7_75t_R)
+     3   15.082  383.983 v _1795088_/Y (BUFx2_ASAP7_75t_R)
+    10   18.522  402.505 v _1795089_/Y (BUFx3_ASAP7_75t_R)
+    10   18.914  421.418 v _1795619_/Y (BUFx4f_ASAP7_75t_R)
+    10   23.036  444.454 v _1796042_/Y (BUFx3_ASAP7_75t_R)
+     1   10.384  454.838 ^ _1796092_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  454.838 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 454.838   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ g_vpu_out.u_merge_3.g_fifo[2].u_fifo.mem[0][362]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.935  175.065   library setup time
+                 175.065   data required time
+-----------------------------------------------------------------
+                 175.065   data required time
+                -454.838   data arrival time
+-----------------------------------------------------------------
+                -279.773   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank1 -> merge2 (slack -275.714) #####
+Startpoint: g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_2.g_fifo[1].u_fifo.mem[3][30]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3   37.904   37.904 v g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.751   63.656 v _1089993_/Y (BUFx2_ASAP7_75t_R)
+     6   25.753   89.409 v _1090017_/Y (OA22x2_ASAP7_75t_R)
+     1   21.059  110.468 v _1375286_/Y (OA31x2_ASAP7_75t_R)
+    10   20.228  130.696 v _1375287_/Y (BUFx2_ASAP7_75t_R)
+    10   23.501  154.197 v _1375796_/Y (BUFx2_ASAP7_75t_R)
+    10   24.000  178.197 v _1375937_/Y (BUFx2_ASAP7_75t_R)
+     2   29.685  207.882 v _1378898_/Y (OA33x2_ASAP7_75t_R)
+     1   13.994  221.876 v _1419413_/Y (OA21x2_ASAP7_75t_R)
+    10   20.401  242.277 v _1419414_/Y (BUFx2_ASAP7_75t_R)
+     1   12.176  254.453 ^ _1419415_/Y (NAND2x1_ASAP7_75t_R)
+     2   11.414  265.867 v _1419416_/Y (OAI21x1_ASAP7_75t_R)
+     1   16.490  282.357 v _1423423_/Y (AND2x2_ASAP7_75t_R)
+     1   29.299  311.656 v _1423427_/Y (OR5x1_ASAP7_75t_R)
+     1   19.440  331.096 v _1423437_/Y (OR3x1_ASAP7_75t_R)
+     1   26.054  357.150 v _1423438_/Y (OA211x2_ASAP7_75t_R)
+     1   21.641  378.791 v _1423463_/Y (OA211x2_ASAP7_75t_R)
+     9   22.117  400.908 v _1423464_/Y (BUFx2_ASAP7_75t_R)
+    10   23.893  424.802 v _1425272_/Y (BUFx2_ASAP7_75t_R)
+     1   18.480  443.281 v _1440852_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  451.153 ^ _1440853_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  451.153 ^ u_merge_2.g_fifo[1].u_fifo.mem[3][30]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 451.153   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_2.g_fifo[1].u_fifo.mem[3][30]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.561  175.439   library setup time
+                 175.439   data required time
+-----------------------------------------------------------------
+                 175.439   data required time
+                -451.153   data arrival time
+-----------------------------------------------------------------
+                -275.714   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank1 -> merge0 (slack -275.709) #####
+Startpoint: g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_0.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3   37.904   37.904 v g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.751   63.656 v _1089993_/Y (BUFx2_ASAP7_75t_R)
+     6   25.753   89.409 v _1090017_/Y (OA22x2_ASAP7_75t_R)
+     1   21.059  110.468 v _1375286_/Y (OA31x2_ASAP7_75t_R)
+    10   20.228  130.696 v _1375287_/Y (BUFx2_ASAP7_75t_R)
+    10   23.501  154.197 v _1375796_/Y (BUFx2_ASAP7_75t_R)
+    10   24.000  178.197 v _1375937_/Y (BUFx2_ASAP7_75t_R)
+     2   29.685  207.882 v _1378898_/Y (OA33x2_ASAP7_75t_R)
+     1   13.994  221.876 v _1419413_/Y (OA21x2_ASAP7_75t_R)
+    10   20.401  242.277 v _1419414_/Y (BUFx2_ASAP7_75t_R)
+     1   12.176  254.453 ^ _1419415_/Y (NAND2x1_ASAP7_75t_R)
+     2   11.414  265.867 v _1419416_/Y (OAI21x1_ASAP7_75t_R)
+     1   16.490  282.357 v _1423423_/Y (AND2x2_ASAP7_75t_R)
+     1   29.299  311.656 v _1423427_/Y (OR5x1_ASAP7_75t_R)
+     1   19.440  331.096 v _1423437_/Y (OR3x1_ASAP7_75t_R)
+     1   26.054  357.150 v _1423438_/Y (OA211x2_ASAP7_75t_R)
+     1   21.641  378.791 v _1423463_/Y (OA211x2_ASAP7_75t_R)
+     9   22.117  400.908 v _1423464_/Y (BUFx2_ASAP7_75t_R)
+    10   23.893  424.802 v _1425272_/Y (BUFx2_ASAP7_75t_R)
+     1   18.480  443.281 v _1425461_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  451.153 ^ _1425462_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  451.153 ^ u_merge_0.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 451.153   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_0.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.556  175.444   library setup time
+                 175.444   data required time
+-----------------------------------------------------------------
+                 175.444   data required time
+                -451.153   data arrival time
+-----------------------------------------------------------------
+                -275.709   slack (VIOLATED)
+
+
+
+
+##### GROUP PAIR bank1 -> merge1 (slack -275.709) #####
+Startpoint: g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_merge_1.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout    Delay     Time   Description
+-----------------------------------------------------------------
+          0.000    0.000   clock clk (rise edge)
+          0.000    0.000   clock network delay (ideal)
+          0.000    0.000 ^ g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     3   37.904   37.904 v g_bank[1].u_bank.u_vc.use_c[0][0]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+    10   25.751   63.656 v _1089993_/Y (BUFx2_ASAP7_75t_R)
+     6   25.753   89.409 v _1090017_/Y (OA22x2_ASAP7_75t_R)
+     1   21.059  110.468 v _1375286_/Y (OA31x2_ASAP7_75t_R)
+    10   20.228  130.696 v _1375287_/Y (BUFx2_ASAP7_75t_R)
+    10   23.501  154.197 v _1375796_/Y (BUFx2_ASAP7_75t_R)
+    10   24.000  178.197 v _1375937_/Y (BUFx2_ASAP7_75t_R)
+     2   29.685  207.882 v _1378898_/Y (OA33x2_ASAP7_75t_R)
+     1   13.994  221.876 v _1419413_/Y (OA21x2_ASAP7_75t_R)
+    10   20.401  242.277 v _1419414_/Y (BUFx2_ASAP7_75t_R)
+     1   12.176  254.453 ^ _1419415_/Y (NAND2x1_ASAP7_75t_R)
+     2   11.414  265.867 v _1419416_/Y (OAI21x1_ASAP7_75t_R)
+     1   16.490  282.357 v _1423423_/Y (AND2x2_ASAP7_75t_R)
+     1   29.299  311.656 v _1423427_/Y (OR5x1_ASAP7_75t_R)
+     1   19.440  331.096 v _1423437_/Y (OR3x1_ASAP7_75t_R)
+     1   26.054  357.150 v _1423438_/Y (OA211x2_ASAP7_75t_R)
+     1   21.641  378.791 v _1423463_/Y (OA211x2_ASAP7_75t_R)
+     9   22.117  400.908 v _1423464_/Y (BUFx2_ASAP7_75t_R)
+    10   23.893  424.802 v _1425272_/Y (BUFx2_ASAP7_75t_R)
+     1   18.480  443.281 v _1436233_/Y (AND2x2_ASAP7_75t_R)
+     1    7.872  451.153 ^ _1436234_/Y (AOI21x1_ASAP7_75t_R)
+          0.000  451.153 ^ u_merge_1.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                 451.153   data arrival time
+
+        200.000  200.000   clock clk (rise edge)
+          0.000  200.000   clock network delay (ideal)
+        -10.000  190.000   clock uncertainty
+          0.000  190.000   clock reconvergence pessimism
+                 190.000 ^ u_merge_1.g_fifo[1].u_fifo.mem[0][30]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+        -14.556  175.444   library setup time
+                 175.444   data required time
+-----------------------------------------------------------------
+                 175.444   data required time
+                -451.153   data arrival time
+-----------------------------------------------------------------
+                -275.709   slack (VIOLATED)
+
+
+

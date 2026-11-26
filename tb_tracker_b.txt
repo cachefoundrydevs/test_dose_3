@@ -1,0 +1,13 @@
+FAIL tb_tracker_b (no TEST PASSED / ERROR / timeout after 232 s)  [tb_tracker_b]
+=== A: three ports, three sets of bank 1, one cycle ===
+  latencies: P0 4, P1 5, P2 (store) 6
+  ok: A: three requests to one bank in one cycle answer at 4, 5, 6 (port order)
+  ok: A: all three got a tracker entry in the arrival cycle (no skid push)
+=== B: three ports, ONE set of bank 1 (P0 load line X, P1 load line Y, P2 store line Z) ===
+  latencies: P0 4, P1 64, P2 (store) 44
+  B detail: out_t e0 162 e1 162 e2 162 | got_t e0 166 e1 226 e2 206 | store answers NOT after both loads
+ERROR: B: the store answers after both older loads of its set (deps at allocation)
+stats: 9 requests (LD 7, ST 2, LR 0, SC 0, AMO 0), 9 answered; max latency per port: P0 38 P1 64 P2 44 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 2 1 1 0 0 4 1 0
+TEST FAILED: tb_tracker_b (1 errors)
+tb/common/tb_ports_common.vh:701: $finish called at 2370000 (1ps)

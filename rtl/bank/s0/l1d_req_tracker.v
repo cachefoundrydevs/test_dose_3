@@ -544,7 +544,8 @@ module l1d_req_tracker #(
     integer dp_lower;                                            // loop variable: a lower source
     // tm_opt iter 6 (new signals, user approved): the two parts of deps_new kept apart for deps_load
     // TIMING OPT (CB-2b, 2026-11-26): deps_old WITHOUT ~freed_now (pins and flops only). Was: S2 decision -> freed_now -> deps_old
-    //   -> == 0 -> cand_nofresh -> arrival_pick -> arrival_booked_* -> book_line_q in one cycle. The exact mask is applied LAST in
+    //   -> == 0 -> cand_nofresh -> arrival_pick -> arrival_booked_* -> book_line_q in one cycle (l1d_bank_s0; since CB-5 there is
+    //   no book_line_q: the path ends in book_set_q and the narrow booking flops). The exact mask is applied LAST in
     //   deps_load (deps_q bit-identical) and deps_new (same value). cand_nofresh reads the unmasked value: conservative.
     // Example: entry 3 (store, set 5) answers in S2 now; port 1 sends a load of set 5 beside a fresh port 0: deps_old = 0000_1000 ->
     //   not booked now; deps_q = 0 -> READY -> booked c+1, issued c+2 (was c+1; dependent case only).

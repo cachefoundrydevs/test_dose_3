@@ -99,9 +99,11 @@ module l1d_book_select #(
     output wire                   book_now_arrival,       // ... the arrival of this cycle
     output wire                   book_now_prefetch,      // ... the prefetch hint
     // Vivado iter 2 (new port): the prefetch decision as if no arrival is booked (early: no arrival_ready_valid in it);
-    // book_now_prefetch = book_now_prefetch_no_arrival && !book_now_arrival. l1d_bank_s0 builds its field selects for
-    // "arrival booked" and "not booked" side by side and lets the late book_now_arrival pick in the last gate.
-    output wire                   book_now_prefetch_no_arrival, // the prefetch hint is booked unless an arrival is
+    // book_now_prefetch = book_now_prefetch_no_arrival && !book_now_arrival. Until CB-5 l1d_bank_s0 built its line select for
+    // "arrival booked" and "not booked" side by side and let the late arrival pick in the last gate.
+    // CB-5 (2026-11-26): simulation only. l1d_bank_s0 reads this port only in its `ifndef SYNTHESIS check (the old line formula,
+    // book_line_no_arrival); in synthesis it has no load (book_now_any_no_arrival below has none either) and is trimmed.
+    output wire                   book_now_prefetch_no_arrival, // the prefetch hint is booked unless an arrival is (CB-5: simulation check only)
     // Vivado iter 5 (new port): CPU work may book an arrival (door open, no line reader, and not the oldest READY entry); the
     // tracker ANDs it into its pick select so the fields of the booked arrival leave it already gated
     output wire                   book_arrival_allowed          // cpu_go and not book_now_entry (early: no arrival signal in it)

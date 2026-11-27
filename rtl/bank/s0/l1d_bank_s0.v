@@ -18,6 +18,8 @@
 //                        |                        oldest READY entry -------------+--> l1d_book_select --> book_*_q (flops)
 //      snoop buffer, refill token, flush/clean token, prefetch register ----------+
 //      book_*_q | lowest arrival ---> g_set (SRAM address), r_* registers;   r_valid <= booked issue | fresh_issue
+//      CB-5: the booked LINE is no late flop any more: candidate flops (snoop / refill / flush-clean / prefetch line, loaded
+//      every cycle) and the booked entry's packet_q, picked next cycle by the one-hot book_kind_q (wire book_line)
 //
 // STAGE / CYCLE
 //   Cycle c0 of a hit (stage G). The address lane and the decision lane are combinational in c0; the booking flops are
@@ -290,7 +292,7 @@ module l1d_bank_s0 #(
     wire [LSU_PORTS*REQ_W-1:0] arrival_packet_flat;              // the 4 pins packets side by side, LSU_PORTS*REQ_W = 592 bits
     assign arrival_packet_flat = {arrival_packet_3, arrival_packet_2, arrival_packet_1, arrival_packet_0};
     integer fp_port;                                             // loop variable: port
-    always @* begin
+    always @* begin : fresh_packet_proc
         fresh_packet = {REQ_W{1'b0}};
         for (fp_port = 0; fp_port < LSU_PORTS; fp_port = fp_port + 1)
             fresh_packet = fresh_packet | ({REQ_W{lowest_req[fp_port]}} & arrival_packet_flat[fp_port*REQ_W +: REQ_W]);
@@ -300,7 +302,7 @@ module l1d_bank_s0 #(
         // Only the VEC_SLOT_W data bits change, from the buffer's flops (vec_write_slot); not on the decision path.
         if (fresh_packet[REQ_LINE_BIT] && fresh_packet[REQ_RDWR_BIT])
             fresh_packet[REQ_DATA_LSB +: VEC_SLOT_W] = vec_write_slot;
-    end
+    end // always fresh_packet_proc
     wire [INDEX_W-1:0]     fresh_set;                            // its set, 6 bits (the address lane reads only these bits of the AND-OR)
     wire [LINE_ADDR_W-1:0] fresh_line;                           // its line address, 58 bits
     wire                   fresh_is_write;                       // it writes
@@ -487,13 +489,13 @@ module l1d_bank_s0 #(
     // TIMING OPT (CB-2a): room of all ports first (the bound of each port needs the AND over all). miss_ok (the gate of an MSHR / NC
     // push in l1d_bank_s3) implies a place in EVERY FIFO, so this is an upper bound of "a miss answer is pushed now" without the
     // late S1 decodes of miss_ok and without !s2_push. Example: m_resp_valid = 1, free = {5,5,0,5} -> 0 (no miss push possible).
-    always @* begin
+    always @* begin : resp_room_proc
         for (room_port = 0; room_port < LSU_PORTS; room_port = room_port + 1)
             resp_fifo_has_room[room_port] = (free_now_flat[room_port*RCNT_W +: RCNT_W] != {RCNT_W{1'b0}});   // RCNT_W = 3 bits
         miss_push_possible = (m_resp_valid || n_resp_valid) && (&resp_fifo_has_room);
-    end
+    end // always resp_room_proc
     integer cr_port;                                             // loop variable: port
-    always @* begin
+    always @* begin : credit_next_proc
         for (cr_port = 0; cr_port < LSU_PORTS; cr_port = cr_port + 1) begin
             r_is_port[cr_port]     = r_cpu_q && (r_port == cr_port);
             s1_is_port[cr_port]    = s1_lsu && !s1_pf && (s1_port == cr_port);
@@ -539,7 +541,7 @@ module l1d_bank_s0 #(
             port_miss_ok[cr_port]  = s1_is_port[cr_port] ? (r_is_port[cr_port] ? credit_ge_three : credit_ge_two)
                                                          : (r_is_port[cr_port] ? credit_ge_two   : credit_ge_one);
         end
-    end
+    end // always credit_next_proc
     assign miss_ok = &port_miss_ok;
     always @(posedge clk) begin : credit_proc
         if (rst) credit_q <= {LSU_PORTS{1'b1}};                  // empty FIFOs, empty pipeline
@@ -628,7 +630,7 @@ module l1d_bank_s0 #(
     wire book_now_entry, book_now_prefetch;
     // Vivado iter 3: the max_fanout copy of iter 2 is removed (it put one more LUT in series, iter 2 routed report)
     wire book_now_arrival;                                       // this cycle books the arrival (late)
-    wire book_now_prefetch_no_arrival;                           // Vivado iter 2: prefetch booked unless an arrival is (early)
+    wire book_now_prefetch_no_arrival;                           // Vivado iter 2: prefetch booked unless an arrival is (early); CB-5: simulation check only
     // the two late gates about the next cycle
     wire amo_issued_now;                                         // an AMO enters R next cycle
     wire store_in_flight_next;                                   // a store-class op in R / S1 / S2 next cycle, or an AMO in S3
@@ -670,10 +672,35 @@ module l1d_bank_s0 #(
     // Vivado iter 5: the arrival leg comes already gated by the tracker pick (was {NE{book_now_arrival}} & arrival_book_entry_onehot)
     assign book_entry_onehot = book_ready_onehot | arrival_booked_entry_onehot;
     // the fields of the booked operation, captured at the booking edge (the address lane reads book_set_q, a flop)
+    // TIMING OPT (CB-5, 2026-11-26, plan L3): booking candidate registers. Was: book_line_q <= arrival_booked_line |
+    //   (book_line_no_arrival & ~{58{arrival_book_go}}) and book_set_q <= its set bits. arrival_book_go (the OR of the late
+    //   tracker pick) cut 64 AND gates through a 3-level buffer tree, and arrival_booked_source fed 58 more AND-OR terms
+    //   (ASAP7 CB-3 l1d_top in2reg: OR5 -> BUFx2 -> BUFx3 -> BUFx3 -> NOR2 -> OR4 -> OA21 -> book_line_q, 100 ps after the OR5).
+    //   Now the wide line never waits for the booking decision:
+    //   (1) the snoop, refill, flush/clean and prefetch lines load their own candidate flop every cycle (no select, no enable);
+    //   (2) an ENTRY-kind booking (the oldest READY entry, or an arrival booked in its arrival cycle) needs no candidate: the
+    //       booked entry's packet_q holds the line in the next cycle (a free entry loads load_packet every cycle, a valid one
+    //       keeps packet_q; the vector-store place number only rewrites the data field), read through booked_entry_packet;
+    //   (3) book_line = AND-OR of these by book_kind_q (flop, one-hot or zero), in the G -> R part below;
+    //   (4) the 6-bit address lane keeps its flop book_set_q (rule T-3: g_set stays one 2:1 by a flop); its D takes the exact
+    //       book_now_prefetch (= book_now_prefetch_no_arrival & !arrival_book_go, l1d_book_select T7 form) instead of the cut.
+    //   Only narrow flops still take the late decision (book_valid_q, book_kind_q, book_entry_onehot_q / _sel_q, book_set_q,
+    //   port, write, AMO): arrival_booked_source drives 18 gates instead of 76, arrival_book_go none (simulation check only).
+    // Example: cycle c-1 the port 1 load of line 0x1234 (set 13) arrives and is booked into entry 5; packet_q[5] loads it.
+    //   Cycle c: book_kind_q = ENTRY, book_entry_sel_q = 0010_0000 -> book_line = packet_q[5] line = 0x1234, book_set_q = 13,
+    //   g_set = 13, r_line <= 0x1234: the values of the old book_line_q / book_set_q. A prefetch booked in c-1 while a new hint
+    //   replaces pf_line_q on the same edge: book_line = prefetch_line_cand_q = the booked (old) hint, as before; r_req still
+    //   takes the NEW hint (pf_packet reads pf_line_q) and the new hint is lost: pre-existing, see BUGS.md.
     wire [LINE_ADDR_W-1:0] mt_line;                              // line address of the flush/clean token: {zeros, set, bank}, 58 bits
     assign mt_line = {{TAG_W{1'b0}}, mt_set, BANK_C};
-    reg  [LINE_ADDR_W-1:0] book_line_q;                          // flop: line address of the booked op, 58 bits
+    reg  [LINE_ADDR_W-1:0] snoop_line_cand_q;                    // CB-5 flop: sn_sel_line of the last cycle, LINE_ADDR_W = 58 bits
+    reg  [LINE_ADDR_W-1:0] refill_line_cand_q;                   // CB-5 flop: tok_line of the last cycle, LINE_ADDR_W = 58 bits
+    reg  [INDEX_W-1:0]     maint_set_cand_q;                     // CB-5 flop: mt_set of the last cycle (rest of mt_line is constant), INDEX_W = 6 bits
+    reg  [LINE_ADDR_W-1:0] prefetch_line_cand_q;                 // CB-5 flop: pf_line_q of the last cycle, LINE_ADDR_W = 58 bits
+    wire [LINE_ADDR_W-1:0] maint_line_cand;                      // CB-5: {zeros, maint_set_cand_q, bank}, LINE_ADDR_W = 58 bits
+    wire [LINE_ADDR_W-1:0] book_line;                            // CB-5: line address of the booked op (was the flop book_line_q), LINE_ADDR_W = 58 bits
     reg  [INDEX_W-1:0]     book_set_q;                           // flop: its set (its own flops: the address lane), 6 bits
+    wire [INDEX_W-1:0]     book_set_next;                        // CB-5: the set being booked (was book_line_next[LA_SET_LSB +: INDEX_W]), INDEX_W = 6 bits
     reg  [NE-1:0]          book_entry_onehot_q;                  // flop: the booked tracker entry, one-hot, 8 bits
     reg  [NE-1:0]          book_entry_sel_q [0:3];               // flops: 4 copies of it for the 148-bit packet AND-OR (rule T-6), 4 x 8 bits
     reg  [SNP_ID_W-1:0]    book_sid_q;                           // flop: booked snoop entry, 1 bit
@@ -681,25 +708,27 @@ module l1d_bank_s0 #(
     reg  [MSHR_ID_W-1:0]   book_mid_q;                           // flop: booked refill token's MSHR entry, 3 bits
     reg  [WAY_W-1:0]       book_mway_q;                          // flop: booked flush/clean token's way, 2 bits
     reg                    book_mop_q;                           // flop: booked flush/clean token's operation
-    reg  [LINE_ADDR_W-1:0] book_line_next;                       // the line address being booked, 58 bits
     reg  [PORT_W-1:0]      book_port_next;                       // the port being booked, 2 bits
     reg                    book_is_write_next;                   // the booked op writes
     reg                    book_is_amo_next;                     // the booked op is an AMO
     // Vivado iter 3: the fields when NO arrival is booked (early terms only), as separate wires; the late book_now_arrival
-    // selects between them and the arrival fields (no keep attribute, user decision 2026-11-17)
-    wire [LINE_ADDR_W-1:0] book_line_no_arrival;   // line address, 58 bits
+    // selects between them and the arrival fields (no keep attribute, user decision 2026-11-17). CB-5: the 58-bit line
+    // version moved to the simulation check (book_line_no_arrival there).
     wire [PORT_W-1:0]      book_port_no_arrival;   // port, 2 bits
     wire                   book_is_write_no_arrival; // writes
     wire                   book_is_amo_no_arrival;   // one-request AMO
-    assign book_line_no_arrival     = ({LINE_ADDR_W{book_now_snoop}}               & sn_sel_line) |
-                                      ({LINE_ADDR_W{book_now_refill}}              & tok_line) |
-                                      ({LINE_ADDR_W{book_now_maint}}               & mt_line) |
-                                      ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q) |
-                                      ({LINE_ADDR_W{book_now_entry}}               & oldest_ready_line);
+    // CB-5: the set, same value as the old book_line_next[LA_SET_LSB +: INDEX_W]: at most one term is set (one-hot decision;
+    //   arrival_booked_line is zero unless the arrival is booked), and book_now_prefetch is 0 whenever the arrival is booked
+    assign book_set_next = arrival_booked_line[LA_SET_LSB +: INDEX_W] |                                 // INDEX_W = 6 bits
+                           ({INDEX_W{book_now_snoop}}    & sn_sel_line[LA_SET_LSB +: INDEX_W]) |       // INDEX_W = 6 bits
+                           ({INDEX_W{book_now_refill}}   & tok_line[LA_SET_LSB +: INDEX_W]) |          // INDEX_W = 6 bits
+                           ({INDEX_W{book_now_maint}}    & mt_line[LA_SET_LSB +: INDEX_W]) |           // INDEX_W = 6 bits
+                           ({INDEX_W{book_now_prefetch}} & pf_line_q[LA_SET_LSB +: INDEX_W]) |         // INDEX_W = 6 bits
+                           ({INDEX_W{book_now_entry}}    & oldest_ready_line[LA_SET_LSB +: INDEX_W]);  // INDEX_W = 6 bits
     assign book_port_no_arrival     = {PORT_W{book_now_entry}} & oldest_ready_port;
     assign book_is_write_no_arrival = book_now_entry & oldest_ready_is_write;
     assign book_is_amo_no_arrival   = book_now_entry & oldest_ready_is_amo;
-    always @* begin
+    always @* begin : book_fields_next_proc
         // a select by the one-hot decision (at most one book_now_* is set: l1d_book_select makes them exclude each other
         // for every input). tm_opt iter 1: one AND-OR instead of the last-wins if-chain (one mux level per source); the
         // late arrival leg (tracker arrival_book_* and book_now_arrival) enters only the last OR.
@@ -710,11 +739,20 @@ module l1d_bank_s0 #(
         // Vivado iter 5: the arrival fields are zero unless booked (tracker pick select), so the late select becomes an OR.
         // When the arrival is booked, snoop / refill / maint / entry are all off (cpu_go, not entry), so only the prefetch term
         // of book_line_no_arrival can be set: it is cut by arrival_book_go. Port, write and AMO have no prefetch term.
-        book_line_next     = arrival_booked_line     | (book_line_no_arrival & ~{LINE_ADDR_W{arrival_book_go}});
+        // CB-5: the line left this block (candidate flops, book_line). Port, write and AMO stay late flops on purpose: they
+        // feed credit_book_next, amo_issued_now and store_in_flight_next of the next booking (the Vivado worst chain)
         book_port_next     = arrival_booked_port     | book_port_no_arrival;
         book_is_write_next = arrival_booked_is_write | book_is_write_no_arrival;
         book_is_amo_next   = arrival_booked_is_amo   | book_is_amo_no_arrival;
-    end
+    end // always book_fields_next_proc
+    // CB-5: the candidates load every cycle, also in reset (data flops, no late enable, rule SS-6); book_kind_q = 0 in and
+    //   after reset masks them in book_line
+    always @(posedge clk) begin : book_cand_proc
+        snoop_line_cand_q    <= sn_sel_line;
+        refill_line_cand_q   <= tok_line;
+        maint_set_cand_q     <= mt_set;
+        prefetch_line_cand_q <= pf_line_q;
+    end // always book_cand_proc
     integer cp_idx;                                              // loop variable: copy of the entry select
     always @(posedge clk) begin : book_fields_proc
         if (rst) begin
@@ -722,8 +760,7 @@ module l1d_bank_s0 #(
             for (cp_idx = 0; cp_idx < 4; cp_idx = cp_idx + 1) book_entry_sel_q[cp_idx] <= {NE{1'b0}};
             pf_booked_q <= 1'b0;
         end else begin
-            book_line_q         <= book_line_next;
-            book_set_q          <= book_line_next[LA_SET_LSB +: INDEX_W];
+            book_set_q          <= book_set_next;                // CB-5: the line has no flop here any more (book_line)
             book_port_q         <= book_port_next;
             book_is_write_q     <= book_is_write_next;
             book_is_amo_q       <= book_is_amo_next;
@@ -784,14 +821,23 @@ module l1d_bank_s0 #(
     integer be_entry;                                            // loop variable: entry
     integer be_group;                                            // loop variable: bit group of the packet
     localparam GROUP_W = (REQ_W + 3) / 4;                        // bits per select copy, 37
-    always @* begin
+    always @* begin : booked_entry_packet_proc
         booked_entry_packet = {REQ_W{1'b0}};
         for (be_entry = 0; be_entry < NE; be_entry = be_entry + 1)
             for (be_group = 0; be_group < 4; be_group = be_group + 1)
                 if (be_group * GROUP_W < REQ_W)
                     booked_entry_packet[be_group*GROUP_W +: GROUP_W] = booked_entry_packet[be_group*GROUP_W +: GROUP_W] |
                         ({GROUP_W{book_entry_sel_q[be_group][be_entry]}} & entry_packet_flat[be_entry*REQ_W + be_group*GROUP_W +: GROUP_W]);
-    end
+    end // always booked_entry_packet_proc
+    // CB-5: the booked line from flops only. book_kind_q is one-hot when book_valid_q = 1 and zero otherwise, so book_line
+    //   is 0 when nothing is booked, as the old book_line_q. It feeds only r_line (flop to flop, no SRAM pin): 8-to-1 AND-OR
+    //   (book_entry_sel_q) then this 5-to-1 AND-OR then the 2:1 of r_line.
+    assign maint_line_cand = {{TAG_W{1'b0}}, maint_set_cand_q, BANK_C};   // TAG_W = 50 bits zeros, 6-bit set, 2-bit bank = 58 bits
+    assign book_line = ({LINE_ADDR_W{book_kind_q[BOOK_ENTRY_B]}}  & booked_entry_packet[LINE_IN_REQ +: LINE_ADDR_W]) |   // LINE_ADDR_W = 58 bits
+                       ({LINE_ADDR_W{book_kind_q[BOOK_SNOOP_B]}}  & snoop_line_cand_q) |                                // LINE_ADDR_W = 58 bits
+                       ({LINE_ADDR_W{book_kind_q[BOOK_REFILL_B]}} & refill_line_cand_q) |                               // LINE_ADDR_W = 58 bits
+                       ({LINE_ADDR_W{book_kind_q[BOOK_MAINT_B]}}  & maint_line_cand) |                                  // LINE_ADDR_W = 58 bits
+                       ({LINE_ADDR_W{book_kind_q[BOOK_PF_B]}}     & prefetch_line_cand_q);                              // LINE_ADDR_W = 58 bits
     wire [REQ_W-1:0] booked_packet;                              // the packet of the booked op (entry or prefetch), 148 bits
     assign booked_packet = book_kind_q[BOOK_PF_B] ? pf_packet : booked_entry_packet;
     wire [1:0] booked_kind;                                      // K_* of the booked op
@@ -802,14 +848,14 @@ module l1d_bank_s0 #(
     reg  [SEAT_W-1:0] booked_seat;                               // the booked entry's number, 3 bits
     reg  [SEAT_W-1:0] fresh_seat;                                // the fresh entry's number, 3 bits
     integer en_idx;                                              // loop variable: entry
-    always @* begin
+    always @* begin : seat_encode_proc
         booked_seat = {SEAT_W{1'b0}};
         fresh_seat  = {SEAT_W{1'b0}};
         for (en_idx = 0; en_idx < NE; en_idx = en_idx + 1) begin
             if (book_entry_onehot_q[en_idx]) booked_seat = booked_seat | en_idx[SEAT_W-1:0];
             if (fresh_entry_onehot[en_idx])  fresh_seat  = fresh_seat  | en_idx[SEAT_W-1:0];
         end
-    end
+    end // always seat_encode_proc
     always @(posedge clk) begin : g_to_r_proc
         if (rst) begin
             r_valid <= 1'b0;
@@ -824,7 +870,7 @@ module l1d_bank_s0 #(
             // the wide fields load every cycle from the booked op or the arrival (no late enable, rule SS-6); r_valid qualifies them
             r_kind  <= book_valid_q ? booked_kind : K_LSU;
             r_req   <= book_valid_q ? booked_packet : fresh_packet;
-            r_line  <= book_valid_q ? book_line_q : fresh_line;
+            r_line  <= book_valid_q ? book_line : fresh_line;    // CB-5: book_line (candidate flops), same value
             r_seat  <= book_valid_q ? booked_seat : fresh_seat;
             r_mid   <= book_mid_q;
             r_mway  <= book_mway_q;
@@ -838,8 +884,26 @@ module l1d_bank_s0 #(
     // SIMULATION CHECKS (always on): the address lane invariant and the bookkeeping of the booking
     // ======================================================================
 `ifndef SYNTHESIS
+    // ERROR CB-5 (always on in simulation): the old formula as a shadow flop. In every booked cycle (the only cycles in which
+    //   r_line and g_set read the booked leg) the rebuilt book_line and the book_set_q lane must equal it, and book_kind_q
+    //   must be one-hot (book_line is a one-hot AND-OR of it).
+    wire [LINE_ADDR_W-1:0] book_line_no_arrival;                 // check only: the old early leg of the line, LINE_ADDR_W = 58 bits
+    reg  [LINE_ADDR_W-1:0] book_line_old_q;                      // check only: book_line_q as the old RTL built it, LINE_ADDR_W = 58 bits
+    assign book_line_no_arrival = ({LINE_ADDR_W{book_now_snoop}}               & sn_sel_line) |          // LINE_ADDR_W = 58 bits
+                                  ({LINE_ADDR_W{book_now_refill}}              & tok_line) |             // LINE_ADDR_W = 58 bits
+                                  ({LINE_ADDR_W{book_now_maint}}               & mt_line) |              // LINE_ADDR_W = 58 bits
+                                  ({LINE_ADDR_W{book_now_prefetch_no_arrival}} & pf_line_q) |            // LINE_ADDR_W = 58 bits
+                                  ({LINE_ADDR_W{book_now_entry}}               & oldest_ready_line);     // LINE_ADDR_W = 58 bits
+    always @(posedge clk) begin : book_line_check_proc
+        book_line_old_q <= arrival_booked_line | (book_line_no_arrival & ~{LINE_ADDR_W{arrival_book_go}});   // LINE_ADDR_W = 58 bits
+        if (!rst && book_valid_q &&
+            ((book_line !== book_line_old_q) || (book_set_q !== book_line_old_q[LA_SET_LSB +: INDEX_W]) ||   // 58-bit line, 6-bit set
+             (book_kind_q == {BOOK_KIND_W{1'b0}}) || ((book_kind_q & (book_kind_q - 1'b1)) != {BOOK_KIND_W{1'b0}})))   // BOOK_KIND_W = 5 bits
+            $display("[%0t] L1D B%0d S0 ERROR CB-5: booked line %h set %0d kind %b, old formula line %h", $time, BANK_ID,
+                     {book_line, OFF0}, book_set_q, book_kind_q, {book_line_old_q, OFF0});
+    end // always book_line_check_proc
     reg [INDEX_W-1:0] g_set_q;                                   // the set the SRAMs read last cycle (check only), 6 bits
-    always @(posedge clk) begin
+    always @(posedge clk) begin : s0_check_proc
         g_set_q <= g_set;
         if (!rst) begin
             if (r_valid && (r_line[LA_SET_LSB +: INDEX_W] != g_set_q))
@@ -854,15 +918,15 @@ module l1d_bank_s0 #(
             if (book_valid_q && !book_issue)
                 $display("[%0t] L1D B%0d S0 NOTE: booked %b cancelled (source offer changed): bubble", $time, BANK_ID, book_kind_q);
         end
-    end
+    end // always s0_check_proc
 `endif
 `ifdef L1D_DEBUG
-    always @(posedge clk) begin
+    always @(posedge clk) begin : debug_issue_proc
         if (!rst) begin
             if (snoop_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE snoop %s line=%h", $time, BANK_ID, book_sinv_q ? "INV" : "READ", {book_line_q, OFF0});
+                $display("[%0t] L1D B%0d S0 ISSUE snoop %s line=%h", $time, BANK_ID, book_sinv_q ? "INV" : "READ", {book_line, OFF0});
             else if (refill_issue)
-                $display("[%0t] L1D B%0d S0 ISSUE refill token  mshr=%0d line=%h", $time, BANK_ID, book_mid_q, {book_line_q, OFF0});
+                $display("[%0t] L1D B%0d S0 ISSUE refill token  mshr=%0d line=%h", $time, BANK_ID, book_mid_q, {book_line, OFF0});
             else if (maint_issue)
                 $display("[%0t] L1D B%0d S0 ISSUE %s token  set=%0d way=%0d", $time, BANK_ID,
                          (book_mop_q == MAINT_FLUSH) ? "flush" : "clean", book_set_q, book_mway_q);
@@ -877,7 +941,7 @@ module l1d_bank_s0 #(
                          fresh_packet[REQ_PORT_LSB +: PORT_W], fresh_packet[REQ_IDX_LSB +: IDX_BITS],
                          (fresh_packet[REQ_RDWR_BIT] ? "ST" : "LD"), fresh_packet[REQ_ADDR_LSB +: ADDR_W]);
         end
-    end
+    end // always debug_issue_proc
 `endif
 
 endmodule

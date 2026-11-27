@@ -1,0 +1,13 @@
+PASS tb_tracker_b_B_WARM (174 s)  [tb_tracker_b -d B_WARM]
+=== A: three ports, three sets of bank 1, one cycle ===
+  latencies: P0 4, P1 5, P2 (store) 6
+  ok: A: three requests to one bank in one cycle answer at 4, 5, 6 (port order)
+  ok: A: all three got a tracker entry in the arrival cycle (no skid push)
+=== B: three ports, ONE set of bank 1 (P0 load line X, P1 load line Y, P2 store line Z) ===
+  latencies: P0 4, P1 5, P2 (store) 10
+  B detail: out_t e0 258 e1 258 e2 258 | got_t e0 262 e1 263 e2 268 | store answers     AFTER both loads
+  ok: B: the store answers after both older loads of its set (deps at allocation)
+stats: 11 requests (LD 9, ST 2, LR 0, SC 0, AMO 0), 11 answered; max latency per port: P0 46 P1 5 P2 10 P3 0
+latency histogram (cycles 4 | 5 | 6-7 | 8-11 | 12-23 | 24-63 | 64-255 | more): 2 2 1 1 0 5 0 0
+TEST PASSED: tb_tracker_b (11 requests, seed 1)
+tb/common/tb_ports_common.vh:701: $finish called at 2790000 (1ps)
